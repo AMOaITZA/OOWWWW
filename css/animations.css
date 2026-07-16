@@ -1,0 +1,62 @@
+/* =====================================================================
+   ANIMATIONS.CSS — keyframes y transiciones puras.
+   Las animaciones controladas por GSAP/AOS se disparan desde JS,
+   pero sus keyframes CSS de apoyo viven aquí.
+===================================================================== */
+
+/* aurora flotando */
+@keyframes auroraFloat {
+  0%   { transform: translate(0,0) scale(1); }
+  50%  { transform: translate(4%, 6%) scale(1.08); }
+  100% { transform: translate(0,0) scale(1); }
+}
+.aurora { animation: auroraFloat 18s ease-in-out infinite; }
+.a2 { animation-duration: 22s; animation-delay: -4s; }
+.a3 { animation-duration: 26s; animation-delay: -10s; }
+
+/* vinilo girando */
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* fade + rise genérico (usado por AOS custom / clases manuales) */
+.fade-up {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .8s var(--ease), transform .8s var(--ease);
+}
+.fade-up.in-view { opacity: 1; transform: translateY(0); }
+
+/* pulso suave del corazón del sobre */
+@keyframes heartPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+.envelope-body i { animation: heartPulse 2.4s ease-in-out infinite; }
+
+/* brillo en los cards al hover (glow) */
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(191,162,255,0); }
+  50% { box-shadow: 0 0 24px rgba(191,162,255,.25); }
+}
+
+/* parpadeo de estrellas del gate, dibujado también vía canvas en app.js */
+@keyframes twinkle {
+  0%, 100% { opacity: .3; }
+  50% { opacity: 1; }
+}
+
+/* botón entrar: glow respirando */
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 0 rgba(191,162,255,0); }
+  50% { box-shadow: 0 0 30px rgba(191,162,255,.35); }
+}
+.btn-enter { animation: breathe 3.5s ease-in-out infinite; }
+
+/* preferencia de movimiento reducido: apagamos animaciones decorativas */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

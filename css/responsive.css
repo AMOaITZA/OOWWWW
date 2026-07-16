@@ -1,0 +1,59 @@
+/* =====================================================================
+   RESPONSIVE.CSS — Tablet y Móvil
+===================================================================== */
+
+/* ---------- TABLET (≤ 1024px) ---------- */
+@media (max-width: 1024px) {
+  .reasons-grid { grid-template-columns: repeat(2, 1fr); }
+  .moodboard-grid { grid-template-columns: repeat(2, 1fr); }
+  .places-grid { grid-template-columns: 1fr; }
+  .masonry { column-count: 2; }
+  .side-nav { left: 16px; }
+}
+
+/* ---------- MÓVIL (≤ 720px) ---------- */
+@media (max-width: 720px) {
+  :root { --section-pad: 110px; }
+
+  body, button, a { cursor: auto; }
+  .cursor-dot, .cursor-ring { display: none; }
+
+  .section { padding: var(--section-pad) 6vw; }
+
+  .hero-photo { width: 200px; height: 260px; }
+
+  .reasons-grid, .moodboard-grid { grid-template-columns: 1fr; }
+  .masonry { column-count: 1; }
+
+  .letter-paper { padding: 36px 26px; }
+
+  .counter-grid { gap: 12px; }
+  .c-unit { min-width: 80px; padding: 18px 14px; }
+  .c-num { font-size: 1.7rem; }
+
+  /* menú lateral se convierte en botón + drawer superior */
+  .side-nav { top: 20px; left: 20px; transform: none; }
+  .side-nav-toggle { display: flex; }
+  .side-nav-list {
+    position: fixed; top: 76px; left: 20px;
+    background: var(--glass); border: 1px solid var(--glass-border);
+    border-radius: 14px; padding: 18px; backdrop-filter: blur(20px);
+    flex-direction: column; gap: 14px;
+    opacity: 0; transform: translateY(-10px); pointer-events: none;
+    transition: all .3s var(--ease);
+  }
+  .side-nav-list.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+  .player { right: 16px; bottom: 16px; }
+  .player-panel { width: 240px; }
+  .back-to-top { left: 16px; bottom: 16px; }
+
+  .scrapbook-grid { gap: 20px; }
+  .s-item { width: 96px; height: 106px; }
+}
+
+@media (max-width: 420px) {
+  .gate-title { font-size: 3rem; }
+  .hero-title { font-size: 2.2rem; }
+  .final-title { font-size: 2rem; }
+}

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Para ti — una constelación de nosotros</title>
+  <meta name="description" content="Una carta interactiva hecha con cariño." />
+
+  <!-- ============================================================
+       GOOGLE FONTS
+       Display: Cormorant Garamond (itálica, elegante, para titulares)
+       Body: Manrope (limpia, cálida, para texto)
+       Utility: Space Grotesk (para números — contador, fechas)
+  ============================================================ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Manrope:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome (iconos) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- AOS (animaciones al hacer scroll) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+
+  <!-- CSS propio -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- ============================================================
+       CURSOR PERSONALIZADO (desktop únicamente, ver js/cursor.js)
+  ============================================================ -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- ============================================================
+       PANTALLA DE CARGA
+  ============================================================ -->
+  <div class="preloader" id="preloader">
+    <div class="preloader-inner">
+      <p class="preloader-eyebrow">esto comenzó un día cualquiera</p>
+      <!-- ✏️ CAMBIAR: fecha de inicio de la historia -->
+      <p class="preloader-date">14 · 02 · 2022</p>
+      <div class="preloader-bar"><span></span></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       PANTALLA INICIAL — se ve tras el preloader, antes de entrar
+  ============================================================ -->
+  <section class="gate" id="gate">
+    <canvas id="starfield"></canvas>
+    <div class="gate-content">
+      <span class="gate-eyebrow" data-typed data-strings='["para la persona que le da forma a mis días", "para ti, siempre para ti"]'></span>
+      <!-- ✏️ CAMBIAR: nombre -->
+      <h1 class="gate-title">Feli<span class="gate-title-accent">z</span></h1>
+      <p class="gate-sub">Hice este lugar pequeño para guardar algo grande.<br>Tómate tu tiempo. No hay prisa aquí adentro.</p>
+      <button class="btn-enter" id="btnEnter">
+        <span>Entrar</span>
+        <i class="fa-solid fa-arrow-down"></i>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       EXPERIENCIA PRINCIPAL (oculta hasta presionar "Entrar")
+  ============================================================ -->
+  <div class="experience" id="experience">
+
+    <!-- REPRODUCTOR DE MÚSICA FLOTANTE -->
+    <div class="player" id="player">
+      <button class="player-toggle" id="playerToggle" aria-label="Mostrar/ocultar reproductor">
+        <i class="fa-solid fa-music"></i>
+      </button>
+      <div class="player-panel" id="playerPanel">
+        <div class="player-art"><i class="fa-solid fa-record-vinyl spinning"></i></div>
+        <div class="player-info">
+          <!-- ✏️ CAMBIAR: nombre de la canción / artista -->
+          <p class="player-track" id="playerTrack">Perfect — Ed Sheeran</p>
+          <div class="player-progress">
+            <input type="range" id="playerSeek" min="0" max="100" value="0" step="0.1">
+          </div>
+          <div class="player-controls">
+            <button id="playerPrev" aria-label="Anterior"><i class="fa-solid fa-backward-step"></i></button>
+            <button id="playerPlay" aria-label="Reproducir"><i class="fa-solid fa-play"></i></button>
+            <button id="playerNext" aria-label="Siguiente"><i class="fa-solid fa-forward-step"></i></button>
+            <button id="playerMute" aria-label="Silenciar"><i class="fa-solid fa-volume-high"></i></button>
+            <input type="range" id="playerVolume" min="0" max="1" step="0.01" value="0.5">
+          </div>
+        </div>
+      </div>
+      <!-- ✏️ CAMBIAR: agrega tus canciones (mp3) en assets/music/ y edítalas en js/music.js -->
+      <audio id="audioEl" preload="none"></audio>
+    </div>
+
+    <!-- BARRA DE PROGRESO DE SCROLL -->
+    <div class="scroll-progress"><span id="scrollProgressBar"></span></div>
+
+    <!-- MENÚ LATERAL -->
+    <nav class="side-nav" id="sideNav">
+      <button class="side-nav-toggle" id="sideNavToggle" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></button>
+      <ul class="side-nav-list" id="sideNavList">
+        <li><a href="#hero" data-label="Inicio"><span>01</span>Inicio</a></li>
+        <li><a href="#carta" data-label="Carta"><span>02</span>Carta</a></li>
+        <li><a href="#galeria" data-label="Galería"><span>03</span>Galería</a></li>
+        <li><a href="#recuerdos" data-label="Recuerdos"><span>04</span>Recuerdos</a></li>
+        <li><a href="#razones" data-label="Razones"><span>05</span>Razones</a></li>
+        <li><a href="#playlist" data-label="Playlist"><span>06</span>Playlist</a></li>
+        <li><a href="#detalles" data-label="Detalles"><span>07</span>Detalles</a></li>
+        <li><a href="#contador" data-label="Contador"><span>08</span>Contador</a></li>
+        <li><a href="#lugares" data-label="Lugares"><span>09</span>Lugares</a></li>
+        <li><a href="#caja" data-label="Caja"><span>10</span>Caja</a></li>
+        <li><a href="#final" data-label="Final"><span>11</span>Final</a></li>
+      </ul>
+    </nav>
+
+    <!-- fondo animado global: aurora + partículas, ver js/particles.js -->
+    <div class="aurora-bg" aria-hidden="true">
+      <div class="aurora a1"></div>
+      <div class="aurora a2"></div>
+      <div class="aurora a3"></div>
+    </div>
+    <canvas id="particlesCanvas" aria-hidden="true"></canvas>
+
+    <!-- ============================================================
+         01. HERO
+    ============================================================ -->
+    <section class="section hero" id="hero">
+      <div class="hero-photo" data-tilt data-tilt-max="8" data-tilt-glare data-tilt-max-glare="30">
+        <!-- ✏️ CAMBIAR: foto principal en assets/images/ -->
+        <img src="assets/images/hero-photo.jpg" alt="Foto principal" onerror="this.style.display='none'; this.parentElement.classList.add('photo-placeholder')">
+      </div>
+      <p class="hero-eyebrow">un pequeño universo, hecho para ti</p>
+      <h2 class="hero-title">Todo lo bueno<br>me sabe a <em>ti</em></h2>
+      <p class="hero-text">Baja despacio. Cada sección es un cajón distinto de la misma caja: la de las cosas que nunca te había dicho así.</p>
+      <a href="#carta" class="scroll-hint" aria-label="Bajar a la carta"><i class="fa-solid fa-chevron-down"></i></a>
+    </section>
+
+    <!-- ============================================================
+         02. CARTA
+    ============================================================ -->
+    <section class="section letter" id="carta">
+      <div class="letter-envelope" id="envelope">
+        <div class="envelope-flap"></div>
+        <div class="envelope-body">
+          <i class="fa-solid fa-heart"></i>
+          <span>toca para abrir</span>
+        </div>
+      </div>
+      <div class="letter-paper" id="letterPaper">
+        <p class="letter-heading">Para ti</p>
+        <!-- ✏️ CAMBIAR: el texto completo de tu carta -->
+        <p class="letter-body" id="letterTyped"></p>
+        <p class="letter-sign">— con todo, siempre</p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         03. GALERÍA
+    ============================================================ -->
+    <section class="section gallery-section" id="galeria">
+      <p class="section-eyebrow">03 — instantes</p>
+      <h2 class="section-title">Galería</h2>
+      <p class="section-sub">Pasa el cursor. Cada foto revela algo distinto.</p>
+      <!-- ✏️ CAMBIAR: agrega/quita items y reemplaza las imágenes en assets/images/ -->
+      <div class="masonry" id="masonryGrid">
+        <div class="m-item" data-full="assets/images/g1.jpg" data-caption="Aquel domingo"><img src="assets/images/g1.jpg" alt="" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
+        <div class="m-item tall" data-full="assets/images/g2.jpg" data-caption="Riéndote sin razón"><img src="assets/images/g2.jpg" alt="" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
+        <div class="m-item" data-full="assets/images/g3.jpg" data-caption="El café de siempre"><img src="assets/images/g3.jpg" alt="" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
+        <div class="m-item" data-full="assets/images/g4.jpg" data-caption="Ese viaje corto"><img src="assets/images/g4.jpg" alt="" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
+        <div class="m-item tall" data-full="assets/images/g5.jpg" data-caption="La luz de esa tarde"><img src="assets/images/g5.jpg" alt="" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
+        <div class="m-item" data-full="assets/images/g6.jpg" data-caption="Un jueves cualquiera"><img src="assets/images/g6.jpg" alt="" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
+      </div>
+      <!-- lightbox -->
+      <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
+        <img src="" alt="" id="lightboxImg">
+        <p id="lightboxCaption"></p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         04. NUESTROS RECUERDOS (timeline)
+    ============================================================ -->
+    <section class="section timeline-section" id="recuerdos">
+      <p class="section-eyebrow">04 — la línea del tiempo</p>
+      <h2 class="section-title">Nuestros recuerdos</h2>
+      <div class="timeline" id="timelineList">
+        <!-- ✏️ CAMBIAR: agrega/edita cada hito en un <li> -->
+        <div class="t-item">
+          <div class="t-dot"></div>
+          <div class="t-card">
+            <span class="t-date">14 feb 2022</span>
+            <h3>Donde empezó todo</h3>
+            <p>El día que dejamos de ser dos personas que apenas se conocían.</p>
+          </div>
+        </div>
+        <div class="t-item">
+          <div class="t-dot"></div>
+          <div class="t-card">
+            <span class="t-date">03 jun 2022</span>
+            <h3>El primer viaje</h3>
+            <p>Aprendimos que perdernos juntos también es una forma de estar bien.</p>
+          </div>
+        </div>
+        <div class="t-item">
+          <div class="t-dot"></div>
+          <div class="t-card">
+            <span class="t-date">21 nov 2023</span>
+            <h3>La mudanza</h3>
+            <p>El día que un lugar cualquiera empezó a sentirse como un hogar.</p>
+          </div>
+        </div>
+        <div class="t-item">
+          <div class="t-dot"></div>
+          <div class="t-card">
+            <span class="t-date">hoy</span>
+            <h3>Este mismo instante</h3>
+            <p>El capítulo que seguimos escribiendo, uno junto al otro.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         05. RAZONES POR LAS QUE TE AMO
+    ============================================================ -->
+    <section class="section reasons-section" id="razones">
+      <p class="section-eyebrow">05 — sin motivo aparente, con todos los motivos</p>
+      <h2 class="section-title">Razones</h2>
+      <!-- ✏️ CAMBIAR: agrega/edita razones -->
+      <div class="reasons-grid" id="reasonsGrid">
+        <div class="r-card" data-tilt data-tilt-max="10" data-tilt-glare data-tilt-max-glare="20"><i class="fa-solid fa-mug-hot"></i><p>Por cómo conviertes lo simple en costumbre bonita.</p></div>
+        <div class="r-card" data-tilt data-tilt-max="10" data-tilt-glare data-tilt-max-glare="20"><i class="fa-solid fa-face-laugh-beam"></i><p>Por tu risa, que arregla días enteros.</p></div>
+        <div class="r-card" data-tilt data-tilt-max="10" data-tilt-glare data-tilt-max-glare="20"><i class="fa-solid fa-book-open"></i><p>Por cómo escuchas, de verdad, sin esperar tu turno para hablar.</p></div>
+        <div class="r-card" data-tilt data-tilt-max="10" data-tilt-glare data-tilt-max-glare="20"><i class="fa-solid fa-umbrella"></i><p>Por quedarte en los días grises también.</p></div>
+        <div class="r-card" data-tilt data-tilt-max="10" data-tilt-glare data-tilt-max-glare="20"><i class="fa-solid fa-seedling"></i><p>Por hacerme querer ser mejor, sin pedírmelo nunca.</p></div>
+        <div class="r-card" data-tilt data-tilt-max="10" data-tilt-glare data-tilt-max-glare="20"><i class="fa-solid fa-house-chimney"></i><p>Por sentirte como un lugar al que siempre quiero volver.</p></div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         06. PLAYLIST
+    ============================================================ -->
+    <section class="section playlist-section" id="playlist">
+      <p class="section-eyebrow">06 — para escuchar mientras lees esto otra vez</p>
+      <h2 class="section-title">Playlist</h2>
+      <!-- ✏️ CAMBIAR: agrega/edita canciones. Si tienes un embed de Spotify, pégalo dentro de #spotifyEmbed -->
+      <ul class="playlist-list" id="playlistList">
+        <li><i class="fa-solid fa-record-vinyl"></i><div><span class="pl-title">Perfect</span><span class="pl-artist">Ed Sheeran</span></div><span class="pl-note">nuestra canción</span></li>
+        <li><i class="fa-solid fa-record-vinyl"></i><div><span class="pl-title">Cuéntame</span><span class="pl-artist">The Marías</span></div><span class="pl-note">la que sonaba ese día</span></li>
+        <li><i class="fa-solid fa-record-vinyl"></i><div><span class="pl-title">Anti-Hero</span><span class="pl-artist">Taylor Swift</span></div><span class="pl-note">para los días torpes</span></li>
+        <li><i class="fa-solid fa-record-vinyl"></i><div><span class="pl-title">Golden Hour</span><span class="pl-artist">JVKE</span></div><span class="pl-note">para conducir juntos</span></li>
+      </ul>
+      <div id="spotifyEmbed" class="spotify-embed">
+        <!-- ✏️ CAMBIAR: pega aquí tu <iframe> de Spotify si prefieres usarlo en vez de la lista -->
+      </div>
+    </section>
+
+    <!-- ============================================================
+         07. COSAS QUE ME RECUERDAN A TI
+    ============================================================ -->
+    <section class="section moodboard-section" id="detalles">
+      <p class="section-eyebrow">07 — pequeñas señales</p>
+      <h2 class="section-title">Cosas que me recuerdan a ti</h2>
+      <!-- ✏️ CAMBIAR: agrega/edita tarjetas -->
+      <div class="moodboard-grid" id="moodboardGrid">
+        <div class="mb-card"><i class="fa-solid fa-cloud-moon"></i><span>El cielo justo antes de anochecer</span></div>
+        <div class="mb-card"><i class="fa-solid fa-mug-saucer"></i><span>El café recién hecho de las mañanas lentas</span></div>
+        <div class="mb-card"><i class="fa-solid fa-film"></i><span>Esa película que vimos tres veces</span></div>
+        <div class="mb-card"><i class="fa-solid fa-fan"></i><span>Los girasoles en cualquier florería</span></div>
+        <div class="mb-card"><i class="fa-solid fa-compact-disc"></i><span>Cualquier canción lenta en el auto</span></div>
+        <div class="mb-card"><i class="fa-solid fa-cookie"></i><span>El olor a pan recién horneado</span></div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         08. CONTADOR
+    ============================================================ -->
+    <section class="section counter-section" id="contador">
+      <p class="section-eyebrow">08 — llevamos contando</p>
+      <h2 class="section-title">Desde aquel día</h2>
+      <!-- ✏️ CAMBIAR: fecha de inicio en js/app.js → const START_DATE -->
+      <div class="counter-grid" id="counterGrid">
+        <div class="c-unit"><span class="c-num" id="cYears">0</span><span class="c-label">años</span></div>
+        <div class="c-unit"><span class="c-num" id="cMonths">0</span><span class="c-label">meses</span></div>
+        <div class="c-unit"><span class="c-num" id="cDays">0</span><span class="c-label">días</span></div>
+        <div class="c-unit"><span class="c-num" id="cHours">0</span><span class="c-label">horas</span></div>
+        <div class="c-unit"><span class="c-num" id="cMinutes">0</span><span class="c-label">min</span></div>
+        <div class="c-unit"><span class="c-num" id="cSeconds">0</span><span class="c-label">seg</span></div>
+      </div>
+      <p class="counter-sub">y contando, sin ninguna prisa por terminar.</p>
+    </section>
+
+    <!-- ============================================================
+         09. MAPA / LUGARES
+    ============================================================ -->
+    <section class="section places-section" id="lugares">
+      <p class="section-eyebrow">09 — un mapa sin coordenadas exactas</p>
+      <h2 class="section-title">Lugares nuestros</h2>
+      <!-- ✏️ CAMBIAR: agrega/edita lugares -->
+      <div class="places-grid" id="placesGrid">
+        <div class="p-card"><i class="fa-solid fa-location-dot"></i><h3>La cafetería de la esquina</h3><p>Donde hablamos por primera vez de todo y de nada.</p></div>
+        <div class="p-card"><i class="fa-solid fa-location-dot"></i><h3>El mirador</h3><p>Donde el silencio se sentía cómodo entre nosotros.</p></div>
+        <div class="p-card"><i class="fa-solid fa-location-dot"></i><h3>Aquel departamento pequeño</h3><p>Donde aprendimos a compartir el espacio y el tiempo.</p></div>
+        <div class="p-card"><i class="fa-solid fa-location-dot"></i><h3>La playa de aquel viaje</h3><p>Donde decidimos, sin decirlo, seguir intentándolo.</p></div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         10. CAJA DE RECUERDOS (scrapbook)
+    ============================================================ -->
+    <section class="section scrapbook-section" id="caja">
+      <p class="section-eyebrow">10 — un cajón de cosas pequeñas</p>
+      <h2 class="section-title">Caja de recuerdos</h2>
+      <p class="section-sub">Toca cada objeto.</p>
+      <!-- ✏️ CAMBIAR: agrega/edita objetos y sus historias -->
+      <div class="scrapbook-grid" id="scrapbookGrid">
+        <div class="s-item polaroid" data-story="El boleto del primer viaje que hicimos solos. Lo guardé sin decirte nada.">
+          <div class="s-face"><i class="fa-solid fa-ticket"></i></div>
+        </div>
+        <div class="s-item sticky" data-story="La nota que dejaste en el espejo aquella mañana que salí antes que tú.">
+          <div class="s-face"><i class="fa-solid fa-note-sticky"></i></div>
+        </div>
+        <div class="s-item polaroid" data-story="La flor seca de aquel domingo en el parque. Todavía huele, un poco, a esa tarde.">
+          <div class="s-face"><i class="fa-solid fa-fan"></i></div>
+        </div>
+        <div class="s-item sticky" data-story="El dibujo torpe que hiciste en una servilleta. Lo tengo pegado donde lo veo todos los días."><div class="s-face"><i class="fa-solid fa-pencil"></i></div></div>
+      </div>
+      <div class="story-reveal" id="storyReveal"><p id="storyText"></p></div>
+    </section>
+
+    <!-- ============================================================
+         11. MENSAJE FINAL
+    ============================================================ -->
+    <section class="section final-section" id="final">
+      <canvas id="heartsCanvas" aria-hidden="true"></canvas>
+      <p class="section-eyebrow">11 — antes de cerrar esto</p>
+      <!-- ✏️ CAMBIAR: mensaje final y nombre -->
+      <h2 class="final-title">Gracias por ser<br>mi lugar seguro</h2>
+      <p class="final-text">Esto no fue una página. Fue un rato mío pensando en ti, convertido en algo que se pudiera abrir.</p>
+      <button class="btn-final" id="btnFinal"><i class="fa-solid fa-heart"></i><span>Para siempre</span></button>
+      <p class="final-footer">hecho, con calma, para ti.</p>
+    </section>
+
+    <!-- botón volver arriba -->
+    <button class="back-to-top" id="backToTop" aria-label="Volver arriba"><i class="fa-solid fa-arrow-up"></i></button>
+
+  </div>
+
+  <!-- ============================================================
+       LIBRERÍAS (CDN) — ver README.md para instalación vía npm
+  ============================================================ -->
+  <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+
+  <!-- JS propio -->
+  <script src="js/cursor.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/music.js"></script>
+  <script src="js/gallery.js"></script>
+  <script src="js/timeline.js"></script>
+  <script src="js/transitions.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -389,6 +389,17 @@ ul { list-style: none; }
 /* ---------------------------------------------------------------------
    14. MOODBOARD
 --------------------------------------------------------------------- */
+.mua-popup {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0.7);
+  z-index: 400;
+  opacity: 0;
+  pointer-events: none;
+  transition: all .35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.mua-popup.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.mua-popup img { width: 160px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
 .moodboard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 980px; width: 100%; }
 .mb-card { 
   background: linear-gradient(135deg, rgba(200, 182, 255, 0.04), rgba(10, 10, 18, 0.2)); 

@@ -37,6 +37,9 @@ document.getElementById('btnEnter').addEventListener('click', () => {
   const gate = document.getElementById('gate');
   const experience = document.getElementById('experience');
 
+  // 🎵 arranca la canción justo en el clic (gesto de usuario = permitido)
+  if (ytReady && ytPlayerInstance) ytPlayerInstance.playVideo();
+
   gsap.to(gate, {
     opacity: 0,
     duration: 0.7,
@@ -160,3 +163,38 @@ document.getElementById('btnFinal').addEventListener('click', function () {
   this.querySelector('span').textContent = 'Te amo';
   launchHeartRain();
 });
+/* ---------- 10. GIF + SONIDO EN MOODBOARD (uno distinto por tarjeta) ---------- */
+(function muaEffect() {
+  const popup = document.getElementById('muaPopup');
+  const gifImg = document.getElementById('muaGifImg');
+  const sound = document.getElementById('muaSound');
+  if (!popup || !gifImg || !sound) return;
+
+  document.querySelectorAll('[data-mua]').forEach((card) => {
+    card.addEventListener('click', () => {
+      // pone el gif correspondiente a ESA tarjeta
+      gifImg.src = card.dataset.muaGif || 'assets/gifs/mua.gif';
+
+      sound.currentTime = 0;
+      sound.play().catch(() => {});
+      popup.classList.add('show');
+      clearTimeout(popup._hideTimer);
+      popup._hideTimer = setTimeout(() => popup.classList.remove('show'), 1200);
+    });
+  });/* ---------- 11. CANCIÓN DE YOUTUBE AL ENTRAR ---------- */
+let ytPlayerInstance;
+let ytReady = false;
+
+// ✏️ CAMBIA "VIDEO_ID_AQUI" por el ID del video (la parte después de v= en la URL)
+const YT_VIDEO_ID = 'https://www.youtube.com/watch?v=53Pko89ZGaQ';
+
+function onYouTubeIframeAPIReady() {
+  ytPlayerInstance = new YT.Player('ytPlayer', {
+    videoId: YT_VIDEO_ID,
+    playerVars: { autoplay: 0, controls: 0 },
+    events: {
+      onReady: () => { ytReady = true; },
+    },
+  });
+}
+})();

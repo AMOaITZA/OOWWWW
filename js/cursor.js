@@ -20,8 +20,8 @@
 
   // el anillo sigue con un pequeño retraso (lerp) para sensación fluida
   function animateRing() {
-    ringX += (mouseX - ringX) * 0.18;
-    ringY += (mouseY - ringY) * 0.18;
+    ringX += (mouseX - ringX) * 0.2;
+    ringY += (mouseY - ringY) * 0.2;
     ring.style.left = ringX + 'px';
     ring.style.top = ringY + 'px';
     requestAnimationFrame(animateRing);
@@ -29,7 +29,7 @@
   animateRing();
 
   // efecto hover + magnético sobre elementos interactivos
-  const interactive = 'a, button, .m-item, .r-card, .s-item, [data-tilt]';
+  const interactive = 'a, button, .m-item, .r-chip, .p-card, [data-tilt]';
   document.addEventListener('mouseover', (e) => {
     if (e.target.closest(interactive)) ring.classList.add('hovered');
   });
@@ -37,7 +37,7 @@
     if (e.target.closest(interactive)) ring.classList.remove('hovered');
   });
 
-  document.querySelectorAll('.btn-enter, .btn-final, .player-toggle').forEach((el) => {
+  document.querySelectorAll('.btn-enter, .btn-final').forEach((el) => {
     el.addEventListener('mousemove', (e) => {
       const rect = el.getBoundingClientRect();
       const relX = e.clientX - rect.left - rect.width / 2;

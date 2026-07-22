@@ -23,17 +23,3 @@
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
 })();
 
-/* ---------- Caja de recuerdos: revelar historia al tocar ---------- */
-(function scrapbookInit() {
-  const items = document.querySelectorAll('.s-item');
-  const reveal = document.getElementById('storyReveal');
-  const text = document.getElementById('storyText');
-  if (!reveal) return;
-
-  items.forEach((item) => {
-    item.addEventListener('click', () => {
-      text.textContent = item.dataset.story;
-      reveal.classList.add('active');
-    });
-  });
-})();

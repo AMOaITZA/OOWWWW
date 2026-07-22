@@ -7,12 +7,12 @@
 window.addEventListener('load', () => {
   const preloader = document.getElementById('preloader');
   const bar = preloader.querySelector('.preloader-bar span');
-  gsap.to(bar, { width: '100%', duration: 1.6, ease: 'power2.out' });
+  gsap.to(bar, { width: '100%', duration: 1.3, ease: 'power2.out' });
   setTimeout(() => {
     gsap.to(preloader, {
-      opacity: 0, duration: 0.6, onComplete: () => (preloader.style.display = 'none'),
+      opacity: 0, duration: 0.5, onComplete: () => (preloader.style.display = 'none'),
     });
-  }, 1900);
+  }, 1550);
 });
 
 /* ---------- 2. TYPED.JS en la pantalla inicial ---------- */
@@ -22,9 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const strings = JSON.parse(typedEl.dataset.strings);
     new Typed(typedEl, {
       strings,
-      typeSpeed: 45,
-      backSpeed: 20,
-      backDelay: 2200,
+      typeSpeed: 40,
+      backSpeed: 16,
+      backDelay: 2000,
       loop: true,
       smartBackspace: true,
     });
@@ -39,7 +39,7 @@ document.getElementById('btnEnter').addEventListener('click', () => {
 
   gsap.to(gate, {
     opacity: 0,
-    duration: 0.9,
+    duration: 0.7,
     ease: 'power2.inOut',
     onComplete: () => {
       gate.style.display = 'none';
@@ -47,7 +47,7 @@ document.getElementById('btnEnter').addEventListener('click', () => {
       window.dispatchEvent(new Event('experience:entered'));
       initSmoothScroll();
       initScrollReveals();
-      if (typeof AOS !== 'undefined') AOS.init({ duration: 900, once: true, offset: 60 });
+      if (typeof AOS !== 'undefined') AOS.init({ duration: 700, once: true, offset: 60 });
     },
   });
 });
@@ -55,7 +55,7 @@ document.getElementById('btnEnter').addEventListener('click', () => {
 /* ---------- 4. LENIS — smooth scroll ---------- */
 function initSmoothScroll() {
   if (typeof Lenis === 'undefined') return;
-  lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+  lenis = new Lenis({ duration: 0.9, smoothWheel: true });
   function raf(time) {
     lenis.raf(time);
     requestAnimationFrame(raf);
@@ -75,8 +75,8 @@ function initScrollReveals() {
     const heading = section.querySelectorAll('.section-title, .hero-title, .final-title');
     if (!heading.length) return;
     gsap.from(heading, {
-      y: 40, opacity: 0, duration: 1, ease: 'power3.out',
-      scrollTrigger: { trigger: section, start: 'top 75%' },
+      y: 32, opacity: 0, duration: 0.8, ease: 'power3.out',
+      scrollTrigger: { trigger: section, start: 'top 78%' },
     });
   });
 
@@ -90,8 +90,8 @@ function initScrollReveals() {
 }
 
 /* ---------- 6. CONTADOR EN TIEMPO REAL ---------- */
-// ✏️ CAMBIAR: la fecha de inicio de la relación
-const START_DATE = new Date('2022-02-14T00:00:00');
+// ✏️ El día que empezamos a hablar
+const START_DATE = new Date('2025-04-03T00:00:00');
 
 function updateCounter() {
   const now = new Date();
@@ -140,7 +140,7 @@ window.addEventListener('scroll', () => {
     if (!link) return;
     link.classList.toggle('active', rect.top < window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.5);
   });
-});
+}, { passive: true });
 
 backToTop && backToTop.addEventListener('click', () => {
   if (lenis) lenis.scrollTo(0);

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Para ti — una constelación de nosotros</title>
+  <title>Para quee cada que quieras lo veas</title>
   <meta name="description" content="Una carta interactiva hecha con cariño." />
 
   <!-- ============================================================
@@ -40,9 +40,9 @@
   ============================================================ -->
   <div class="preloader" id="preloader">
     <div class="preloader-inner">
-      <p class="preloader-eyebrow">esto comenzó un día cualquiera</p>
+      <p class="preloader-eyebrow">El primer día que hablamos</p>
       <!-- ✏️ CAMBIAR: fecha de inicio de la historia -->
-      <p class="preloader-date">14 · 02 · 2022</p>
+      <p class="preloader-date">03 · 04 · 2025</p>
       <div class="preloader-bar"><span></span></div>
     </div>
   </div>
@@ -53,10 +53,10 @@
   <section class="gate" id="gate">
     <canvas id="starfield"></canvas>
     <div class="gate-content">
-      <span class="gate-eyebrow" data-typed data-strings='["para la persona que le da forma a mis días", "para ti, siempre para ti"]'></span>
+      <span class="gate-eyebrow" data-typed data-strings='["para la persona que alegra mis días", "para ti, siempre para ti"]'></span>
       <!-- ✏️ CAMBIAR: nombre -->
-      <h1 class="gate-title">Feli<span class="gate-title-accent">z</span></h1>
-      <p class="gate-sub">Hice este lugar pequeño para guardar algo grande.<br>Tómate tu tiempo. No hay prisa aquí adentro.</p>
+      <h1 class="gate-title">Para <span class="gate-title-accent">Itza</span></h1>
+      <p class="gate-sub">Hice esto pensandoo en ti.<br>Tómate tu tiempo para ver todoo</p>
       <button class="btn-enter" id="btnEnter">
         <span>Entrar</span>
         <i class="fa-solid fa-arrow-down"></i>
@@ -69,32 +69,6 @@
   ============================================================ -->
   <div class="experience" id="experience">
 
-    <!-- REPRODUCTOR DE MÚSICA FLOTANTE -->
-    <div class="player" id="player">
-      <button class="player-toggle" id="playerToggle" aria-label="Mostrar/ocultar reproductor">
-        <i class="fa-solid fa-music"></i>
-      </button>
-      <div class="player-panel" id="playerPanel">
-        <div class="player-art"><i class="fa-solid fa-record-vinyl spinning"></i></div>
-        <div class="player-info">
-          <!-- ✏️ CAMBIAR: nombre de la canción / artista -->
-          <p class="player-track" id="playerTrack">Perfect — Ed Sheeran</p>
-          <div class="player-progress">
-            <input type="range" id="playerSeek" min="0" max="100" value="0" step="0.1">
-          </div>
-          <div class="player-controls">
-            <button id="playerPrev" aria-label="Anterior"><i class="fa-solid fa-backward-step"></i></button>
-            <button id="playerPlay" aria-label="Reproducir"><i class="fa-solid fa-play"></i></button>
-            <button id="playerNext" aria-label="Siguiente"><i class="fa-solid fa-forward-step"></i></button>
-            <button id="playerMute" aria-label="Silenciar"><i class="fa-solid fa-volume-high"></i></button>
-            <input type="range" id="playerVolume" min="0" max="1" step="0.01" value="0.5">
-          </div>
-        </div>
-      </div>
-      <!-- ✏️ CAMBIAR: agrega tus canciones (mp3) en assets/music/ y edítalas en js/music.js -->
-      <audio id="audioEl" preload="none"></audio>
-    </div>
-
     <!-- BARRA DE PROGRESO DE SCROLL -->
     <div class="scroll-progress"><span id="scrollProgressBar"></span></div>
 
@@ -105,14 +79,12 @@
         <li><a href="#hero" data-label="Inicio"><span>01</span>Inicio</a></li>
         <li><a href="#carta" data-label="Carta"><span>02</span>Carta</a></li>
         <li><a href="#galeria" data-label="Galería"><span>03</span>Galería</a></li>
-        <li><a href="#recuerdos" data-label="Recuerdos"><span>04</span>Recuerdos</a></li>
-        <li><a href="#razones" data-label="Razones"><span>05</span>Razones</a></li>
-        <li><a href="#playlist" data-label="Playlist"><span>06</span>Playlist</a></li>
-        <li><a href="#detalles" data-label="Detalles"><span>07</span>Detalles</a></li>
-        <li><a href="#contador" data-label="Contador"><span>08</span>Contador</a></li>
-        <li><a href="#lugares" data-label="Lugares"><span>09</span>Lugares</a></li>
-        <li><a href="#caja" data-label="Caja"><span>10</span>Caja</a></li>
-        <li><a href="#final" data-label="Final"><span>11</span>Final</a></li>
+        <li><a href="#razones" data-label="Razones"><span>04</span>Razones</a></li>
+        <li><a href="#playlist" data-label="Playlist"><span>05</span>Playlist</a></li>
+        <li><a href="#detalles" data-label="Detalles"><span>06</span>Detalles</a></li>
+        <li><a href="#contador" data-label="Contador"><span>07</span>Contador</a></li>
+        <li><a href="#lugares" data-label="Lugares"><span>08</span>Lugares</a></li>
+        <li><a href="#final" data-label="Final"><span>09</span>Final</a></li>
       </ul>
     </nav>
 
@@ -130,11 +102,11 @@
     <section class="section hero" id="hero">
       <div class="hero-photo" data-tilt data-tilt-max="8" data-tilt-glare data-tilt-max-glare="30">
         <!-- ✏️ CAMBIAR: foto principal en assets/images/ -->
-        <img src="assets/images/hero-photo.jpg" alt="Foto principal" onerror="this.style.display='none'; this.parentElement.classList.add('photo-placeholder')">
+        <img src="assets/images/gatos.jpeg" alt="Foto principal" loading="lazy" onerror="this.style.display='none'; this.parentElement.classList.add('photo-placeholder')">
       </div>
-      <p class="hero-eyebrow">un pequeño universo, hecho para ti</p>
-      <h2 class="hero-title">Todo lo bueno<br>me sabe a <em>ti</em></h2>
-      <p class="hero-text">Baja despacio. Cada sección es un cajón distinto de la misma caja: la de las cosas que nunca te había dicho así.</p>
+      <p class="hero-eyebrow">un pequeño espacio, hecho para ti</p>
+      <h2 class="hero-title">Todo lo bueno<br>me recuerda a <em>ti</em></h2>
+      <p class="hero-text">Baja despacio. Cada sección tiene algo especial para ti.</p>
       <a href="#carta" class="scroll-hint" aria-label="Bajar a la carta"><i class="fa-solid fa-chevron-down"></i></a>
     </section>
 
@@ -150,10 +122,10 @@
         </div>
       </div>
       <div class="letter-paper" id="letterPaper">
-        <p class="letter-heading">Para ti</p>
-        <!-- ✏️ CAMBIAR: el texto completo de tu carta -->
+        <p class="letter-heading">Para Itza</p>
+        <!-- ✏️ CAMBIAR: el texto completo de tu carta vive en js/transitions.js -->
         <p class="letter-body" id="letterTyped"></p>
-        <p class="letter-sign">— con todo, siempre</p>
+        <p class="letter-sign">— con todo mi amor, de leito </p>
       </div>
     </section>
 
@@ -163,15 +135,18 @@
     <section class="section gallery-section" id="galeria">
       <p class="section-eyebrow">03 — instantes</p>
       <h2 class="section-title">Galería</h2>
-      <p class="section-sub">Pasa el cursor. Cada foto revela algo distinto.</p>
+      <p class="section-sub">Cada foto cuando le picaas sale algo.</p>
       <!-- ✏️ CAMBIAR: agrega/quita items y reemplaza las imágenes en assets/images/ -->
       <div class="masonry" id="masonryGrid">
-        <div class="m-item" data-full="assets/images/g1.jpg" data-caption="Aquel domingo"><img src="assets/images/g1.jpg" alt="" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
-        <div class="m-item tall" data-full="assets/images/g2.jpg" data-caption="Riéndote sin razón"><img src="assets/images/g2.jpg" alt="" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
-        <div class="m-item" data-full="assets/images/g3.jpg" data-caption="El café de siempre"><img src="assets/images/g3.jpg" alt="" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
-        <div class="m-item" data-full="assets/images/g4.jpg" data-caption="Ese viaje corto"><img src="assets/images/g4.jpg" alt="" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
-        <div class="m-item tall" data-full="assets/images/g5.jpg" data-caption="La luz de esa tarde"><img src="assets/images/g5.jpg" alt="" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
-        <div class="m-item" data-full="assets/images/g6.jpg" data-caption="Un jueves cualquiera"><img src="assets/images/g6.jpg" alt="" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
+        
+        <div class="m-item" data-full="assets/images/Primerasalida2.jpeg" data-caption="La primera vez que nos vimoos y nos sentamos en una banquita, que yo tenia la mochila abierta cuando te vii jajajaja"><img src="https://i.pinimg.com/736x/b5/b5/f3/b5b5f3d0a9821202041f1d1ad6f1a67e.jpg" alt="" loading="lazy" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
+        <div class="m-item tall" data-full="assets/images/Barriochino2.jpeg" data-caption="En el centro, cuando fuimos al barrio chino y no me callaba, ese dia pense que te habia caido mal jajaja por tanto hablar"><img src="https://i.pinimg.com/1200x/dd/d9/2f/ddd92f406529dd79f6e902471787fb8f.jpg" alt="" loading="lazy" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
+        <div class="m-item" data-full="assets/images/Cafédegatos.jpeg" data-caption="En el cafesito de gatoos, esee dia lo recurdo constantemente fuee la primera vez que nos dimos un beso"><img src="https://i.pinimg.com/736x/64/01/c6/6401c6054942112e100dc3447c051bdd.jpg" alt="" loading="lazy" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
+        <div class="m-item" data-full="assets/images/Primerasalida.jpeg" data-caption="Cuando el taxi ese nos fue a dejar quien sabee dondee jaajjaa"><img src="https://i.pinimg.com/736x/06/fa/2d/06fa2d379c8f74775a6a6ab16954f871.jpg" alt="" loading="lazy" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
+        <div class="m-item tall" data-full="assets/images/Maincraft1.jpeg" data-caption="Cuandoo jugabamos minecraft y teniamos nuestra casitaa y los mil gatos jajaja"><img src="https://i.pinimg.com/1200x/14/b0/6b/14b06bce05de00ed8751020c625336fe.jpg" alt="" loading="lazy" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
+        <div class="m-item" data-full="assets/images/Dibujitos.jpeg" data-caption="Cuandoo te hacia dibujitos "><img src="https://i.pinimg.com/736x/38/a2/e6/38a2e6392157b54834c58183078aa9ce.jpg" alt="" loading="lazy" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
+        <div class="m-item" data-full="assets/images/noviapedida.jpeg" data-caption="Esee día te pedí que fueraas mi novia "><img src="https://i.pinimg.com/736x/75/46/a4/7546a490a961dc7659c2cc0a4b8ea4bb.jpg" alt="" loading="lazy" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
+                <div class="m-item" data-full="assets/images/bautizo.jpeg" data-caption="Esee día sentados en las banquitas mee queria quedar así contigo todoo el día, en la misa haciendo de todo menos poner atención jajajajaj "><img src="https://i.pinimg.com/736x/86/f9/6e/86f96e77b70b509f3247c998bf514079.jpg" alt="" loading="lazy" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
       </div>
       <!-- lightbox -->
       <div class="lightbox" id="lightbox">
@@ -181,107 +156,182 @@
       </div>
     </section>
 
-    <!-- ============================================================
-         04. NUESTROS RECUERDOS (timeline)
-    ============================================================ -->
-    <section class="section timeline-section" id="recuerdos">
-      <p class="section-eyebrow">04 — la línea del tiempo</p>
-      <h2 class="section-title">Nuestros recuerdos</h2>
-      <div class="timeline" id="timelineList">
-        <!-- ✏️ CAMBIAR: agrega/edita cada hito en un <li> -->
-        <div class="t-item">
-          <div class="t-dot"></div>
-          <div class="t-card">
-            <span class="t-date">14 feb 2022</span>
-            <h3>Donde empezó todo</h3>
-            <p>El día que dejamos de ser dos personas que apenas se conocían.</p>
-          </div>
-        </div>
-        <div class="t-item">
-          <div class="t-dot"></div>
-          <div class="t-card">
-            <span class="t-date">03 jun 2022</span>
-            <h3>El primer viaje</h3>
-            <p>Aprendimos que perdernos juntos también es una forma de estar bien.</p>
-          </div>
-        </div>
-        <div class="t-item">
-          <div class="t-dot"></div>
-          <div class="t-card">
-            <span class="t-date">21 nov 2023</span>
-            <h3>La mudanza</h3>
-            <p>El día que un lugar cualquiera empezó a sentirse como un hogar.</p>
-          </div>
-        </div>
-        <div class="t-item">
-          <div class="t-dot"></div>
-          <div class="t-card">
-            <span class="t-date">hoy</span>
-            <h3>Este mismo instante</h3>
-            <p>El capítulo que seguimos escribiendo, uno junto al otro.</p>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- ============================================================
-         05. RAZONES POR LAS QUE TE AMO
+         04. RAZONES POR LAS QUE TE AMO
     ============================================================ -->
     <section class="section reasons-section" id="razones">
-      <p class="section-eyebrow">05 — sin motivo aparente, con todos los motivos</p>
+      <p class="section-eyebrow">04 — sin motivo aparente, con todos los motivos</p>
       <h2 class="section-title">Razones</h2>
-      <!-- ✏️ CAMBIAR: agrega/edita razones -->
-      <div class="reasons-grid" id="reasonsGrid">
-        <div class="r-card" data-tilt data-tilt-max="10" data-tilt-glare data-tilt-max-glare="20"><i class="fa-solid fa-mug-hot"></i><p>Por cómo conviertes lo simple en costumbre bonita.</p></div>
-        <div class="r-card" data-tilt data-tilt-max="10" data-tilt-glare data-tilt-max-glare="20"><i class="fa-solid fa-face-laugh-beam"></i><p>Por tu risa, que arregla días enteros.</p></div>
-        <div class="r-card" data-tilt data-tilt-max="10" data-tilt-glare data-tilt-max-glare="20"><i class="fa-solid fa-book-open"></i><p>Por cómo escuchas, de verdad, sin esperar tu turno para hablar.</p></div>
-        <div class="r-card" data-tilt data-tilt-max="10" data-tilt-glare data-tilt-max-glare="20"><i class="fa-solid fa-umbrella"></i><p>Por quedarte en los días grises también.</p></div>
-        <div class="r-card" data-tilt data-tilt-max="10" data-tilt-glare data-tilt-max-glare="20"><i class="fa-solid fa-seedling"></i><p>Por hacerme querer ser mejor, sin pedírmelo nunca.</p></div>
-        <div class="r-card" data-tilt data-tilt-max="10" data-tilt-glare data-tilt-max-glare="20"><i class="fa-solid fa-house-chimney"></i><p>Por sentirte como un lugar al que siempre quiero volver.</p></div>
+      <p class="section-sub">Ciento cuatro razones, y ninguna es la última.</p>
+      <!-- ✏️ CAMBIAR: agrega/edita razones — cada una solo lleva un pequeño corazón -->
+      <div class="reasons-masonry" id="reasonsGrid">
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Su sonrisa ilumina mi día</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es muy inteligente</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es muy chistosa</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me hace sentir especial</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Siempre está para mí</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es detallista</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Su voz es hermosa</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Su mirada me dejaa asi de que wow jaajjaa</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me inspira a ser mejor</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es muy tierna</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Hace que todo sea más bonito</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me escucha con mucha atención</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Sus abrazos son mágicos</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Se preocupa por mí</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Nos reímos por cualquier tontería</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Siempre tiene algo lindo que decir</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Sus mensajes me alegran el día</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Tiene un corazón gigante</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es única y especial</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me acepta como soy</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me hace sentir amado</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Su forma de hablar me encanta</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Tiene unas ocurrencias jajaaja</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es creativa</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Tiene un vibrante espíritu</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me hace sentir en tan en paz</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Se ve hermosa sin esfuerzo</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me motiva sin querer hacerlo</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es sincera</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es fuerte y valiente</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Siempre tiene una sonrisa lista</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me hace sentir paz</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es mi lugar feliz</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>La forma en que dice mi nombre</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Tiene sueños grandes</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me comparte sus pensamientos</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Siempre está aprendiendo</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es noble</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Tiene una risa contagiosa</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es amorosa con los que quiere</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me hace sentir afortunado</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Tiene estilo propio</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Se ve hermosa en todos lados</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es paciente</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me cuida</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Le gusta compartir lo que le gusta</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me entiende sin palabras, solo con ver mis caraas</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es honesta conmigo</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me hace reír cuando lo necesito</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Hace que todo sea más divertido</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Confía en mí, muchas veces mas de lo que yo lo hago</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es mi mejor compañía</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Siempre tiene un consejo sabio</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es apasionada en lo que hace</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me hace sentir importante</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Está llena de luz</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es respetuosa</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me enseña cosas nuevas</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es un rayo de sol en días nublados</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Le brillan los ojitos cuando habla de lo que ama</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Tiene buen gusto musical</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Tiene un muy buenos gustos en todoo</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me hace sentir afortunado de tenerla</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me calma con solo mirarme</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Su forma de amar es hermosa</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me hace soñar despierto</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es muy observadora</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me soporta jajajaja</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me hace sentir visto</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Siempre encuentra lo bueno en todo</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Le importan los detalles</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Está llena de pasión por lo que se proponee(por eso es muuy buena en todo)</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me hace sentir valiente</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es dulce hasta cuando está enojada</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>No le da miedo ser ella misma</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Tiene una energía que contagia</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es súper linda con los animales (más con los gatos)</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Siempre sabe qué decir</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me sorprende todo el tiempo</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es mi lugar seguro</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>No necesito nada más cuando estoy con ella</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me hace sentir orgulloso</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me da ganas de abrazarla siempre</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me hace sentir cositas en mi panza jajaa</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me da paz con su voz</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Su forma de ver el mundo</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Cada que me pasa algo me dan muchas ganas de mandarle msj y decirlee</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es tan humana, tan real</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Puede con todo</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>No se rinde fácil</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Su cariño</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Su forma de amar me inspira</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me trata con dulzura</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es alguien con quien puedo ser yo</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Tiene esa chispa que no se apaga</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Siempre me hace sentir especial</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Le da sentido a mis días</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es mi mejor historia</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es mi motivación constante</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Por ella creo en el amor</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Me llena el corazón</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Quiero compartir todo con ella</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es mi persona favorita</p></div>
+        <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es todo lo que está bien</p></div>
       </div>
     </section>
 
     <!-- ============================================================
-         06. PLAYLIST
+         05. PLAYLIST
     ============================================================ -->
     <section class="section playlist-section" id="playlist">
-      <p class="section-eyebrow">06 — para escuchar mientras lees esto otra vez</p>
+      <p class="section-eyebrow">05 — para escuchar mientras lees esto otra vez</p>
       <h2 class="section-title">Playlist</h2>
-      <!-- ✏️ CAMBIAR: agrega/edita canciones. Si tienes un embed de Spotify, pégalo dentro de #spotifyEmbed -->
-      <ul class="playlist-list" id="playlistList">
-        <li><i class="fa-solid fa-record-vinyl"></i><div><span class="pl-title">Perfect</span><span class="pl-artist">Ed Sheeran</span></div><span class="pl-note">nuestra canción</span></li>
-        <li><i class="fa-solid fa-record-vinyl"></i><div><span class="pl-title">Cuéntame</span><span class="pl-artist">The Marías</span></div><span class="pl-note">la que sonaba ese día</span></li>
-        <li><i class="fa-solid fa-record-vinyl"></i><div><span class="pl-title">Anti-Hero</span><span class="pl-artist">Taylor Swift</span></div><span class="pl-note">para los días torpes</span></li>
-        <li><i class="fa-solid fa-record-vinyl"></i><div><span class="pl-title">Golden Hour</span><span class="pl-artist">JVKE</span></div><span class="pl-note">para conducir juntos</span></li>
-      </ul>
+      <p class="section-sub">Algunas canciones que tee dedicoo y siempre que encuentro una laa metoo.</p>
+      <!-- ✏️ CAMBIAR: pega aquí tu iframe de Spotify si cambias de playlist -->
       <div id="spotifyEmbed" class="spotify-embed">
-        <!-- ✏️ CAMBIAR: pega aquí tu <iframe> de Spotify si prefieres usarlo en vez de la lista -->
+        <iframe data-testid="embed-iframe"
+          style="border-radius:12px"
+          src="https://open.spotify.com/embed/playlist/0W09mSxBLSwyHqd6LJIu2y?utm_source=generator&si=abef1f53dbcd4f1b"
+          width="100%"
+          height="352"
+          frameBorder="0"
+          allowfullscreen=""
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy">
+        </iframe>
       </div>
     </section>
 
     <!-- ============================================================
-         07. COSAS QUE ME RECUERDAN A TI
+         06. COSAS QUE ME RECUERDAN A TI
     ============================================================ -->
     <section class="section moodboard-section" id="detalles">
-      <p class="section-eyebrow">07 — pequeñas señales</p>
+      <p class="section-eyebrow">06 — Cosas que me recuerdan a ti</p>
       <h2 class="section-title">Cosas que me recuerdan a ti</h2>
-      <!-- ✏️ CAMBIAR: agrega/edita tarjetas -->
+      <!-- ✏️ CAMBIAR: agrega/edita tarjetas. Puedes reemplazar el <i> por una <img> con tus fotos -->
       <div class="moodboard-grid" id="moodboardGrid">
-        <div class="mb-card"><i class="fa-solid fa-cloud-moon"></i><span>El cielo justo antes de anochecer</span></div>
-        <div class="mb-card"><i class="fa-solid fa-mug-saucer"></i><span>El café recién hecho de las mañanas lentas</span></div>
-        <div class="mb-card"><i class="fa-solid fa-film"></i><span>Esa película que vimos tres veces</span></div>
-        <div class="mb-card"><i class="fa-solid fa-fan"></i><span>Los girasoles en cualquier florería</span></div>
-        <div class="mb-card"><i class="fa-solid fa-compact-disc"></i><span>Cualquier canción lenta en el auto</span></div>
-        <div class="mb-card"><i class="fa-solid fa-cookie"></i><span>El olor a pan recién horneado</span></div>
+        <div class="mb-card"><i class="fa-solid fa-crown"></i><span>Las princesas, tuu princesa favoritaa tiana</span></div>
+        <div class="mb-card"><i class="fa-solid fa-cat"></i><span>Los gatos, tuu cowii</span></div>
+        <div class="mb-card"><i class="fa-solid fa-feather"></i><span>Los poemas, eres mi poeta favorita</span></div>
+        <div class="mb-card"><i class="fa-solid fa-book"></i><span>Los libros, pq siempree estas buscando leer algo nuevo</span></div>
+        <div class="mb-card"><i class="fa-solid fa-flask"></i><span>La química, tee encanta y te hubiera gustado estudiarla, aparte de que eres muy buena</span></div>
+        <div class="mb-card"><i class="fa-solid fa-landmark"></i><span>Los museos,por tuu increible interes en el artee</span></div>
+        <div class="mb-card"><i class="fa-solid fa-ghost"></i><span>Five Nights at Freddy's, por que te gustaa mucho y por la carta que te dii de fnaf</span></div>
+        <div class="mb-card"><i class="fa-solid fa-sun"></i><span>El sol, por tus pequitas</span></div>
+        <div class="mb-card"><i class="fa-solid fa-star"></i><span>Las estrellas, porque tu nombre me hace pensar en ellas</span></div>
+        <div class="mb-card"><i class="fa-solid fa-pen-fancy"></i><span>Los tatuajes, porque siempre te has querido hacer uno</span></div>
+        <div class="mb-card"><i class="fa-solid fa-hands-holding"></i><span>Los abrazos, porque siempre que me siento mal imagino un abrazo tuyo y me hacen sentir bien</span></div>
+        <div class="mb-card"><i class="fa-solid fa-cube"></i><span>Roblox, por todas las veces que hemos jugado juntos</span></div>
+        <div class="mb-card"><i class="fa-solid fa-fish"></i><span>Ponyo, es una de esas peliculas que se quedaron en nuestros recuerdos una de tantaas</span></div>
+        <div class="mb-card"><i class="fa-solid fa-heart"></i><span>Takopi, una de las series que mas nos gustoo</span></div>
+        <div class="mb-card"><i class="fa-solid fa-cubes"></i><span>Minecraft, por nuestraa temporada de jugar jajaja</span></div>
+        <div class="mb-card"><i class="fa-solid fa-masks-theater"></i><span>Jax, pq dices que te identificas con él</span></div>
+        <div class="mb-card"><i class="fa-solid fa-umbrella-beach"></i><span>Hawái, porque siempre dices que quieres ir</span></div>
+        <div class="mb-card"><i class="fa-solid fa-music"></i><span>Michael Jackson, porque bailabas como él jajaja</span></div>
+        <div class="mb-card"><i class="fa-solid fa-shapes"></i><span>Playmobil, tus juguetes favoritos</span></div>
+        <div class="mb-card"><i class="fa-solid fa-moon"></i><span>Las noches, porque siempre pienso en ti cuando llegan</span></div>
       </div>
     </section>
 
     <!-- ============================================================
-         08. CONTADOR
+         07. CONTADOR
     ============================================================ -->
     <section class="section counter-section" id="contador">
-      <p class="section-eyebrow">08 — llevamos contando</p>
-      <h2 class="section-title">Desde aquel día</h2>
+      <p class="section-eyebrow">07 — llevamos contando</p>
+      <h2 class="section-title">Desde aquel día que empezamos a hablar</h2>
       <!-- ✏️ CAMBIAR: fecha de inicio en js/app.js → const START_DATE -->
       <div class="counter-grid" id="counterGrid">
         <div class="c-unit"><span class="c-num" id="cYears">0</span><span class="c-label">años</span></div>
@@ -291,58 +341,37 @@
         <div class="c-unit"><span class="c-num" id="cMinutes">0</span><span class="c-label">min</span></div>
         <div class="c-unit"><span class="c-num" id="cSeconds">0</span><span class="c-label">seg</span></div>
       </div>
-      <p class="counter-sub">y contando, sin ninguna prisa por terminar.</p>
+      <p class="counter-sub">y contando, sin ninguna prisa por terminar 👻👻👻.</p>
     </section>
 
     <!-- ============================================================
-         09. MAPA / LUGARES
+         08. MAPA / LUGARES
     ============================================================ -->
     <section class="section places-section" id="lugares">
-      <p class="section-eyebrow">09 — un mapa sin coordenadas exactas</p>
+      <p class="section-eyebrow">08 — un mapa</p>
       <h2 class="section-title">Lugares nuestros</h2>
       <!-- ✏️ CAMBIAR: agrega/edita lugares -->
       <div class="places-grid" id="placesGrid">
-        <div class="p-card"><i class="fa-solid fa-location-dot"></i><h3>La cafetería de la esquina</h3><p>Donde hablamos por primera vez de todo y de nada.</p></div>
-        <div class="p-card"><i class="fa-solid fa-location-dot"></i><h3>El mirador</h3><p>Donde el silencio se sentía cómodo entre nosotros.</p></div>
-        <div class="p-card"><i class="fa-solid fa-location-dot"></i><h3>Aquel departamento pequeño</h3><p>Donde aprendimos a compartir el espacio y el tiempo.</p></div>
-        <div class="p-card"><i class="fa-solid fa-location-dot"></i><h3>La playa de aquel viaje</h3><p>Donde decidimos, sin decirlo, seguir intentándolo.</p></div>
+        <div class="p-card"><i class="fa-solid fa-location-dot"></i><h3>El centro</h3><p>El centro nunca falla jajaja, tantasw veces que hemos ido y todas se me ahcen tan especiales como la primera.</p></div>
+        <div class="p-card"><i class="fa-solid fa-location-dot"></i><h3>En el parquesitoo afuera del mb</h3><p>El lugar donde siempree nos quedabamos de veer y yo te esperabaa con muchas ganas de vertee.</p></div>
+        <div class="p-card"><i class="fa-solid fa-location-dot"></i><h3>La plazaa a la que siempre ibamos</h3><p>La plazaa para ir al cineee, para comer, para pasaar el ratoo o simplementee para estar juntitos.</p></div>
       </div>
     </section>
 
     <!-- ============================================================
-         10. CAJA DE RECUERDOS (scrapbook)
-    ============================================================ -->
-    <section class="section scrapbook-section" id="caja">
-      <p class="section-eyebrow">10 — un cajón de cosas pequeñas</p>
-      <h2 class="section-title">Caja de recuerdos</h2>
-      <p class="section-sub">Toca cada objeto.</p>
-      <!-- ✏️ CAMBIAR: agrega/edita objetos y sus historias -->
-      <div class="scrapbook-grid" id="scrapbookGrid">
-        <div class="s-item polaroid" data-story="El boleto del primer viaje que hicimos solos. Lo guardé sin decirte nada.">
-          <div class="s-face"><i class="fa-solid fa-ticket"></i></div>
-        </div>
-        <div class="s-item sticky" data-story="La nota que dejaste en el espejo aquella mañana que salí antes que tú.">
-          <div class="s-face"><i class="fa-solid fa-note-sticky"></i></div>
-        </div>
-        <div class="s-item polaroid" data-story="La flor seca de aquel domingo en el parque. Todavía huele, un poco, a esa tarde.">
-          <div class="s-face"><i class="fa-solid fa-fan"></i></div>
-        </div>
-        <div class="s-item sticky" data-story="El dibujo torpe que hiciste en una servilleta. Lo tengo pegado donde lo veo todos los días."><div class="s-face"><i class="fa-solid fa-pencil"></i></div></div>
-      </div>
-      <div class="story-reveal" id="storyReveal"><p id="storyText"></p></div>
-    </section>
-
-    <!-- ============================================================
-         11. MENSAJE FINAL
+         09. MENSAJE FINAL
     ============================================================ -->
     <section class="section final-section" id="final">
       <canvas id="heartsCanvas" aria-hidden="true"></canvas>
-      <p class="section-eyebrow">11 — antes de cerrar esto</p>
+      <p class="section-eyebrow">09 — antes de cerrar esto</p>
       <!-- ✏️ CAMBIAR: mensaje final y nombre -->
-      <h2 class="final-title">Gracias por ser<br>mi lugar seguro</h2>
-      <p class="final-text">Esto no fue una página. Fue un rato mío pensando en ti, convertido en algo que se pudiera abrir.</p>
+      <h2 class="final-title">Gracias por ser<br>mi más grandee amor</h2>
+      <p class="final-text">Estoo fue un rato mío pensando en ti, convertido en algo que se puedas veer y conservar .</p>
       <button class="btn-final" id="btnFinal"><i class="fa-solid fa-heart"></i><span>Para siempre</span></button>
-      <p class="final-footer">hecho, con calma, para ti.</p>
+      <p class="final-footer">
+        <span>Con todo mi amor tee amo mil ocho mil</span>
+        <span class="final-signature">Leito</span>
+      </p>
     </section>
 
     <!-- botón volver arriba -->
@@ -363,7 +392,6 @@
   <!-- JS propio -->
   <script src="js/cursor.js"></script>
   <script src="js/particles.js"></script>
-  <script src="js/music.js"></script>
   <script src="js/gallery.js"></script>
   <script src="js/timeline.js"></script>
   <script src="js/transitions.js"></script>

@@ -10,13 +10,25 @@
   if (!envelope) return;
 
   // ✏️ CAMBIAR: el texto completo de tu carta aquí
-  const LETTER_TEXT = `Hay días en los que quiero decirte todo y no encuentro por dónde empezar.
+  const LETTER_TEXT = `Quiero que sepas algo, aunque a veces no encuentre la forma exacta de decirlo: te amo mucho más de lo que imaginas.
 
-Así que empecé por aquí: por un lugar pequeño, hecho con calma, para guardar las cosas que no siempre digo en voz alta.
+Sé que no siempre hago las cosas bien. Que hay días en los que me equivoco, en los que no digo lo correcto o no actúo como debería. Pero también sé que cada día intento ser mejor, no por obligación, sino porque quiero merecer lo que tú me das.
 
-Gracias por quedarte en los días fáciles y también en los difíciles. Gracias por hacer de lo cotidiano algo que se siente, de alguna forma, especial.
+Antes pensaba que nadie cambiaba de verdad por amor. Que era una de esas frases bonitas. Tú me hiciste entender que sí se puede cambiar por alguien, cuando esa persona realmente importa. Y tú importas, más de lo que las palabras pueden explicar.
 
-Esto es solo una parte de lo que siento. El resto te lo sigo diciendo cada día.`;
+Han pasado cosas buenas y cosas difíciles entre nosotros, pero si me preguntas si ha valido la pena, la respuesta siempre va a ser sí. Conocerte ha sido, lo mejor que me ha pasado.
+
+Desde el primer día que hablamos no he podido dejar de pensar en ti. Ha pasado el tiempo y sigue siendo igual: pienso en ti todos los días, en algún momento o todo el día pero siempre estas en mi mente.
+
+Quiero que sepas también que nunca podría odiarte. Puede que algún día dudes de eso, así que quiero dejarlo escrito aquí, para que lo recuerdes siempre que lo necesites: jamás podría sentir eso por ti.
+
+Cada mensaje tuyo mejora mi día, incluso cuando es solo un "hola". Desde el momento en que sé que voy a verte, ya soy feliz. Soy feliz cuando estoy contigo, y también cuando nos despedimos, porque sé que voy a volver a verte pronto.
+
+Eres una persona increíble, y creo que a veces no te das cuenta de todo lo que eres. Eres linda, amorosa, divertida, atenta, observadora, sensible. Eres hermosa, de una forma que no depende de nada externo. Y eres resiliente: siempre encuentras la manera de salir adelante, pase lo que pase. Eso es algo que admiro profundamente en ti.
+
+A veces te miro y siento que tienes pequeñas estrellitas iluminándote a tu alrededor.
+
+Te amo muchísimo. Y quiero que sepas que siempre va a ser así.`;
 
   let opened = false;
   envelope.addEventListener('click', () => {
@@ -26,13 +38,13 @@ Esto es solo una parte de lo que siento. El resto te lo sigo diciendo cada día.
     setTimeout(() => {
       paper.classList.add('open');
       typeWriter(typedTarget, LETTER_TEXT);
-    }, 500);
+    }, 450);
   });
 
   function typeWriter(el, text) {
     let i = 0;
     el.textContent = '';
-    const speed = 22; // ms por caracter
+    const speed = 14; // ms por caracter
     function step() {
       if (i < text.length) {
         el.textContent += text.charAt(i);
@@ -51,7 +63,7 @@ Esto es solo una parte de lo que siento. El resto te lo sigo diciendo cada día.
   if (!els.length) return;
   VanillaTilt.init(els, {
     max: 10,
-    speed: 400,
+    speed: 350,
     glare: true,
     'max-glare': 0.25,
     scale: 1.02,

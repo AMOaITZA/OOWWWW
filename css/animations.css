@@ -1,62 +1,286 @@
 /* =====================================================================
-   ANIMATIONS.CSS — keyframes y transiciones puras.
-   Las animaciones controladas por GSAP/AOS se disparan desde JS,
-   pero sus keyframes CSS de apoyo viven aquí.
+   ANIMATIONS.CSS — KEYFRAMES Y TRANSICIONES DE ENSUEÑO
+   Diseñado con energía de "te observé sonreír y decidí aprender a programar
+   para guardar todos nuestros recuerdos en una página web."
+   Vibras: Dreamcore, Studio Ghibli, The Marías, Pinterest Aesthetic, Glassmorphism.
 ===================================================================== */
 
-/* aurora flotando */
-@keyframes auroraFloat {
-  0%   { transform: translate(0,0) scale(1); }
-  50%  { transform: translate(4%, 6%) scale(1.08); }
-  100% { transform: translate(0,0) scale(1); }
+:root {
+  --purple:      #6E56CF;
+  --lavender:    #C8B6FF;
+  --pink:        #FFD6E7;
+  --warm-white:  #FFF9FC;
+  --accent:      #F6A6C1;
+  --ease:        cubic-bezier(0.25, 1, 0.3, 1); /* Transición líquida súper premium */
 }
-.aurora { animation: auroraFloat 18s ease-in-out infinite; }
-.a2 { animation-duration: 22s; animation-delay: -4s; }
-.a3 { animation-duration: 26s; animation-delay: -10s; }
 
-/* vinilo girando */
-@keyframes spin { to { transform: rotate(360deg); } }
+/* ---------------------------------------------------------------------
+   1. AURORA FLOTANDO (Deriva cósmica y mística)
+--------------------------------------------------------------------- */
+@keyframes auroraFloat {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    filter: blur(100px) brightness(1);
+  }
+  33% {
+    transform: translate(6%, 8%) scale(1.12) rotate(4deg);
+    filter: blur(120px) brightness(1.15);
+  }
+  66% {
+    transform: translate(-4%, 10%) scale(0.95) rotate(-3deg);
+    filter: blur(110px) brightness(0.9);
+  }
+  100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    filter: blur(100px) brightness(1);
+  }
+}
 
-/* fade + rise genérico (usado por AOS custom / clases manuales) */
+.aurora {
+  animation: auroraFloat 22s var(--ease) infinite;
+  will-change: transform, filter;
+}
+.a2 { 
+  animation-duration: 28s; 
+  animation-delay: -6s; 
+}
+.a3 { 
+  animation-duration: 34s; 
+  animation-delay: -12s; 
+}
+
+/* ---------------------------------------------------------------------
+   2. VINILO GIRANDO (Rotación suave y analógica)
+--------------------------------------------------------------------- */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+/* Se añade un sutil latido mientras gira para dar sensación de vida */
+@keyframes spinWithPulse {
+  0% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.02) rotate(180deg); }
+  100% { transform: scale(1) rotate(360deg); }
+}
+
+/* ---------------------------------------------------------------------
+   3. REVELACIONES DE ENTRADA (AOS Custom / Lazy Fades)
+--------------------------------------------------------------------- */
+/* Entrada clásica elevada y suave como una pluma */
 .fade-up {
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity .8s var(--ease), transform .8s var(--ease);
+  transform: translateY(40px) scale(0.98);
+  filter: blur(10px);
+  transition: opacity 1.4s var(--ease), transform 1.4s var(--ease), filter 1.4s var(--ease);
+  will-change: opacity, transform, filter;
 }
-.fade-up.in-view { opacity: 1; transform: translateY(0); }
+.fade-up.in-view {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0px);
+}
 
-/* pulso suave del corazón del sobre */
+/* Entrada lateral romántica (para polaroids y cartas que se deslizan) */
+.fade-romantic {
+  opacity: 0;
+  transform: translateY(20px) rotate(-2deg);
+  filter: blur(5px);
+  transition: opacity 1.2s var(--ease), transform 1.2s var(--ease), filter 1.2s var(--ease);
+}
+.fade-romantic.in-view {
+  opacity: 1;
+  transform: translateY(0) rotate(0deg);
+  filter: blur(0px);
+}
+
+/* ---------------------------------------------------------------------
+   4. LATIDO EMOCIONAL (El pulso del sobre y elementos interactivos)
+--------------------------------------------------------------------- */
 @keyframes heartPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.15); }
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 5px rgba(246, 166, 193, 0.4));
+  }
+  14% {
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 15px rgba(246, 166, 193, 0.8));
+  }
+  28% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 5px rgba(246, 166, 193, 0.4));
+  }
+  42% {
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 15px rgba(246, 166, 193, 0.8));
+  }
+  70% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 5px rgba(246, 166, 193, 0.4));
+  }
 }
-.envelope-body i { animation: heartPulse 2.4s ease-in-out infinite; }
+.envelope-body i {
+  animation: heartPulse 2.8s ease-in-out infinite;
+  will-change: transform, filter;
+}
 
-/* brillo en los cards al hover (glow) */
+/* ---------------------------------------------------------------------
+   5. BRILLO MULTIDIMENSIONAL (Glow místico y pulsante)
+--------------------------------------------------------------------- */
 @keyframes glowPulse {
-  0%, 100% { box-shadow: 0 0 0 rgba(191,162,255,0); }
-  50% { box-shadow: 0 0 24px rgba(191,162,255,.25); }
+  0%, 100% {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 
+                0 0 0px rgba(200, 182, 255, 0);
+    border-color: rgba(200, 182, 255, 0.15);
+  }
+  50% {
+    box-shadow: 0 25px 50px rgba(110, 86, 207, 0.25), 
+                0 0 30px rgba(246, 166, 193, 0.35);
+    border-color: var(--accent);
+  }
 }
 
-/* parpadeo de estrellas del gate, dibujado también vía canvas en app.js */
+/* ---------------------------------------------------------------------
+   6. DESTELLO ESTELAR (Estrellas centelleantes y polvo de hadas)
+--------------------------------------------------------------------- */
 @keyframes twinkle {
-  0%, 100% { opacity: .3; }
-  50% { opacity: 1; }
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.2));
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 8px var(--pink));
+  }
 }
 
-/* botón entrar: glow respirando */
+/* ---------------------------------------------------------------------
+   7. BOTÓN ENTRAR: RESPIRACIÓN MAGNÉTICA (Breathe Glow)
+--------------------------------------------------------------------- */
 @keyframes breathe {
-  0%, 100% { box-shadow: 0 0 0 rgba(191,162,255,0); }
-  50% { box-shadow: 0 0 30px rgba(191,162,255,.35); }
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 8px 32px rgba(10, 10, 18, 0.5), 
+                0 0 0px rgba(110, 86, 207, 0),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 15px 45px rgba(10, 10, 18, 0.6), 
+                0 0 35px rgba(200, 182, 255, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-color: var(--lavender);
+  }
 }
-.btn-enter { animation: breathe 3.5s ease-in-out infinite; }
+.btn-enter {
+  animation: breathe 4s ease-in-out infinite;
+  will-change: transform, box-shadow, border-color;
+}
 
-/* preferencia de movimiento reducido: apagamos animaciones decorativas */
+/* ---------------------------------------------------------------------
+   8. NUEVAS ANIMACIONES DE ENSUEÑO (Estética Premium Adicional)
+--------------------------------------------------------------------- */
+
+/* Flotación sutil para Polaroids, recuerdos y tarjetas */
+@keyframes floatingMemory {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1.5deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+.memory-float {
+  animation: floatingMemory 6s ease-in-out infinite;
+}
+
+/* Brillo metálico / Reflejo de luz que barre los elementos Glass */
+@keyframes glassShimmer {
+  0% {
+    left: -150%;
+  }
+  100% {
+    left: 150%;
+  }
+}
+.glass-shimmer-trigger {
+  position: relative;
+  overflow: hidden;
+}
+.glass-shimmer-trigger::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -150%;
+  width: 50%; height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 249, 252, 0.15),
+    transparent
+  );
+  transform: skewX(-25deg);
+  transition: 0.75s;
+}
+.glass-shimmer-trigger:hover::after {
+  animation: glassShimmer 1.2s var(--ease) forwards;
+}
+
+/* Caída de pétalos de sakura o luces místicas flotantes */
+@keyframes petalDrift {
+  0% {
+    transform: translateY(-10vh) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(110vh) translateX(100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Texto líquido degradado (Aurora sweep para títulos importantes) */
+@keyframes textShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.shimmer-text {
+  background: linear-gradient(
+    90deg, 
+    var(--warm-white), 
+    var(--pink), 
+    var(--lavender), 
+    var(--warm-white)
+  );
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textShimmer 8s ease infinite;
+}
+
+/* ---------------------------------------------------------------------
+   9. PREFERENCIA DE MOVIMIENTO REDUCIDO (Accesibilidad y elegancia)
+--------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
-    animation-duration: .001ms !important;
+    animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: .001ms !important;
+    transition-duration: .01ms !important;
     scroll-behavior: auto !important;
+    transform: none !important;
+    filter: none !important;
+  }
+  .aurora {
+    animation: none;
+    opacity: 0.2;
   }
 }

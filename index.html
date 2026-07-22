@@ -4,57 +4,42 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Para quee cada que quieras lo veas</title>
+  <link rel="icon" href="assets/images/itza.jpeg" type="image/jpeg" />
   <meta name="description" content="Una carta interactiva hecha con cariño." />
 
-  <!-- ============================================================
-       GOOGLE FONTS
-       Display: Cormorant Garamond (itálica, elegante, para titulares)
-       Body: Manrope (limpia, cálida, para texto)
-       Utility: Space Grotesk (para números — contador, fechas)
-  ============================================================ -->
+ 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Manrope:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <!-- Font Awesome (iconos) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- AOS (animaciones al hacer scroll) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
 
-  <!-- CSS propio -->
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
 
-  <!-- ============================================================
-       CURSOR PERSONALIZADO (desktop únicamente, ver js/cursor.js)
-  ============================================================ -->
+
   <div class="cursor-dot" id="cursorDot"></div>
   <div class="cursor-ring" id="cursorRing"></div>
 
-  <!-- ============================================================
-       PANTALLA DE CARGA
-  ============================================================ -->
+
   <div class="preloader" id="preloader">
     <div class="preloader-inner">
       <p class="preloader-eyebrow">El primer día que hablamos</p>
-      <!-- ✏️ CAMBIAR: fecha de inicio de la historia -->
       <p class="preloader-date">03 · 04 · 2025</p>
       <div class="preloader-bar"><span></span></div>
     </div>
   </div>
 
-  <!-- ============================================================
-       PANTALLA INICIAL — se ve tras el preloader, antes de entrar
-  ============================================================ -->
+ 
   <section class="gate" id="gate">
     <canvas id="starfield"></canvas>
     <div class="gate-content">
       <span class="gate-eyebrow" data-typed data-strings='["para la persona que alegra mis días", "para ti, siempre para ti"]'></span>
-      <!-- ✏️ CAMBIAR: nombre -->
       <h1 class="gate-title">Para <span class="gate-title-accent">Itza</span></h1>
       <p class="gate-sub">Hice esto pensandoo en ti.<br>Tómate tu tiempo para ver todoo</p>
       <button class="btn-enter" id="btnEnter">
@@ -64,15 +49,11 @@
     </div>
   </section>
 
-  <!-- ============================================================
-       EXPERIENCIA PRINCIPAL (oculta hasta presionar "Entrar")
-  ============================================================ -->
+
   <div class="experience" id="experience">
 
-    <!-- BARRA DE PROGRESO DE SCROLL -->
     <div class="scroll-progress"><span id="scrollProgressBar"></span></div>
 
-    <!-- MENÚ LATERAL -->
     <nav class="side-nav" id="sideNav">
       <button class="side-nav-toggle" id="sideNavToggle" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></button>
       <ul class="side-nav-list" id="sideNavList">
@@ -88,7 +69,6 @@
       </ul>
     </nav>
 
-    <!-- fondo animado global: aurora + partículas, ver js/particles.js -->
     <div class="aurora-bg" aria-hidden="true">
       <div class="aurora a1"></div>
       <div class="aurora a2"></div>
@@ -96,12 +76,9 @@
     </div>
     <canvas id="particlesCanvas" aria-hidden="true"></canvas>
 
-    <!-- ============================================================
-         01. HERO
-    ============================================================ -->
+
     <section class="section hero" id="hero">
       <div class="hero-photo" data-tilt data-tilt-max="8" data-tilt-glare data-tilt-max-glare="30">
-        <!-- ✏️ CAMBIAR: foto principal en assets/images/ -->
         <img src="assets/images/gatos.jpeg" alt="Foto principal" loading="lazy" onerror="this.style.display='none'; this.parentElement.classList.add('photo-placeholder')">
       </div>
       <p class="hero-eyebrow">un pequeño espacio, hecho para ti</p>
@@ -110,9 +87,6 @@
       <a href="#carta" class="scroll-hint" aria-label="Bajar a la carta"><i class="fa-solid fa-chevron-down"></i></a>
     </section>
 
-    <!-- ============================================================
-         02. CARTA
-    ============================================================ -->
     <section class="section letter" id="carta">
       <div class="letter-envelope" id="envelope">
         <div class="envelope-flap"></div>
@@ -123,20 +97,16 @@
       </div>
       <div class="letter-paper" id="letterPaper">
         <p class="letter-heading">Para Itza</p>
-        <!-- ✏️ CAMBIAR: el texto completo de tu carta vive en js/transitions.js -->
         <p class="letter-body" id="letterTyped"></p>
         <p class="letter-sign">— con todo mi amor, de leito </p>
       </div>
     </section>
 
-    <!-- ============================================================
-         03. GALERÍA
-    ============================================================ -->
+   
     <section class="section gallery-section" id="galeria">
       <p class="section-eyebrow">03 — instantes</p>
       <h2 class="section-title">Galería</h2>
       <p class="section-sub">Cada foto cuando le picaas sale algo(Todos esos somo tu y yo obvio el mas oscurito jajaja).</p>
-      <!-- ✏️ CAMBIAR: agrega/quita items y reemplaza las imágenes en assets/images/ -->
       <div class="masonry" id="masonryGrid">
         
         <div class="m-item" data-full="assets/images/Primerasalida2.jpeg" data-caption="La primera vez que nos vimoos y nos sentamos en una banquita, que yo tenia la mochila abierta cuando te vii jajajaja"><img src="https://i.pinimg.com/736x/b5/b5/f3/b5b5f3d0a9821202041f1d1ad6f1a67e.jpg" alt="" loading="lazy" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
@@ -148,7 +118,6 @@
         <div class="m-item" data-full="assets/images/noviapedida.jpeg" data-caption="Esee día te pedí que fueraas mi novia "><img src="https://i.pinimg.com/736x/75/46/a4/7546a490a961dc7659c2cc0a4b8ea4bb.jpg" alt="" loading="lazy" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
                 <div class="m-item" data-full="assets/images/bautizo.jpeg" data-caption="Esee día sentados en las banquitas mee queria quedar así contigo todoo el día, en la misa haciendo de todo menos poner atención jajajajaj "><img src="https://i.pinimg.com/736x/86/f9/6e/86f96e77b70b509f3247c998bf514079.jpg" alt="" loading="lazy" onerror="this.parentElement.classList.add('photo-placeholder')"></div>
       </div>
-      <!-- lightbox -->
       <div class="lightbox" id="lightbox">
         <button class="lightbox-close" id="lightboxClose" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
         <img src="" alt="" id="lightboxImg">
@@ -157,14 +126,11 @@
     </section>
 
 
-    <!-- ============================================================
-         04. RAZONES POR LAS QUE TE AMO
-    ============================================================ -->
+
     <section class="section reasons-section" id="razones">
       <p class="section-eyebrow">04 — sin motivo aparente, con todos los motivos</p>
       <h2 class="section-title">Razones</h2>
       <p class="section-sub">Ciento cuatro razones, y ninguna es la última.</p>
-      <!-- ✏️ CAMBIAR: agrega/edita razones — cada una solo lleva un pequeño corazón -->
       <div class="reasons-masonry" id="reasonsGrid">
         <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Su sonrisa ilumina mi día</p></div>
         <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es muy inteligente</p></div>
@@ -273,14 +239,11 @@
       </div>
     </section>
 
-    <!-- ============================================================
-         05. PLAYLIST
-    ============================================================ -->
+
     <section class="section playlist-section" id="playlist">
       <p class="section-eyebrow">05 — para escuchar mientras lees esto otra vez</p>
       <h2 class="section-title">Playlist</h2>
       <p class="section-sub">Algunas canciones que tee dedicoo y siempre que encuentro una laa metoo.</p>
-      <!-- ✏️ CAMBIAR: pega aquí tu iframe de Spotify si cambias de playlist -->
       <div id="spotifyEmbed" class="spotify-embed">
         <iframe data-testid="embed-iframe"
           style="border-radius:12px"
@@ -295,13 +258,11 @@
       </div>
     </section>
 
-    <!-- ============================================================
-         06. COSAS QUE ME RECUERDAN A TI
-    ============================================================ -->
+
     <section class="section moodboard-section" id="detalles">
       <p class="section-eyebrow">06 — Cosas que me recuerdan a ti</p>
       <h2 class="section-title">Cosas que me recuerdan a ti</h2>
-      <!-- ✏️ CAMBIAR: agrega/edita tarjetas. Puedes reemplazar el <i> por una <img> con tus fotos -->
+      <p class="section-sub">Picale a las tarjetitas, salee algoo</p>
 <div class="moodboard-grid" id="moodboardGrid">
         <div class="mb-card" data-mua data-mua-gif="https://i.pinimg.com/originals/b5/94/62/b59462b846804e1b74867da52bc9fa18.gif"><i class="fa-solid fa-crown"></i><span>Las princesas, tuu princesa favoritaa tiana</span></div>
         <div class="mb-card" data-mua data-mua-gif="https://i.pinimg.com/originals/73/0d/75/730d75ed729397068c7a89fa7476e305.gif"><i class="fa-solid fa-cat"></i><span>Los gatos, tuu cowii</span></div>
@@ -326,26 +287,21 @@
               <div class="mb-card" data-mua data-mua-gif="https://i.pinimg.com/originals/c1/17/dc/c117dcce4c730c9e6dae1dce2ce76cb6.gif"><i class="fa-solid fa-clapperboard"></i><span>Las peliculas, cada que veo una me imagino viendola contigoo</span></div>
       </div>
       
-      <!-- Tarjeta de Cine (Modificada) -->      <!-- Contenedor del popup del GIF y el Audio -->
       <div class="mua-popup" id="muaPopup">
         <img src="" alt="gif sorpresa" id="muaGifImg">
       </div>
       
-      <!-- Audio con soporte seguro para .m4a -->
+      
       <audio id="muaSound" preload="auto">
-        <source src="assets/music/mua.m4a" type="audio/m4a">
+        <source src="assets/music/mua.mp3" type="audio/mp3">
       </audio>
 
-    <!-- Aquí termina la sección (si tenías una etiqueta </section> al final) -->
     </section>
 
-    <!-- ============================================================
-         07. CONTADOR
-    ============================================================ -->
+
     <section class="section counter-section" id="contador">
       <p class="section-eyebrow">07 — llevamos contando</p>
       <h2 class="section-title">Desde aquel día que empezamos a hablar</h2>
-      <!-- ✏️ CAMBIAR: fecha de inicio en js/app.js → const START_DATE -->
       <div class="counter-grid" id="counterGrid">
         <div class="c-unit"><span class="c-num" id="cYears">0</span><span class="c-label">años</span></div>
         <div class="c-unit"><span class="c-num" id="cMonths">0</span><span class="c-label">meses</span></div>
@@ -357,13 +313,9 @@
       <p class="counter-sub">y contando, sin ninguna prisa por terminar 👻👻👻.</p>
     </section>
 
-    <!-- ============================================================
-         08. MAPA / LUGARES
-    ============================================================ -->
     <section class="section places-section" id="lugares">
       <p class="section-eyebrow">08 — un mapa</p>
       <h2 class="section-title">Lugares nuestros</h2>
-      <!-- ✏️ CAMBIAR: agrega/edita lugares -->
       <div class="places-grid" id="placesGrid">
         <div class="p-card"><i class="fa-solid fa-location-dot"></i><h3>El centro</h3><p>El centro nunca falla jajaja, tantas veces que hemos ido y todas se me hacen tan especiales como la primera.</p></div>
         <div class="p-card"><i class="fa-solid fa-location-dot"></i><h3>En el parquesitoo afuera del mb</h3><p>El lugar donde siempree nos quedabamos de veer y yo te esperabaa con muchas ganas de vertee.</p></div>
@@ -371,13 +323,10 @@
       </div>
     </section>
 
-    <!-- ============================================================
-         09. MENSAJE FINAL
-    ============================================================ -->
+ 
     <section class="section final-section" id="final">
       <canvas id="heartsCanvas" aria-hidden="true"></canvas>
       <p class="section-eyebrow">09 — antes de cerrar esto</p>
-      <!-- ✏️ CAMBIAR: mensaje final y nombre -->
       <h2 class="final-title">Gracias por ser<br>mi más grandee amor</h2>
       <p class="final-text">Estoo fue un rato mío pensando en ti, convertido en algo que se puedas veer y conservar .</p>
       <button class="btn-final" id="btnFinal"><i class="fa-solid fa-heart"></i><span>Para siempre</span></button>
@@ -388,14 +337,11 @@
       </p>
     </section>
 
-    <!-- botón volver arriba -->
     <button class="back-to-top" id="backToTop" aria-label="Volver arriba"><i class="fa-solid fa-arrow-up"></i></button>
 
   </div>
 
-  <!-- ============================================================
-       LIBRERÍAS (CDN) — ver README.md para instalación vía npm
-  ============================================================ -->
+
   <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
@@ -403,7 +349,6 @@
   <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
 
-  <!-- JS propio -->
   <script src="js/cursor.js"></script>
   <script src="js/particles.js"></script>
   <script src="js/gallery.js"></script>
@@ -412,5 +357,8 @@
   <script src="js/app.js"></script>
   <div id="ytPlayer" style="display:none;"></div>
 <script src="https://www.youtube.com/iframe_api"></script>
+<audio id="entradaSong" preload="auto">
+     <source src="assets/music/Cuco - Winters Ballad (Instrumental).mp3" type="audio/mpeg">
+   </audio>
 </body>
 </html>

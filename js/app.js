@@ -189,26 +189,25 @@ document.getElementById('btnFinal').addEventListener('click', function () {
   });
 })();
 
-/* ---------- 11. CANCIÓN DE YOUTUBE AL ENTRAR ---------- */
-/* ---------- 11. CANCIÓN DE YOUTUBE AL ENTRAR ---------- */
-let ytPlayerInstance;
-let ytReady = false;
+document.getElementById('btnEnter').addEventListener('click', () => {
+     const gate = document.getElementById('gate');
+     const experience = document.getElementById('experience');
+     const song = document.getElementById('entradaSong');
 
-// ✏️ Solo el ID del video, no la URL completa
-const YT_VIDEO_ID = '53Pko89ZGaQ';
+     // 🎵 llamada directa y síncrona = funciona en todos los navegadores
+     song.play().catch(() => console.warn('No se pudo reproducir la canción'));
 
-function onYouTubeIframeAPIReady() {
-  ytPlayerInstance = new YT.Player('ytPlayer', {
-    videoId: YT_VIDEO_ID,
-    playerVars: { autoplay: 0, controls: 0 },
-    events: {
-      onReady: () => {
-        ytReady = true;
-        if (pendingSongPlay) {
-          ytPlayerInstance.playVideo();
-          pendingSongPlay = false;
-        }
-      },
-    },
-  });
-}
+     gsap.to(gate, {
+       opacity: 0,
+       duration: 0.7,
+       ease: 'power2.inOut',
+       onComplete: () => {
+         gate.style.display = 'none';
+         experience.classList.add('visible');
+         window.dispatchEvent(new Event('experience:entered'));
+         initSmoothScroll();
+         initScrollReveals();
+         if (typeof AOS !== 'undefined') AOS.init({ duration: 700, once: true, offset: 60 });
+       },
+     });
+   });

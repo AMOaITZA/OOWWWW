@@ -171,6 +171,7 @@ document.getElementById('btnFinal').addEventListener('click', function () {
 });
 
 /* ---------- 10. GIF + SONIDO EN MOODBOARD (uno distinto por tarjeta) ---------- */
+/* ---------- 10. GIF + SONIDO EN MOODBOARD (uno distinto por tarjeta) ---------- */
 (function muaEffect() {
   const popup = document.getElementById('muaPopup');
   const gifImg = document.getElementById('muaGifImg');
@@ -180,11 +181,25 @@ document.getElementById('btnFinal').addEventListener('click', function () {
   document.querySelectorAll('[data-mua]').forEach((card) => {
     card.addEventListener('click', () => {
       gifImg.src = card.dataset.muaGif || 'assets/gifs/mua.gif';
+      
+      // Reiniciamos y reproducimos el sonido
       sound.currentTime = 0;
       sound.play().catch(() => {});
+      
       popup.classList.add('show');
+      
+      // 1. Temporizador del GIF: Lo oculta a los 2.5 segundos (2500 ms)
       clearTimeout(popup._hideTimer);
-      popup._hideTimer = setTimeout(() => popup.classList.remove('show'), 2500);
+      popup._hideTimer = setTimeout(() => {
+        popup.classList.remove('show');
+      }, 2500);
+
+      // 2. Temporizador del SONIDO: Lo pausa a los 1.5 segundos (1500 ms)
+      clearTimeout(sound._stopTimer);
+      sound._stopTimer = setTimeout(() => {
+        sound.pause();
+      }, 1500);
+      
     });
   });
 })();

@@ -1,31 +1,61 @@
 /* =====================================================================
-   LOVE PAGE — STYLE.CSS (DREAMCORE / ROMANTIC AESTHETIC EDITION)
+   LOVE PAGE — STYLE.CSS (PIXEL ART RETRO / COZY RPG EDITION)
    Estructura general, tokens de diseño y layout de cada sección.
+   REDISEÑO POR PASOS — Paso 1: base global (fuentes, fondo, render de
+   imagen y paleta). Los apartados internos se rediseñan en pasos
+   posteriores.
    Las animaciones puras viven en animations.css
    Los breakpoints viven en responsive.css
 ===================================================================== */
 
 /* ---------------------------------------------------------------------
-   1. TOKENS — PALETA Y TIPOGRAFÍA AESTHETIC
+   1. TOKENS — PALETA Y TIPOGRAFÍA PIXEL ART (cozy RPG)
+   Los --px-* son la fuente de verdad de la paleta. Los nombres antiguos
+   (--bg, --pink, --accent...) apuntan a ellos para que los apartados
+   que aún no se rediseñan hereden la paleta nueva sin tocar su CSS.
 --------------------------------------------------------------------- */
 :root {
-  --bg:          #0A0A12;
-  --purple:      #6E56CF;
-  --lavender:    #C8B6FF;
-  --pink:        #FFD6E7;
-  --warm-white:  #FFF9FC;
-  --grey:        #B8B8C8;
-  --accent:      #F6A6C1;
+  /* Crema / pergamino */
+  --px-cream:      #FFF1DC;
+  --px-parchment:  #F3D9B1;
+  --px-tan:        #D9C2A3;
 
-  /* Glassmorphism Premium */
-  --glass:           rgba(255, 249, 252, 0.04);
-  --glass-border:    rgba(200, 182, 255, 0.15);
-  --glass-highlight: rgba(255, 255, 255, 0.08);
+  /* Madera */
+  --px-wood-light: #C98F5B;
+  --px-wood:       #A06A3F;
+  --px-wood-dark:  #6B4429;
+  --px-wood-deep:  #2E1F18;
 
-  /* Tipografía Romántica & Moderna */
-  --font-display: 'Cormorant Garamond', serif;
-  --font-body:    'Quicksand', sans-serif;
-  --font-utility: 'Poppins', sans-serif;
+  /* Rosa vintage */
+  --px-rose-light: #F6D1CF;
+  --px-rose:       #E8A0A8;
+  --px-rose-deep:  #B5656F;
+
+  /* Luz cálida (lámpara / ventana) y contorno de sprites */
+  --px-amber:      #F2C46D;
+  --px-ink:        #1B120E;
+
+  /* Alias de la paleta anterior → paleta pixel */
+  --bg:          var(--px-wood-deep);
+  --purple:      var(--px-rose-deep);
+  --lavender:    var(--px-parchment);
+  --pink:        var(--px-rose-light);
+  --warm-white:  var(--px-cream);
+  --grey:        var(--px-tan);
+  --accent:      var(--px-rose);
+
+  /* Paneles translúcidos (cálidos) */
+  --glass:           rgba(255, 241, 220, 0.06);
+  --glass-border:    rgba(243, 217, 177, 0.28);
+  --glass-highlight: rgba(255, 241, 220, 0.10);
+
+  /* Tipografía pixel: títulos, UI y párrafos */
+  --font-display: 'Press Start 2P', 'Courier New', monospace;
+  --font-utility: 'Silkscreen', 'Press Start 2P', 'Courier New', monospace;
+  --font-body:    'VT323', 'Courier New', monospace;
+
+  /* Velo cálido sobre el fondo de la habitación (sube/baja para legibilidad) */
+  --room-veil: rgba(46, 31, 24, 0.45);
 
   --ease: cubic-bezier(0.25, 1, 0.3, 1); /* Transiciones más suaves y flotantes */
   --section-pad: 160px;
@@ -54,12 +84,24 @@
    2. RESET
 --------------------------------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* Render pixel art: image-rendering se hereda, así que esto cubre img,
+     canvas, video y fondos CSS de toda la página. Crisp-edges va primero
+     como respaldo; los navegadores que soportan "pixelated" usan ese. */
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+/* Salida de emergencia: una imagen que deba verse suave (foto real, etc.) */
+.smooth-img, .smooth-img img { image-rendering: auto; }
 body {
   background: var(--bg);
   color: var(--warm-white);
-  font-family: var(--font-body);
+  font-family: var(--font-body);   /* VT323 para párrafos */
+  font-size: 1.25rem;              /* VT323 es chica: compensa el tamaño base */
+  line-height: 1.4;
   font-weight: 400;
+  font-synthesis: none;            /* sin negritas/cursivas falsas en fuentes pixel */
   overflow-x: hidden;
   cursor: none;
   -webkit-font-smoothing: antialiased;
@@ -68,7 +110,7 @@ img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; transition: color 0.3s var(--ease); }
 button { font-family: inherit; background: none; border: none; color: inherit; cursor: none; outline: none; }
 ul { list-style: none; }
-::selection { background: rgba(200, 182, 255, 0.3); color: var(--warm-white); text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+::selection { background: rgba(232, 160, 168, 0.45); color: var(--warm-white); }
 
 @media (hover: none) {
   body, button, a { cursor: auto; }
@@ -193,13 +235,31 @@ ul { list-style: none; }
 .btn-enter:hover::before { left: 100%; }
 
 /* ---------------------------------------------------------------------
-   6. GLOBAL BACKGROUND — Auroras y Polvo Estelar
+   6. GLOBAL BACKGROUND — Habitación (pixel art) fija
 --------------------------------------------------------------------- */
+/* Capa fija con la habitación. Va en un pseudo-elemento y no en
+   background-attachment: fixed porque iOS Safari ignora "fixed" en body.
+   Capas (de arriba a abajo): velo cálido → imagen → degradado de respaldo
+   (se ve si assets/bg-room.png falta o aún no carga). */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--room-veil), var(--room-veil)),
+    url('../assets/bg-room.png') center / cover no-repeat,
+    radial-gradient(ellipse at 50% 30%, var(--px-wood-dark) 0%, var(--bg) 75%);
+}
+
+/* Contenedor principal: transparente, por encima de la capa de fondo */
 .experience { position: relative; display: none; }
 .experience.visible { display: block; animation: fadeIn 2s ease forwards; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-.aurora-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; filter: blur(120px); opacity: .45; mix-blend-mode: screen; }
+/* Auroras moradas desactivadas: chocan con la paleta cálida y taparían la
+   habitación. El HTML se conserva por si se quiere reutilizar. */
+.aurora-bg { display: none; position: fixed; inset: 0; z-index: 0; overflow: hidden; filter: blur(120px); opacity: .45; mix-blend-mode: screen; }
 .aurora { position: absolute; border-radius: 50%; }
 .a1 { width: 60vw; height: 60vw; background: radial-gradient(circle, var(--purple) 0%, transparent 70%); top: -20%; left: -10%; animation: auroraDrift 20s infinite alternate; }
 .a2 { width: 50vw; height: 50vw; background: radial-gradient(circle, var(--accent) 0%, transparent 70%); bottom: -15%; right: -10%; animation: auroraDrift 25s infinite alternate-reverse; }

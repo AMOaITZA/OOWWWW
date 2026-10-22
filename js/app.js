@@ -120,7 +120,7 @@ function updateCounter() {
 
   const set = (id, val) => {
     const el = document.getElementById(id);
-    if (el) el.textContent = val;
+    if (el) el.textContent = String(val).padStart(2, '0');
   };
   set('cYears', years);
   set('cMonths', months);

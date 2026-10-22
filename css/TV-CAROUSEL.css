@@ -400,3 +400,101 @@
 /* Contador y OSD en VT323 (ej. 02 / 21) */
 .tv-counter { font-family: var(--font-body); font-size: clamp(1.1rem, 4cqw, 1.8rem); letter-spacing: .12em; color: var(--px-amber); text-shadow: 2px 2px 0 #1a1a1a; }
 .tv-osd { font-family: var(--font-body); color: var(--px-amber); text-shadow: 2px 2px 0 #1a1a1a; }
+/* =====================================================================
+   PASO 6 — Carta (02), Contador (07), Lugares (08), Final (09)
+   Se carga DESPUÉS de TV-CAROUSEL.css. Usa --px-block y --px-notch
+   definidos en el paso 4/5 (dentro de TV-CAROUSEL.css).
+===================================================================== */
+:root {
+  --px-notch6: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 3' shape-rendering='crispEdges' fill='%231a1a1a'%3E%3Crect x='1' width='1' height='1'/%3E%3Crect x='1' y='2' width='1' height='1'/%3E%3Crect y='1' width='1' height='1'/%3E%3Crect x='2' y='1' width='1' height='1'/%3E%3C/svg%3E");
+}
+/* Marco pixel reutilizable: borde de 4px con esquinas escalonadas + sombra de bloque */
+.letter-paper, .envelope-body, .p-card, .c-unit, .game-over {
+  border: 4px solid transparent; border-image: var(--px-notch6) 1 stretch; border-radius: 0;
+  background-clip: padding-box; backdrop-filter: none; box-shadow: 6px 6px 0 0 #1a1a1a;
+}
+
+/* ---------- 02 CARTA ---------- */
+.letter-envelope { width: clamp(140px, 40vw, 180px); height: clamp(96px, 28vw, 124px); }
+.letter-envelope:hover { transform: translate(-4px, -4px); }
+.envelope-body { background-color: var(--px-cream); }
+.envelope-body i { color: var(--px-rose-deep); filter: none; }
+.envelope-body span { color: var(--px-ink); }
+.envelope-flap { background: var(--px-rose); border: 0; backdrop-filter: none; }
+.letter-paper {
+  width: min(680px, 100%); padding: clamp(24px, 6vw, 56px) clamp(18px, 5vw, 48px);
+  background-color: var(--px-parchment); color: var(--px-ink);
+}
+.letter-heading { font-family: var(--font-display); font-style: normal; font-size: clamp(.8rem, 3.4vw, 1rem); line-height: 1.6; color: var(--px-wood-dark); text-shadow: none; margin-bottom: 20px; }
+.letter-body { font-family: var(--font-body); font-weight: 400; font-size: clamp(1.3rem, 4.4vw, 1.7rem); line-height: 1.2; color: var(--px-ink); min-height: 160px; overflow-wrap: anywhere; }
+.letter-sign { font-family: var(--font-body); font-style: normal; font-size: clamp(1.4rem, 4.8vw, 1.9rem); color: var(--px-rose-deep); filter: none; margin-top: 28px; }
+
+/* ---------- 07 CONTADOR: marcador arcade / HUD ---------- */
+.counter-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; width: 100%; max-width: 920px; }
+.counter-grid::before {
+  content: '1UP  TIEMPO JUNTOS'; grid-column: 1 / -1; justify-self: center; padding: 8px 14px;
+  background: var(--px-ink); color: var(--px-amber); font: 10px/1.6 var(--font-display); letter-spacing: .12em;
+  animation: pxBlink 1.6s step-end infinite;
+}
+.c-unit {
+  min-width: 0; padding: 0; display: flex; flex-direction: column-reverse; overflow: hidden;   /* etiqueta arriba, dígitos abajo */
+  background-color: #120c08;
+  background-image: repeating-linear-gradient(0deg, rgba(255, 255, 255, .05) 0 2px, transparent 2px 4px);
+  transition: transform .15s steps(2);
+}
+.c-unit:hover { transform: translate(-4px, -4px); box-shadow: 10px 10px 0 0 #1a1a1a; border-color: transparent; }
+.c-label {
+  padding: 7px 4px 5px; background: var(--px-wood-dark); color: var(--px-cream); border-bottom: 4px solid var(--px-ink);
+  font: 700 clamp(.5rem, 1.4vw, .7rem)/1.4 var(--font-utility); letter-spacing: .08em; text-transform: uppercase;
+}
+.c-num {
+  padding: 14px 4px 10px; font-family: var(--font-body); font-weight: 400; font-size: clamp(2.6rem, 6.5vw, 4.2rem); line-height: 1;
+  color: var(--px-amber); text-shadow: 3px 3px 0 var(--px-rose-deep); font-variant-numeric: tabular-nums;
+}
+.counter-sub { font-family: var(--font-body); font-style: normal; font-size: clamp(1.3rem, 4vw, 1.8rem); color: var(--px-cream); text-shadow: 2px 2px 0 #1a1a1a; }
+
+/* ---------- 08 LUGARES: tarjetas de misión ---------- */
+.places-grid { width: 100%; }
+.p-card { background-color: var(--px-cream); color: var(--px-ink); text-align: left; transition: transform .15s steps(2); }
+.p-card::before { display: none; }
+.p-card:hover { transform: translate(-4px, -4px); box-shadow: 10px 10px 0 0 #1a1a1a; border-color: transparent; }
+.p-card i { color: var(--px-rose-deep); filter: none; font-size: 1.4rem; margin-bottom: 14px; }
+.p-card:hover i { animation: pxHop .6s step-end infinite; }
+.p-card h3 { font-family: var(--font-display); font-style: normal; font-size: clamp(.7rem, 2.6vw, .85rem); line-height: 1.7; color: var(--px-wood-dark); text-shadow: none; overflow-wrap: anywhere; }
+.p-card p { font-family: var(--font-body); font-weight: 400; font-size: clamp(1.25rem, 3.8vw, 1.5rem); line-height: 1.15; color: var(--px-ink); }
+
+/* ---------- 09 FINAL: FIN DEL CAPÍTULO 1 / ¿CONTINUAR? ---------- */
+.final-title { font-style: normal; font-weight: 400; font-size: clamp(1.1rem, 5.2vw, 2.4rem); line-height: 1.6; text-shadow: 4px 4px 0 #1a1a1a; animation: none; }
+.final-text { font-family: var(--font-body); font-size: clamp(1.3rem, 4vw, 1.7rem); line-height: 1.15; color: var(--px-cream); text-shadow: 2px 2px 0 #1a1a1a; }
+.game-over { position: relative; z-index: 2; width: min(520px, 100%); margin: 0 auto 36px; padding: 0 20px 22px; background-color: var(--px-cream); color: var(--px-ink); box-shadow: 8px 8px 0 0 #1a1a1a; }
+.go-title { margin: 0 -20px 18px; padding: 12px 10px 10px; background: var(--px-wood-dark); color: var(--px-cream); border-bottom: 4px solid var(--px-ink); font: 10px/1.6 var(--font-display); letter-spacing: .1em; }
+.go-art { position: relative; width: min(240px, 70%); aspect-ratio: 9 / 8; margin: 0 auto 16px; background: var(--px-heart) center / contain no-repeat; image-rendering: pixelated; }
+.go-art:has(img) { background: none; }
+.go-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
+.go-msg { font: 12px/1.6 var(--font-display); color: var(--px-rose-deep); animation: pxBlink 1.2s step-end infinite; }
+.go-sub { margin-top: 8px; font: 1.4rem/1.1 var(--font-body); }
+.btn-final {
+  padding: 16px 28px; border-radius: 0; background: var(--px-rose); color: var(--px-ink);
+  border: 4px solid transparent; border-image: var(--px-notch6) 1 stretch; background-clip: padding-box;
+  font-family: var(--font-utility); font-weight: 700; font-size: .9rem; transition: none;
+  box-shadow: 0 6px 0 0 #1a1a1a, inset 0 4px 0 rgba(255, 255, 255, .35), inset 0 -4px 0 rgba(0, 0, 0, .15);
+}
+.btn-final span::before { content: '▶ '; }
+.btn-final:hover { transform: none; filter: brightness(1.1); box-shadow: 0 6px 0 0 #1a1a1a, inset 0 4px 0 rgba(255, 255, 255, .35), inset 0 -4px 0 rgba(0, 0, 0, .15); }
+.btn-final:active { transform: translateY(6px); box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .15); }
+.final-footer, .final-footer * { font-family: var(--font-body); font-style: normal; letter-spacing: .02em; text-transform: none; }
+.final-footer { margin-top: 56px; font-size: clamp(1.25rem, 3.8vw, 1.5rem); line-height: 1.2; color: var(--px-tan); }
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 1024px) { .counter-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 720px) {
+  .counter-grid { gap: 12px; }
+  .c-unit { min-width: 0; padding: 0; }
+  .c-num { padding: 10px 2px 8px; }
+  .p-card { padding: 20px 16px; }
+  .game-over { padding: 0 14px 18px; }
+  .go-title { margin: 0 -14px 14px; font-size: 8px; }
+  .btn-final { width: 100%; justify-content: center; }
+}
+@media (max-width: 380px) { .counter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (prefers-reduced-motion: reduce) { .counter-grid::before, .go-msg, .p-card:hover i { animation: none !important; } }

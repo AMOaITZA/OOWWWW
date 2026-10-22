@@ -33,45 +33,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ---------- 3. BOTÓN ENTRAR → inicia la experiencia ---------- */
 let lenis;
-let pendingSongPlay = false; // 🎵 bandera por si el usuario entra antes de que YouTube esté listo
 
-document.getElementById('btnEnter').addEventListener('click', () => {
-  const gate = document.getElementById('gate');
-  const experience = document.getElementById('experience');
-
-  // 🎵 arranca la canción justo en el clic (gesto de usuario = permitido)
-  if (ytReady && ytPlayerInstance) {
-    ytPlayerInstance.playVideo();
-  } else {
-    pendingSongPlay = true; // se reproducirá en cuanto el player esté listo
-  }
-
-  gsap.to(gate, {
-    opacity: 0,
-    duration: 0.7,
-    ease: 'power2.inOut',
-    onComplete: () => {
-      gate.style.display = 'none';
-      experience.classList.add('visible');
-      window.dispatchEvent(new Event('experience:entered'));
-      initSmoothScroll();
-      initScrollReveals();
-      if (typeof AOS !== 'undefined') AOS.init({ duration: 700, once: true, offset: 60 });
-    },
-  });
-});
+/* (el botón ENTRAR se maneja al final de este archivo, con la canción de entrada) */
 
 /* ---------- 4. LENIS — smooth scroll ---------- */
 function initSmoothScroll() {
-  if (typeof Lenis === 'undefined') return;
+  if (typeof Lenis === 'undefined' || lenis) return;      // nunca crear dos veces
   lenis = new Lenis({ duration: 0.9, smoothWheel: true });
-  function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-  }
-  requestAnimationFrame(raf);
   if (typeof gsap !== 'undefined' && gsap.ticker) {
+    // un SOLO loop de animación (antes había dos corriendo a la vez)
     gsap.ticker.add((time) => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+    if (typeof ScrollTrigger !== 'undefined') lenis.on('scroll', ScrollTrigger.update);
+  } else {
+    const raf = (time) => { lenis.raf(time); requestAnimationFrame(raf); };
+    requestAnimationFrame(raf);
   }
 }
 
@@ -135,7 +111,13 @@ updateCounter();
 /* ---------- 7. SCROLL PROGRESS BAR ---------- */
 const progressBar = document.getElementById('scrollProgressBar');
 const backToTop = document.getElementById('backToTop');
-window.addEventListener('scroll', () => {
+const navSections = [...document.querySelectorAll('.section')].map((section) => ({
+  section,
+  link: document.querySelector(`.side-nav-list a[href="#${section.id}"]`),
+}));
+let scrollTicking = false;
+function onScrollFrame() {
+  scrollTicking = false;
   const scrollTop = window.scrollY;
   const docHeight = document.documentElement.scrollHeight - window.innerHeight;
   const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
@@ -143,12 +125,14 @@ window.addEventListener('scroll', () => {
   if (backToTop) backToTop.classList.toggle('visible', scrollTop > 600);
 
   // resalta el link activo del menú lateral
-  document.querySelectorAll('.section').forEach((section) => {
-    const rect = section.getBoundingClientRect();
-    const link = document.querySelector(`.side-nav-list a[href="#${section.id}"]`);
+  navSections.forEach(({ section, link }) => {
     if (!link) return;
+    const rect = section.getBoundingClientRect();
     link.classList.toggle('active', rect.top < window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.5);
   });
+}
+window.addEventListener('scroll', () => {
+  if (!scrollTicking) { scrollTicking = true; requestAnimationFrame(onScrollFrame); }
 }, { passive: true });
 
 backToTop && backToTop.addEventListener('click', () => {

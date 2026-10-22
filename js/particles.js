@@ -57,13 +57,13 @@
 
   function resize() {
     w = canvas.width = window.innerWidth;
-    h = canvas.height = document.body.scrollHeight;
+    h = canvas.height = window.innerHeight;   // canvas fijo: solo del tamaño de la pantalla
   }
   resize();
   window.addEventListener('resize', resize);
 
   // ✏️ CAMBIAR: cantidad y color de partículas
-  const COUNT = 60;
+  const COUNT = 40;
   const colors = ['#BFA2FF', '#F8C8DC', '#F8F7FF'];
   for (let i = 0; i < COUNT; i++) {
     particles.push({
@@ -95,7 +95,6 @@
   draw();
 
   // recalcular altura cuando cambie el contenido (tras entrar a la experiencia)
-  window.addEventListener('experience:entered', () => setTimeout(resize, 500));
 })();
 
 // ---------- 3. Lluvia de corazones (sección final) ----------

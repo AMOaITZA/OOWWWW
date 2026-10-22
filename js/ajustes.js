@@ -99,8 +99,14 @@
   // Se arma cuando la experiencia ya es visible y las fuentes están cargadas
   const ready = () => (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve());
   window.addEventListener('experience:entered', () => ready().then(() => requestAnimationFrame(build)));
-  let t;
-  window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(build, 150); });
+  // Solo se reacomoda si cambia el ANCHO (en el celular el scroll cambia el alto
+  // al esconderse la barra del navegador y eso no debe recalcular el libro).
+  let t, lastW = window.innerWidth;
+  window.addEventListener('resize', () => {
+    if (window.innerWidth === lastW) return;
+    lastW = window.innerWidth;
+    clearTimeout(t); t = setTimeout(build, 150);
+  });
 })();
 
 /* ---------- FINAL: pareja mirándose → beso cada vez que le pican ---------- */

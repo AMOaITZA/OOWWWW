@@ -1,0 +1,122 @@
+/* =====================================================================
+   AJUSTES — Hero parpadeando · Libro de razones · Final con beso
+   Se carga DESPUÉS de TV-CAROUSEL.css.
+===================================================================== */
+
+/* ---------- 01 INICIO: pareja que parpadea ---------- */
+.hero-sprite {
+  width: min(380px, 80vw);
+  aspect-ratio: 766 / 665;
+  background: none; border: 0; box-shadow: none;
+  margin-bottom: 28px;
+}
+.hero-sprite img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain; image-rendering: pixelated;
+  animation: none;
+}
+/* La imagen de ojos cerrados aparece un instante (doble parpadeo) cada 5 s */
+.hero-sprite .eyes-closed { opacity: 0; animation: parpadeo 5s steps(1, end) infinite; }
+@keyframes parpadeo {
+  0%   { opacity: 0; }
+  70%  { opacity: 1; }
+  72%  { opacity: 0; }
+  88%  { opacity: 1; }
+  91%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* ---------- 04 RAZONES: libro con botones ---------- */
+.reasons-source { display: none !important; }
+
+.book {
+  width: min(940px, 100%);
+  padding: 14px;
+  background: var(--px-wood);
+  border: 4px solid var(--px-ink);
+  box-shadow: 8px 8px 0 0 #1a1a1a, inset 0 0 0 4px var(--px-wood-dark);
+}
+.book-spread {
+  position: relative;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr);
+  height: clamp(430px, 60vw, 520px);
+  background: var(--px-cream);
+  border: 4px solid var(--px-ink);
+  overflow: hidden;
+}
+/* lomo del libro */
+.book-spread::after {
+  content: ''; position: absolute; top: 0; bottom: 0; left: 50%;
+  width: 24px; transform: translateX(-50%); pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(107, 68, 41, .28) 45%, rgba(27, 18, 14, .55) 50%, rgba(107, 68, 41, .28) 55%, transparent);
+}
+.book-page {
+  position: relative; min-width: 0; min-height: 0;
+  display: flex; flex-direction: column;
+  padding: 26px 30px 40px;
+  background: var(--px-cream);
+  text-align: left;
+}
+.book-page-left  { background: linear-gradient(90deg, var(--px-cream) 80%, var(--px-parchment)); }
+.book-page-right { background: linear-gradient(270deg, var(--px-cream) 80%, var(--px-parchment)); }
+.book-page-left  { padding-right: 38px; }
+.book-page-right { padding-left: 38px; }
+
+/* lista: ocupa lo que cabe; el JS reparte las razones para que nunca se salgan */
+.book-list { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: 9px; }
+.book-reason {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding-bottom: 8px; border-bottom: 2px dashed var(--px-tan);
+  font-family: var(--font-body); font-size: 1.45rem; line-height: 1.05;
+  color: var(--px-ink); overflow-wrap: anywhere;
+}
+.book-reason i { flex: none; margin-top: .3em; font-size: .75rem; color: var(--px-rose-deep); }
+.book-pageno {
+  position: absolute; left: 0; right: 0; bottom: 10px; text-align: center;
+  font-family: var(--font-utility); font-size: .7rem; color: var(--px-wood-dark);
+}
+
+/* pasar de página */
+.book-spread.flip .book-page { animation: pasarPagina .28s steps(4, end); }
+@keyframes pasarPagina { from { opacity: .15; } to { opacity: 1; } }
+
+.book-controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; }
+.book-counter { font-family: var(--font-body); font-size: 1.5rem; color: var(--px-cream); text-shadow: 2px 2px 0 #1a1a1a; }
+.book-btn {
+  padding: 12px 18px; border-radius: 0; cursor: pointer;
+  background: var(--px-rose); color: var(--px-ink);
+  border: 4px solid var(--px-ink);
+  font-family: var(--font-utility); font-weight: 700; font-size: .85rem;
+  box-shadow: 0 5px 0 0 #1a1a1a, inset 0 3px 0 rgba(255,255,255,.35), inset 0 -3px 0 rgba(0,0,0,.15);
+}
+.book-btn:hover { filter: brightness(1.1); }
+.book-btn:active { transform: translateY(5px); box-shadow: inset 0 -3px 0 rgba(0,0,0,.15); }
+.book-btn:disabled { opacity: .45; cursor: not-allowed; filter: grayscale(.6); transform: none; }
+
+@media (max-width: 759px) {
+  .book { padding: 10px; }
+  .book-spread { grid-template-columns: minmax(0, 1fr); height: clamp(400px, 118vw, 500px); }
+  .book-spread::after, .book-page-right { display: none; }
+  .book-page-left { padding: 22px 22px 38px; background: var(--px-cream); }
+  .book-reason { font-size: 1.35rem; }
+  .book-btn { padding: 10px 12px; font-size: .75rem; }
+}
+
+/* ---------- 09 FINAL: pareja mirándose → beso al picar ---------- */
+.go-art {
+  width: min(340px, 82%);
+  aspect-ratio: 872 / 752;
+  background: none !important;
+}
+.go-art img { transition: none; }
+.go-art .kiss { opacity: 0; }
+.go-art.is-kissing .kiss { opacity: 1; }
+.go-art.is-kissing .look { opacity: 0; }
+.go-art.is-kissing { animation: besoPop .3s steps(3, end); }
+@keyframes besoPop { 0% { transform: scale(1); } 50% { transform: scale(1.06); } 100% { transform: scale(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-sprite .eyes-closed { animation: none; }
+  .book-spread.flip .book-page, .go-art.is-kissing { animation: none; }
+}

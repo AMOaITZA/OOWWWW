@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="css/responsive.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 <link rel="stylesheet" href="css/TV-CAROUSEL.css">
+<link rel="stylesheet" href="css/ajustes.css">   <!-- hero parpadeando, libro de razones, final con beso -->
 <link rel="stylesheet" href="css/pixel-paso-6.css">   <!-- después de style/animations/responsive -->
 </head>
 <body>
@@ -84,9 +85,10 @@
 
 
     <section class="section hero" id="hero">
-      <!-- Sprite de los personajes: sube tu imagen como assets/hero-pixels.png. Mientras no exista se muestra un "?" -->
-      <div class="hero-sprite">
-        <img src="assets/hero-pixels.png" alt="Nuestros personajes en pixel art" onerror="this.style.display='none'; this.parentElement.classList.add('is-empty')">
+      <!-- Pareja parpadeando: dos imágenes encimadas, la de ojos cerrados aparece un instante cada cierto tiempo -->
+      <div class="hero-sprite" aria-label="Nosotros en pixel art">
+        <img class="eyes-open" src="assets/images/pareja_ojos_abiertos.png" alt="Nosotros en pixel art">
+        <img class="eyes-closed" src="assets/images/pareja_ojos_cerrados.png" alt="" aria-hidden="true">
       </div>
       <div class="rpg-dialog">
         <p class="hero-eyebrow">un pequeño espacio, hecho para ti</p>
@@ -140,7 +142,8 @@
       <p class="section-eyebrow">04 — sin motivo aparente, con todos los motivos</p>
       <h2 class="section-title">Razones</h2>
       <p class="section-sub">Ciento cuatro razones, y ninguna es la última.</p>
-      <div class="reasons-masonry" id="reasonsGrid">
+      <!-- Fuente de las razones: edita/agrega aquí y el libro se acomoda solo -->
+      <div class="reasons-source" id="reasonsGrid" hidden>
         <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Su sonrisa ilumina mi día</p></div>
         <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es muy inteligente</p></div>
         <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es muy chistosa</p></div>
@@ -246,6 +249,18 @@
         <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es mi persona favorita</p></div>
         <div class="r-chip"><i class="fa-solid fa-heart"></i><p>Es todo lo que está bien</p></div>
       </div>
+
+      <div class="book" id="reasonsBook">
+        <div class="book-spread" id="bookSpread">
+          <div class="book-page book-page-left"><div class="book-list"></div><span class="book-pageno"></span></div>
+          <div class="book-page book-page-right"><div class="book-list"></div><span class="book-pageno"></span></div>
+        </div>
+        <div class="book-controls">
+          <button class="book-btn" id="bookPrev" aria-label="Página anterior"><i class="fa-solid fa-chevron-left"></i> Anterior</button>
+          <span class="book-counter" id="bookCounter"></span>
+          <button class="book-btn" id="bookNext" aria-label="Página siguiente">Siguiente <i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+      </div>
     </section>
 
 
@@ -336,7 +351,10 @@
 
   <div class="game-over" id="gameOver">
     <div class="go-title">FIN DEL CAPÍTULO 1</div>
-    <div class="go-art"><img src="assets/images/despedida-pixel.png" alt="" onerror="this.remove()"></div>
+    <div class="go-art" id="goArt">
+      <img class="look" src="assets/images/pareja_mirandose.png" alt="Nosotros mirándonos">
+      <img class="kiss" src="assets/images/pareja_beso.png" alt="" aria-hidden="true">
+    </div>
     <p class="go-msg">¿CONTINUAR?</p>
     <p class="go-sub">Insertar corazón para seguir juntos ♥</p>
   </div>
@@ -383,7 +401,8 @@
   <script src="js/timeline.js"></script>
   <script src="js/transitions.js"></script>
   <script src="js/app.js"></script>
-  <script src="js/TV-CAROUSEL.js"></script>   <!-- justo después de app.js -->
+  <script src="js/TV-CAROUSEL.js"></script>
+  <script src="js/ajustes.js"></script>   <!-- justo después de app.js -->
   <div id="ytPlayer" style="display:none;"></div>
 <script src="https://www.youtube.com/iframe_api"></script>
 <audio id="entradaSong" preload="auto">

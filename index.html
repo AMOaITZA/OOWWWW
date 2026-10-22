@@ -20,11 +20,8 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/responsive.css">
-  <!-- ANTES de style.css -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/animations.css">
-<link rel="stylesheet" href="css/TV-CAROUSEL.css">   <!-- nuevo, después de animations.css -->
+<link rel="stylesheet" href="css/TV-CAROUSEL.css">   <!-- después de style/animations/responsive -->
 </head>
 <body>
 
@@ -86,13 +83,16 @@
 
 
     <section class="section hero" id="hero">
-      <div class="hero-photo" data-tilt data-tilt-max="8" data-tilt-glare data-tilt-max-glare="30">
-        <img src="assets/images/gatos.jpeg" alt="Foto principal" loading="lazy" onerror="this.style.display='none'; this.parentElement.classList.add('photo-placeholder')">
+      <!-- Sprite de los personajes: sube tu imagen como assets/hero-pixels.png. Mientras no exista se muestra un "?" -->
+      <div class="hero-sprite">
+        <img src="assets/hero-pixels.png" alt="Nuestros personajes en pixel art" onerror="this.style.display='none'; this.parentElement.classList.add('is-empty')">
       </div>
-      <p class="hero-eyebrow">un pequeño espacio, hecho para ti</p>
-      <h2 class="hero-title">Todo lo bueno<br>me recuerda a <em>ti</em></h2>
-      <p class="hero-text">Baja despacio. Cada sección tiene algo especial para ti.</p>
-      <a href="#carta" class="scroll-hint" aria-label="Bajar a la carta"><i class="fa-solid fa-chevron-down"></i></a>
+      <div class="rpg-dialog">
+        <p class="hero-eyebrow">un pequeño espacio, hecho para ti</p>
+        <h2 class="hero-title">Todo lo bueno<br>me recuerda a <em>ti</em></h2>
+        <p class="hero-text">Baja despacio. Cada sección tiene algo especial para ti.</p>
+        <a href="#carta" class="scroll-hint" aria-label="Bajar a la carta"><i class="fa-solid fa-chevron-down"></i></a>
+      </div>
     </section>
 
     <section class="section letter" id="carta">

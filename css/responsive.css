@@ -8,7 +8,20 @@
   .moodboard-grid { grid-template-columns: repeat(2, 1fr); }
   .places-grid { grid-template-columns: 1fr; }
   .masonry { column-count: 2; }
-  .side-nav { left: 16px; }
+}
+
+/* ---------- MENÚ LATERAL → botón + panel desplegable (≤ 1100px) ----------
+   Con menos ancho el panel fijo taparía el contenido. El JS (app.js) solo
+   alterna la clase .open en la lista. */
+@media (max-width: 1100px) {
+  .side-nav { top: 20px; left: 20px; transform: none; }
+  .side-nav-toggle { display: flex; }
+  .side-nav-list {
+    display: none;
+    position: fixed; top: 80px; left: 20px;
+    width: min(240px, calc(100vw - 40px));
+  }
+  .side-nav-list.open { display: flex; }
 }
 
 /* ---------- MÓVIL (≤ 720px) ---------- */
@@ -20,7 +33,10 @@
 
   .section { padding: var(--section-pad) 6vw; }
 
-  .hero-photo { width: 200px; height: 260px; }
+  /* Inicio: diálogo RPG más compacto (Press Start 2P se ve nítida en múltiplos de 8px) */
+  .hero-title { font-size: 16px; }
+  .rpg-dialog { padding: 0 16px 16px; }
+  .hero-eyebrow { margin: 0 -16px 16px; }
 
   .reasons-grid, .moodboard-grid { grid-template-columns: 1fr; }
   .masonry { column-count: 1; }
@@ -30,19 +46,6 @@
   .counter-grid { gap: 12px; }
   .c-unit { min-width: 80px; padding: 18px 14px; }
   .c-num { font-size: 1.7rem; }
-
-  /* menú lateral se convierte en botón + drawer superior */
-  .side-nav { top: 20px; left: 20px; transform: none; }
-  .side-nav-toggle { display: flex; }
-  .side-nav-list {
-    position: fixed; top: 76px; left: 20px;
-    background: var(--glass); border: 1px solid var(--glass-border);
-    border-radius: 14px; padding: 18px; backdrop-filter: blur(20px);
-    flex-direction: column; gap: 14px;
-    opacity: 0; transform: translateY(-10px); pointer-events: none;
-    transition: all .3s var(--ease);
-  }
-  .side-nav-list.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
 
   .player { right: 16px; bottom: 16px; }
   .player-panel { width: 240px; }
@@ -54,6 +57,5 @@
 
 @media (max-width: 420px) {
   .gate-title { font-size: 3rem; }
-  .hero-title { font-size: 2.2rem; }
   .final-title { font-size: 2rem; }
 }

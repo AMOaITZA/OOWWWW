@@ -291,3 +291,112 @@
   .tv-set[data-tv] .tv-swiper,
   .tv-play-ring, .tv-static::before, .tv-scanlines { animation: none !important; }
 }
+/* =====================================================================
+   PASOS 4 y 5 — Galería Polaroid, diálogos RPG, TV pixel art
+   Se carga DESPUÉS de TV-CAROUSEL.css y sobrescribe lo anterior.
+===================================================================== */
+:root {
+  --px-block: 6px 6px 0 0 #1a1a1a;
+  /* Borde de 4px con esquinas escalonadas (falta el pixel de la esquina) */
+  --px-notch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 3' shape-rendering='crispEdges' fill='%231a1a1a'%3E%3Crect x='1' width='1' height='1'/%3E%3Crect x='1' y='2' width='1' height='1'/%3E%3Crect y='1' width='1' height='1'/%3E%3Crect x='2' y='1' width='1' height='1'/%3E%3C/svg%3E");
+}
+
+/* ---------- 03 GALERÍA: marco Polaroid pixel art ---------- */
+.masonry .m-item {
+  border: 4px solid transparent; border-image: var(--px-notch) 1 stretch; border-radius: 0;
+  padding: 10px 10px 42px; overflow: visible;
+  background: var(--px-heart) no-repeat center bottom 9px / 27px 24px, var(--px-cream);
+  background-clip: padding-box;
+  box-shadow: var(--px-block);
+  transition: transform .15s steps(2), box-shadow .15s steps(2);
+}
+.masonry .m-item img { border: 4px solid var(--px-ink); image-rendering: auto; transition: none; }
+.masonry .m-item:hover { transform: translate(-4px, -4px); box-shadow: 10px 10px 0 0 #1a1a1a; }
+.masonry .m-item:hover img { transform: none; filter: none; }
+.masonry .m-item.photo-placeholder { backdrop-filter: none; }
+.masonry .m-item.photo-placeholder::before { color: var(--px-ink); filter: none; }
+
+/* Tooltip = cuadro de diálogo de juego (lee data-caption) */
+.masonry .m-item::after {
+  content: attr(data-caption) " ▼";
+  inset: auto 6px 6px 6px; z-index: 2;
+  padding: 8px 10px; background: var(--px-cream); color: var(--px-ink);
+  border: 4px solid var(--px-ink); box-shadow: 4px 4px 0 0 #1a1a1a;
+  font: 1.2rem/1.1 var(--font-body); text-align: left;
+  opacity: 0; transition: none;
+}
+.masonry .m-item:hover::after { opacity: 1; }
+
+/* Lightbox: foto Polaroid + descripción como diálogo */
+.lightbox { background: rgba(27, 18, 14, .88); backdrop-filter: none; padding: 24px; }
+.lightbox img {
+  border: 10px solid var(--px-cream); border-radius: 0; outline: 4px solid var(--px-ink);
+  box-shadow: 8px 8px 0 4px #1a1a1a; image-rendering: auto;
+}
+.lightbox p {
+  position: relative; max-width: min(640px, 88vw); padding: 14px 34px 16px 18px;
+  background: var(--px-cream); color: var(--px-ink); border: 4px solid var(--px-ink); box-shadow: var(--px-block);
+  font: 1.5rem/1.15 var(--font-body); letter-spacing: 0; text-align: left; text-shadow: none;
+}
+.lightbox p:empty { display: none; }
+.lightbox p::after { content: '▼'; position: absolute; right: 10px; bottom: 6px; font-size: 1rem; animation: pxBlink 1s step-end infinite; }
+.lightbox-close {
+  top: 24px; right: 24px; width: 44px; height: 44px; display: grid; place-items: center;
+  background: var(--px-rose); color: var(--px-ink); border: 4px solid var(--px-ink); box-shadow: 4px 4px 0 0 #1a1a1a;
+}
+.lightbox-close:hover { transform: none; background: var(--px-amber); color: var(--px-ink); }
+.lightbox-close:active { transform: translate(4px, 4px); box-shadow: none; }
+
+/* Sección de canciones (Playlist): mismo bloque sólido */
+.spotify-embed { max-width: 720px; width: 100%; margin: 0 auto; padding: 10px; background: var(--px-parchment); border: 4px solid var(--px-ink); box-shadow: var(--px-block); }
+.spotify-embed iframe { display: block; border-radius: 0 !important; border: 4px solid var(--px-ink); }
+
+/* ---------- 06 TV RETRO PIXEL ART ---------- */
+.tv-frame { filter: none; image-rendering: pixelated; }
+.tv-screen { border-radius: 0; background: #0d0a08; box-shadow: inset 0 0 0 4px #1a1a1a, inset 0 0 40px rgba(0, 0, 0, .7); }
+.tv-scanlines { background: repeating-linear-gradient(0deg, rgba(0, 0, 0, .28) 0 2px, transparent 2px 4px); opacity: .5; }
+.tv-vignette { background: radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, .55) 100%); }
+.tv-play-ring { border-radius: 0; }
+.tv-gif { border-radius: 0; border: 4px solid var(--px-ink); box-shadow: none; image-rendering: auto; }
+.tv-caption { border-radius: 0; background: var(--px-cream); border: 4px solid var(--px-ink); box-shadow: 4px 4px 0 0 #1a1a1a; backdrop-filter: none; }
+.tv-caption i { color: var(--px-rose-deep); filter: none; }
+.tv-caption span { font-family: var(--font-body); font-style: normal; color: var(--px-ink); font-size: clamp(1rem, 3.2cqw, 1.5rem); line-height: 1.05; }
+
+/* Respaldo si aún no existe assets/tv-pixelart.png: tele de madera dibujada en CSS */
+.tv-set.no-frame { width: min(84vw, 760px); margin: 72px auto 76px; }
+.tv-set.no-frame .tv-screen {
+  border: 0;
+  box-shadow: 0 0 0 4px #1a1a1a, 0 0 0 12px var(--px-wood-light), 0 0 0 24px var(--px-wood), 0 0 0 28px #1a1a1a,
+              12px 12px 0 28px #1a1a1a, inset 0 0 0 4px #1a1a1a, inset 0 0 40px rgba(0, 0, 0, .7);
+}
+.tv-set.no-frame::before, .tv-set.no-frame::after {          /* antenas */
+  content: ''; position: absolute; bottom: calc(100% + 28px); width: 6px; height: 90px; background: #1a1a1a; transform-origin: bottom;
+}
+.tv-set.no-frame::before { left: 42%; transform: rotate(-28deg); }
+.tv-set.no-frame::after  { left: 58%; transform: rotate(28deg); }
+
+/* Botones físicos arcade: se hunden al presionar */
+.tv-nav, .tv-power {
+  --arc: 0 6px 0 0 #1a1a1a, inset 0 4px 0 rgba(255, 255, 255, .35), inset 0 -4px 0 rgba(0, 0, 0, .2);
+  border: 4px solid transparent; border-image: var(--px-notch) 1 stretch; border-radius: 0;
+  background-clip: padding-box; backdrop-filter: none; color: var(--px-ink);
+  box-shadow: var(--arc); transition: opacity .4s;
+}
+.tv-nav { width: clamp(40px, 9cqw, 64px); }
+.tv-prev, .tv-prev:hover { background-color: var(--px-rose); }
+.tv-next, .tv-next:hover { background-color: var(--px-amber); }
+.tv-power, .tv-power:hover { background-color: var(--px-rose-deep); color: var(--px-cream); }
+.tv-nav i { display: none; }
+.tv-nav::before {                                    /* flecha pixelada de 6 filas */
+  content: ''; width: 42%; height: 42%; background: var(--px-ink);
+  clip-path: polygon(0 0, 33% 0, 33% 17%, 67% 17%, 67% 33%, 100% 33%, 100% 67%, 67% 67%, 67% 83%, 33% 83%, 33% 100%, 0 100%);
+}
+.tv-prev::before { transform: scaleX(-1); }
+.tv-nav:hover, .tv-power:hover { transform: translateY(-50%); filter: brightness(1.12); box-shadow: var(--arc); border-color: transparent; }
+.tv-power:hover { transform: none; }
+.tv-nav:active { transform: translateY(calc(-50% + 6px)); box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .2); }
+.tv-power:active { transform: translateY(6px); box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .2); }
+
+/* Contador y OSD en VT323 (ej. 02 / 21) */
+.tv-counter { font-family: var(--font-body); font-size: clamp(1.1rem, 4cqw, 1.8rem); letter-spacing: .12em; color: var(--px-amber); text-shadow: 2px 2px 0 #1a1a1a; }
+.tv-osd { font-family: var(--font-body); color: var(--px-amber); text-shadow: 2px 2px 0 #1a1a1a; }

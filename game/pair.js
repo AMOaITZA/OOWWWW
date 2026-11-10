@@ -3,7 +3,7 @@ export function createPair(save){return {x:save.position.x,y:save.position.y,dir
 function person(ctx,x,y,who,direction,clock,assets){
   const isLeo=who==='leo',offset=clock?1:0;
   const image=assets?.[who]?.base;
-  if(image){const row=direction==='down'?0:direction==='up'?2:1,col=clock?3:2;ctx.save();if(direction==='left'){ctx.translate(x*2+32,0);ctx.scale(-1,1);}ctx.drawImage(image,col*32,row*48,32,48,direction==='left'?0:x,y+offset,32,48);ctx.restore();return;}
+  if(image){const row=direction==='down'?0:direction==='up'?2:1,col=clock?3:2;ctx.save();if(direction==='left'){ctx.translate(x+32,0);ctx.scale(-1,1);}ctx.drawImage(image,col*32,row*48,32,48,direction==='left'?0:x,y+offset,32,48);ctx.restore();return;}
   const skin=isLeo?'#C98F5B':'#D9C2A3',coat=isLeo?'#B5656F':'#2E1F18',hair=isLeo?'#1B120E':'#302020';
   ctx.fillStyle='#2E1F18';ctx.fillRect(x+9,y+39+offset,5,6);ctx.fillRect(x+19,y+39+offset,5,6);
   ctx.fillStyle='#607D91';ctx.fillRect(x+8,y+30+offset,16,10);

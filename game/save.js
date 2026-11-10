@@ -1,5 +1,5 @@
 const KEY = 'oowwww-game-v1';
-const DEFAULT = {position:{x:60,y:39},direction:'down',outfits:{leo:{},itza:{}},visited:[]};
+const DEFAULT = {position:{x:30,y:25},direction:'down',outfits:{leo:{},itza:{}},visited:[]};
 export function loadSave() {
   try {
     const data=JSON.parse(localStorage.getItem(KEY));

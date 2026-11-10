@@ -10,7 +10,7 @@ const canvas=$('world'),ctx=canvas.getContext('2d',{alpha:false});
 ctx.imageSmoothingEnabled=false;
 const save=loadSave(),pair=createPair(save);
 initWorld(places);
-if(!walkable(Math.round(pair.x),Math.round(pair.y))){pair.x=60;pair.y=39;}
+if(!walkable(Math.round(pair.x),Math.round(pair.y))){pair.x=30;pair.y=25;}
 let path=[],targetPlace=null,opened=false,lastTime=0,autosave=0;
 const images={objects:{},characters:{leo:{},itza:{}},ground:null};
 function loadImage(url){if(!url)return Promise.resolve(null);return new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src=url;});}

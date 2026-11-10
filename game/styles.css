@@ -66,3 +66,7 @@
 
 /* El visor lógico se amplía por múltiplos enteros cuando cabe en pantalla. */
 .game-frame{box-sizing:content-box;max-width:none}
+
+.wardrobe-direction{display:flex;gap:4px}
+.wardrobe-face{flex:1;min-width:0;border:2px solid var(--px-ink);padding:5px 3px;background:var(--px-parchment);color:var(--px-ink);font:10px 'Silkscreen',monospace;cursor:pointer}
+.wardrobe-face.selected{background:var(--px-rose-deep);color:#FFF1DC}

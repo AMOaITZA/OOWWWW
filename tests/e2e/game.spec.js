@@ -5,9 +5,15 @@ const find=id=>places.find(p=>p.id===id);
 async function loadAt(page,id){
   const place=find(id);if(!place)throw Error('No existe el lugar '+id);
   await page.goto('/game.html');
-  await page.evaluate(p=>localStorage.setItem('oowwww-game-v1',JSON.stringify({
+  // La página guarda su posición al salir. Entregamos el punto de prueba
+  // al documento recién cargado para que pagehide no lo sobrescriba.
+  await page.evaluate(p=>sessionStorage.setItem('__test_spawn',JSON.stringify({
     position:{x:p.arrival[0],y:p.arrival[1]},direction:'down',outfits:{leo:{},itza:{}},visited:[]
   })),place);
+  await page.addInitScript(()=>{
+    const seed=sessionStorage.getItem('__test_spawn');
+    if(seed){localStorage.setItem('oowwww-game-v1',seed);sessionStorage.removeItem('__test_spawn');}
+  });
   await page.reload();
   await page.locator('#start-game').click();
   return place;

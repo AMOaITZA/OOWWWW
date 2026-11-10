@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "description": "Rutas web; valores ausentes usan placeholders generados por código.",
+  "description": "La imagen de suelo no contiene obstáculos; cada edificio puede tener base, techo y toldo independientes. Las hojas de personaje se declaran en los catálogos por separado.",
   "world": {
     "ground": "/assets/game/world/ground.png"
   },
@@ -18,7 +18,9 @@
     "tree": "/assets/game/objects/tree.png",
     "rock": "/assets/game/objects/rock.png",
     "bench": "/assets/game/objects/bench.png",
-    "lamp": "/assets/game/objects/lamp.png"
+    "lamp": "/assets/game/objects/lamp.png",
+    "roof": "/assets/game/objects/roof.png",
+    "awning": "/assets/game/objects/awning.png"
   },
   "characters": {
     "leo": {

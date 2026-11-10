@@ -20,6 +20,7 @@ jobs:
           node-version: '22'
       - run: npm install --no-audit --no-fund
       - run: npm test
+      - run: npm run art:check
       - run: npm run build
       - name: Verify both HTML entries
         run: |

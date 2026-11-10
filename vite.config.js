@@ -1,13 +1,15 @@
 import { defineConfig } from 'vite';
-import { resolve } from 'node:path';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
+const root = dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   base: '/',
   build: {
     rollupOptions: {
       input: {
-        classic: resolve(import.meta.dirname, 'index.html'),
-        game: resolve(import.meta.dirname, 'game.html'),
+        classic: resolve(root, 'index.html'),
+        game: resolve(root, 'game.html'),
       },
     },
   },

@@ -63,3 +63,6 @@
 .wardrobe-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
 .wardrobe-category.selected,.wardrobe-tab.selected,.wardrobe-item.selected{background:var(--px-rose-deep);color:#FFF1DC}
 @media(max-width:600px){.wardrobe-layout{grid-template-columns:1fr}.wardrobe-left{position:static;max-width:180px;justify-self:center}.wardrobe-tabs{width:180px}.experience-panel{padding:24px 14px}.memory-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.reasons-list li{font-size:20px}.reasons-paper{padding:10px}.tv-display{min-height:230px}.tv-image{height:140px}}
+
+/* El visor lógico se amplía por múltiplos enteros cuando cabe en pantalla. */
+.game-frame{box-sizing:content-box;max-width:none}

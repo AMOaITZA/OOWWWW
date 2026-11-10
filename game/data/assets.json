@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "description": "Rutas relativas a la raíz web. El motor no conoce nombres de archivos: modifica únicamente este manifiesto.",
+  "world": {
+    "ground": null
+  },
+  "objects": {
+    "tree": null,
+    "house": null,
+    "letter": null,
+    "gallery": null,
+    "book": null,
+    "playlist": null,
+    "tv": null,
+    "clock": null,
+    "places": null,
+    "final": null,
+    "wardrobe": null
+  },
+  "characters": {
+    "leo": {
+      "base": null,
+      "hairBack": null,
+      "hairFront": null,
+      "top": null,
+      "bottom": null,
+      "shoes": null,
+      "accessories": null
+    },
+    "itza": {
+      "base": null,
+      "hairBack": null,
+      "hairFront": null,
+      "top": null,
+      "bottom": null,
+      "shoes": null,
+      "accessories": null
+    }
+  }
+}

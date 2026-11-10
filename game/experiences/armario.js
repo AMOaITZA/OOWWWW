@@ -1,39 +1,67 @@
 import {node,paragraph,labeledButton} from './dom.js';
-import {catalogs,getChoice,chooseOutfit} from '../wardrobe.js';
+import {getLookOptions,getChoice,chooseOutfit} from '../wardrobe.js';
 import {drawCharacter} from '../pair.js';
-const categories=[['hair','Cabello'],['top','Parte superior'],['bottom','Parte inferior'],['shoes','Calzado'],['accessories','Accesorios']];
+import {prepareLooks} from '../assets.js';
+
+// Dos atuendos completos por personaje: ni pelo ni accesorios se desmontan.
 export function mount(root,_data,api){
-  let who='itza',category='top',facing='down';
-  paragraph(root,'Prueba combinaciones para Itza y Leo. Las prendas se guardan automáticamente.');
-  const tabs=node('div','wardrobe-tabs'),categoriesEl=node('div','wardrobe-categories'),items=node('div','wardrobe-items');
-  const facingTabs=node('div','wardrobe-direction');
-  const preview=node('canvas','wardrobe-preview');preview.width=160;preview.height=125;preview.setAttribute('aria-label','Vista previa del personaje');
+  let who='itza',facing='down',walking=false,clock=0;
+  paragraph(root,'Elige un conjunto completo para Itza o Leo. El segundo estará disponible cuando se agregue su hoja de sprites. La elección se guarda automáticamente.');
+  const tabs=node('div','wardrobe-tabs');
+  const directions=node('div','wardrobe-direction');
+  const items=node('div','wardrobe-items');
+  const preview=node('canvas','wardrobe-preview');
+  preview.width=160;preview.height=125;
+  preview.setAttribute('aria-label','Vista previa animada del conjunto completo');
   const info=paragraph(root,'','wardrobe-info');
-  const container=node('div','wardrobe-layout'),left=node('div','wardrobe-left'),right=node('div','wardrobe-right');
-  left.append(tabs,facingTabs,preview);right.append(categoriesEl,items);container.append(left,right);root.append(container);
+  const walkButton=labeledButton('Ver caminata',()=>{
+    walking=!walking;clock=0;walkButton.textContent=walking?'Detener animación':'Ver caminata';draw();
+  },'wardrobe-category');
+  const layout=node('div','wardrobe-layout'),left=node('div','wardrobe-left'),right=node('div','wardrobe-right');
+  left.append(tabs,directions,preview,walkButton);
+  right.append(info,items);layout.append(left,right);root.append(layout);
+  let alive=true;
   function draw(){
+    if(!alive)return;
     const ctx=preview.getContext('2d');ctx.imageSmoothingEnabled=false;
     ctx.fillStyle='#F3D9B1';ctx.fillRect(0,0,160,125);
     for(let y=0;y<125;y+=16){ctx.fillStyle='#D9C2A3';ctx.fillRect(0,y,160,1);}
+    const frame=walking?2+clock%4:0;
     ctx.save();ctx.scale(2,2);
-    drawCharacter(ctx,24,7,who,facing,0,api.assetImage,api.save.outfits);
+    drawCharacter(ctx,24,7,who,facing,frame,api.assetImage,api.save.outfits);
     ctx.restore();
   }
-  function render(){
-    tabs.replaceChildren();facingTabs.replaceChildren();categoriesEl.replaceChildren();items.replaceChildren();
-    for(const name of ['itza','leo']){const b=labeledButton(name==='itza'?'Itza':'Leo',()=>{who=name;render();},'wardrobe-tab');b.classList.toggle('selected',who===name);tabs.append(b);}
-    for(const [id,label] of [['down','Frente'],['right','Lado'],['up','Espalda']]){
-      const b=labeledButton(label,()=>{facing=id;render();},'wardrobe-face');
-      b.classList.toggle('selected',facing===id);facingTabs.append(b);
-    }
-    categories.forEach(([id,label])=>{const b=labeledButton(label,()=>{category=id;render();},'wardrobe-category');b.classList.toggle('selected',category===id);categoriesEl.append(b);});
-    const choices=catalogs[who][category];
-    const none=labeledButton('Quitar',()=>set(null),'wardrobe-item');
-    none.classList.toggle('selected',getChoice(api.save.outfits,who,category)===null);items.append(none);
-    for(const item of choices){const b=labeledButton(item.name,()=>set(item.id),'wardrobe-item');b.classList.toggle('selected',getChoice(api.save.outfits,who,category)===item.id);items.append(b);}
-    info.textContent='Editando a '+(who==='itza'?'Itza':'Leo')+' · '+categories.find(([id])=>id===category)[1];draw();
+  function select(id){
+    if(!chooseOutfit(api.save.outfits,who,id))return;
+    const promise=api.onOutfitChange();
+    render();
+    Promise.resolve(promise).then(()=>{if(alive)draw();});
   }
-  function set(id){chooseOutfit(api.save.outfits,who,category,id);const loading=api.onOutfitChange();render();Promise.resolve(loading).then(draw);}
+  function render(){
+    if(!alive)return;
+    tabs.replaceChildren();directions.replaceChildren();items.replaceChildren();
+    for(const name of ['itza','leo']){
+      const button=labeledButton(name==='itza'?'Itza':'Leo',()=>{who=name;render();},'wardrobe-tab');
+      button.classList.toggle('selected',who===name);tabs.append(button);
+    }
+    for(const [direction,label] of [['down','Frente'],['right','Lado'],['up','Espalda']]){
+      const button=labeledButton(label,()=>{facing=direction;render();},'wardrobe-face');
+      button.classList.toggle('selected',facing===direction);directions.append(button);
+    }
+    const options=getLookOptions(who);
+    for(const [i,look] of options.entries()){
+      const available=Boolean(api.assetImage(look.sheet));
+      const button=labeledButton(look.name,()=>select(look.id),'wardrobe-item');
+      button.classList.toggle('selected',getChoice(api.save.outfits,who)===look.id);
+      button.disabled=i!==0&&!available;
+      if(!available)button.title=i===0?'Copia el PNG para mostrar el sprite definitivo':'Pendiente: '+look.sheet;
+      items.append(button);
+    }
+    info.textContent='Editando a '+(who==='itza'?'Itza':'Leo')+' · Dos conjuntos completos';
+    draw();
+  }
+  const timer=setInterval(()=>{if(walking){clock++;draw();}},155);
+  prepareLooks().then(()=>{if(alive)render();});
   render();
-  return ()=>{};
+  return ()=>{alive=false;clearInterval(timer);};
 }

@@ -83,3 +83,6 @@
 .map-destination.visited{background:var(--px-amber)}
 .map-destination:hover{background:var(--px-rose-light)}
 .map-title-row .hud-button{background:var(--px-wood-dark);color:var(--px-cream)}
+
+.final-action-game{justify-self:center;display:block;background:var(--px-rose-deep);color:var(--px-cream);border:3px solid var(--px-ink);box-shadow:4px 4px 0 var(--px-ink);padding:10px 22px;cursor:pointer;font:16px 'Silkscreen',monospace}
+.final-action-game:hover{background:var(--px-wood-dark)}

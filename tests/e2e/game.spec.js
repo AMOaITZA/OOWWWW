@@ -83,6 +83,12 @@ for(const id of ['carta','galeria','razones','playlist','recuerdos','contador','
     }
     if(id==='contador')await expect(page.locator('.counter-box')).toHaveCount(6);
     if(id==='lugares')await expect(page.locator('.place-memory')).toHaveCount(3);
+    if(id==='final'){
+      await expect(page.locator('.final-pair img').first()).toBeVisible();
+      await page.getByRole('button',{name:'Para siempre'}).click();
+      await expect(page.getByRole('button',{name:'Te amo'})).toBeVisible();
+      await expect(page.locator('.final-pair img').last()).toBeVisible();
+    }
     await page.locator('#close-experience').click();
     await expect(page.locator('#experience')).toBeHidden();
     expect(errors).toEqual([]);
@@ -118,4 +124,26 @@ test('overview navigates without teleporting and can be closed',async({page})=>{
   await page.locator('#map-button').click();
   await page.keyboard.press('Escape');
   await expect(page.locator('#map-panel')).toBeHidden();
+});
+
+test('touchscreen portrait navigates and shows responsive game',async({browser})=>{
+  const context=await browser.newContext({viewport:{width:375,height:812},isMobile:true,hasTouch:true,deviceScaleFactor:2});
+  const page=await context.newPage();
+  try{
+    const errors=[];page.on('pageerror',error=>errors.push(error.message));
+    await page.goto('/game.html');
+    await page.locator('#start-game').tap();
+    await expect(page.locator('#world')).toBeVisible();
+    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
+    expect(overflow).toBeLessThanOrEqual(3);
+    await page.locator('#map-button').tap();
+    await expect(page.locator('#map-panel')).toBeVisible();
+    await expect(page.locator('#map-destinations button')).toHaveCount(10);
+    await page.locator('#close-map').tap();
+    await expect(page.locator('#map-panel')).toBeHidden();
+    await page.locator('#help-button').tap();
+    await expect(page.locator('#experience-title')).toHaveText('Cómo jugar');
+    await page.locator('#close-experience').tap();
+    expect(errors).toEqual([]);
+  }finally{await context.close();}
 });

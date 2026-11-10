@@ -313,7 +313,10 @@
     "from": "Leito",
     "to": "Itza",
     "ps": "P.D. Esta página se actualiza cada que yo le muevo jajaja, así que métete de vez en cuandoo a ver si ya le metí algo nuevo. ",
-    "action": "Para siempre"
+    "action": "Para siempre",
+    "photo": "/assets/images/pareja_mirandose.png",
+    "kissPhoto": "/assets/images/pareja_beso.png",
+    "actionAfter": "Te amo"
   },
   "armario": {
     "title": "Armario",

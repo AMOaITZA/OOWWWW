@@ -63,7 +63,13 @@ for(const id of ['carta','galeria','razones','playlist','recuerdos','contador','
     await expect(page.locator('#experience')).toBeVisible();
     await expect(page.locator('#experience-title')).not.toBeEmpty();
     if(id==='carta')await expect(page.locator('.letter-original')).toContainText('Quiero que sepas algo');
-    if(id==='galeria')await expect(page.locator('.photo-tile')).toHaveCount(8);
+    if(id==='galeria'){
+      await expect(page.locator('.photo-tile')).toHaveCount(8);
+      await page.getByRole('button',{name:'Ver fotografía 1'}).click();
+      await expect(page.locator('.gallery-viewer')).toBeVisible();
+      await page.getByRole('button',{name:'Cerrar foto'}).click();
+      await expect(page.locator('.photo-tile')).toHaveCount(8);
+    }
     if(id==='razones'){
       await expect(page.locator('.reasons-list li')).toHaveCount(8);
       await page.getByRole('button',{name:'Siguiente'}).click();
@@ -96,17 +102,3 @@ test('wardrobe changes remain after closing and reloading',async({page})=>{
   await expect(page.getByRole('button',{name:'Suéter rosa'})).toHaveClass(/selected/);
 });
 
-test('diagnostic: gallery interaction and errors',async({page})=>{
- const errors=[];page.on('pageerror',error=>errors.push(error.message));
- const place=await loadAt(page,'galeria');
- await tapPlace(page,place);
- const state=await page.evaluate(()=>{
-  const save=JSON.parse(localStorage.getItem('oowwww-game-v1'));
-  return {save, title:document.getElementById('experience-title').textContent,
-   hidden:document.getElementById('experience').hidden,status:document.getElementById('world-status').textContent,
-   children:document.getElementById('experience-content').children.length};
- });
- console.log('GALLERY DIAGNOSTIC',JSON.stringify({state,errors}));
- expect(errors).toEqual([]);
- expect(state.hidden).toBe(false);
-});

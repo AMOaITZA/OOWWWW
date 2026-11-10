@@ -7,10 +7,17 @@ export function mount(root,data){
   const dismiss=labeledButton('Cerrar foto',()=>{viewer.hidden=true;grid.hidden=false;});
   viewer.prepend(larger);viewer.append(dismiss);
   data.photos.forEach((photo,index)=>{
-    const btn=labeledButton('','photo-tile');btn.setAttribute('aria-label','Ver fotografía '+(index+1));
+    const btn=labeledButton('',()=>{
+      larger.src=photo.src;
+      larger.alt=photo.caption;
+      caption.textContent=photo.caption;
+      grid.hidden=true;
+      viewer.hidden=false;
+      dismiss.focus();
+    },'photo-tile');
+    btn.setAttribute('aria-label','Ver fotografía '+(index+1));
     btn.append(picture(photo.src,photo.caption));
     const number=node('span','photo-number',String(index+1).padStart(2,'0'));btn.append(number);
-    btn.addEventListener('click',()=>{larger.src=photo.src;larger.alt=photo.caption;caption.textContent=photo.caption;grid.hidden=true;viewer.hidden=false;dismiss.focus();});
     grid.append(btn);
   });root.append(grid,viewer);
   return ()=>{};

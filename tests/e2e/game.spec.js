@@ -95,3 +95,18 @@ test('wardrobe changes remain after closing and reloading',async({page})=>{
   await tapPlace(page,place);
   await expect(page.getByRole('button',{name:'Suéter rosa'})).toHaveClass(/selected/);
 });
+
+test('diagnostic: gallery interaction and errors',async({page})=>{
+ const errors=[];page.on('pageerror',error=>errors.push(error.message));
+ const place=await loadAt(page,'galeria');
+ await tapPlace(page,place);
+ const state=await page.evaluate(()=>{
+  const save=JSON.parse(localStorage.getItem('oowwww-game-v1'));
+  return {save, title:document.getElementById('experience-title').textContent,
+   hidden:document.getElementById('experience').hidden,status:document.getElementById('world-status').textContent,
+   children:document.getElementById('experience-content').children.length};
+ });
+ console.log('GALLERY DIAGNOSTIC',JSON.stringify({state,errors}));
+ expect(errors).toEqual([]);
+ expect(state.hidden).toBe(false);
+});

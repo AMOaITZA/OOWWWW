@@ -4,3 +4,62 @@
 .game-screen{min-height:100dvh;display:flex;flex-direction:column;background:linear-gradient(#2E1F18,#493329);padding:calc(8px + env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}.game-header,.game-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;max-width:1400px;margin:0 auto}.game-header{padding:8px 0}.brand{font-family:'Silkscreen',monospace;font-size:18px}.brand small{display:block;font:18px 'VT323',monospace;color:var(--px-tan)}.header-actions{display:flex;gap:8px;flex-wrap:wrap}.hud-button{font:16px 'Silkscreen',monospace;padding:7px 10px;text-decoration:none;color:var(--px-cream);background:var(--px-wood-dark);border:2px solid var(--px-ink)}.game-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0}.game-frame{position:relative;width:min(100%,960px);aspect-ratio:16/9;border:4px solid var(--px-ink);background:#91B079;box-shadow:8px 8px 0 #1B120E;overflow:hidden}.game-frame canvas{display:block;width:100%;height:100%;object-fit:fill;image-rendering:pixelated;touch-action:none;cursor:crosshair}.world-status{position:absolute;left:8px;bottom:7px;max-width:calc(100% - 16px);font:13px 'Silkscreen',monospace;background:#2E1F18DD;color:var(--px-cream);padding:5px 7px;pointer-events:none}.game-hint{font-size:19px;color:var(--px-tan);text-align:center;margin:15px 0}.game-footer{color:var(--px-tan);font-size:18px;padding:8px 0}.experience{position:fixed;inset:0;background:#1B120EEB;z-index:30;display:grid;place-items:center;padding:20px;overflow:auto}.experience-panel{position:relative;width:min(600px,100%);max-height:90dvh;overflow:auto;padding:30px 25px;background:var(--px-cream);color:var(--px-ink);border:5px solid var(--px-ink);box-shadow:9px 9px 0 var(--px-rose-deep)}.experience-panel h2{font:clamp(17px,3vw,24px)/1.8 'Press Start 2P',monospace;overflow-wrap:anywhere}.experience-panel .eyebrow{color:var(--px-rose-deep)}.experience-panel p{font-size:25px}.close-experience{position:absolute;right:12px;top:8px;background:none;border:none;color:var(--px-ink);font-size:34px}.experience-panel a{display:inline-block;background:var(--px-wood-dark);border:3px solid var(--px-ink);color:var(--px-cream);padding:9px 16px;text-decoration:none;font-family:'Silkscreen',monospace;font-size:15px;margin-top:6px}
 @media(max-width:560px){.game-header{align-items:flex-start}.brand{font-size:14px}.brand small{font-size:14px}.hud-button{font-size:12px;padding:6px}.game-frame{border-width:3px;box-shadow:4px 4px 0 var(--px-ink)}.game-hint{font-size:16px}.world-status{font-size:9px}.title-content h1{font-size:30px}.eyebrow{font-size:11px}.game-footer{font-size:15px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}}
+
+/* Experiencias del juego: paneles internos sin estilos del modo clásico. */
+#experience-content{display:grid;gap:16px;margin-top:14px}
+#experience-content p{margin:0;line-height:1.35;white-space:pre-line}
+.experience-panel{width:min(780px,100%);max-height:min(90dvh,800px);overscroll-behavior:contain}
+.experience-panel h2{font-size:clamp(14px,2.3vw,21px);line-height:1.5;margin:0;padding-right:22px}
+.experience-panel .pixel-action,.experience-panel button{cursor:pointer}
+.experience-panel button:disabled{opacity:.42;cursor:not-allowed}
+.experience-panel button:focus-visible{outline:3px solid var(--px-rose-deep);outline-offset:3px}
+.experience-heading{font-family:'Silkscreen',monospace}
+.intro-portrait{display:block;margin:0 auto;width:min(240px,65%);height:auto;image-rendering:pixelated}
+.intro-quote,.final-quote{font-family:'Silkscreen',monospace;font-size:clamp(19px,3vw,26px)!important;line-height:1.5!important;color:var(--px-wood-dark)}
+.letter-original{padding:16px;background:#FFF8EA;border:3px solid #D9C2A3;white-space:pre-wrap!important;font-size:clamp(20px,2.8vw,26px)!important;line-height:1.5!important}
+.signature{text-align:right;font-family:'Silkscreen',monospace}
+.memory-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:12px}
+.photo-tile{position:relative;display:block;padding:0;border:3px solid var(--px-ink);background:var(--px-parchment);aspect-ratio:1/1;overflow:hidden;min-width:0;cursor:pointer}
+.photo-tile img{width:100%;height:100%;object-fit:cover;image-rendering:auto}
+.photo-number{position:absolute;bottom:0;right:0;color:var(--px-cream);background:var(--px-ink);padding:3px 6px;font-family:'Silkscreen',monospace;font-size:11px}
+.gallery-viewer{text-align:center}
+.gallery-viewer[hidden],.tv-display.off .tv-image{display:none}
+.gallery-viewer img{display:block;margin:auto;max-height:48vh;max-width:100%;object-fit:contain;image-rendering:auto}
+.gallery-viewer p{margin:12px auto!important;max-width:650px}
+.gallery-viewer button,.reasons-navigation button,.tv-controls button,.wardrobe-tab,.wardrobe-category,.wardrobe-item{border:2px solid var(--px-ink);padding:8px 11px;background:var(--px-parchment);color:var(--px-ink);box-shadow:2px 2px 0 var(--px-ink);font:15px 'Silkscreen',monospace}
+.reasons-paper{border:4px solid var(--px-wood-dark);padding:18px;background:#FFF8EA;box-shadow:5px 5px 0 var(--px-tan)}
+.reasons-list{padding-left:2em;margin:0;min-height:200px}
+.reasons-list li{font-size:23px;margin:5px 0;padding-left:4px}
+.reasons-navigation{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:15px}
+.reasons-count{font-family:'Silkscreen',monospace;font-size:14px}
+.playlist-embed{border:0;width:100%;height:352px;border-radius:4px;max-width:100%}
+.tv-console{padding:14px;background:#A06A3F;border:6px solid #2E1F18;box-shadow:6px 6px 0 #6B4429}
+.tv-display{display:grid;place-items:center;min-height:280px;padding:14px;background:#2E302D;border:6px solid #1B120E;color:#FFF1DC;text-align:center}
+.tv-display.off{background:repeating-linear-gradient(0deg,#292E2E,#292E2E 3px,#333739 3px,#333739 5px)}
+.tv-inner{width:100%;display:grid;justify-items:center;gap:12px}
+.tv-image{width:min(100%,380px);height:195px;object-fit:contain;image-rendering:auto}
+.tv-memory{font-size:clamp(21px,3vw,27px)!important}
+.tv-display.off .tv-inner{display:block}
+.tv-number{display:block;text-align:center;font:14px 'Silkscreen',monospace;margin:8px}
+.tv-controls{display:flex;align-items:center;justify-content:center;gap:18px}
+.counter-grid-game{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.counter-box{padding:12px 5px;border:3px solid var(--px-wood-dark);background:var(--px-parchment);display:grid;justify-items:center;gap:3px}
+.counter-box strong{font:clamp(20px,4vw,32px) 'VT323',monospace}
+.counter-box span{font:clamp(11px,2.5vw,16px) 'Silkscreen',monospace}
+.place-memory{background:#FFF8EA;border-left:5px solid var(--px-rose-deep);padding:13px}
+.place-memory h3{font:18px 'Silkscreen',monospace;margin:0 0 9px}
+.final-pair{display:grid;place-items:center;background:var(--px-parchment);border:3px solid var(--px-wood-dark)}
+.final-pair img{max-height:230px;object-fit:contain;image-rendering:pixelated}
+.final-chapter,.final-question{font-family:'Silkscreen',monospace;text-align:center}
+.final-footer-love{background:var(--px-parchment);padding:14px}
+.final-ps{font-style:italic}
+.wardrobe-info{color:var(--px-wood-dark);font-size:18px!important;font-family:'Silkscreen',monospace}
+.wardrobe-layout{display:grid;grid-template-columns:minmax(160px,200px) minmax(0,1fr);gap:20px;align-items:start}
+.wardrobe-left{position:sticky;top:0;display:grid;gap:12px}
+.wardrobe-tabs{display:flex;gap:5px}
+.wardrobe-tab{flex:1;min-width:0}
+.wardrobe-preview{width:100%;height:auto;aspect-ratio:160/125;image-rendering:pixelated;border:4px solid var(--px-ink);background:var(--px-parchment)}
+.wardrobe-categories{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.wardrobe-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.wardrobe-category.selected,.wardrobe-tab.selected,.wardrobe-item.selected{background:var(--px-rose-deep);color:#FFF1DC}
+@media(max-width:600px){.wardrobe-layout{grid-template-columns:1fr}.wardrobe-left{position:static;max-width:180px;justify-self:center}.wardrobe-tabs{width:180px}.experience-panel{padding:24px 14px}.memory-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.reasons-list li{font-size:20px}.reasons-paper{padding:10px}.tv-display{min-height:230px}.tv-image{height:140px}}

@@ -26,7 +26,7 @@ export function mount(root,_data,api){
     for(const item of choices){const b=labeledButton(item.name,()=>set(item.id),'wardrobe-item');b.classList.toggle('selected',getChoice(api.save.outfits,who,category)===item.id);items.append(b);}
     info.textContent='Editando a '+(who==='itza'?'Itza':'Leo')+' · '+categories.find(([id])=>id===category)[1];draw();
   }
-  function set(id){chooseOutfit(api.save.outfits,who,category,id);api.onOutfitChange();render();}
+  function set(id){chooseOutfit(api.save.outfits,who,category,id);const loading=api.onOutfitChange();render();Promise.resolve(loading).then(draw);}
   render();
   return ()=>{};
 }

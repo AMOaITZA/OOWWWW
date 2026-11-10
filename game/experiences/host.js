@@ -34,7 +34,15 @@ export function createHost(api){
     if(priorFocus?.isConnected)priorFocus.focus();
     priorFocus=null;api.onClose?.();
   }
+  function help(){
+    if(!panel.hidden)close();
+    priorFocus=document.activeElement;body.replaceChildren();
+    title.textContent='Cómo jugar';category.textContent='Controles';
+    const p=document.createElement('p');
+    p.textContent='Toca o haz clic en el suelo para caminar. Toca una casa para acercarte y vuelve a tocarla para abrir su experiencia. En computadora también puedes usar las flechas o WASD. El armario guarda los conjuntos de cada personaje.';
+    body.append(p);panel.hidden=false;closeButton.focus();
+  }
   closeButton.addEventListener('click',close);
   panel.addEventListener('click',event=>{if(event.target===panel)close();});
-  return {open,close,isOpen:()=>!panel.hidden};
+  return {open,help,close,isOpen:()=>!panel.hidden};
 }

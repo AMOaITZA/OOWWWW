@@ -96,7 +96,6 @@ function draw(){
   }
   const scenery=objects.concat([{z:pair.y*TILE,draw:ctx=>drawPair(ctx,pair,assetImage,save.outfits)}]);
   scenery.sort((a,b)=>a.z-b.z);
-  const left=camera.x-100,right=camera.x+canvas.width+100,top=camera.y-110,bottom=camera.y+canvas.height+110;
   for(const item of scenery)item.draw(ctx); // objetos independientes, clasificados por profundidad
   ctx.restore();
 }
@@ -121,7 +120,7 @@ $('start-game').addEventListener('click',()=>{
   $('title-screen').hidden=true;$('game-screen').hidden=false;active=true;layout();persist();status('Toca para caminar');
 });
 $('help-button').addEventListener('click',()=>{
-  host.open('inicio'); // temporal: se sustituye abajo por ayuda dedicada
+  host.help();
 });
 canvas.addEventListener('pointerdown',pointClick);
 window.addEventListener('keydown',event=>{

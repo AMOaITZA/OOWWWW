@@ -55,9 +55,9 @@ test('walking, second tap and exact position retention',async({page})=>{
   expect(state.position).toEqual({x:place.arrival[0],y:place.arrival[1]});
   expect(state.visited).toContain('inicio');
 });
-test('all nine original experiences mount without leaving map',async({page})=>{
-  const errors=[];page.on('pageerror',error=>errors.push(error.message));
-  for(const id of ['carta','galeria','razones','playlist','recuerdos','contador','lugares','final']){
+for(const id of ['carta','galeria','razones','playlist','recuerdos','contador','lugares','final']){
+  test('experience '+id+' mounts and returns to map',async({page})=>{
+    const errors=[];page.on('pageerror',error=>errors.push(error.message));
     const place=await loadAt(page,id);
     await tapPlace(page,place);
     await expect(page.locator('#experience')).toBeVisible();
@@ -79,9 +79,9 @@ test('all nine original experiences mount without leaving map',async({page})=>{
     if(id==='lugares')await expect(page.locator('.place-memory')).toHaveCount(3);
     await page.locator('#close-experience').click();
     await expect(page.locator('#experience')).toBeHidden();
-  }
-  expect(errors).toEqual([]);
-});
+    expect(errors).toEqual([]);
+  });
+}
 test('wardrobe changes remain after closing and reloading',async({page})=>{
   const place=await loadAt(page,'armario');
   await tapPlace(page,place);

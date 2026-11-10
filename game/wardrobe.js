@@ -1,27 +1,29 @@
-import leo from './data/catalog-leo.json' with { type: 'json' };
-import itza from './data/catalog-itza.json' with { type: 'json' };
-export const catalogs={leo,itza};
-export const SLOTS=['hair','top','bottom','shoes','accessories'];
-export function getChoice(outfits,who,slot){
-  const recorded=outfits?.[who]?.[slot];
-  if(recorded===null)return null;
-  const items=catalogs[who][slot];
-  if(items.some(item=>item.id===recorded))return recorded;
-  return items.find(item=>item.default)?.id??null;
+import manifest from './data/assets.json' with { type: 'json' };
+
+// Solo dos looks completos por personaje. La ropa, los lentes y el pelo ya vienen
+// integrados en cada hoja: la lógica nunca conoce nombres de prendas sueltas.
+export const catalogs={
+  leo:manifest.characters.leo.looks,
+  itza:manifest.characters.itza.looks
+};
+export const CHARACTERS=['leo','itza'];
+export const LOOK_LIMIT=2;
+export function getLookOptions(who){return catalogs[who]||[];}
+export function getChoice(outfits,who){
+  const available=getLookOptions(who);
+  const requested=outfits?.[who]?.look;
+  return available.find(look=>look.id===requested)?.id??available[0]?.id??null;
 }
-export function chooseOutfit(outfits,who,slot,id){
-  if(!outfits[who])outfits[who]={};
-  outfits[who][slot]=id;
+export function getSelectedLook(outfits,who){
+  const chosen=getChoice(outfits,who);
+  return getLookOptions(who).find(look=>look.id===chosen)||null;
 }
-export function getItem(outfits,who,slot){
-  const selected=getChoice(outfits,who,slot);
-  return catalogs[who][slot].find(item=>item.id===selected)||null;
+export function chooseOutfit(outfits,who,id){
+  if(!getLookOptions(who).some(look=>look.id===id))return false;
+  if(!outfits[who]||typeof outfits[who]!=='object')outfits[who]={};
+  outfits[who].look=id;
+  return true;
 }
 export function equipmentUrls(outfits){
-  const urls=[];
-  for(const who of ['leo','itza'])for(const slot of SLOTS){
-    const item=getItem(outfits,who,slot);
-    if(item){for(const url of [item.sprite,item.front,item.back])if(url)urls.push(url);}
-  }
-  return urls;
+  return CHARACTERS.map(who=>getSelectedLook(outfits,who)?.sheet).filter(Boolean);
 }

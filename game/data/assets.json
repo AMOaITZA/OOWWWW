@@ -1,6 +1,6 @@
 {
-  "version": 2,
-  "description": "La imagen de suelo no contiene obstáculos; cada edificio puede tener base, techo y toldo independientes. Las hojas de personaje se declaran en los catálogos por separado.",
+  "version": 3,
+  "description": "Dos conjuntos completos de 192×144 por personaje; no se usan capas independientes de ropa ni cabello.",
   "world": {
     "ground": "/assets/game/world/ground.png"
   },
@@ -24,10 +24,32 @@
   },
   "characters": {
     "leo": {
-      "base": "/assets/game/characters/leo/base.png"
+      "looks": [
+        {
+          "id": "principal",
+          "name": "Conjunto original",
+          "sheet": "/assets/game/characters/leo/look-01.png"
+        },
+        {
+          "id": "alternativo",
+          "name": "Segundo conjunto",
+          "sheet": "/assets/game/characters/leo/look-02.png"
+        }
+      ]
     },
     "itza": {
-      "base": "/assets/game/characters/itza/base.png"
+      "looks": [
+        {
+          "id": "principal",
+          "name": "Conjunto original",
+          "sheet": "/assets/game/characters/itza/look-01.png"
+        },
+        {
+          "id": "alternativo",
+          "name": "Segundo conjunto",
+          "sheet": "/assets/game/characters/itza/look-02.png"
+        }
+      ]
     }
   }
 }

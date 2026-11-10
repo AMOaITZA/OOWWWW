@@ -8,11 +8,13 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "node --test tests/*.test.js",
-    "art:check": "node scripts/validate-art.mjs"
+    "art:check": "node scripts/validate-art.mjs",
+    "test:e2e": "playwright test"
   },
   "devDependencies": {
     "vite": "^5.4.0",
-    "pngjs": "^7.0.0"
+    "pngjs": "^7.0.0",
+    "@playwright/test": "^1.56.0"
   },
   "dependencies": {
     "gsap": "^3.12.5",

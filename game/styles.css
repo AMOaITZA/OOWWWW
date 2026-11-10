@@ -86,3 +86,9 @@
 
 .final-action-game{justify-self:center;display:block;background:var(--px-rose-deep);color:var(--px-cream);border:3px solid var(--px-ink);box-shadow:4px 4px 0 var(--px-ink);padding:10px 22px;cursor:pointer;font:16px 'Silkscreen',monospace}
 .final-action-game:hover{background:var(--px-wood-dark)}
+
+/* Armario simplificado: dos hojas completas por personaje, sin ranuras de prendas. */
+.wardrobe-items{grid-template-columns:repeat(2,minmax(0,1fr))}
+.wardrobe-item:disabled{opacity:.55;cursor:not-allowed}
+.wardrobe-left>.wardrobe-category{width:100%}
+@media(max-width:520px){.wardrobe-items{grid-template-columns:1fr}}

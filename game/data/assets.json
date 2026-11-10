@@ -1,40 +1,31 @@
 {
-  "version": 1,
-  "description": "Rutas relativas a la raíz web. El motor no conoce nombres de archivos: modifica únicamente este manifiesto.",
+  "version": 2,
+  "description": "Rutas web; valores ausentes usan placeholders generados por código.",
   "world": {
-    "ground": null
+    "ground": "/assets/game/world/ground.png"
   },
   "objects": {
-    "tree": null,
-    "house": null,
-    "letter": null,
-    "gallery": null,
-    "book": null,
-    "playlist": null,
-    "tv": null,
-    "clock": null,
-    "places": null,
-    "final": null,
-    "wardrobe": null
+    "house": "/assets/game/objects/house.png",
+    "letter": "/assets/game/objects/letter.png",
+    "gallery": "/assets/game/objects/gallery.png",
+    "book": "/assets/game/objects/book.png",
+    "playlist": "/assets/game/objects/playlist.png",
+    "tv": "/assets/game/objects/tv.png",
+    "clock": "/assets/game/objects/clock.png",
+    "places": "/assets/game/objects/places.png",
+    "final": "/assets/game/objects/final.png",
+    "wardrobe": "/assets/game/objects/wardrobe.png",
+    "tree": "/assets/game/objects/tree.png",
+    "rock": "/assets/game/objects/rock.png",
+    "bench": "/assets/game/objects/bench.png",
+    "lamp": "/assets/game/objects/lamp.png"
   },
   "characters": {
     "leo": {
-      "base": null,
-      "hairBack": null,
-      "hairFront": null,
-      "top": null,
-      "bottom": null,
-      "shoes": null,
-      "accessories": null
+      "base": "/assets/game/characters/leo/base.png"
     },
     "itza": {
-      "base": null,
-      "hairBack": null,
-      "hairFront": null,
-      "top": null,
-      "bottom": null,
-      "shoes": null,
-      "accessories": null
+      "base": "/assets/game/characters/itza/base.png"
     }
   }
 }

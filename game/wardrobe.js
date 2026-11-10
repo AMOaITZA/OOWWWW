@@ -1,5 +1,5 @@
-import leo from './data/catalog-leo.json';
-import itza from './data/catalog-itza.json';
+import leo from './data/catalog-leo.json' with { type: 'json' };
+import itza from './data/catalog-itza.json' with { type: 'json' };
 export const catalogs={leo,itza};
 export const SLOTS=['hair','top','bottom','shoes','accessories'];
 export function getChoice(outfits,who,slot){

@@ -28,9 +28,21 @@
         <span class="brand">OOWWWW <small>Nuestro pequeño mundo</small></span>
         <div class="header-actions">
           <button id="help-button" class="hud-button" type="button">Cómo jugar</button>
+          <button id="map-button" class="hud-button" type="button">Mapa</button>
           <a class="hud-button" href="/">Modo clásico</a>
         </div>
       </header>
+      <div id="map-panel" class="map-panel" hidden role="dialog" aria-modal="true" aria-labelledby="map-title">
+        <div class="map-paper">
+          <header class="map-title-row">
+            <h2 id="map-title">Nuestro pequeño mundo</h2>
+            <button id="close-map" class="hud-button" type="button" aria-label="Cerrar mapa">Cerrar</button>
+          </header>
+          <p>Selecciona un lugar y caminaremos hasta él. Tócalo de nuevo cuando lleguemos para entrar.</p>
+          <canvas id="overview" width="360" height="240" aria-label="Mapa general: elige un punto para caminar"></canvas>
+          <div id="map-destinations" class="map-destinations" aria-label="Lugares del mundo"></div>
+        </div>
+      </div>
       <div class="game-center">
         <div id="game-frame" class="game-frame">
           <canvas id="world" width="480" height="270" aria-label="Mapa explorable de Itza y Leo"></canvas>

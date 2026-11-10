@@ -6,6 +6,7 @@ import {nearestPlace,sceneObjects} from './places.js';
 import {loadSave,writeSave} from './save.js';
 import {assetImage,prepareWorldAssets,prepareOutfit,groundImage,objectImage} from './assets.js';
 import {createHost} from './experiences/host.js';
+import {createMap} from './map.js';
 
 const $=id=>document.getElementById(id);
 const canvas=$('world'),ctx=canvas.getContext('2d',{alpha:false});
@@ -44,7 +45,7 @@ function cameraAt(){
     y:Math.max(0,Math.min(HEIGHT*TILE-canvas.height,Math.round(pair.y*TILE-canvas.height/2)))};
 }
 function pointClick(event){
-  if(!active||host.isOpen())return;
+  if(!active||host.isOpen()||overview.isOpen())return;
   const bounds=canvas.getBoundingClientRect();
   const px=(event.clientX-bounds.left)*canvas.width/bounds.width;
   const py=(event.clientY-bounds.top)*canvas.height/bounds.height;
@@ -55,11 +56,15 @@ function pointClick(event){
     else goTo(place.arrival[0],place.arrival[1],place);
   }else goTo(Math.floor(wx/TILE),Math.floor(wy/TILE));
 }
+const overview=createMap({
+  places,decor,pair,save,
+  onNavigate:(x,y,place)=>goTo(x,y,place)
+});
 const pressed=new Set();
 const keyDirections={arrowup:[0,-1,'up'],w:[0,-1,'up'],arrowdown:[0,1,'down'],s:[0,1,'down'],arrowleft:[-1,0,'left'],a:[-1,0,'left'],arrowright:[1,0,'right'],d:[1,0,'right']};
 function step(dt){
   pair.clock+=dt;
-  if(!active||host.isOpen()){pair.moving=false;return;}
+  if(!active||host.isOpen()||overview.isOpen()){pair.moving=false;return;}
   const direction=Object.keys(keyDirections).find(key=>pressed.has(key));
   if(direction&&!path.length){
     const [dx,dy,face]=keyDirections[direction];
@@ -101,7 +106,7 @@ function draw(){
 }
 function tick(time){
   const dt=Math.min(0.05,(time-lastTime)/1000||0);lastTime=time;
-  step(dt);draw();saveClock+=dt;
+  step(dt);draw();overview.repaint();saveClock+=dt;
   if(saveClock>10){persist();saveClock=0;}
   requestAnimationFrame(tick);
 }
@@ -125,8 +130,9 @@ $('help-button').addEventListener('click',()=>{
 canvas.addEventListener('pointerdown',pointClick);
 window.addEventListener('keydown',event=>{
   if(event.key==='Escape'&&host.isOpen()){host.close();return;}
+  if(event.key==='Escape'&&overview.isOpen()){overview.close();return;}
   const key=event.key.toLowerCase();
-  if(active&&!host.isOpen()&&keyDirections[key]){
+  if(active&&!host.isOpen()&&!overview.isOpen()&&keyDirections[key]){
     event.preventDefault();pressed.add(key);
     if(path.length){path=[];targetPlace=null;}
   }

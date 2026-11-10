@@ -102,3 +102,20 @@ test('wardrobe changes remain after closing and reloading',async({page})=>{
   await expect(page.getByRole('button',{name:'Suéter rosa'})).toHaveClass(/selected/);
 });
 
+
+test('overview navigates without teleporting and can be closed',async({page})=>{
+  await page.goto('/game.html');
+  await page.locator('#start-game').click();
+  await page.locator('#map-button').click();
+  await expect(page.locator('#map-panel')).toBeVisible();
+  await expect(page.locator('#map-destinations button')).toHaveCount(10);
+  const original=await page.evaluate(()=>JSON.parse(localStorage.getItem('oowwww-game-v1')).position);
+  await page.getByRole('button',{name:'Carta',exact:true}).click();
+  await expect(page.locator('#map-panel')).toBeHidden();
+  await expect(page.locator('#world-status')).toContainText('Caminando hacia Carta');
+  const after=await page.evaluate(()=>JSON.parse(localStorage.getItem('oowwww-game-v1')).position);
+  expect(after).toEqual(original);
+  await page.locator('#map-button').click();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#map-panel')).toBeHidden();
+});

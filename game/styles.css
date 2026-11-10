@@ -70,3 +70,16 @@
 .wardrobe-direction{display:flex;gap:4px}
 .wardrobe-face{flex:1;min-width:0;border:2px solid var(--px-ink);padding:5px 3px;background:var(--px-parchment);color:var(--px-ink);font:10px 'Silkscreen',monospace;cursor:pointer}
 .wardrobe-face.selected{background:var(--px-rose-deep);color:#FFF1DC}
+
+/* Plano top-down con selector de destino y la misma navegación A* del mundo */
+.map-panel{position:fixed;z-index:25;inset:0;background:#1B120ED8;padding:calc(12px + env(safe-area-inset-top)) 12px calc(12px + env(safe-area-inset-bottom));display:grid;place-items:center;overflow:auto}
+.map-paper{background:var(--px-cream);color:var(--px-ink);border:5px solid var(--px-ink);box-shadow:8px 8px 0 var(--px-wood-dark);width:min(800px,100%);max-height:94dvh;overflow:auto;padding:16px}
+.map-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.map-title-row h2{font:clamp(13px,2.5vw,19px)/1.5 'Press Start 2P',monospace}
+.map-paper p{margin:6px 0 14px;font-size:21px}
+.map-paper canvas{display:block;image-rendering:pixelated;touch-action:none;border:3px solid var(--px-ink);width:min(100%,600px);height:auto;aspect-ratio:3/2;margin:0 auto 14px;cursor:crosshair}
+.map-destinations{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.map-destination{border:2px solid var(--px-ink);padding:8px;background:var(--px-parchment);color:var(--px-ink);font:12px/1.5 'Silkscreen',monospace;cursor:pointer;text-align:left}
+.map-destination.visited{background:var(--px-amber)}
+.map-destination:hover{background:var(--px-rose-light)}
+.map-title-row .hud-button{background:var(--px-wood-dark);color:var(--px-cream)}

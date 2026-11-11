@@ -35,12 +35,20 @@ function scenery(ctx,x,y,kind){
     ctx.fillStyle='#F2C46D';ctx.fillRect(x-6,y-38,12,6);
   }
 }
-function drawWorldObject(ctx,obj,image){
-  const x=obj.tile[0]*TILE,y=obj.tile[1]*TILE;
-  if(image){
-    if(obj.kind==='tree')ctx.drawImage(image,x-24,y-82,48,84);
-    else ctx.drawImage(image,x-24,y-45,48,47);
-  }else scenery(ctx,x,y,obj.kind);
+function drawWorldObject(ctx, obj, image) {
+  const x = obj.tile[0] * TILE;
+  const y = obj.tile[1] * TILE;
+
+  if (image) {
+    if (obj.kind === 'tree') {
+      ctx.drawImage(image, x - 32, y - 110, 64, 112);
+    } else if (obj.kind === 'lamp') {
+ctx.drawImage(image, x - 22, y - 94, 50, 100);    } else {
+      ctx.drawImage(image, x - 24, y - 45, 48, 47);
+    }
+  } else {
+    scenery(ctx, x, y, obj.kind);
+  }
 }
 function placeBase(ctx,obj,image){
   const x=obj.tile[0]*TILE,y=obj.tile[1]*TILE;

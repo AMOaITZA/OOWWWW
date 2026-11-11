@@ -105,3 +105,22 @@ El validador de arte se ejecuta con `npm run art:check` y comprueba tamaños,
 alfa limpio y un máximo de 48 colores en el conjunto de imágenes cargadas.
 
 Para Render: sitio estático, build `npm install && npm run build`, publicar `dist`.
+
+## Música de YouTube (beta)
+
+La casa Playlist incluye una lista de 24 videos proporcionados por el usuario.
+Elegir una canción abre un reproductor oficial de YouTube fijo y visible que
+permanece montado al cerrar experiencias o usar el mapa. El botón **Música**
+permite abrir el último video seleccionado. Los botones Anterior/Siguiente
+cambian el video. **Cerrar** destruye el iframe y detiene la reproducción.
+
+- La reproducción **no comienza automáticamente**; se pulsa Play en YouTube.
+- El video permanece visible y tiene al menos 200×200 px, incluso en móvil.
+- Si el titular impide la inserción, se puede usar «Abrir video en YouTube».
+- Los navegadores pueden interrumpir videos al cambiar de pestaña o bloquear
+  ciertas reproducciones. No se descargan ni se separan las pistas de audio.
+- No se necesita API key ni Spotify. La selección (no la reproducción) se recuerda
+  en `localStorage` como `oowwww-music-track-v1`.
+- No se añade contenido musical al repositorio; se utilizan incrustaciones oficiales.
+
+Archivos: `game/data/songs.json`, `game/music.js`, `game/experiences/playlist.js`.

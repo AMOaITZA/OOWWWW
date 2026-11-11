@@ -7,6 +7,7 @@ import {loadSave,writeSave} from './save.js';
 import {assetImage,prepareWorldAssets,prepareOutfit,groundImage,objectImage} from './assets.js';
 import {createHost} from './experiences/host.js';
 import {createMap} from './map.js';
+import {createMusicPlayer} from './music.js';
 
 const $=id=>document.getElementById(id);
 const canvas=$('world'),ctx=canvas.getContext('2d',{alpha:false});
@@ -21,8 +22,10 @@ function persist(){
   save.position={x:Math.round(pair.x),y:Math.round(pair.y)};
   save.direction=pair.direction;writeSave(save);
 }
+const music=createMusicPlayer();
 const host=createHost({
   save,assetImage,
+  onMusicSelect:videoId=>{if(music.select(videoId))host.close();},
   onOutfitChange:()=>{persist();return prepareOutfit(save.outfits);},
   onClose:()=>{status('Explora nuestro mundo');persist();}
 });

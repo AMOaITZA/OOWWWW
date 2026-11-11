@@ -29,6 +29,7 @@
         <div class="header-actions">
           <button id="help-button" class="hud-button" type="button">Cómo jugar</button>
           <button id="map-button" class="hud-button" type="button">Mapa</button>
+          <button id="music-button" class="hud-button" type="button" aria-controls="music-dock" aria-expanded="false">Música</button>
           <a class="hud-button" href="/">Modo clásico</a>
         </div>
       </header>
@@ -59,6 +60,24 @@
           <div id="experience-content"></div>
         </div>
       </div>
+      <aside id="music-dock" class="music-dock" hidden aria-label="Reproductor musical de YouTube">
+        <div class="music-dock-header">
+          <div class="music-dock-heading">
+            <p class="music-kicker">Nuestra música</p>
+            <strong id="music-track-title">Canción</strong>
+            <span id="music-track-artist">Artista</span>
+          </div>
+          <button id="music-close" class="music-dock-close" type="button" aria-label="Cerrar y detener música">Cerrar</button>
+        </div>
+        <div id="music-video" class="music-video" aria-label="Video de YouTube"></div>
+        <div class="music-dock-controls">
+          <button id="music-prev" type="button" aria-label="Canción anterior">Anterior</button>
+          <span id="music-track-number" aria-live="polite">1 / 24</span>
+          <button id="music-next" type="button" aria-label="Canción siguiente">Siguiente</button>
+        </div>
+        <p class="music-dock-help">Pulsa reproducir en el video. Para escuchar mientras exploras, mantén este reproductor visible. Cerrar detiene la canción.</p>
+        <a id="music-youtube-link" class="music-youtube-link" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/">Abrir video en YouTube</a>
+      </aside>
     </section>
   </main>
   <script type="module" src="/game/main.js"></script>

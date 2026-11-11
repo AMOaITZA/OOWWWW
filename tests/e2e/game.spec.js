@@ -168,3 +168,34 @@ test('touchscreen portrait navigates and shows responsive game',async({browser})
     expect(errors).toEqual([]);
   }finally{await context.close();}
 });
+
+test('YouTube playlist selects one of 24 songs and keeps the visible player during exploration',async({page})=>{
+  await page.route('**/youtube-nocookie.com/**',route=>route.fulfill({
+    status:200,contentType:'text/html',body:'<!doctype html><title>Reproductor de prueba</title>'
+  }));
+  const place=await loadAt(page,'playlist');
+  await tapPlace(page,place);
+  await expect(page.locator('.playlist-song')).toHaveCount(24);
+  await page.locator('.playlist-search').fill('Paramore');
+  await expect(page.locator('.playlist-song')).toHaveCount(2);
+  await page.getByRole('button',{name:'Elegir Still Into You — Paramore'}).click();
+  await expect(page.locator('#experience')).toBeHidden();
+  await expect(page.locator('#music-dock')).toBeVisible();
+  await expect(page.locator('#music-track-title')).toHaveText('Still Into You');
+  await expect(page.locator('#music-video iframe')).toHaveAttribute('src',/XNB1MhMDFbY/);
+  await page.locator('#help-button').click();
+  await expect(page.locator('#experience')).toBeVisible();
+  await expect(page.locator('#music-video iframe')).toHaveAttribute('src',/XNB1MhMDFbY/);
+  await page.locator('#close-experience').click();
+  await page.getByRole('button',{name:'Canción siguiente'}).click();
+  await expect(page.locator('#music-track-title')).toHaveText('The Only Exception');
+  await expect(page.locator('#music-track-number')).toHaveText('24 / 24');
+  await expect(page.locator('#music-video iframe')).toHaveAttribute('src',/G5vz7UcDm-g/);
+  await page.getByRole('button',{name:'Cerrar y detener música'}).click();
+  await expect(page.locator('#music-dock')).toBeHidden();
+  await expect(page.locator('#music-video iframe')).toHaveCount(0);
+  await page.locator('#music-button').click();
+  await expect(page.locator('#music-track-title')).toHaveText('The Only Exception');
+  const persisted=await page.evaluate(()=>localStorage.getItem('oowwww-music-track-v1'));
+  expect(persisted).toBe('G5vz7UcDm-g');
+});

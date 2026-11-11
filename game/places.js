@@ -1,6 +1,6 @@
 import {TILE} from './world.js';
 export function nearestPlace(places,x,y){
-  return places.find(p=>Math.abs(x-p.tile[0]*TILE)<55&&Math.abs(y-p.tile[1]*TILE+12)<78);
+  return places.find(p=>Math.abs(x-p.tile[0]*TILE)<76&&Math.abs(y-p.tile[1]*TILE+12)<104);
 }
 const roofColor=kind=>kind==='wardrobe'?'#B5656F':kind==='tv'?'#6B4429':kind==='final'?'#E8A0A8':'#A06A3F';
 function walls(ctx,x,y){
@@ -44,14 +44,14 @@ function drawWorldObject(ctx,obj,image){
 }
 function placeBase(ctx,obj,image){
   const x=obj.tile[0]*TILE,y=obj.tile[1]*TILE;
-  if(image)ctx.drawImage(image,x-48,y-60,96,85);
+  if(image)ctx.drawImage(image,x-72,y-60,144,85);
   else walls(ctx,x,y);
 }
 function placeOverlays(ctx,obj,roofImage,awningImage){
   const x=obj.tile[0]*TILE,y=obj.tile[1]*TILE;
-  if(roofImage)ctx.drawImage(roofImage,x-52,y-63,104,30);
+  if(roofImage)ctx.drawImage(roofImage,x-76,y-90,152,34);
   else roof(ctx,x,y,obj.kind);
-  if(awningImage)ctx.drawImage(awningImage,x-32,y-24,64,16);
+  if(awningImage)ctx.drawImage(awningImage,x-20,y-41,40,24);
   sign(ctx,x,y,obj.name);
   const [ax,ay]=obj.arrival;
   ctx.fillStyle='#2E1F18';ctx.fillRect(ax*TILE-5,ay*TILE-5,10,10);

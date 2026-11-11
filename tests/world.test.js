@@ -22,3 +22,11 @@ test('A* walks to landmarks with adjacent collision-safe steps',()=>{
 test('tapping blocked ground chooses a nearby walkable tile',()=>{
   const closest=closestWalkable(30,18);assert.ok(closest);assert.ok(walkable(closest.x,closest.y));
 });
+
+test('wider house collision matches facade sprites without blocking arrivals',()=>{
+  for(const p of places){
+    assert.ok(!walkable(p.tile[0]-4,p.tile[1]),p.id);
+    assert.ok(!walkable(p.tile[0]+4,p.tile[1]),p.id);
+    assert.ok(walkable(...p.arrival),p.id);
+  }
+});

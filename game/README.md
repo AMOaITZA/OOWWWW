@@ -1,90 +1,107 @@
-# OOWWWW — prueba de movimiento con sprites completos
+# OOWWWW — recursos de mapa y personajes
 
-## Estado
+El clásico se conserva en `/`, y el RPG en `/game.html`.
+Todo este trabajo se hace en `feat/game-phase-0`. El PR sigue en borrador.
 
-El sitio clásico permanece en `/` y el juego se abre en `/game.html`.
+## Paquete de arte preparado
 
-El mapa, A*, las diez experiencias y el guardado siguen operativos.
-El Armario ahora **solo permite dos looks completos por personaje**. No se requieren
-archivos independientes para cabello, lentes, chamarra, pantalones o calzado.
+Las once ilustraciones de edificios y piezas enviadas originalmente como JPEG
+se han convertido a PNG, eliminando el tablero cuadriculado, con alfa 0/255,
+proporción conservada y una paleta común de **48 colores** junto con el
+suelo y los dos personajes existentes.
 
-## Recursos mínimos para probar el movimiento hoy
+**IMPORTANTE:** usa el paquete completo más reciente, no mezcles su suelo con
+los `look-01.png` de un paquete anterior sin pasar `npm run art:check`,
+pues cada versión puede usar una paleta distinta.
 
-Descarga el paquete de recursos preparado con las tres imágenes originales.
-Copia su carpeta `assets/` sobre la carpeta `assets/` del repositorio (sin borrar
-los recursos preexistentes del sitio clásico).
+### Archivos del paquete
 
-Los tres PNG son:
-
-```
-assets/game/world/ground.png            1920×1280 (suelo)
-assets/game/characters/itza/look-01.png 192×144 (primer atuendo completo)
-assets/game/characters/leo/look-01.png  192×144 (primer atuendo completo)
-```
-
-**Solo con esos tres recursos se puede jugar y caminar.** El código carga los tres
-automáticamente porque sus rutas ya figuran en `game/data/assets.json`.
-No hay que modificar JavaScript después de copiarlos.
-
-Las hojas tienen 6 columnas × 3 filas, con frames de 32×48. Columnas:
-0–1 quieto; 2–5 caminar. Filas: frente, derecha y espalda. Izquierda se
-obtiene espejando derecha.
-
-## Segundo atuendo, para cuando esté listo
-
-Únicamente añade:
-
-```
-assets/game/characters/itza/look-02.png 192×144
-assets/game/characters/leo/look-02.png  192×144
+```text
+assets/game/world/ground.png             1920 x 1280
+assets/game/characters/leo/look-01.png   192 x 144
+assets/game/characters/itza/look-01.png  192 x 144
+assets/game/objects/house.png            144 x 85
+assets/game/objects/letter.png           144 x 85
+assets/game/objects/gallery.png          144 x 85
+assets/game/objects/book.png             144 x 85
+assets/game/objects/playlist.png         144 x 85
+assets/game/objects/tv.png               144 x 85
+assets/game/objects/clock.png            144 x 85
+assets/game/objects/places.png           144 x 85
+assets/game/objects/final.png            144 x 85
+assets/game/objects/roof.png             152 x 34
+assets/game/objects/awning.png           40 x 24
 ```
 
-El botón «Segundo conjunto» estará disponible para el personaje correspondiente
-cuando exista su PNG válido. Cada look es un solo archivo de 18 frames.
-La selección se guarda en `localStorage` con la clave `oowwww-game-v1`, sin
-alterar las posiciones ni la ropa ya guardada del sitio.
+Se adaptó el motor para **no estirar** las fachadas. La colisión de cada edificio
+ocupa nueve celdas de ancho; techo y toldo son objetos separados.
 
-Ambos personajes pueden usar looks distintos.
+**Pendientes:** `wardrobe.png`, `tree.png`, `rock.png`, `bench.png`,
+`lamp.png` y los segundos conjuntos `look-02.png` de Itza y Leo.
+Mientras falten, el motor usa sus dibujos provisionales.
 
-## Arranque en Windows / PowerShell
+## Instrucciones de instalación
+
+Descarga el ZIP de recursos que se entrega junto a esta revisión.
+
+1. Extrae el ZIP.
+2. Abre tu proyecto local `OOWWWW`.
+3. Copia la carpeta `assets` del ZIP dentro de tu carpeta `OOWWWW`,
+   **combinándola** con la carpeta existente. No borres las fotos clásicas.
+4. En PowerShell dentro de OOWWWW:
 
 ```powershell
 git switch feat/game-phase-0
 git pull origin feat/game-phase-0
 npm install
 npm run art:check
+npm test
 npm run dev
 ```
 
-Abrir `http://localhost:5173/game.html` y pulsar Entrar.
+Abre `http://localhost:5173/game.html` y prueba caminar, abrir casas y el Armario.
 
-- Clic o toque en el terreno: caminar hacia allí siguiendo un camino libre.
-- Tocar un edificio: caminar hacia su entrada; otro toque para abrirlo.
-- WASD o flechas: desplazamiento con teclado.
-- «Mapa»: seleccionar destinos sin teletransportación.
-- «Armario»: ver Itza o Leo por delante, de lado o de espaldas, reproducir caminata y elegir entre dos conjuntos completos.
+## Subir los nuevos PNG a GitHub
 
-## Pruebas
+Después de copiar los recursos en el proyecto local:
 
-```bash
-npm test
-npm run art:check
-npm run build
-npm run test:e2e
+```powershell
+git status
+git add assets/game
+git commit -m "feat(art): add pixel-art buildings and characters"
+git push origin feat/game-phase-0
 ```
 
-`art:check` comprueba tamaño de hojas y suelo, alfa totalmente opaco/transparente
-y paleta combinada de hasta 48 colores. La alineación de manos, el efecto de
-caminar juntos y la precisión del pixel art todavía requieren revisión visual.
+**No uses `git add -A` si tienes otros archivos no relacionados**. Solo
+necesitamos subir `assets/game`.
 
-## Importante
+Cuando termine el push, el PR de esta rama recibirá los PNG y GitHub Actions
+repetirá todas las pruebas.
 
-Los JPEG suministrados eran imágenes de referencia, no sprites utilizables
-directamente. Los PNG preparados son conversiones técnicas de prueba.
-Se ha eliminado el fondo blanco de los personajes, normalizado el tamaño y reducido
-su paleta de colores. Si aparecen bordes extraños por la compresión JPEG original
-habrá que corregirlos manualmente, sin generar otra hoja por cada prenda.
+## Revisión visual
 
-La ruta de inicio del mundo y la disposición actual de casas y árboles son
-provisionales y se adaptarán a la composición final del mapa.
-El suelo es solo una imagen: los obstáculos se definen por separado en el código.
+Los JPEG entregados ya traían la cuadrícula gris pintada, no transparencia real.
+Una segmentación automática nunca garantiza contornos perfectos: revisa sobre
+fondo oscuro las macetas, escalones y esquinas de cada edificio, y comprueba los
+píxeles de ojos, manos y pies de ambos personajes. Si hiciera falta, retocaremos
+esos detalles manualmente.
+
+El contador, las 104 razones, la carta, las ocho fotos, los 21 recuerdos, Spotify
+y demás experiencias no se modifican al incorporar los PNG. Los GIF externos
+continúan dependiendo del sitio que los aloja.
+
+## Agregar nuevos recursos
+
+Las rutas viven en `game/data/assets.json`. El código central del juego no
+incluye nombres concretos de archivos de ropa ni del suelo.
+
+- `wardrobe.png`: 144 x 85 píxeles, transparente.
+- `tree.png`: 48 x 84.
+- `rock.png`, `bench.png`, `lamp.png`: 48 x 47.
+- `look-02.png` por cada personaje: hoja completa 192 x 144;
+  6 columnas x 3 filas, cada frame 32 x 48.
+
+El validador de arte se ejecuta con `npm run art:check` y comprueba tamaños,
+alfa limpio y un máximo de 48 colores en el conjunto de imágenes cargadas.
+
+Para Render: sitio estático, build `npm install && npm run build`, publicar `dist`.

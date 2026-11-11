@@ -7,7 +7,7 @@ export function initWorld(places,decor=[]){
   solid.fill(0);
   for(let y=0;y<HEIGHT;y++)for(let x=0;x<WIDTH;x++)if(!inside(x,y))solid[key(x,y)]=1;
   for(const p of places){
-    for(let y=p.tile[1]-2;y<=p.tile[1]+1;y++)for(let x=p.tile[0]-3;x<=p.tile[0]+3;x++){
+    for(let y=p.tile[1]-2;y<=p.tile[1]+1;y++)for(let x=p.tile[0]-4;x<=p.tile[0]+4;x++){
       if(inside(x,y))solid[key(x,y)]=1;
     }
   }

@@ -9,7 +9,7 @@ const manifest=read('game/data/assets.json');
 const images=new Map();
 const add=(url,type)=>{if(url&&url.startsWith('/assets/game/')&&url.toLowerCase().endsWith('.png'))images.set(url,type);};
 add(manifest.world.ground,'ground');
-for(const url of Object.values(manifest.objects))add(url,'object');
+for(const [kind,url] of Object.entries(manifest.objects))add(url,kind);
 for(const who of ['leo','itza']){
   const looks=manifest.characters[who]?.looks??[];
   if(looks.length>2)throw Error(who+': solo se permiten dos conjuntos completos');
@@ -24,7 +24,8 @@ for(const [url,type] of images){
   let png;
   try{png=PNG.sync.read(readFileSync(path));}
   catch(error){errors.push(url+': PNG ilegible ('+error.message+')');continue;}
-  const expected=type==='ground'?[1920,1280]:type==='sheet'?[192,144]:null;
+  const special={roof:[152,34],awning:[40,24],tree:[48,84],rock:[48,47],bench:[48,47],lamp:[48,47]};
+  const expected=type==='ground'?[1920,1280]:type==='sheet'?[192,144]:special[type]??[144,85];
   if(expected&&(png.width!==expected[0]||png.height!==expected[1]))
     errors.push(url+': '+png.width+'×'+png.height+'; debe ser '+expected.join('×'));
   let transparent=0,partial=0;

@@ -1,4 +1,4 @@
-import songs from '../data/songs.json';
+import songs from '../data/songs.json' with { type: 'json' };
 import {paragraph,node} from './dom.js';
 
 const normalize=text=>text.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();

@@ -170,7 +170,7 @@ test('touchscreen portrait navigates and shows responsive game',async({browser})
 });
 
 test('YouTube playlist selects one of 24 songs and keeps the visible player during exploration',async({page})=>{
-  await page.route('**/youtube-nocookie.com/**',route=>route.fulfill({
+  await page.route('**/*youtube-nocookie.com/**',route=>route.fulfill({
     status:200,contentType:'text/html',body:'<!doctype html><title>Reproductor de prueba</title>'
   }));
   const place=await loadAt(page,'playlist');

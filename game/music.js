@@ -1,4 +1,4 @@
-import songs from './data/songs.json';
+import songs from './data/songs.json' with { type: 'json' };
 
 const SAVE_KEY='oowwww-music-track-v1';
 

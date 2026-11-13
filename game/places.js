@@ -42,6 +42,8 @@ function drawWorldObject(ctx, obj, image) {
   if (image) {
     if (obj.kind === 'tree') {
       ctx.drawImage(image, x - 32, y - 110, 64, 112);
+    } else if (obj.kind === 'bench') {
+      ctx.drawImage(image, x - 28, y - 39, 56, 40);
     } else if (obj.kind === 'lamp') {
 ctx.drawImage(image, x - 22, y - 94, 50, 100);    } else {
       ctx.drawImage(image, x - 24, y - 45, 48, 47);
@@ -65,9 +67,9 @@ function placeOverlays(ctx,obj,roofImage,awningImage){
   ctx.fillStyle='#2E1F18';ctx.fillRect(ax*TILE-5,ay*TILE-5,10,10);
   ctx.fillStyle='#F2C46D';ctx.fillRect(ax*TILE-3,ay*TILE-3,6,6);
 }
-export function sceneObjects(places,decor,objectImage){
+export function sceneObjects(places,decor,objectImage,momentImage=()=>null){
   return [
-    ...decor.map(obj=>({z:obj.tile[1]*TILE,draw:ctx=>drawWorldObject(ctx,obj,objectImage(obj.kind))})),
+    ...decor.map(obj=>({z:obj.tile[1]*TILE,draw:ctx=>drawWorldObject(ctx,obj,obj.kind==='bench'?(momentImage('benchSeat')||objectImage('bench')):objectImage(obj.kind))})),
     ...places.flatMap(obj=>[
       {z:obj.tile[1]*TILE,draw:ctx=>placeBase(ctx,obj,objectImage(obj.kind))},
       {z:(obj.tile[1]+2)*TILE,draw:ctx=>placeOverlays(ctx,obj,objectImage('roof'),objectImage('awning'))}

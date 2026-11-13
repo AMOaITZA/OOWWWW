@@ -186,6 +186,30 @@ async function load(){
     hearts:makeEffect('hearts'),sparkles:makeEffect('sparkles')
   };
   for(const [name,resource] of Object.entries(fallback))cache.set(name,resource);
+  // Los diecinueve gráficos definitivos se empaquetan en una hoja indexada
+  // de 720×342. Sus rectángulos se recortan sin suavizado y luego se exponen
+  // con las mismas claves que usaban los respaldos: no rompe las cinemáticas.
+  const atlas=await image('/assets/game/wedding/atlas.png');
+  if(atlas&&atlas.naturalWidth===720&&atlas.naturalHeight===342){
+    const regions={
+      castle:[0,0,264,154],'itza-walk':[264,0,192,144],
+      'leo-walk':[456,0,192,144],roof:[0,154,280,86],
+      arch:[280,154,64,86],bench:[344,154,68,68],
+      vows:[412,154,256,48],idle:[0,240,128,48],
+      kiss:[128,240,192,48],hug:[320,240,128,48],
+      'wedding-bench':[448,240,128,48],
+      flower:[576,240,32,40],emblem:[608,240,24,24],
+      vines:[632,240,40,40],petalPath:[672,240,48,48],
+      celebrate:[0,288,192,48],awning:[192,288,56,38],
+      hearts:[248,288,96,16],sparkles:[344,288,96,16]
+    };
+    for(const [name,[sx,sy,w,h]] of Object.entries(regions)){
+      const c=canvas(w,h),ctx=c.getContext('2d');
+      ctx.drawImage(atlas,sx,sy,w,h,0,0,w,h);
+      cache.set(name,c);
+    }
+    return;
+  }
   // Si los PNG definitivos del paquete ya están en el repositorio, reemplazan
   // los respaldos. Una imagen ausente nunca impide abrir el juego.
   const urls={

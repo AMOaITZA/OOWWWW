@@ -1,8 +1,8 @@
 import {TILE} from './world.js';
 
 // Tamaños de dibujo (no alteran el tamaño original de los archivos PNG).
-const CAT_DRAW_W=56;
-const CAT_DRAW_H=45;
+const CAT_DRAW_W=40;
+const CAT_DRAW_H=32;
 const SIT_FRAME_W=64;
 const SIT_FRAME_H=48;
 const SIT_DRAW_W=80;
@@ -87,26 +87,12 @@ export function createMoments({spots,pair,getImage,bubble}){
       bubble.hidden=true;
       return;
     }
-    if(phraseRemaining<=0)bubble.hidden=true;
+    bubble.hidden=phraseRemaining<=0;
     nextPhrase-=dt;
     if(nextPhrase<=0){
       say(randomLine());
       nextPhrase=24+Math.random()*22;
     }
-  }
-  function positionBubble(camera){
-    if(bubble.hidden||phraseRemaining<=0)return;
-    let x=pair.x*TILE,y=pair.y*TILE-65;
-    if(bubbleAnchor==='cats'&&petRemaining>0){
-      x=cats.tile[0]*TILE;y=cats.tile[1]*TILE-CAT_DRAW_H-22;
-    }else if(sitting){
-      x=sitting.tile[0]*TILE;y=sitting.tile[1]*TILE-SIT_DRAW_H-19;
-    }
-    // Posición relativa al canvas: funciona también con escala fraccionaria móvil.
-    const sx=Math.min(410,Math.max(70,x-camera.x));
-    const sy=Math.min(195,Math.max(75,y-camera.y));
-    bubble.style.left=(sx/480*100)+'%';
-    bubble.style.top=(sy/270*100)+'%';
   }
   function scenery(){
     const result=[];
@@ -116,8 +102,8 @@ export function createMoments({spots,pair,getImage,bubble}){
         const sprite=getImage(petRemaining>0?'catHappy':'catIdle');
         if(sprite)ctx.drawImage(sprite,x-CAT_DRAW_W/2,y-CAT_DRAW_H,CAT_DRAW_W,CAT_DRAW_H);
         else{
-          ctx.fillStyle='#8B8584';ctx.fillRect(x-24,y-32,48,31);
-          ctx.fillStyle='#FFF1DC';ctx.fillRect(x-22,y-29,18,22);
+          ctx.fillStyle='#8B8584';ctx.fillRect(x-18,y-26,36,25);
+          ctx.fillStyle='#FFF1DC';ctx.fillRect(x-16,y-23,14,18);
         }
         if(petRemaining>0){
           const fx=getImage('petSparkles');
@@ -146,5 +132,5 @@ export function createMoments({spots,pair,getImage,bubble}){
     return result;
   }
   return {spots,momentAt:(x,y)=>momentAt(spots,x,y),isMoment,closest:(x,y)=>closestMoment(spots,x,y),
-    arrive,stand,isSitting,seatId,shouldHidePair,tick,scenery,positionBubble};
+    arrive,stand,isSitting,seatId,shouldHidePair,tick,scenery};
 }

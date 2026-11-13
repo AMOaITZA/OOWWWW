@@ -89,14 +89,10 @@ export function mount(root,_data,api){
     else fallbackCastle();
     const roof=api.getWeddingImage('roof');
     if(roof)ctx.drawImage(roof,100,17,280,86);
+    // Un toque de pétalos bajo los zapatos, sin colocar losetas cuadradas
+    // flotando en la parte inferior de la pantalla.
     const petal=api.getWeddingImage('petalPath');
-    if(petal)for(const [x,y] of [[216,200],[216,232]]){
-      ctx.drawImage(petal,x,y,48,48);
-    }
-    const vines=api.getWeddingImage('vines');
-    if(vines)for(const [x,y] of [[36,155],[404,158],[27,213],[411,214]]){
-      ctx.drawImage(vines,x,y,39,39);
-    }
+    if(petal)ctx.drawImage(petal,221,212,38,38);
     // El arco queda detrás de la pareja durante los votos.
     const arch=api.getWeddingImage('arch');
     if(arch)ctx.drawImage(arch,173,87,134,148);

@@ -341,7 +341,7 @@ test('real wedding artwork ships and interactive vows and cinematic autoplay wor
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   const asset=await page.request.get('/assets/game/wedding/atlas.png');
   expect(asset.status()).toBe(200);
-  expect(asset.headers()['content-type']).toMatch(/image\\/png/);
+  expect(asset.headers()['content-type']).toContain('image/png');
   const bytes=await asset.body();
   expect(bytes.length).toBeGreaterThan(20000);
   const place=await loadAt(page,'boda');

@@ -30,6 +30,7 @@ export const hasAsset=url=>Boolean(ready.get(url));
 export async function prepareWorldAssets(){
   const tasks=[load(manifest.world.ground,{ground:true})];
   for(const url of Object.values(manifest.objects))tasks.push(load(url));
+  for(const url of Object.values(manifest.moments??{}))tasks.push(load(url));
   for(const who of CHARACTERS){
     for(const look of getLookOptions(who))tasks.push(load(look.sheet,{sheet:true}));
   }
@@ -37,6 +38,7 @@ export async function prepareWorldAssets(){
 }
 export function groundImage(){return assetImage(manifest.world.ground);}
 export function objectImage(kind){return assetImage(manifest.objects[kind]);}
+export function momentImage(kind){return assetImage(manifest.moments?.[kind]);}
 export async function prepareOutfit(outfits){
   await Promise.all(equipmentUrls(outfits).map(url=>load(url,{sheet:true})));
 }

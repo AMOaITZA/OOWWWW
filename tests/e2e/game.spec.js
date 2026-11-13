@@ -261,7 +261,7 @@ test('bench interaction uses E, repeats to stand, and walking stands up',async({
   expect(errors).toEqual([]);
 });
 
-test('Leo dialogue never covers the game canvas, cats or seated characters',async({page})=>{
+test('Leo speech bubble floats near the characters without hiding the cats',async({page})=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   await page.addInitScript(()=>localStorage.setItem('oowwww-game-v1',JSON.stringify({
     position:{x:68,y:51},direction:'down',outfits:{leo:{},itza:{}},visited:[]
@@ -269,19 +269,30 @@ test('Leo dialogue never covers the game canvas, cats or seated characters',asyn
   await page.goto('/game.html');
   await page.locator('#start-game').click();
   await page.keyboard.press('e');
-  await expect(page.locator('#leo-bubble')).toBeVisible();
-  async function verify(){
-    return page.evaluate(()=>{
-      const bubble=document.querySelector('#leo-bubble').getBoundingClientRect();
-      const frame=document.querySelector('#game-frame').getBoundingClientRect();
-      return {bubbleTop:bubble.top,frameBottom:frame.bottom,overlaps:bubble.top<frame.bottom-1};
-    });
-  }
-  expect((await verify()).overlaps).toBe(false);
+  const bubble=page.locator('#leo-bubble');
+  await expect(bubble).toBeVisible();
+  await expect(bubble).toHaveCSS('position','fixed');
+  const metrics=await page.evaluate(()=>{
+    const element=document.querySelector('#leo-bubble');
+    const b=element.getBoundingClientRect();
+    const canvas=document.querySelector('#world').getBoundingClientRect();
+    const k=canvas.width/480;
+    const catX=canvas.left+(68*16-20-(68*16-240))*k;
+    const catY=canvas.top+(47*16-32-(51*16-135))*k;
+    const overlap=Math.max(0,Math.min(b.right,catX+40*k)-Math.max(b.left,catX))*
+      Math.max(0,Math.min(b.bottom,catY+32*k)-Math.max(b.top,catY));
+    return {overlap,x:b.x,y:b.y,right:b.right,bottom:b.bottom,
+      tail:element.dataset.tail,width:innerWidth,height:innerHeight};
+  });
+  expect(metrics.overlap).toBe(0);
+  expect(metrics.x).toBeGreaterThanOrEqual(0);
+  expect(metrics.y).toBeGreaterThanOrEqual(0);
+  expect(metrics.right).toBeLessThanOrEqual(metrics.width);
+  expect(metrics.bottom).toBeLessThanOrEqual(metrics.height);
+  expect(['top','bottom','left','right']).toContain(metrics.tail);
   await page.locator('#map-button').click();
   await page.getByRole('button',{name:'Banca · Banca del sendero'}).click();
   await expect(page.locator('#world-status')).toContainText('Descansando juntos en la banca',{timeout:12000});
-  await expect(page.locator('#leo-bubble')).toBeVisible();
-  expect((await verify()).overlaps).toBe(false);
+  await expect(bubble).toBeVisible();
   expect(errors).toEqual([]);
 });

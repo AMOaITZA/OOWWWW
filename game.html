@@ -60,24 +60,35 @@
           <div id="experience-content"></div>
         </div>
       </div>
-      <aside id="music-dock" class="music-dock" hidden aria-label="Reproductor musical de YouTube">
+      <aside id="music-dock" class="music-dock" hidden aria-label="Reproductor musical">
         <div class="music-dock-header">
           <div class="music-dock-heading">
-            <p class="music-kicker">Nuestra música</p>
+            <span class="music-kicker">Nuestra música</span>
             <strong id="music-track-title">Canción</strong>
             <span id="music-track-artist">Artista</span>
           </div>
-          <button id="music-close" class="music-dock-close" type="button" aria-label="Cerrar y detener música">Cerrar</button>
+          <button id="music-close" class="music-dock-close" type="button" aria-label="Minimizar reproductor">Minimizar</button>
         </div>
-        <div id="music-video" class="music-video" aria-label="Video de YouTube"></div>
+        <p id="music-status" class="music-status" role="status" aria-live="polite">Elige una canción</p>
+        <div class="music-seek-row">
+          <label for="music-seek" class="music-input-label">Progreso</label>
+          <input id="music-seek" type="range" min="0" max="1000" value="0" disabled aria-label="Posición de la canción">
+          <span id="music-time">0:00 / 0:00</span>
+        </div>
         <div class="music-dock-controls">
           <button id="music-prev" type="button" aria-label="Canción anterior">Anterior</button>
-          <span id="music-track-number" aria-live="polite">1 / 24</span>
+          <button id="music-play" type="button" aria-label="Reproducir música">Reproducir</button>
           <button id="music-next" type="button" aria-label="Canción siguiente">Siguiente</button>
         </div>
-        <p class="music-dock-help">Pulsa reproducir en el video. Para escuchar mientras exploras, mantén este reproductor visible. Cerrar detiene la canción.</p>
-        <a id="music-youtube-link" class="music-youtube-link" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/">Abrir video en YouTube</a>
+        <div class="music-dock-bottom">
+          <label class="music-volume" for="music-volume">Volumen
+            <input id="music-volume" type="range" min="0" max="100" value="75">
+          </label>
+          <button id="music-stop" type="button">Detener</button>
+          <button id="music-list" type="button">Lista</button>
+        </div>
       </aside>
+      <audio id="music-audio" preload="none"></audio>
     </section>
   </main>
   <script type="module" src="/game/main.js"></script>

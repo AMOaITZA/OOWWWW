@@ -94,41 +94,29 @@ for(const id of ['carta','galeria','razones','playlist','recuerdos','contador','
     expect(errors).toEqual([]);
   });
 }
-test('three outfits per character, switch and saved choice',async({page})=>{
-  // PNG sintético válido: comprueba el segundo conjunto antes de que se suba su arte.
-  const tiny='iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/zpwAAAAASUVORK5CYII=';
-  const png=Buffer.from(tiny,'base64');
-  // Los sprites se generan con el tamaño exacto usando pngjs.
-  const {default:pngjs}=await import('pngjs');
-  const {PNG}=pngjs;
-  const sheet=new PNG({width:192,height:144});
-  for(let i=0;i<sheet.data.length;i+=4){
-    sheet.data[i]=80;sheet.data[i+1]=65;sheet.data[i+2]=82;sheet.data[i+3]=255;
-  }
-  const body=PNG.sync.write(sheet);
-  await page.route('**/assets/game/characters/*/look-0*.png',route=>route.fulfill({
-    status:200,contentType:'image/png',body
-  }));
+test('only installed outfits can be selected and wedding choices persist',async({page})=>{
+  const missingRequests=[];
+  page.on('request',request=>{if(request.url().includes('look-02.png'))missingRequests.push(request.url());});
   const place=await loadAt(page,'armario');
   await tapPlace(page,place);
-  await expect(page.locator('#experience-title')).toHaveText('Armario');
   await expect(page.locator('.wardrobe-item')).toHaveCount(3);
-  await expect(page.getByRole('button',{name:'Segundo conjunto'})).toBeEnabled();
-  await page.getByRole('button',{name:'Segundo conjunto'}).click();
-  await expect(page.getByRole('button',{name:'Segundo conjunto'})).toHaveClass(/selected/);
+  await expect(page.getByRole('button',{name:/Segundo conjunto/})).toBeDisabled();
+  await page.getByRole('button',{name:'Vestido de novia'}).click();
+  await expect(page.getByRole('button',{name:'Vestido de novia'})).toHaveClass(/selected/);
   await page.getByRole('button',{name:'Lado'}).click();
   await page.getByRole('button',{name:'Ver caminata'}).click();
   await expect(page.getByRole('button',{name:'Detener animación'})).toBeVisible();
   await page.getByRole('button',{name:'Leo',exact:true}).click();
-  await expect(page.locator('.wardrobe-item')).toHaveCount(3);
+  await expect(page.getByRole('button',{name:/Segundo conjunto/})).toBeDisabled();
   await expect(page.getByRole('button',{name:'Conjunto original'})).toHaveClass(/selected/);
   await page.locator('#close-experience').click();
   const save=await page.evaluate(()=>JSON.parse(localStorage.getItem('oowwww-game-v1')));
-  expect(save.outfits.itza.look).toBe('alternativo');
+  expect(save.outfits.itza.look).toBe('boda');
   expect(save.outfits.leo.look??'principal').toBe('principal');
   await page.reload();await page.locator('#start-game').click();
   await tapPlace(page,place);
-  await expect(page.getByRole('button',{name:'Segundo conjunto'})).toHaveClass(/selected/);
+  await expect(page.getByRole('button',{name:'Vestido de novia'})).toHaveClass(/selected/);
+  expect(missingRequests).toEqual([]);
 });
 test('overview navigates without teleporting and can be closed',async({page})=>{
   await page.goto('/game.html');

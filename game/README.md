@@ -9,11 +9,12 @@ n.º 1. No se fusiona con `main` sin aprobación explícita.
 - Mundo de 120 × 80 casillas (16 píxeles por casilla), cámara de 480 × 270,
   paseo por teclado, ratón y pantalla táctil, con búsqueda de rutas A*.
 - Once lugares: las nueve experiencias clásicas, armario y **Castillo de nuestra boda**.
-  Además, tres puntos interactivos: los dos gatitos y dos bancas.
+  Además, tres puntos interactivos: una pareja de gatitos y dos bancas.
   El mapa muestra **14 destinos**.
 - Itza y Leo conservan sus atuendos seleccionados y la posición guardada.
-  Tienen tres opciones en el armario: original, alternativa opcional y boda.
-  Las imágenes `look-02.png` son opcionales y pueden seguir pendientes.
+  El armario conserva tres identificadores: original, alternativa opcional y boda.
+  Solo se habilitan las imágenes instaladas: original y boda. Los dos
+  `look-02.png` siguen pendientes y no producen solicitudes HTTP.
 - Globo de frases de Leo que se recoloca para no tapar la pareja ni los gatos.
 - Reproductor de audio local persistente, controles y catálogo de canciones.
 
@@ -52,6 +53,7 @@ artefacto original; poses de banca; fachada del castillo, techo
 reconstruido, arco, flores, emblema, banco, toldo, enredaderas,
 camino de pétalos, corazones y destellos. Los recursos originales se
 procesaron desde las imágenes del usuario sin modificar el modo clásico.
+Esta revisión conserva todos esos PNG sin regenerarlos.
 
 ## Probar en Windows / VS Code
 
@@ -90,3 +92,30 @@ grabaciones comerciales aportadas por el usuario. No se deben
 distribuir públicamente mediante GitHub/Render sin autorización de
 los titulares. La ceremonia no agrega grabaciones ni reproduce música
 sin interacción del visitante.
+
+
+## Revisión de continuidad visual e interacción
+
+- La fachada y la coronación del castillo comparten composición en mapa y
+  ceremonia: se evitan las torres duplicadas. El arco, las flores y las bancas
+  respetan su proporción. Las lámparas del mapa usan escala uniforme 2×.
+- Las poses de boda comparten escala 2× y anclaje de pies/centro medido por
+  frame. Votos, beso y abrazo terminan en una pose sostenida. Hay fundido
+  entre capítulos, repetición completa y respeto de movimiento reducido.
+- Las bancas incorporan aproximación y levantamiento de 0,38 s; los gatos
+  tienen anticipación, reacción y cuatro frames visibles de destellos.
+- Los globos permanecen en el área del juego y conservan las frases originales.
+  Los cambios de ruta a mitad de paso regresan al centro de la casilla.
+- Pulsa **E** cerca de una entrada para abrirla, además del clic/toque habitual.
+  Las flechas de los controles de volumen/progreso no mueven a la pareja.
+- Los diálogos contienen el foco, admiten Escape, restauran el control anterior
+  y reinician el scroll. El reproductor se minimiza temporalmente durante
+  una experiencia y vuelve al cerrar; el audio sigue montado y nunca se inicia
+  al entrar al mundo.
+- Press Start 2P, Silkscreen (400/700) y VT323 se sirven localmente desde
+  `assets/game/fonts/`, con sus licencias SIL OFL. El juego ya no depende de
+  Google Fonts para mostrar su tipografía. El modo clásico conserva su código.
+
+Consulta la [guía visual](../docs/ART-DIRECTION.md), el
+[inventario y prompts](../docs/ART-INVENTORY.md) y el
+[informe de pruebas y capturas](../docs/QA-POLISH.md).

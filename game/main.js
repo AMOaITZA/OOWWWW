@@ -1,20 +1,23 @@
 import places from './data/places.json';
 import decor from './data/decor.json';
+import momentSpots from './data/moments.json';
 import {TILE,WIDTH,HEIGHT,initWorld,walkable,closestWalkable,findPath,groundTile} from './world.js';
 import {createPair,drawPair} from './pair.js';
 import {nearestPlace,sceneObjects} from './places.js';
 import {loadSave,writeSave} from './save.js';
-import {assetImage,prepareWorldAssets,prepareOutfit,groundImage,objectImage} from './assets.js';
+import {assetImage,prepareWorldAssets,prepareOutfit,groundImage,objectImage,momentImage} from './assets.js';
 import {createHost} from './experiences/host.js';
 import {createMap} from './map.js';
 import {createMusicPlayer} from './music.js';
+import {createMoments} from './moments.js';
 
 const $=id=>document.getElementById(id);
 const canvas=$('world'),ctx=canvas.getContext('2d',{alpha:false});
 ctx.imageSmoothingEnabled=false;
 const save=loadSave();save.outfits??={leo:{},itza:{}};
 const pair=createPair(save);
-initWorld(places,decor);
+const moments=createMoments({spots:momentSpots,pair,getImage:momentImage,bubble:$('leo-bubble')});
+initWorld(places,decor,momentSpots);
 if(!walkable(Math.round(pair.x),Math.round(pair.y))){pair.x=30;pair.y=25;}
 let path=[],targetPlace=null,lastTime=0,saveClock=0,active=false;
 const status=text=>{$('world-status').textContent=text;};
@@ -30,12 +33,17 @@ const host=createHost({
   onClose:()=>{status('Explora nuestro mundo');persist();}
 });
 function goTo(x,y,place=null){
+  if(moments.isSitting()&&!moments.isMoment(place))moments.stand();
   const point=closestWalkable(x,y);
   if(!point){status('No se puede llegar a ese lugar');return;}
   const route=findPath(pair,point);
   if(route.length){path=route;targetPlace=place;status(place?'Caminando hacia '+place.name:'Caminando…');}
   else if(Math.round(pair.x)===point.x&&Math.round(pair.y)===point.y){
-    path=[];targetPlace=place;status(place?'Toca otra vez '+place.name:'Ya estamos aquí');
+    path=[];targetPlace=null;
+    if(place&&moments.isMoment(place)){
+      moments.arrive(place);
+      status(place.kind==='cats'?'Acariciando a los gatitos':'Descansando juntos en la banca');
+    }else status(place?'Toca otra vez '+place.name:'Ya estamos aquí');
   }else status('No se puede llegar a ese lugar');
 }
 function openPlace(place){
@@ -53,6 +61,14 @@ function pointClick(event){
   const px=(event.clientX-bounds.left)*canvas.width/bounds.width;
   const py=(event.clientY-bounds.top)*canvas.height/bounds.height;
   const camera=cameraAt(),wx=px+camera.x,wy=py+camera.y;
+  const spot=moments.momentAt(wx,wy);
+  if(spot){
+    if(moments.isSitting()&&Math.hypot(pair.x-spot.arrival[0],pair.y-spot.arrival[1])<.51){
+      moments.arrive(spot);
+      status('Seguimos explorando');
+    }else goTo(...spot.arrival,spot);
+    return;
+  }
   const place=nearestPlace(places,wx,wy);
   if(place){
     if(!path.length&&Math.hypot(pair.x-place.arrival[0],pair.y-place.arrival[1])<0.51)openPlace(place);
@@ -60,7 +76,7 @@ function pointClick(event){
   }else goTo(Math.floor(wx/TILE),Math.floor(wy/TILE));
 }
 const overview=createMap({
-  places,decor,pair,save,
+  places,decor,moments:momentSpots,pair,save,
   onNavigate:(x,y,place)=>goTo(x,y,place)
 });
 const pressed=new Set();
@@ -70,6 +86,7 @@ function step(dt){
   if(!active||host.isOpen()||overview.isOpen()){pair.moving=false;return;}
   const direction=Object.keys(keyDirections).find(key=>pressed.has(key));
   if(direction&&!path.length){
+    if(moments.isSitting())moments.stand();
     const [dx,dy,face]=keyDirections[direction];
     pair.direction=face;
     const nx=Math.round(pair.x)+dx,ny=Math.round(pair.y)+dy;
@@ -84,7 +101,10 @@ function step(dt){
     if(dist<=0.035||speed>=dist){pair.x=next.x;pair.y=next.y;path.shift();
       if(!path.length){
         pair.moving=false;
-        status(targetPlace?'Llegamos a '+targetPlace.name+'. Toca otra vez para entrar.':'Explora nuestro mundo');
+        if(targetPlace&&moments.isMoment(targetPlace)){
+          const spot=targetPlace;targetPlace=null;moments.arrive(spot);
+          status(spot.kind==='cats'?'Acariciando a los gatitos':'Descansando juntos en la banca');
+        }else status(targetPlace?'Llegamos a '+targetPlace.name+'. Toca otra vez para entrar.':'Explora nuestro mundo');
         persist();
       }
     }else{pair.x+=dx/dist*speed;pair.y+=dy/dist*speed;}
@@ -102,13 +122,16 @@ function draw(){
     const y0=Math.max(0,Math.floor(camera.y/TILE)-1),y1=Math.min(HEIGHT,Math.ceil((camera.y+canvas.height)/TILE)+1);
     for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++)groundTile(ctx,x,y);
   }
-  const scenery=objects.concat([{z:pair.y*TILE,draw:ctx=>drawPair(ctx,pair,assetImage,save.outfits)}]);
+  const scenery=objects.concat(moments.scenery());
+  if(!moments.shouldHidePair())scenery.push({z:pair.y*TILE,draw:ctx=>drawPair(ctx,pair,assetImage,save.outfits)});
   scenery.sort((a,b)=>a.z-b.z);
   for(const item of scenery)item.draw(ctx); // objetos independientes, clasificados por profundidad
   ctx.restore();
+  moments.positionBubble(camera);
 }
 function tick(time){
   const dt=Math.min(0.05,(time-lastTime)/1000||0);lastTime=time;
+  moments.tick(dt,{active,dialogsOpen:host.isOpen()||overview.isOpen()});
   step(dt);draw();overview.repaint();saveClock+=dt;
   if(saveClock>10){persist();saveClock=0;}
   requestAnimationFrame(tick);
@@ -135,6 +158,10 @@ window.addEventListener('keydown',event=>{
   if(event.key==='Escape'&&host.isOpen()){host.close();return;}
   if(event.key==='Escape'&&overview.isOpen()){overview.close();return;}
   const key=event.key.toLowerCase();
+  if(active&&key==='e'&&!host.isOpen()&&!overview.isOpen()){
+    const spot=moments.closest(pair.x,pair.y,4);
+    if(spot){event.preventDefault();goTo(...spot.arrival,spot);return;}
+  }
   if(active&&!host.isOpen()&&!overview.isOpen()&&keyDirections[key]){
     event.preventDefault();pressed.add(key);
     if(path.length){path=[];targetPlace=null;}

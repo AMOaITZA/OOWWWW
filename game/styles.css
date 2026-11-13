@@ -166,3 +166,21 @@
 }
 .map-destination.moment-destination{background:#FFF1DC;border-color:#B5656F}
 .map-destination.moment-destination:hover{background:#F6D1CF}
+
+/* Castillo y escenas de boda: pixel art accesible, sin tapar controles. */
+.wedding-ceremony{display:grid;gap:10px;justify-items:center;text-align:center}
+.wedding-stage-number,.wedding-progress{font:11px/1.5 'Silkscreen',monospace!important;color:#956078;letter-spacing:1px}
+.wedding-stage-title{font:clamp(18px,3.4vw,27px)/1.45 'Silkscreen',monospace;margin:0;color:#7d475d}
+.wedding-stage-caption{font:clamp(15px,3vw,20px)/1.4 'VT323',monospace!important;color:#9f6b78}
+.wedding-cinema{display:block;image-rendering:pixelated;width:100%;height:auto;aspect-ratio:16/9;max-height:52dvh;border:5px solid #9b6477;box-shadow:5px 5px 0 #6d475a;background:#312a4a}
+.wedding-vow{font:clamp(17px,2.6vw,23px)/1.55 'Silkscreen',monospace!important;max-width:620px;padding:12px;background:#fff9eb;border:3px double #dca0ae;color:#6d4654}
+.wedding-controls{width:100%;display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+.wedding-controls .wedding-nav{min-height:43px;padding:8px 10px;min-width:110px;font:clamp(11px,2vw,13px) 'Silkscreen',monospace;color:#fff7ee;background:#986075;border:3px solid #472d3b;box-shadow:2px 2px 0 #472d3b}
+.wedding-controls .wedding-next{background:#ad687e}
+@media(max-width:560px){
+ .experience:has(.wedding-ceremony){padding:8px 7px}
+ .experience-panel:has(.wedding-ceremony){padding:18px 10px;max-height:96dvh}
+ .wedding-controls .wedding-nav{flex:1;min-width:0;font-size:10px}
+ .wedding-cinema{border-width:3px;box-shadow:2px 2px 0 #6d475a}
+ .wedding-vow{padding:9px;font-size:14px!important}
+}

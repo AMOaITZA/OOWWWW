@@ -12,7 +12,7 @@ add(manifest.world.ground,'ground');
 for(const [kind,url] of Object.entries(manifest.objects))add(url,kind);
 for(const who of ['leo','itza']){
   const looks=manifest.characters[who]?.looks??[];
-  if(looks.length>2)throw Error(who+': solo se permiten dos conjuntos completos');
+  if(looks.length>3)throw Error(who+': solo se permiten tres conjuntos completos');
   for(const look of looks)add(look.sheet,'sheet');
 }
 const palette=new Set(),errors=[];

@@ -30,3 +30,13 @@ test('wider house collision matches facade sprites without blocking arrivals',()
     assert.ok(walkable(...p.arrival),p.id);
   }
 });
+
+test('wedding castle has a wide obstacle and a reachable entrance',()=>{
+ const castle=places.find(p=>p.id==='boda');
+ assert.ok(castle);
+ assert.ok(!walkable(castle.tile[0]-8,castle.tile[1]-3));
+ assert.ok(!walkable(castle.tile[0]+8,castle.tile[1]));
+ assert.ok(walkable(...castle.arrival));
+ const route=findPath({x:30,y:25},{x:castle.arrival[0],y:castle.arrival[1]});
+ assert.ok(route.length>0);
+});

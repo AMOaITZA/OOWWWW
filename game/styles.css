@@ -129,10 +129,10 @@
   .experience:has(~ .music-dock:not([hidden])) .experience-panel{max-height:max(230px,calc(100dvh - 260px))}
 }
 
-/* Interacciones románticas: burbuja de Leo sobre los personajes. */
-.leo-bubble{position:absolute;z-index:5;transform:translate(-50%,-100%);max-width:min(280px,78%);min-width:105px;background:#FFF1DC;color:#2E1F18;border:3px solid #2E1F18;padding:8px 10px;font:11px/1.55 'Silkscreen',monospace;text-align:center;box-shadow:3px 3px 0 #B5656F;pointer-events:none;overflow-wrap:break-word}
+/* Las frases se muestran debajo del canvas: nunca ocultan personajes ni animales. */
+.leo-dialogue-row{display:flex;align-items:center;justify-content:center;width:min(100%,960px);min-height:64px;padding:7px 6px 0}
+.leo-bubble{position:relative;max-width:min(660px,100%);width:fit-content;background:var(--px-cream);color:var(--px-wood-deep);border:3px solid var(--px-ink);padding:8px 12px;font:clamp(10px,1.5vw,13px)/1.5 'Silkscreen',monospace;text-align:center;box-shadow:3px 3px 0 var(--px-rose-deep);overflow-wrap:break-word}
 .leo-bubble[hidden]{display:none}
-.leo-bubble::after{content:'';position:absolute;bottom:-9px;left:calc(50% - 7px);width:10px;height:10px;transform:rotate(45deg);border-right:3px solid #2E1F18;border-bottom:3px solid #2E1F18;background:#FFF1DC}
+@media(max-width:600px){.leo-dialogue-row{min-height:62px;padding:6px 4px 0}.leo-bubble{font-size:10px;padding:6px 7px;border-width:2px;line-height:1.4}}
 .map-destination.moment-destination{background:#FFF1DC;border-color:#B5656F}
 .map-destination.moment-destination:hover{background:#F6D1CF}
-@media(max-width:600px){.leo-bubble{font-size:8px;padding:5px 7px;min-width:76px;max-width:73%;border-width:2px}}

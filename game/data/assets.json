@@ -51,5 +51,12 @@
         }
       ]
     }
+  },
+  "moments": {
+    "catIdle": "/assets/game/moments/cat-duo-idle.png",
+    "catHappy": "/assets/game/moments/cat-duo-happy.png",
+    "petSparkles": "/assets/game/moments/pet-sparkles-sheet.png",
+    "pairBenchSit": "/assets/game/moments/pair-bench-sit-sheet.png",
+    "benchSeat": "/assets/game/moments/bench-seat-wide.png"
   }
 }

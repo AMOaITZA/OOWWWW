@@ -135,3 +135,41 @@ una publicación pública se recomienda música original o autorizada.
 `assets/` a `dist/` para el despliegue estático y las URLs de audio
 deben admitir solicitudes HTTP Range para permitir saltos de posición.
 
+
+## Los gatitos y las bancas (beta)
+
+Los cinco sprites pixel art enviados por el usuario se convirtieron de JPEG
+con tablero de fondo pintado a PNG transparentes y de dimensiones nativas:
+
+- `assets/game/moments/cat-duo-idle.png` — 80×64
+- `assets/game/moments/cat-duo-happy.png` — 80×64
+- `assets/game/moments/pet-sparkles-sheet.png` — 96×16 (6 × 16×16)
+- `assets/game/moments/pair-bench-sit-sheet.png` — 128×48 (2 × 64×48)
+- `assets/game/moments/bench-seat-wide.png` — 56×40
+
+El lugar **Los gatitos** se encuentra en la celda [68, 47], cerca del
+sendero central; se puede acariciar tocándolos, haciendo clic o pulsando
+**E** cuando Itza y Leo se acercan. Los gatos cambian al sprite feliz
+durante la caricia, y aparecen estrellitas/corazones animados.
+
+También se puede tomar asiento en las dos bancas originales de
+`game/data/decor.json`, en [24, 31] y [76, 47]. El sprite de
+Itza y Leo sentados ocupa 2 fotogramas, se levanta al pulsar **E** de nuevo
+o al moverse, y vuelve a la animación de caminar.
+
+El mapa general incluye tres destinos adicionales (10 lugares originales
++ gatos + dos bancas). La cuenta de lugares visitados sigue reflejando solo
+las 10 experiencias originales. No se cambió el modo clásico.
+
+Leo pronuncia aleatoriamente frases cortas mediante una burbuja sobre los
+personajes, con pausas entre una y otra. Las frases están en
+`game/moments.js` y se pueden editar sin regenerar imágenes.
+
+Las pruebas automáticas de esta incorporación verifican los cinco PNG,
+las posiciones caminables, la colisión de los gatos y la interacción por
+teclado y el mapa, incluidos los dispositivos móviles.
+
+**Pendiente de otra fase:** armonizar los sprites originales del mundo
+para que su paleta combinada cumpla el límite histórico configurado de
+48 colores. La paleta actual tiene 156; no se redujo ni se alteró la
+regla para aprobar artificialmente este cambio.

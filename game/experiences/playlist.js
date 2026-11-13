@@ -1,10 +1,10 @@
-import songs from '../data/songs.json' with { type: 'json' };
+import {tracks} from '../music.js';
 import {paragraph,node} from './dom.js';
 
-const normalize=text=>text.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const normalize=value=>value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 export function mount(root,data,api){
   paragraph(root,data.text);
-  paragraph(root,'Elige una canción para abrir el reproductor de YouTube. Puedes seguir caminando y visitar los demás lugares mientras el video permanece visible.','playlist-guide');
+  paragraph(root,'Elige una canción para escucharla mientras exploras. Los controles están en el botón Música.','playlist-guide');
   const search=node('input','playlist-search');
   search.type='search';
   search.placeholder='Buscar canción o artista';
@@ -15,17 +15,15 @@ export function mount(root,data,api){
   list.setAttribute('aria-label','Canciones disponibles');
   function render(){
     const query=normalize(search.value.trim());
-    const filtered=songs.filter(song=>normalize(song.title+' '+song.artist).includes(query));
-    count.textContent=filtered.length+' de '+songs.length+' canciones';
+    const filtered=tracks.filter(track=>normalize(track.title+' '+track.artist).includes(query));
+    count.textContent=filtered.length+' de '+tracks.length+' canciones';
     list.replaceChildren();
-    for(const song of filtered){
+    for(const track of filtered){
       const button=node('button','playlist-song');
       button.type='button';
-      button.setAttribute('aria-label','Elegir '+song.title+' — '+song.artist);
-      const title=node('strong','playlist-song-title',song.title);
-      const artist=node('span','playlist-song-artist',song.artist);
-      button.append(title,artist);
-      button.addEventListener('click',()=>api.onMusicSelect?.(song.videoId));
+      button.setAttribute('aria-label','Elegir '+track.title+(track.artist?' — '+track.artist:''));
+      button.append(node('strong','playlist-song-title',track.title),node('span','playlist-song-artist',track.artist||'Audio'));
+      button.addEventListener('click',()=>api.onMusicSelect?.(track.filename));
       list.append(button);
     }
     if(!filtered.length)list.append(node('p','playlist-empty','No encontramos esa canción.'));

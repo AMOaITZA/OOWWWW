@@ -208,8 +208,15 @@ async function load(){
   };
   // No efectuamos solicitudes para recursos que no se han proporcionado aún:
   // el mapa y las animaciones originales permanecen funcionales.
-  const resources=Object.entries(urls).filter(([,url])=>document.querySelector('meta[name="wedding-assets-complete"]')?.content==='yes');
-  await Promise.all(resources.map(async([key,url])=>{
+  // El catálogo de archivos definitivos solo se intenta cargar cuando
+  // existe la primera imagen PNG y el servidor declara el MIME correcto.
+  // Así evitamos decenas de peticiones 404 en una instalación sin el paquete.
+  let installed=false;
+  try{
+    const response=await fetch(urls.castle,{method:'HEAD'});
+    installed=response.ok&&/image\/png/i.test(response.headers.get('content-type')||'');
+  }catch{}
+  if(installed)await Promise.all(Object.entries(urls).map(async([key,url])=>{
     const im=await image(url);if(im)cache.set(key,im);
   }));
 }

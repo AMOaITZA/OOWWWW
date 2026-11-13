@@ -135,7 +135,7 @@ test('overview navigates without teleporting and can be closed',async({page})=>{
   await page.locator('#start-game').click();
   await page.locator('#map-button').click();
   await expect(page.locator('#map-panel')).toBeVisible();
-  await expect(page.locator('#map-destinations button')).toHaveCount(10);
+  await expect(page.locator('#map-destinations button')).toHaveCount(13);
   const original=await page.evaluate(()=>JSON.parse(localStorage.getItem('oowwww-game-v1')).position);
   await page.getByRole('button',{name:'Carta',exact:true}).click();
   await expect(page.locator('#map-panel')).toBeHidden();
@@ -159,7 +159,7 @@ test('touchscreen portrait navigates and shows responsive game',async({browser})
     expect(overflow).toBeLessThanOrEqual(3);
     await page.locator('#map-button').tap();
     await expect(page.locator('#map-panel')).toBeVisible();
-    await expect(page.locator('#map-destinations button')).toHaveCount(10);
+    await expect(page.locator('#map-destinations button')).toHaveCount(13);
     await page.locator('#close-map').tap();
     await expect(page.locator('#map-panel')).toBeHidden();
     await page.locator('#help-button').tap();
@@ -222,4 +222,41 @@ test('audio player fits mobile portrait and does not autoplay on entry',async({b
     await page.locator('#music-close').tap();
     await expect(page.locator('#music-dock')).toBeHidden();
   }finally{await context.close();}
+});
+
+test('cats can be petted and show sparkles state, bench can be used and exited',async({page})=>{
+  const errors=[];page.on('pageerror',error=>errors.push(error.message));
+  await page.addInitScript(()=>localStorage.setItem('oowwww-game-v1',JSON.stringify({
+    position:{x:68,y:51},direction:'down',outfits:{leo:{},itza:{}},visited:[]
+  })));
+  await page.goto('/game.html');
+  await page.locator('#start-game').click();
+  await page.keyboard.press('e');
+  await expect(page.locator('#world-status')).toContainText('Acariciando a los gatitos');
+  await expect(page.locator('#leo-bubble')).toBeVisible();
+  await page.locator('#map-button').click();
+  await expect(page.locator('#map-destinations button')).toHaveCount(13);
+  await expect(page.getByRole('button',{name:'Gatitos · Acariciar'})).toBeVisible();
+  await expect(page.getByRole('button',{name:/Banca · Banca del jardín/})).toBeVisible();
+  await page.locator('#close-map').click();
+  expect(errors).toEqual([]);
+});
+test('bench interaction uses E, repeats to stand, and walking stands up',async({page})=>{
+  const errors=[];page.on('pageerror',error=>errors.push(error.message));
+  await page.addInitScript(()=>localStorage.setItem('oowwww-game-v1',JSON.stringify({
+    position:{x:24,y:33},direction:'down',outfits:{leo:{},itza:{}},visited:[]
+  })));
+  await page.goto('/game.html');
+  await page.locator('#start-game').click();
+  await page.keyboard.press('e');
+  await expect(page.locator('#world-status')).toContainText('Descansando juntos en la banca');
+  await expect(page.locator('#leo-bubble')).toBeVisible();
+  await page.keyboard.press('e');
+  await expect(page.locator('#leo-bubble')).toContainText('vamos a seguir caminando');
+  await page.keyboard.press('e');
+  await page.keyboard.down('ArrowDown');
+  await page.waitForTimeout(350);
+  await page.keyboard.up('ArrowDown');
+  await expect(page.locator('#world')).toBeVisible();
+  expect(errors).toEqual([]);
 });

@@ -7,7 +7,7 @@ import places from '../game/data/places.json' with {type:'json'};
 import decor from '../game/data/decor.json' with {type:'json'};
 import spots from '../game/data/moments.json' with {type:'json'};
 import assets from '../game/data/assets.json' with {type:'json'};
-import {momentAt,closestMoment,LEO_LINES} from '../game/moments.js';
+import {momentAt,closestMoment,LEO_LINES,createMoments} from '../game/moments.js';
 import {initWorld,walkable,findPath} from '../game/world.js';
 
 test('one cats point and two original bench points are registered',()=>{
@@ -50,4 +50,30 @@ test('all five resources are real transparent PNGs at native pixel-art resolutio
     }
     assert.ok(fullyTransparent&&fullyOpaque,url+' sin recorte transparente válido');
   }
+});
+
+test('cats render smaller, the seated pair renders larger and the interaction hitboxes follow the new sizes',()=>{
+  const pair={x:68,y:51,clock:0};
+  const bubble={textContent:'',hidden:true,style:{}};
+  const controller=createMoments({spots,pair,bubble,getImage:name=>({name})});
+  const cats=spots.find(spot=>spot.kind==='cats');
+  const bench=spots.find(spot=>spot.kind==='bench');
+  const drawings=[];
+  const ctx={
+    drawImage(...args){drawings.push(args);},
+    fillRect(){},
+    set fillStyle(_) {}
+  };
+  controller.scenery().forEach(item=>item.draw(ctx));
+  const catDraw=drawings.find(args=>args[0].name==='catIdle');
+  assert.ok(catDraw,'Gatos visibles');
+  assert.deepEqual(catDraw.slice(1),[cats.tile[0]*16-28,cats.tile[1]*16-45,56,45]);
+  assert.equal(momentAt(spots,cats.tile[0]*16+29,cats.tile[1]*16-20)?.id,cats.id);
+  assert.equal(momentAt(spots,cats.tile[0]*16+36,cats.tile[1]*16-20)?.id,undefined);
+  controller.arrive(bench);
+  drawings.length=0;
+  controller.scenery().forEach(item=>item.draw(ctx));
+  const sitDraw=drawings.find(args=>args[0].name==='pairBenchSit');
+  assert.ok(sitDraw,'Itza y Leo sentados visibles');
+  assert.deepEqual(sitDraw.slice(1),[0,0,64,48,bench.tile[0]*16-40,bench.tile[1]*16-59,80,60]);
 });

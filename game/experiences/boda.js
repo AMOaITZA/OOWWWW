@@ -13,6 +13,7 @@ export const stageFor=index=>WEDDING_STAGES[Math.min(WEDDING_STAGES.length-1,Mat
 
 export function mount(root,_data,api){
   let index=0,clock=0,playing=true,alive=true,last=0,frameHandle=0;
+  let autoStory=false,storyClock=0,transition=0;
   const shell=node('section','wedding-ceremony');
   shell.setAttribute('aria-label','Ceremonia interactiva de Itza y Leo');
   const status=node('p','wedding-stage-number');
@@ -30,8 +31,19 @@ export function mount(root,_data,api){
   const back=labeledButton('Anterior',()=>setStage(index-1),'wedding-nav');
   const next=labeledButton('Siguiente',()=>setStage(index===WEDDING_STAGES.length-1?0:index+1),'wedding-nav wedding-next');
   const replay=labeledButton('Repetir escena',()=>{clock=0;playing=true;},'wedding-nav');
+  const auto=labeledButton('Reproducir historia',()=>{
+    if(!autoStory&&index===WEDDING_STAGES.length-1)setStage(0);
+    autoStory=!autoStory;storyClock=0;
+    auto.textContent=autoStory?'Pausar historia':'Reproducir historia';
+    auto.setAttribute('aria-pressed',String(autoStory));
+  },'wedding-nav wedding-auto');
+  auto.setAttribute('aria-pressed','false');
+  const yes=labeledButton('Sí, quiero',()=>{
+    setStage(2);
+    story.textContent='Sí, quiero. Hoy y en cada capítulo de nuestra historia.';
+  },'wedding-nav wedding-yes');
   const counter=node('p','wedding-progress');
-  controls.append(back,next,replay);
+  controls.append(back,next,replay,auto,yes);
   shell.append(status,stageName,caption,canvas,story,counter,controls);
   root.append(shell);
 
@@ -54,30 +66,57 @@ export function mount(root,_data,api){
     rectangle(232,115,16,65,'#b76575');
   }
   function drawBackdrop(time){
-    rectangle(0,0,480,270,'#3d3458');
-    rectangle(0,180,480,90,'#a58a8b');
-    for(let y=180;y<270;y+=13)for(let x=(Math.floor(y/13)%2)*12;x<480;x+=28)
-      rectangle(x,y,25,1,'#e9c8b6');
-    for(let i=0;i<23;i++){
-      const x=(i*97+43)%480,y=(i*63+17)%178;
-      const glow=1+Math.round((1+Math.sin(time*1.7+i))*.7);
-      rectangle(x,y,glow,glow,i%3===0?'#fff3b9':'#e9b6c3');
+    // Atardecer lavanda y jardín frontal, con parpadeos pixelados.
+    rectangle(0,0,480,270,'#6d5875');
+    for(let y=0;y<180;y+=15){
+      const bands=['#75617d','#7d6885','#8d7590','#997f91','#a88f97','#c0a19a'];
+      rectangle(0,y,480,15,bands[Math.min(5,Math.floor(y/30))]);
+    }
+    rectangle(0,183,480,87,'#97ac87');
+    rectangle(0,218,480,52,'#c5a799');
+    for(let y=221;y<270;y+=13){
+      for(let x=Math.floor(y/13)%2?0:13;x<480;x+=26){
+        rectangle(x,y,24,1,'#f8d4bc');
+      }
+    }
+    for(let i=0;i<27;i++){
+      const x=(i*97+43)%480,y=(i*53+17)%174;
+      const pulse=Math.sin(time*1.3+i*1.87)>0.24;
+      rectangle(x,y,pulse?3:1,pulse?3:1,i%3===0?'#fff4c9':'#e9bed1');
     }
     const castle=api.getWeddingImage('castle');
-    if(castle)ctx.drawImage(castle,108,14,264,154);
+    if(castle)ctx.drawImage(castle,108,53,264,154);
     else fallbackCastle();
+    const roof=api.getWeddingImage('roof');
+    if(roof)ctx.drawImage(roof,100,17,280,86);
+    const petal=api.getWeddingImage('petalPath');
+    if(petal)for(const [x,y] of [[216,200],[216,232]]){
+      ctx.drawImage(petal,x,y,48,48);
+    }
+    const vines=api.getWeddingImage('vines');
+    if(vines)for(const [x,y] of [[36,155],[404,158],[27,213],[411,214]]){
+      ctx.drawImage(vines,x,y,39,39);
+    }
+    // El arco queda detrás de la pareja durante los votos.
     const arch=api.getWeddingImage('arch');
-    if(arch)ctx.drawImage(arch,179,78,122,143);
+    if(arch)ctx.drawImage(arch,173,87,134,148);
     else{
       rectangle(174,95,9,128,'#e5b6a5');
       rectangle(298,95,9,128,'#e5b6a5');
       rectangle(183,92,115,10,'#f4d6c5');
       for(let i=0;i<9;i++)rectangle(175+i*15,83+Math.abs(4-i)*2,9,9,i%2?'#d68f9e':'#b9bc91');
     }
-    for(const x of [132,328]){
+    for(const x of [148,332]){
       const flower=api.getWeddingImage('flower');
-      if(flower)ctx.drawImage(flower,x-15,195,30,36);
-      else {rectangle(x-13,212,26,12,'#ebc1b7');rectangle(x-11,198,22,16,'#bf7991');}
+      if(flower)ctx.drawImage(flower,x-18,198,36,46);
+      else{rectangle(x-13,212,26,12,'#ebc1b7');rectangle(x-11,198,22,16,'#bf7991');}
+    }
+    const bench=api.getWeddingImage('bench');
+    if(bench&&stageFor(index).id==='end'){
+      ctx.globalAlpha=.87;
+      ctx.drawImage(bench,15,189,85,76);
+      ctx.drawImage(bench,380,189,85,76);
+      ctx.globalAlpha=1;
     }
   }
   function drawPairSprite(stage,t){
@@ -120,12 +159,16 @@ export function mount(root,_data,api){
     drawBackdrop(clock);
     drawPairSprite(stage,clock);
     particles(clock,stage.id==='kiss'||stage.id==='celebrate'||stage.id==='end');
+    if(transition>0){
+      ctx.fillStyle='#fff3d9';ctx.globalAlpha=Math.min(.45,transition*1.1);
+      ctx.fillRect(0,0,480,270);ctx.globalAlpha=1;
+    }
     ctx.strokeStyle='#f3d3ad';ctx.lineWidth=4;
     ctx.strokeRect(2,2,476,266);
   }
   function setStage(n){
     const nextIndex=Math.min(WEDDING_STAGES.length-1,Math.max(0,n));
-    index=nextIndex;clock=0;playing=true;
+    index=nextIndex;clock=0;storyClock=0;transition=.38;playing=true;
     const stage=stageFor(index);
     status.textContent='Capítulo '+(index+1)+' de '+WEDDING_STAGES.length;
     stageName.textContent=stage.name;
@@ -133,6 +176,7 @@ export function mount(root,_data,api){
     story.textContent=stage.line;
     counter.textContent='Escena '+(index+1)+' / '+WEDDING_STAGES.length;
     back.disabled=index===0;
+    yes.hidden=stage.id!=='vows';
     next.textContent=index===WEDDING_STAGES.length-1?'Volver al principio':'Siguiente';
     redraw();
   }
@@ -140,6 +184,17 @@ export function mount(root,_data,api){
     if(!alive)return;
     const dt=Math.min(.05,(timestamp-last)/1000||0);last=timestamp;
     if(playing)clock+=dt;
+    transition=Math.max(0,transition-dt);
+    if(autoStory){
+      storyClock+=dt;
+      const seconds={welcome:7,vows:10,kiss:7,hug:8,celebrate:9,end:12};
+      if(storyClock>=(seconds[stageFor(index).id]||8)){
+        if(index===WEDDING_STAGES.length-1){
+          autoStory=false;auto.textContent='Reproducir historia';
+          auto.setAttribute('aria-pressed','false');
+        }else setStage(index+1);
+      }
+    }
     redraw();frameHandle=requestAnimationFrame(animate);
   }
   setStage(0);

@@ -93,35 +93,38 @@
 .wardrobe-left>.wardrobe-category{width:100%}
 @media(max-width:520px){.wardrobe-items{grid-template-columns:1fr}}
 
-/* Reproductor oficial de YouTube: visible mientras reproduce, nunca audio oculto. */
-.music-dock{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:40;width:min(390px,calc(100vw - 24px));padding:11px;background:var(--px-parchment);color:var(--px-ink);border:4px solid var(--px-ink);box-shadow:6px 6px 0 var(--px-rose-deep)}
-.music-dock-header{display:flex;align-items:flex-start;gap:10px;justify-content:space-between;margin-bottom:9px}
-.music-dock-heading{display:grid;gap:2px;min-width:0}
-.music-dock-heading strong{font:clamp(12px,1.8vw,15px)/1.45 'Silkscreen',monospace;overflow-wrap:anywhere}
-.music-dock-heading span{font-size:20px}
-.music-kicker{font:10px 'Silkscreen',monospace;text-transform:uppercase;color:var(--px-wood-dark);margin:0 0 3px}
-.music-dock-close,.music-dock-controls button{padding:7px 9px;background:var(--px-wood-dark);border:2px solid var(--px-ink);color:var(--px-cream);font:11px 'Silkscreen',monospace;cursor:pointer}
+/* Reproductor compacto: audio sigue montado al cerrar experiencias. */
+.music-dock{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:40;width:min(365px,calc(100vw - 24px));padding:12px;background:var(--px-parchment);color:var(--px-ink);border:4px solid var(--px-ink);box-shadow:5px 5px 0 var(--px-rose-deep)}
+.music-dock-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.music-dock-heading{display:grid;gap:3px;min-width:0}
+.music-kicker{font:10px 'Silkscreen',monospace;color:var(--px-wood-dark);text-transform:uppercase}
+.music-dock-heading strong{font:clamp(11px,1.7vw,14px)/1.45 'Silkscreen',monospace;overflow-wrap:anywhere}
+.music-dock-heading span:last-child{font:20px 'VT323',monospace;color:var(--px-wood-dark)}
+.music-dock button{padding:8px;background:var(--px-wood-dark);color:var(--px-cream);border:2px solid var(--px-ink);font:10px 'Silkscreen',monospace;cursor:pointer;min-height:36px}
+.music-dock button:focus-visible{outline:3px solid var(--px-rose-deep);outline-offset:2px}
 .music-dock-close{flex-shrink:0}
-.music-video{width:100%;height:212px;min-height:200px;background:#181818}
-.music-video iframe{display:block;border:0;width:100%;height:100%;min-height:200px}
-.music-dock-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:9px}
-.music-dock-controls span{font:12px 'Silkscreen',monospace}
-.music-dock-help{font:16px/1.2 'VT323',monospace;margin:8px 0 4px}
-.music-youtube-link{font:12px 'Silkscreen',monospace;color:var(--px-wood-dark);text-decoration:underline}
+.music-status{margin:7px 0!important;min-height:15px;font:12px 'VT323',monospace}
+.music-seek-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px}
+.music-input-label{font:10px 'Silkscreen',monospace}
+.music-seek-row input,.music-volume input{width:100%;min-width:0;accent-color:var(--px-rose-deep);cursor:pointer}
+.music-seek-row span{font:14px 'VT323',monospace;white-space:nowrap}
+.music-dock-controls{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:7px;margin:10px 0}
+.music-dock-bottom{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px}
+.music-volume{display:grid;grid-template-columns:auto minmax(40px,1fr);align-items:center;gap:6px;font:14px 'VT323',monospace}
 .playlist-guide{font-size:22px!important}
 .playlist-search{width:100%;padding:10px 12px;font:19px 'VT323',monospace;color:var(--px-ink);background:#FFF8EA;border:3px solid var(--px-wood-dark)}
 .playlist-song-count{font:12px 'Silkscreen',monospace!important;margin:10px 0}
-.playlist-song-list{display:grid;gap:7px;max-height:min(390px,48dvh);overflow:auto;padding:3px 5px 5px 0}
+.playlist-song-list{display:grid;gap:7px;max-height:min(400px,48dvh);overflow:auto;padding:3px 5px 5px 0}
 .playlist-song{display:grid;gap:3px;width:100%;padding:11px 12px;text-align:left;background:#FFF8EA;color:var(--px-ink);border:3px solid var(--px-wood-dark);cursor:pointer}
 .playlist-song:hover,.playlist-song:focus-visible{background:var(--px-rose-light)}
 .playlist-song-title{font:13px/1.55 'Silkscreen',monospace;overflow-wrap:anywhere}
 .playlist-song-artist{font:21px 'VT323',monospace;color:var(--px-wood-dark)}
 .playlist-empty{padding:12px}
 @media(max-width:560px){
-  .music-dock{left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));width:auto;padding:8px;box-shadow:3px 3px 0 var(--px-rose-deep)}
-  .music-video{height:206px}
-  .music-dock-controls button{font-size:10px}
-  .music-dock-help{font-size:15px}
-  .experience:has(~ .music-dock:not([hidden])){align-items:start;padding-bottom:300px}
-  .experience:has(~ .music-dock:not([hidden])) .experience-panel{max-height:max(230px,calc(100dvh - 315px))}
+  .music-dock{left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));width:auto;padding:9px;box-shadow:3px 3px 0 var(--px-rose-deep)}
+  .music-dock-controls button{font-size:9px}
+  .music-dock-bottom button{font-size:9px}
+  .music-dock-heading strong{font-size:12px}
+  .experience:has(~ .music-dock:not([hidden])){align-items:start;padding-bottom:240px}
+  .experience:has(~ .music-dock:not([hidden])) .experience-panel{max-height:max(230px,calc(100dvh - 260px))}
 }

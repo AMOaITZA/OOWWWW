@@ -40,7 +40,7 @@ export function createHost(api){
     priorFocus=document.activeElement;body.replaceChildren();
     title.textContent='Cómo jugar';category.textContent='Controles';
     const p=document.createElement('p');
-    p.textContent='Toca o haz clic en el suelo para caminar. Toca una casa para acercarte y vuelve a tocarla para abrir su experiencia. En computadora también puedes usar las flechas o WASD. El armario guarda los conjuntos de cada personaje. En el mapa general encontrarás Los gatitos y dos bancas: tócalos o pulsa E al estar cerca para acariciar o sentarte. Vuelve a pulsar E o camina para levantarte.';
+    p.textContent='Toca o haz clic en el suelo para caminar. Toca una casa para acercarte y vuelve a tocarla para abrir su experiencia. En computadora también puedes usar las flechas o WASD. El armario permite cambiar los conjuntos, incluidos el traje y el vestido de boda. En el mapa general encontrarás el Castillo de nuestra boda: camina hasta su puerta y toca de nuevo el edificio para entrar a la ceremonia. Allí puedes decir «Sí, quiero», avanzar por seis escenas o reproducir la historia seguida. También encontrarás Los gatitos y dos bancas: tócalos o pulsa E cerca para acariciar o sentarte. Pulsa E otra vez o camina para levantarte.';
     body.append(p);panel.hidden=false;closeButton.focus();
   }
   closeButton.addEventListener('click',close);

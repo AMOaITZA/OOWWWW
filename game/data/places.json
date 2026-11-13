@@ -138,5 +138,19 @@
       42
     ],
     "classic": null
+  },
+  {
+    "id": "boda",
+    "name": "Castillo de nuestra boda",
+    "kind": "wedding",
+    "tile": [
+      105,
+      51
+    ],
+    "arrival": [
+      105,
+      56
+    ],
+    "classic": null
   }
 ]

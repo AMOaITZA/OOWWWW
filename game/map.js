@@ -1,7 +1,7 @@
 import {WIDTH,HEIGHT,walkable} from './world.js';
 const STEP=3;
 const palette={grass:'#94B77B',grassShade:'#8BAE74',road:'#D8C69A',water:'#6D9BAC',accent:'#B5656F',ink:'#1B120E',cream:'#FFF1DC',visited:'#F2C46D'};
-export function createMap({places,decor,pair,save,onNavigate}){
+export function createMap({places,decor,moments=[],pair,save,onNavigate}){
   const panel=document.getElementById('map-panel');
   const canvas=document.getElementById('overview');
   const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;
@@ -31,6 +31,12 @@ export function createMap({places,decor,pair,save,onNavigate}){
       ctx.fillStyle=palette.ink;ctx.fillRect(x-2,y-2,5,5);
       ctx.fillStyle=palette.cream;ctx.fillRect(x-1,y-1,3,3);
     }
+    for(const spot of moments){
+      const x=spot.tile[0]*STEP,y=spot.tile[1]*STEP;
+      ctx.fillStyle=spot.kind==='cats'?'#F6C0CE':'#F2C46D';
+      ctx.fillRect(x-3,y-3,7,7);
+      ctx.fillStyle=palette.ink;ctx.fillRect(x-1,y-1,3,3);
+    }
     // Vista exacta de 480×270 sobre el mapa de 1920×1280.
     const cameraX=Math.max(0,Math.min(WIDTH*16-480,Math.round(pair.x*16-240)));
     const cameraY=Math.max(0,Math.min(HEIGHT*16-270,Math.round(pair.y*16-135)));
@@ -58,12 +64,24 @@ export function createMap({places,decor,pair,save,onNavigate}){
       button.addEventListener('click',()=>navigate(...place.arrival,place));
       destinations.append(button);
     }
+    for(const spot of moments){
+      const button=document.createElement('button');
+      button.type='button';button.className='map-destination moment-destination';
+      button.textContent=spot.kind==='cats'?'Gatitos · Acariciar':'Banca · '+spot.name;
+      button.addEventListener('click',()=>navigate(...spot.arrival,spot));
+      destinations.append(button);
+    }
     repaint();closeButton.focus();
   }
   canvas.addEventListener('pointerdown',event=>{
     const rect=canvas.getBoundingClientRect();
     const x=(event.clientX-rect.left)*canvas.width/rect.width/STEP;
     const y=(event.clientY-rect.top)*canvas.height/rect.height/STEP;
+    const spot=moments.reduce((best,p)=>{
+      const dist=Math.hypot(p.tile[0]-x,p.tile[1]-y);
+      return dist<3.8&&(!best||dist<best.dist)?{p,dist}:best;
+    },null)?.p;
+    if(spot){navigate(...spot.arrival,spot);return;}
     const place=places.reduce((best,p)=>{
       const dist=Math.hypot(p.tile[0]-x,p.tile[1]-y);
       return dist<7&&(!best||dist<best.dist)?{p,dist}:best;

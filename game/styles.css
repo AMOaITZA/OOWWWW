@@ -128,3 +128,11 @@
   .experience:has(~ .music-dock:not([hidden])){align-items:start;padding-bottom:240px}
   .experience:has(~ .music-dock:not([hidden])) .experience-panel{max-height:max(230px,calc(100dvh - 260px))}
 }
+
+/* Interacciones románticas: burbuja de Leo sobre los personajes. */
+.leo-bubble{position:absolute;z-index:5;transform:translate(-50%,-100%);max-width:min(280px,78%);min-width:105px;background:#FFF1DC;color:#2E1F18;border:3px solid #2E1F18;padding:8px 10px;font:11px/1.55 'Silkscreen',monospace;text-align:center;box-shadow:3px 3px 0 #B5656F;pointer-events:none;overflow-wrap:break-word}
+.leo-bubble[hidden]{display:none}
+.leo-bubble::after{content:'';position:absolute;bottom:-9px;left:calc(50% - 7px);width:10px;height:10px;transform:rotate(45deg);border-right:3px solid #2E1F18;border-bottom:3px solid #2E1F18;background:#FFF1DC}
+.map-destination.moment-destination{background:#FFF1DC;border-color:#B5656F}
+.map-destination.moment-destination:hover{background:#F6D1CF}
+@media(max-width:600px){.leo-bubble{font-size:8px;padding:5px 7px;min-width:76px;max-width:73%;border-width:2px}}

@@ -6,7 +6,7 @@ import {prepareLooks} from '../assets.js';
 // Dos atuendos completos por personaje: ni pelo ni accesorios se desmontan.
 export function mount(root,_data,api){
   let who='itza',facing='down',walking=false,clock=0;
-  paragraph(root,'Elige un conjunto completo para Itza o Leo. El segundo estará disponible cuando se agregue su hoja de sprites. La elección se guarda automáticamente.');
+  paragraph(root,'Elige el atuendo de Itza o Leo. El traje y el vestido de boda están disponibles. Tu elección se guarda automáticamente.');
   const tabs=node('div','wardrobe-tabs');
   const directions=node('div','wardrobe-direction');
   const items=node('div','wardrobe-items');
@@ -57,7 +57,7 @@ export function mount(root,_data,api){
       if(!available)button.title=i===0?'Copia el PNG para mostrar el sprite definitivo':'Pendiente: '+look.sheet;
       items.append(button);
     }
-    info.textContent='Editando a '+(who==='itza'?'Itza':'Leo')+' · Dos conjuntos completos';
+    info.textContent='Editando a '+(who==='itza'?'Itza':'Leo')+' · Tres conjuntos completos';
     draw();
   }
   const timer=setInterval(()=>{if(walking){clock++;draw();}},155);

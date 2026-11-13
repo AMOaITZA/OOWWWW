@@ -1,5 +1,13 @@
 import {TILE} from './world.js';
 
+// Tamaños de dibujo (no alteran el tamaño original de los archivos PNG).
+const CAT_DRAW_W=56;
+const CAT_DRAW_H=45;
+const SIT_FRAME_W=64;
+const SIT_FRAME_H=48;
+const SIT_DRAW_W=80;
+const SIT_DRAW_H=60;
+
 export const LEO_LINES=[
   'te amo mil ocho mil',
   'owww qué bonitaaa',
@@ -23,8 +31,8 @@ export function momentAt(spots,x,y){
   return spots.find(spot=>{
     const sx=spot.tile[0]*TILE,sy=spot.tile[1]*TILE;
     return spot.kind==='cats'
-      ? Math.abs(x-sx)<44&&y>=sy-66&&y<=sy+12
-      : Math.abs(x-sx)<35&&y>=sy-43&&y<=sy+15;
+      ? Math.abs(x-sx)<CAT_DRAW_W/2+4&&y>=sy-CAT_DRAW_H-4&&y<=sy+10
+      : Math.abs(x-sx)<39&&y>=sy-54&&y<=sy+12;
   })??null;
 }
 export function closestMoment(spots,x,y,maxDistance=4){
@@ -90,9 +98,9 @@ export function createMoments({spots,pair,getImage,bubble}){
     if(bubble.hidden||phraseRemaining<=0)return;
     let x=pair.x*TILE,y=pair.y*TILE-65;
     if(bubbleAnchor==='cats'&&petRemaining>0){
-      x=cats.tile[0]*TILE;y=cats.tile[1]*TILE-80;
+      x=cats.tile[0]*TILE;y=cats.tile[1]*TILE-CAT_DRAW_H-22;
     }else if(sitting){
-      x=sitting.tile[0]*TILE;y=sitting.tile[1]*TILE-64;
+      x=sitting.tile[0]*TILE;y=sitting.tile[1]*TILE-SIT_DRAW_H-19;
     }
     // Posición relativa al canvas: funciona también con escala fraccionaria móvil.
     const sx=Math.min(410,Math.max(70,x-camera.x));
@@ -106,20 +114,20 @@ export function createMoments({spots,pair,getImage,bubble}){
       result.push({z:cats.tile[1]*TILE+1,draw(ctx){
         const x=cats.tile[0]*TILE,y=cats.tile[1]*TILE;
         const sprite=getImage(petRemaining>0?'catHappy':'catIdle');
-        if(sprite)ctx.drawImage(sprite,x-40,y-64,80,64);
+        if(sprite)ctx.drawImage(sprite,x-CAT_DRAW_W/2,y-CAT_DRAW_H,CAT_DRAW_W,CAT_DRAW_H);
         else{
-          ctx.fillStyle='#8B8584';ctx.fillRect(x-24,y-36,48,34);
-          ctx.fillStyle='#FFF1DC';ctx.fillRect(x-22,y-33,18,25);
+          ctx.fillStyle='#8B8584';ctx.fillRect(x-24,y-32,48,31);
+          ctx.fillStyle='#FFF1DC';ctx.fillRect(x-22,y-29,18,22);
         }
         if(petRemaining>0){
           const fx=getImage('petSparkles');
           if(fx){
             const frame=Math.min(5,Math.floor((2.8-petRemaining)/.44));
-            ctx.drawImage(fx,frame*16,0,16,16,x-8,y-83,16,16);
-            ctx.drawImage(fx,((frame+2)%6)*16,0,16,16,x+15,y-76,16,16);
+            ctx.drawImage(fx,frame*16,0,16,16,x-8,y-CAT_DRAW_H-18,16,16);
+            ctx.drawImage(fx,((frame+2)%6)*16,0,16,16,x+12,y-CAT_DRAW_H-12,16,16);
           }else{
-            ctx.fillStyle='#FFC76E';ctx.fillRect(x-2,y-71,5,5);
-            ctx.fillStyle='#E8A0A8';ctx.fillRect(x+13,y-66,5,5);
+            ctx.fillStyle='#FFC76E';ctx.fillRect(x-2,y-CAT_DRAW_H-10,5,5);
+            ctx.fillStyle='#E8A0A8';ctx.fillRect(x+13,y-CAT_DRAW_H-6,5,5);
           }
         }
       }});
@@ -130,7 +138,8 @@ export function createMoments({spots,pair,getImage,bubble}){
         result.push({z:sitting.tile[1]*TILE+12,draw(ctx){
           const x=sitting.tile[0]*TILE,y=sitting.tile[1]*TILE;
           const frame=Math.floor(pair.clock/1.25)%2;
-          ctx.drawImage(sprite,frame*64,0,64,48,x-32,y-47,64,48);
+          ctx.drawImage(sprite,frame*SIT_FRAME_W,0,SIT_FRAME_W,SIT_FRAME_H,
+            x-SIT_DRAW_W/2,y-SIT_DRAW_H+1,SIT_DRAW_W,SIT_DRAW_H);
         }});
       }
     }

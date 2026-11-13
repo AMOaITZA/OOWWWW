@@ -9,7 +9,8 @@ import * as counter from './contador.js';
 import * as places from './lugares.js';
 import * as ending from './final.js';
 import * as wardrobe from './armario.js';
-const modules={inicio:intro,carta:letter,galeria:gallery,razones:reasons,playlist,recuerdos:tv,contador:counter,lugares:places,final:ending,armario:wardrobe};
+import * as boda from './boda.js';
+const modules={inicio:intro,carta:letter,galeria:gallery,razones:reasons,playlist,recuerdos:tv,contador:counter,lugares:places,final:ending,armario:wardrobe,boda};
 export function createHost(api){
   const panel=document.getElementById('experience');
   const body=document.getElementById('experience-content');

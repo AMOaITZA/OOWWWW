@@ -28,7 +28,7 @@ export function mount(root,_data,api){
   story.setAttribute('aria-live','polite');
   const controls=node('div','wedding-controls');
   const back=labeledButton('Anterior',()=>setStage(index-1),'wedding-nav');
-  const next=labeledButton('Siguiente',()=>setStage(index+1),'wedding-nav wedding-next');
+  const next=labeledButton('Siguiente',()=>setStage(index===WEDDING_STAGES.length-1?0:index+1),'wedding-nav wedding-next');
   const replay=labeledButton('Repetir escena',()=>{clock=0;playing=true;},'wedding-nav');
   const counter=node('p','wedding-progress');
   controls.append(back,next,replay);
@@ -134,7 +134,6 @@ export function mount(root,_data,api){
     counter.textContent='Escena '+(index+1)+' / '+WEDDING_STAGES.length;
     back.disabled=index===0;
     next.textContent=index===WEDDING_STAGES.length-1?'Volver al principio':'Siguiente';
-    next.onclick=()=>setStage(index===WEDDING_STAGES.length-1?0:index+1);
     redraw();
   }
   function animate(timestamp){

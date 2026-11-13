@@ -1,6 +1,6 @@
 import {TILE} from './world.js';
 export function nearestPlace(places,x,y){
-  return places.find(p=>Math.abs(x-p.tile[0]*TILE)<76&&Math.abs(y-p.tile[1]*TILE+12)<104);
+  return places.find(p=>p.kind==='wedding' ? Math.abs(x-p.tile[0]*TILE)<138&&y>=p.tile[1]*TILE-170&&y<=p.tile[1]*TILE+22 : Math.abs(x-p.tile[0]*TILE)<76&&Math.abs(y-p.tile[1]*TILE+12)<104);
 }
 const roofColor=kind=>kind==='wardrobe'?'#B5656F':kind==='tv'?'#6B4429':kind==='final'?'#E8A0A8':'#A06A3F';
 function walls(ctx,x,y){
@@ -52,6 +52,24 @@ ctx.drawImage(image, x - 22, y - 94, 50, 100);    } else {
     scenery(ctx, x, y, obj.kind);
   }
 }
+function weddingCastle(ctx,obj,images){
+  const x=obj.tile[0]*TILE,y=obj.tile[1]*TILE;
+  const castle=images('castle');
+  if(castle)ctx.drawImage(castle,x-132,y-152,264,154);
+  else{
+    ctx.fillStyle='#F6DDC7';ctx.fillRect(x-112,y-111,224,100);
+    ctx.fillStyle='#C9879C';ctx.fillRect(x-124,y-136,248,27);
+    for(const bx of [x-121,x+88]){
+      ctx.fillStyle='#F6DDC7';ctx.fillRect(bx,y-136,33,121);
+      ctx.fillStyle='#B5656F';ctx.fillRect(bx-8,y-148,49,15);
+      ctx.fillStyle='#FFF0D1';ctx.fillRect(bx+11,y-105,10,35);
+    }
+    ctx.fillStyle='#A76972';ctx.fillRect(x-19,y-62,38,51);
+    ctx.fillStyle='#F7C77A';ctx.fillRect(x-12,y-56,24,45);
+  }
+  ctx.fillStyle='#FFF1DC';ctx.fillRect(x-7,y+1,14,7);
+  ctx.fillStyle='#B5656F';ctx.fillRect(x-4,y+3,8,4);
+}
 function placeBase(ctx,obj,image){
   const x=obj.tile[0]*TILE,y=obj.tile[1]*TILE;
   if(image)ctx.drawImage(image,x-72,y-60,144,85);
@@ -67,12 +85,14 @@ function placeOverlays(ctx,obj,roofImage,awningImage){
   ctx.fillStyle='#2E1F18';ctx.fillRect(ax*TILE-5,ay*TILE-5,10,10);
   ctx.fillStyle='#F2C46D';ctx.fillRect(ax*TILE-3,ay*TILE-3,6,6);
 }
-export function sceneObjects(places,decor,objectImage,momentImage=()=>null){
+export function sceneObjects(places,decor,objectImage,momentImage=()=>null,weddingImage=()=>null){
   return [
     ...decor.map(obj=>({z:obj.tile[1]*TILE,draw:ctx=>drawWorldObject(ctx,obj,obj.kind==='bench'?(momentImage('benchSeat')||objectImage('bench')):objectImage(obj.kind))})),
-    ...places.flatMap(obj=>[
-      {z:obj.tile[1]*TILE,draw:ctx=>placeBase(ctx,obj,objectImage(obj.kind))},
-      {z:(obj.tile[1]+2)*TILE,draw:ctx=>placeOverlays(ctx,obj,objectImage('roof'),objectImage('awning'))}
-    ]),
+    ...places.flatMap(obj=>obj.kind==='wedding'
+      ? [{z:(obj.tile[1]+1)*TILE,draw:ctx=>weddingCastle(ctx,obj,weddingImage)}]
+      : [
+        {z:obj.tile[1]*TILE,draw:ctx=>placeBase(ctx,obj,objectImage(obj.kind))},
+        {z:(obj.tile[1]+2)*TILE,draw:ctx=>placeOverlays(ctx,obj,objectImage('roof'),objectImage('awning'))}
+      ]),
   ];
 }

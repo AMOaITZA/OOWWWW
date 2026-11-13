@@ -336,3 +336,26 @@ test('the wedding look appears in both armarios and can be selected',async({page
   expect(saved.outfits.itza.look).toBe('boda');
   expect(saved.outfits.leo.look).toBe('boda');
 });
+
+test('real wedding artwork ships and interactive vows and cinematic autoplay work',async({page})=>{
+  const errors=[];page.on('pageerror',error=>errors.push(error.message));
+  const asset=await page.request.get('/assets/game/wedding/atlas.png');
+  expect(asset.status()).toBe(200);
+  expect(asset.headers()['content-type']).toMatch(/image\\/png/);
+  const bytes=await asset.body();
+  expect(bytes.length).toBeGreaterThan(20000);
+  const place=await loadAt(page,'boda');
+  await tapPlace(page,place);
+  await expect(page.locator('#experience-title')).toHaveText('Nuestra boda');
+  await page.getByRole('button',{name:'Siguiente'}).click();
+  await expect(page.getByRole('button',{name:'Sí, quiero'})).toBeVisible();
+  await page.getByRole('button',{name:'Sí, quiero'}).click();
+  await expect(page.locator('.wedding-stage-title')).toHaveText('El gran sí');
+  await expect(page.locator('.wedding-vow')).toContainText('Sí, quiero');
+  await page.getByRole('button',{name:'Reproducir historia'}).click();
+  await expect(page.getByRole('button',{name:'Pausar historia'})).toHaveAttribute('aria-pressed','true');
+  await page.getByRole('button',{name:'Pausar historia'}).click();
+  await expect(page.getByRole('button',{name:'Reproducir historia'})).toHaveAttribute('aria-pressed','false');
+  await page.locator('#close-experience').click();
+  expect(errors).toEqual([]);
+});

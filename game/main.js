@@ -33,7 +33,7 @@ const host=createHost({
   onClose:()=>{status('Explora nuestro mundo');persist();}
 });
 function goTo(x,y,place=null){
-  if(moments.isSitting()&&!moments.isMoment(place))moments.stand();
+  if(moments.isSitting()&&moments.seatId()!==place?.id)moments.stand();
   const point=closestWalkable(x,y);
   if(!point){status('No se puede llegar a ese lugar');return;}
   const route=findPath(pair,point);

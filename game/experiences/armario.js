@@ -3,7 +3,7 @@ import {getLookOptions,getChoice,chooseOutfit} from '../wardrobe.js';
 import {drawCharacter} from '../pair.js';
 import {prepareLooks} from '../assets.js';
 
-// Dos atuendos completos por personaje: ni pelo ni accesorios se desmontan.
+// Tres atuendos completos por personaje; los estilos incluyen la ropa de boda.
 export function mount(root,_data,api){
   let who='itza',facing='down',walking=false,clock=0;
   paragraph(root,'Elige el atuendo de Itza o Leo. El traje y el vestido de boda están disponibles. Tu elección se guarda automáticamente.');

@@ -70,6 +70,7 @@ export function createMoments({spots,pair,getImage,bubble}){
     return true;
   }
   function isSitting(){return sitting!==null;}
+  function seatId(){return sitting?.id??null;}
   function shouldHidePair(){return sitting!==null&&Boolean(getImage('pairBenchSit'));}
   function tick(dt,{active=true,dialogsOpen=false}={}){
     petRemaining=Math.max(0,petRemaining-dt);
@@ -95,7 +96,7 @@ export function createMoments({spots,pair,getImage,bubble}){
     }
     // Posición relativa al canvas: funciona también con escala fraccionaria móvil.
     const sx=Math.min(410,Math.max(70,x-camera.x));
-    const sy=Math.min(192,Math.max(8,y-camera.y));
+    const sy=Math.min(195,Math.max(75,y-camera.y));
     bubble.style.left=(sx/480*100)+'%';
     bubble.style.top=(sy/270*100)+'%';
   }
@@ -136,5 +137,5 @@ export function createMoments({spots,pair,getImage,bubble}){
     return result;
   }
   return {spots,momentAt:(x,y)=>momentAt(spots,x,y),isMoment,closest:(x,y)=>closestMoment(spots,x,y),
-    arrive,stand,isSitting,shouldHidePair,tick,scenery,positionBubble};
+    arrive,stand,isSitting,seatId,shouldHidePair,tick,scenery,positionBubble};
 }

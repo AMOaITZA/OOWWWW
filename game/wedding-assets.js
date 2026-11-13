@@ -206,6 +206,12 @@ async function load(){
     for(const [name,[sx,sy,w,h]] of Object.entries(regions)){
       const c=canvas(w,h),ctx=c.getContext('2d');
       ctx.drawImage(atlas,sx,sy,w,h,0,0,w,h);
+      // El atlas usa paleta indexada: llevar el alfa a 0/255 elimina
+      // bordes semitransparentes del procesamiento JPEG sin borrar píxeles.
+      const rgba=ctx.getImageData(0,0,w,h);
+      for(let i=3;i<rgba.data.length;i+=4)
+        rgba.data[i]=rgba.data[i]>=128?255:0;
+      ctx.putImageData(rgba,0,0);
       cache.set(name,c);
     }
     return;

@@ -127,6 +127,7 @@ function draw(){
   scenery.sort((a,b)=>a.z-b.z);
   for(const item of scenery)item.draw(ctx); // objetos independientes, clasificados por profundidad
   ctx.restore();
+  moments.positionBubble(camera,canvas);
 }
 function tick(time){
   const dt=Math.min(0.05,(time-lastTime)/1000||0);lastTime=time;

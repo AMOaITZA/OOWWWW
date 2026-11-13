@@ -10,6 +10,7 @@ import {createHost} from './experiences/host.js';
 import {createMap} from './map.js';
 import {createMusicPlayer} from './music.js';
 import {createMoments} from './moments.js';
+import {weddingImage} from './wedding-assets.js';
 
 const $=id=>document.getElementById(id);
 const canvas=$('world'),ctx=canvas.getContext('2d',{alpha:false});
@@ -27,7 +28,7 @@ function persist(){
 }
 const music=createMusicPlayer({openPlaylist:()=>host.open('playlist')});
 const host=createHost({
-  save,assetImage,
+  save,assetImage,getWeddingImage:weddingImage,
   onMusicSelect:videoId=>{if(music.select(videoId))host.close();},
   onOutfitChange:()=>{persist();return prepareOutfit(save.outfits);},
   onClose:()=>{status('Explora nuestro mundo');persist();}
@@ -48,7 +49,7 @@ function goTo(x,y,place=null){
 }
 function openPlace(place){
   path=[];targetPlace=place;pair.moving=false;host.open(place.id);
-  if(!save.visited.includes(place.id)){save.visited.push(place.id);$('place-counter').textContent=save.visited.length+' / 10 lugares visitados';}
+  if(!save.visited.includes(place.id)){save.visited.push(place.id);$('place-counter').textContent=save.visited.length+' / '+places.length+' lugares visitados';}
   persist();
 }
 function cameraAt(){
@@ -110,7 +111,7 @@ function step(dt){
     }else{pair.x+=dx/dist*speed;pair.y+=dy/dist*speed;}
   }
 }
-const objects=sceneObjects(places,decor,objectImage,momentImage);
+const objects=sceneObjects(places,decor,objectImage,momentImage,weddingImage);
 function draw(){
   if(!active)return;
   const camera=cameraAt();
@@ -171,5 +172,5 @@ window.addEventListener('keyup',event=>pressed.delete(event.key.toLowerCase()));
 window.addEventListener('blur',()=>{pressed.clear();persist();});
 window.addEventListener('resize',layout);
 window.addEventListener('pagehide',persist);
-$('place-counter').textContent=save.visited.length+' / 10 lugares visitados';
+$('place-counter').textContent=save.visited.length+' / '+places.length+' lugares visitados';
 stars();prepareWorldAssets();prepareOutfit(save.outfits);requestAnimationFrame(tick);

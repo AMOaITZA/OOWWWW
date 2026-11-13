@@ -67,13 +67,26 @@ test('cats render smaller, the seated pair renders larger and the interaction hi
   controller.scenery().forEach(item=>item.draw(ctx));
   const catDraw=drawings.find(args=>args[0].name==='catIdle');
   assert.ok(catDraw,'Gatos visibles');
-  assert.deepEqual(catDraw.slice(1),[cats.tile[0]*16-28,cats.tile[1]*16-45,56,45]);
-  assert.equal(momentAt(spots,cats.tile[0]*16+29,cats.tile[1]*16-20)?.id,cats.id);
-  assert.equal(momentAt(spots,cats.tile[0]*16+36,cats.tile[1]*16-20)?.id,undefined);
+  assert.deepEqual(catDraw.slice(1),[cats.tile[0]*16-20,cats.tile[1]*16-32,40,32]);
+  assert.equal(momentAt(spots,cats.tile[0]*16+22,cats.tile[1]*16-20)?.id,cats.id);
+  assert.equal(momentAt(spots,cats.tile[0]*16+28,cats.tile[1]*16-20)?.id,undefined);
   controller.arrive(bench);
   drawings.length=0;
   controller.scenery().forEach(item=>item.draw(ctx));
   const sitDraw=drawings.find(args=>args[0].name==='pairBenchSit');
   assert.ok(sitDraw,'Itza y Leo sentados visibles');
   assert.deepEqual(sitDraw.slice(1),[0,0,64,48,bench.tile[0]*16-40,bench.tile[1]*16-59,80,60]);
+});
+
+test('speech lives outside the canvas; the game no longer positions a floating bubble over sprites',()=>{
+  const pair={x:24,y:33,clock:0};
+  const bubble={textContent:'',hidden:true,style:{}};
+  const controller=createMoments({spots,pair,bubble,getImage:()=>({})});
+  assert.equal('positionBubble' in controller,false);
+  controller.arrive(spots.find(s=>s.kind==='bench'));
+  assert.equal(bubble.hidden,false);
+  controller.tick(0.1,{active:true,dialogsOpen:true});
+  assert.equal(bubble.hidden,true);
+  controller.tick(0.1,{active:true,dialogsOpen:false});
+  assert.equal(bubble.hidden,false);
 });

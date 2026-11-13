@@ -110,7 +110,7 @@ function step(dt){
     }else{pair.x+=dx/dist*speed;pair.y+=dy/dist*speed;}
   }
 }
-const objects=sceneObjects(places,decor,objectImage);
+const objects=sceneObjects(places,decor,objectImage,momentImage);
 function draw(){
   if(!active)return;
   const camera=cameraAt();

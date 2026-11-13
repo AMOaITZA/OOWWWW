@@ -129,10 +129,40 @@
   .experience:has(~ .music-dock:not([hidden])) .experience-panel{max-height:max(230px,calc(100dvh - 260px))}
 }
 
-/* Las frases se muestran debajo del canvas: nunca ocultan personajes ni animales. */
-.leo-dialogue-row{display:flex;align-items:center;justify-content:center;width:min(100%,960px);min-height:64px;padding:7px 6px 0}
-.leo-bubble{position:relative;max-width:min(660px,100%);width:fit-content;background:var(--px-cream);color:var(--px-wood-deep);border:3px solid var(--px-ink);padding:8px 12px;font:clamp(10px,1.5vw,13px)/1.5 'Silkscreen',monospace;text-align:center;box-shadow:3px 3px 0 var(--px-rose-deep);overflow-wrap:break-word}
+/* Globo pixel art flotante: se ubica junto a Leo sin cubrir a los personajes. */
+.leo-bubble{
+  position:fixed;top:0;left:0;z-index:20;pointer-events:none;
+  width:max-content;max-width:min(246px,calc(100vw - 20px));
+  padding:8px 11px;background:var(--px-cream);
+  color:var(--px-wood-deep);border:3px solid var(--px-ink);
+  box-shadow:3px 3px 0 var(--px-rose-deep);
+  font:11px/1.5 'Silkscreen',monospace;text-align:center;
+  overflow-wrap:break-word;white-space:normal;
+}
 .leo-bubble[hidden]{display:none}
-@media(max-width:600px){.leo-dialogue-row{min-height:62px;padding:6px 4px 0}.leo-bubble{font-size:10px;padding:6px 7px;border-width:2px;line-height:1.4}}
+.leo-bubble::after{
+  content:'';position:absolute;width:11px;height:11px;
+  background:var(--px-cream);transform:rotate(45deg);
+}
+.leo-bubble[data-tail="bottom"]::after{
+  bottom:-8px;left:calc(var(--tail-x,50%) - 6px);
+  border-right:3px solid var(--px-ink);border-bottom:3px solid var(--px-ink);
+}
+.leo-bubble[data-tail="top"]::after{
+  top:-8px;left:calc(var(--tail-x,50%) - 6px);
+  border-top:3px solid var(--px-ink);border-left:3px solid var(--px-ink);
+}
+.leo-bubble[data-tail="left"]::after{
+  left:-8px;top:calc(var(--tail-y,50%) - 6px);
+  border-left:3px solid var(--px-ink);border-bottom:3px solid var(--px-ink);
+}
+.leo-bubble[data-tail="right"]::after{
+  right:-8px;top:calc(var(--tail-y,50%) - 6px);
+  border-top:3px solid var(--px-ink);border-right:3px solid var(--px-ink);
+}
+@media(max-width:560px){
+  .leo-bubble{max-width:min(186px,calc(100vw - 20px));font-size:9px;
+    padding:6px 8px;line-height:1.45;border-width:2px;box-shadow:2px 2px 0 var(--px-rose-deep)}
+}
 .map-destination.moment-destination{background:#FFF1DC;border-color:#B5656F}
 .map-destination.moment-destination:hover{background:#F6D1CF}

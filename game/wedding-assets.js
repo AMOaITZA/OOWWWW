@@ -1,10 +1,11 @@
-import manifest from './data/assets.json';
+import manifest from './data/assets.json' with {type:'json'};
 
-// Los assets definitivos se encuentran en assets/game/wedding/*.png.
-// Si todavía no se han copiado, usamos sprites generados a partir del
-// aspecto actual de los personajes y dibujos de respaldo, sin bloquear el juego.
+// El atlas versionado es la fuente principal. Los dibujos de respaldo solo
+// se crean si falla su carga; no se solicitan nombres de archivo opcionales.
 const cache=new Map();
 let loading=null;
+let assetStatus='loading';
+export const weddingAssetStatus=()=>assetStatus;
 export const weddingImage=key=>cache.get(key)||null;
 const px=(ctx,x,y,w,h,color)=>{ctx.fillStyle=color;ctx.fillRect(Math.round(x),Math.round(y),w,h);};
 const canvas=(w,h)=>{
@@ -167,28 +168,21 @@ function makePair(sheetLeo,sheetItza,kind){
   }
   return c;
 }
+// Composición compartida por el mapa y la ceremonia: el atlas de fachada ya
+// contiene tejados. Recortamos esa coronación antes de colocar el techo nuevo,
+// alineado con las torres, para evitar dos filas de torreones superpuestas.
+export function drawWeddingCastle(ctx,castle,roof,x,y){
+  if(!castle)return false;
+  x=Math.round(x);y=Math.round(y);
+  if(roof&&castle.dataset?.weddingSource==='atlas'){
+    ctx.drawImage(castle,0,56,264,98,x,y+56,264,98);
+    // El margen transparente de ambos recortes no representa su ancho visual.
+    ctx.drawImage(roof,24,1,231,84,x+38,y-3,188,188*84/231);
+  }else ctx.drawImage(castle,x,y,264,154);
+  return true;
+}
+
 async function load(){
-  const [leo,itza]=await Promise.all([
-    image('/assets/game/characters/leo/look-01.png'),
-    image('/assets/game/characters/itza/look-01.png')
-  ]);
-  const leoWedding=makeWalk(leo,'leo'),itzaWedding=makeWalk(itza,'itza');
-  const fallback={
-    'leo-walk':leoWedding,'itza-walk':itzaWedding,
-    castle:makeCastle(),roof:makeRoof(),arch:makeArch(),flower:makeFlower(),
-    bench:makeBench(),emblem:makeEffect('hearts'),
-    idle:makePair(leoWedding,itzaWedding,'idle'),
-    vows:makePair(leoWedding,itzaWedding,'vows'),
-    kiss:makePair(leoWedding,itzaWedding,'kiss'),
-    hug:makePair(leoWedding,itzaWedding,'hug'),
-    celebrate:makePair(leoWedding,itzaWedding,'celebrate'),
-    'wedding-bench':makePair(leoWedding,itzaWedding,'bench'),
-    hearts:makeEffect('hearts'),sparkles:makeEffect('sparkles')
-  };
-  for(const [name,resource] of Object.entries(fallback))cache.set(name,resource);
-  // Los diecinueve gráficos definitivos se empaquetan en una hoja indexada
-  // de 720×342. Sus rectángulos se recortan sin suavizado y luego se exponen
-  // con las mismas claves que usaban los respaldos: no rompe las cinemáticas.
   const atlas=await image(manifest.wedding?.atlas||'/assets/game/wedding/atlas.png');
   if(atlas&&atlas.naturalWidth===720&&atlas.naturalHeight===342){
     const regions={
@@ -212,45 +206,35 @@ async function load(){
       for(let i=3;i<rgba.data.length;i+=4)
         rgba.data[i]=rgba.data[i]>=128?255:0;
       ctx.putImageData(rgba,0,0);
+      c.dataset.weddingSource='atlas';
       cache.set(name,c);
     }
+    assetStatus='atlas';
     return;
   }
-  // Si los PNG definitivos del paquete ya están en el repositorio, reemplazan
-  // los respaldos. Una imagen ausente nunca impide abrir el juego.
-  const urls={
-    'leo-walk':'/assets/game/wedding/leo-look-wedding.png',
-    'itza-walk':'/assets/game/wedding/itza-look-wedding.png',
-    castle:'/assets/game/wedding/castle.png',
-    roof:'/assets/game/wedding/roof.png',
-    arch:'/assets/game/wedding/arch.png',
-    flower:'/assets/game/wedding/flower.png',
-    bench:'/assets/game/wedding/bench.png',
-    emblem:'/assets/game/wedding/emblem.png',
-    idle:'/assets/game/wedding/pair-wedding-idle.png',
-    vows:'/assets/game/wedding/pair-wedding-vows.png',
-    kiss:'/assets/game/wedding/pair-wedding-kiss.png',
-    hug:'/assets/game/wedding/pair-wedding-hug.png',
-    celebrate:'/assets/game/wedding/pair-wedding-celebrate.png',
-    hearts:'/assets/game/wedding/hearts.png',
-    sparkles:'/assets/game/wedding/sparkles.png',
-    'wedding-bench':'/assets/game/wedding/pair-wedding-bench.png'
+  // Contingencia explícita para una instalación incompleta, conservando la
+  // identidad de los protagonistas. No hace peticiones HEAD/404 adicionales.
+  const [leo,itza]=await Promise.all([
+    image('/assets/game/characters/leo/look-01.png'),
+    image('/assets/game/characters/itza/look-01.png')
+  ]);
+  const leoWedding=makeWalk(leo,'leo'),itzaWedding=makeWalk(itza,'itza');
+  const fallback={
+    'leo-walk':leoWedding,'itza-walk':itzaWedding,
+    castle:makeCastle(),roof:makeRoof(),arch:makeArch(),flower:makeFlower(),
+    bench:makeBench(),emblem:makeEffect('hearts'),
+    idle:makePair(leoWedding,itzaWedding,'idle'),
+    vows:makePair(leoWedding,itzaWedding,'vows'),
+    kiss:makePair(leoWedding,itzaWedding,'kiss'),
+    hug:makePair(leoWedding,itzaWedding,'hug'),
+    celebrate:makePair(leoWedding,itzaWedding,'celebrate'),
+    'wedding-bench':makePair(leoWedding,itzaWedding,'bench'),
+    hearts:makeEffect('hearts'),sparkles:makeEffect('sparkles')
   };
-  // No efectuamos solicitudes para recursos que no se han proporcionado aún:
-  // el mapa y las animaciones originales permanecen funcionales.
-  // El catálogo de archivos definitivos solo se intenta cargar cuando
-  // existe la primera imagen PNG y el servidor declara el MIME correcto.
-  // Así evitamos decenas de peticiones 404 en una instalación sin el paquete.
-  let installed=false;
-  try{
-    const response=await fetch(urls.castle,{method:'HEAD'});
-    installed=response.ok&&/image\/png/i.test(response.headers.get('content-type')||'');
-  }catch{}
-  if(installed)await Promise.all(Object.entries(urls).map(async([key,url])=>{
-    const im=await image(url);if(im)cache.set(key,im);
-  }));
+  for(const [name,resource] of Object.entries(fallback))cache.set(name,resource);
+  assetStatus='fallback';
 }
 export function loadWeddingImages(){
-  if(!loading)loading=load().catch(error=>{console.warn('[OOWWWW] Boda: recursos de respaldo',error);});
+  if(!loading)loading=load().catch(error=>{assetStatus='error';console.warn('[OOWWWW] Boda: no se pudo cargar el arte',error);});
   return loading;
 }

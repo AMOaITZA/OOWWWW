@@ -6,5 +6,3 @@ dist/
 playwright-report/
 test-results/
 .DS_Store
-# Atlas de boda reconstruido automáticamente desde los bloques versionados
-assets/game/wedding/atlas.png

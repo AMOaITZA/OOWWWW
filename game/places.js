@@ -1,4 +1,5 @@
 import {TILE} from './world.js';
+import {drawWeddingCastle} from './wedding-assets.js';
 export function nearestPlace(places,x,y){
   return places.find(p=>p.kind==='wedding' ? Math.abs(x-p.tile[0]*TILE)<142&&y>=p.tile[1]*TILE-192&&y<=p.tile[1]*TILE+22 : Math.abs(x-p.tile[0]*TILE)<76&&Math.abs(y-p.tile[1]*TILE+12)<104);
 }
@@ -43,9 +44,10 @@ function drawWorldObject(ctx, obj, image) {
     if (obj.kind === 'tree') {
       ctx.drawImage(image, x - 32, y - 110, 64, 112);
     } else if (obj.kind === 'bench') {
-      ctx.drawImage(image, x - 36, y - 51, 72, 52);
+      ctx.drawImage(image, x - 28, y - 39, 56, 40);
     } else if (obj.kind === 'lamp') {
-ctx.drawImage(image, x - 22, y - 94, 50, 100);    } else {
+// Escala uniforme 2×; anclaje en el último píxel visible de la base.
+      ctx.drawImage(image, x - 48, y - 81, 96, 94);    } else {
       ctx.drawImage(image, x - 24, y - 45, 48, 47);
     }
   } else {
@@ -56,10 +58,7 @@ function weddingCastle(ctx,obj,images){
   const x=obj.tile[0]*TILE,y=obj.tile[1]*TILE;
   const castle=images('castle');
   if(castle){
-    // Fachada y coronación separados para conservar la escala de los torreones.
-    ctx.drawImage(castle,x-132,y-152,264,154);
-    const roof=images('roof');
-    if(roof)ctx.drawImage(roof,x-140,y-188,280,86);
+    drawWeddingCastle(ctx,castle,images('roof'),x-132,y-152);
   }
   else{
     ctx.fillStyle='#F6DDC7';ctx.fillRect(x-112,y-111,224,100);

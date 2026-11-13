@@ -189,7 +189,7 @@ async function load(){
   // Los diecinueve gráficos definitivos se empaquetan en una hoja indexada
   // de 720×342. Sus rectángulos se recortan sin suavizado y luego se exponen
   // con las mismas claves que usaban los respaldos: no rompe las cinemáticas.
-  const atlas=await image('/assets/game/wedding/atlas.png');
+  const atlas=await image(manifest.wedding?.atlas||'/assets/game/wedding/atlas.png');
   if(atlas&&atlas.naturalWidth===720&&atlas.naturalHeight===342){
     const regions={
       castle:[0,0,264,154],'itza-walk':[264,0,192,144],

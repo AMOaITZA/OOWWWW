@@ -22,7 +22,7 @@ function persist(){
   save.position={x:Math.round(pair.x),y:Math.round(pair.y)};
   save.direction=pair.direction;writeSave(save);
 }
-const music=createMusicPlayer();
+const music=createMusicPlayer({openPlaylist:()=>host.open('playlist')});
 const host=createHost({
   save,assetImage,
   onMusicSelect:videoId=>{if(music.select(videoId))host.close();},

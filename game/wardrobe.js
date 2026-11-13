@@ -7,7 +7,7 @@ export const catalogs={
   itza:manifest.characters.itza.looks
 };
 export const CHARACTERS=['leo','itza'];
-export const LOOK_LIMIT=2;
+export const LOOK_LIMIT=3;
 export function getLookOptions(who){return catalogs[who]||[];}
 export function getChoice(outfits,who){
   const available=getLookOptions(who);

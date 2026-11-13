@@ -321,5 +321,10 @@
   "armario": {
     "title": "Armario",
     "eyebrow": "Nuestra ropa"
+  },
+  "boda": {
+    "title": "Nuestra boda",
+    "eyebrow": "Un castillo, seis capítulos y una promesa",
+    "text": "Nuestro pequeño cuento de hadas"
   }
 }

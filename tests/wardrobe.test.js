@@ -1,16 +1,18 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {catalogs,getLookOptions,getChoice,chooseOutfit,equipmentUrls} from '../game/wardrobe.js';
-test('there are exactly two complete character looks without layered parts',()=>{
+test('characters have original, alternate and ceremony looks without layered parts',()=>{
   for(const who of ['leo','itza']){
     const looks=getLookOptions(who);
-    assert.equal(looks.length,2);
+    assert.equal(looks.length,3);
     assert.equal(looks[0].id,'principal');
     assert.equal(looks[1].id,'alternativo');
-    for(const look of looks){
+    assert.equal(looks[2].id,'boda');
+    for(const look of looks.slice(0,2)){
       assert.ok(look.sheet.startsWith('/assets/game/characters/'+who+'/'));
       assert.ok(look.sheet.endsWith('.png'));
     }
+    assert.equal(looks[2].sheet,'wedding:'+who+'-walk');
   }
 });
 test('outfits are independent and save the complete look',()=>{
@@ -29,4 +31,12 @@ test('old layered saves fall back to the main outfit',()=>{
   const old={leo:{top:'guinda'},itza:{hair:'largo'}};
   assert.equal(getChoice(old,'leo'),'principal');
   assert.equal(getChoice(old,'itza'),'principal');
+});
+
+test('wedding outfit can be chosen independently and persisted',()=>{
+ const outfits={leo:{},itza:{}};
+ assert.equal(chooseOutfit(outfits,'leo','boda'),true);
+ assert.equal(chooseOutfit(outfits,'itza','boda'),true);
+ assert.equal(getChoice(JSON.parse(JSON.stringify(outfits)),'leo'),'boda');
+ assert.equal(getChoice(JSON.parse(JSON.stringify(outfits)),'itza'),'boda');
 });

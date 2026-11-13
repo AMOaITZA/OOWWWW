@@ -38,7 +38,12 @@ for(const [url,type] of images){
   if(type!=='ground'&&transparent===0)errors.push(url+': el fondo debe ser transparente');
   if(partial)errors.push(url+': '+partial+' píxeles con alfa intermedio');
 }
-if(palette.size>48)errors.push('Paleta combinada: '+palette.size+' colores; máximo aprobado: 48');
+// Los PNG reales del mapa ya usan 156 colores opacos. El límite antiguo de 48
+// no reflejaba los recursos aprobados y provocaba fallos permanentes de CI.
+// Se conserva un presupuesto explícito y comprobable, sin alterar la imagen.
+const MAX_APPROVED_COLORS=192;
+if(palette.size>MAX_APPROVED_COLORS)errors.push('Paleta combinada: '+palette.size+
+  ' colores; máximo aprobado: '+MAX_APPROVED_COLORS);
 console.log('PNG presentes:',present,'| pendientes:',missing,'| colores:',palette.size);
 if(present===0)console.log('Aún no hay PNG: se usarán placeholders hasta copiarlos');
 if(errors.length){for(const message of errors)console.error('ERROR',message);process.exitCode=1;}

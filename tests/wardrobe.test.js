@@ -40,3 +40,16 @@ test('wedding outfit can be chosen independently and persisted',()=>{
  assert.equal(getChoice(JSON.parse(JSON.stringify(outfits)),'leo'),'boda');
  assert.equal(getChoice(JSON.parse(JSON.stringify(outfits)),'itza'),'boda');
 });
+
+test('unavailable saved looks fall back without erasing the saved preference',()=>{
+  const outfits={leo:{look:'alternativo'},itza:{look:'boda'}};
+  const installed=sheet=>!sheet.endsWith('look-02.png');
+  assert.equal(getChoice(outfits,'leo',installed),'principal');
+  assert.equal(getChoice(outfits,'itza',installed),'boda');
+  assert.equal(outfits.leo.look,'alternativo');
+  assert.equal(chooseOutfit(outfits,'leo','alternativo',installed),false);
+  assert.equal(chooseOutfit(outfits,'leo','boda',installed),true);
+});
+test('no loaded sheets means no available selection',()=>{
+  assert.equal(getChoice({leo:{look:'principal'}},'leo',()=>false),null);
+});

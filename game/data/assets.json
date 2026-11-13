@@ -1,6 +1,6 @@
 {
-  "version": 3,
-  "description": "Dos conjuntos completos de 192×144 por personaje; no se usan capas independientes de ropa ni cabello.",
+  "version": 4,
+  "description": "Tres conjuntos completos por personaje, incluido el traje y vestido de boda; el atlas indexado contiene 19 sprites de la ceremonia.",
   "world": {
     "ground": "/assets/game/world/ground.png"
   },
@@ -70,18 +70,12 @@
     "benchSeat": "/assets/game/moments/bench-seat-wide.png"
   },
   "wedding": {
-    "castle": "/assets/game/wedding/castle.svg",
-    "roof": "/assets/game/wedding/roof.svg",
-    "arch": "/assets/game/wedding/arch.svg",
-    "flower": "/assets/game/wedding/flower.svg",
-    "bench": "/assets/game/wedding/bench.svg",
-    "emblem": "/assets/game/wedding/emblem.svg",
-    "idle": "/assets/game/wedding/idle.svg",
-    "vows": "/assets/game/wedding/vows.svg",
-    "kiss": "/assets/game/wedding/kiss.svg",
-    "hug": "/assets/game/wedding/hug.svg",
-    "celebrate": "/assets/game/wedding/celebrate.svg",
-    "hearts": "/assets/game/wedding/hearts.svg",
-    "sparkles": "/assets/game/wedding/sparkles.svg"
+    "atlas": "/assets/game/wedding/atlas.png",
+    "logicalSize": [
+      720,
+      342
+    ],
+    "resourceCount": 19,
+    "note": "Los recortes y dimensiones de los sprites están definidos en game/wedding-assets.js."
   }
 }

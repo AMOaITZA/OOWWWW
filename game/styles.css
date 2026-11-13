@@ -177,6 +177,13 @@
 .wedding-controls{width:100%;display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
 .wedding-controls .wedding-nav{min-height:43px;padding:8px 10px;min-width:110px;font:clamp(11px,2vw,13px) 'Silkscreen',monospace;color:#fff7ee;background:#986075;border:3px solid #472d3b;box-shadow:2px 2px 0 #472d3b}
 .wedding-controls .wedding-next{background:#ad687e}
+.wedding-controls .wedding-yes{background:#b95477;color:#fffdf7;animation:wedding-pulse 2.2s ease-in-out infinite}
+.wedding-controls .wedding-auto[aria-pressed="true"]{background:#6d4b76;border-color:#4b3255}
+.wedding-controls .wedding-nav:focus-visible{outline:3px solid #f3c78a;outline-offset:3px}
+.wedding-controls .wedding-nav:disabled{opacity:.48;cursor:not-allowed}
+@keyframes wedding-pulse{0%,100%{box-shadow:2px 2px 0 #472d3b}50%{box-shadow:2px 2px 0 #472d3b,0 0 0 3px #f4c7d0}}
+@media(prefers-reduced-motion:reduce){.wedding-controls .wedding-yes{animation:none}}
+
 @media(max-width:560px){
  .experience:has(.wedding-ceremony){padding:8px 7px}
  .experience-panel:has(.wedding-ceremony){padding:18px 10px;max-height:96dvh}

@@ -169,33 +169,57 @@ test('touchscreen portrait navigates and shows responsive game',async({browser})
   }finally{await context.close();}
 });
 
-test('YouTube playlist selects one of 24 songs and keeps the visible player during exploration',async({page})=>{
-  await page.route('**/*youtube-nocookie.com/**',route=>route.fulfill({
-    status:200,contentType:'text/html',body:'<!doctype html><title>Reproductor de prueba</title>'
+test('local MP3 playlist lists 37 songs and persists through experiences',async({page})=>{
+  await page.route('**/assets/game/audio/**',route=>route.fulfill({
+    status:200,contentType:'audio/mpeg',body:''
   }));
+  await page.addInitScript(()=>{
+    HTMLMediaElement.prototype.play=function(){
+      this.dispatchEvent(new Event('play'));
+      this.dispatchEvent(new Event('playing'));
+      return Promise.resolve();
+    };
+    HTMLMediaElement.prototype.pause=function(){this.dispatchEvent(new Event('pause'));};
+  });
   const place=await loadAt(page,'playlist');
   await tapPlace(page,place);
-  await expect(page.locator('.playlist-song')).toHaveCount(24);
-  await page.locator('.playlist-search').fill('Paramore');
+  await expect(page.locator('.playlist-song')).toHaveCount(37);
+  await page.locator('.playlist-search').fill('Carla Morrison');
   await expect(page.locator('.playlist-song')).toHaveCount(2);
-  await page.getByRole('button',{name:'Elegir Still Into You — Paramore'}).click();
+  await page.getByRole('button',{name:'Elegir Compartir — Carla Morrison'}).click();
   await expect(page.locator('#experience')).toBeHidden();
   await expect(page.locator('#music-dock')).toBeVisible();
-  await expect(page.locator('#music-track-title')).toHaveText('Still Into You');
-  await expect(page.locator('#music-video iframe')).toHaveAttribute('src',/XNB1MhMDFbY/);
+  await expect(page.locator('#music-track-title')).toHaveText('Compartir');
+  await expect(page.locator('#music-track-artist')).toHaveText('Carla Morrison');
+  await expect(page.locator('#music-audio')).toHaveAttribute('src',/Compartir%20-%20Carla%20Morrison/);
   await page.locator('#help-button').click();
   await expect(page.locator('#experience')).toBeVisible();
-  await expect(page.locator('#music-video iframe')).toHaveAttribute('src',/XNB1MhMDFbY/);
+  await expect(page.locator('#music-audio')).toHaveCount(1);
+  await expect(page.locator('#music-track-title')).toHaveText('Compartir');
   await page.locator('#close-experience').click();
-  await page.getByRole('button',{name:'Canción siguiente'}).click();
-  await expect(page.locator('#music-track-title')).toHaveText('The Only Exception');
-  await expect(page.locator('#music-track-number')).toHaveText('24 / 24');
-  await expect(page.locator('#music-video iframe')).toHaveAttribute('src',/G5vz7UcDm-g/);
-  await page.getByRole('button',{name:'Cerrar y detener música'}).click();
+  await page.getByRole('button',{name:'Minimizar reproductor'}).click();
   await expect(page.locator('#music-dock')).toBeHidden();
-  await expect(page.locator('#music-video iframe')).toHaveCount(0);
+  await expect(page.locator('#music-audio')).toHaveAttribute('src',/Compartir%20-%20Carla%20Morrison/);
   await page.locator('#music-button').click();
-  await expect(page.locator('#music-track-title')).toHaveText('The Only Exception');
-  const persisted=await page.evaluate(()=>localStorage.getItem('oowwww-music-track-v1'));
-  expect(persisted).toBe('G5vz7UcDm-g');
+  await expect(page.locator('#music-dock')).toBeVisible();
+  const saved=await page.evaluate(()=>localStorage.getItem('oowwww-audio-track-v1'));
+  expect(saved).toBe('Compartir - Carla Morrison - Spotimate.app.mp3');
+  await page.locator('#music-list').click();
+  await expect(page.locator('.playlist-song')).toHaveCount(37);
+});
+
+test('audio player fits mobile portrait and does not autoplay on entry',async({browser})=>{
+  const context=await browser.newContext({viewport:{width:375,height:812},isMobile:true,hasTouch:true});
+  const page=await context.newPage();
+  try{
+    await page.goto('/game.html');
+    await page.locator('#start-game').tap();
+    await expect(page.locator('#music-audio')).not.toHaveAttribute('src',/.+/);
+    await page.locator('#music-button').tap();
+    await expect(page.locator('#music-dock')).toBeVisible();
+    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
+    expect(overflow).toBeLessThanOrEqual(3);
+    await page.locator('#music-close').tap();
+    await expect(page.locator('#music-dock')).toBeHidden();
+  }finally{await context.close();}
 });

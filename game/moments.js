@@ -1,4 +1,5 @@
 import {TILE} from './world.js';
+import {placeDialogue} from './dialogue-position.js';
 
 // Tamaños de dibujo (no alteran el tamaño original de los archivos PNG).
 const CAT_DRAW_W=40;
@@ -46,12 +47,11 @@ export function createMoments({spots,pair,getImage,bubble}){
   const cats=spots.find(spot=>spot.kind==='cats');
   let sitting=null,petRemaining=0,phraseRemaining=0;
   let nextPhrase=12+Math.random()*12;
-  let bubbleAnchor='pair',lastPhrase=-1;
-  function say(line,anchor='pair'){
+  let lastPhrase=-1;
+  function say(line){
     bubble.textContent='Leo: '+line;
     bubble.hidden=false;
     phraseRemaining=line.length>65?9:6;
-    bubbleAnchor=anchor;
   }
   function randomLine(){
     const choices=LEO_LINES.map((line,i)=>({line,i})).filter(({i})=>i!==lastPhrase);
@@ -66,7 +66,7 @@ export function createMoments({spots,pair,getImage,bubble}){
     if(spot.kind==='cats'){
       stand();
       petRemaining=2.8;
-      say(pick(['owww qué bonitaaa','miralooos, les encantan las caricias','qué bonitos están juntos']), 'cats');
+      say(pick(['owww qué bonitaaa','miralooos, les encantan las caricias','qué bonitos están juntos']));
     }else if(sitting?.id===spot.id){
       stand();
       say('vamos a seguir caminando');
@@ -93,6 +93,48 @@ export function createMoments({spots,pair,getImage,bubble}){
       say(randomLine());
       nextPhrase=24+Math.random()*22;
     }
+  }
+  function positionBubble(camera,canvas){
+    if(bubble.hidden)return;
+    const rect=canvas.getBoundingClientRect();
+    const sx=rect.width/canvas.width,sy=rect.height/canvas.height;
+    const toScreen=(x,y)=>({x:rect.left+(x-camera.x)*sx,y:rect.top+(y-camera.y)*sy});
+    const box=(id,x,y,w,h)=>{
+      const p=toScreen(x,y);
+      return {id,x:p.x,y:p.y,width:w*sx,height:h*sy};
+    };
+    const hero=sitting
+      ?box('pair',sitting.tile[0]*TILE-SIT_DRAW_W/2,
+        sitting.tile[1]*TILE-SIT_DRAW_H+1,SIT_DRAW_W,SIT_DRAW_H)
+      :box('pair',pair.x*TILE-32,pair.y*TILE-47,64,50);
+    const leoX=sitting?sitting.tile[0]*TILE-17:
+      pair.x*TILE+(pair.direction==='right'?13:-16);
+    const leoY=sitting?sitting.tile[1]*TILE-SIT_DRAW_H+12:
+      pair.y*TILE-39;
+    const anchor=toScreen(leoX,leoY);
+    const obstacles=[hero];
+    if(cats)obstacles.push(box('cats',cats.tile[0]*TILE-CAT_DRAW_W/2,
+      cats.tile[1]*TILE-CAT_DRAW_H,CAT_DRAW_W,CAT_DRAW_H));
+    for(const spot of spots){
+      if(spot.kind==='bench')obstacles.push(box(spot.id,
+        spot.tile[0]*TILE-36,spot.tile[1]*TILE-51,72,52));
+    }
+    const status=document.getElementById('world-status');
+    if(status&&!status.hidden){
+      const r=status.getBoundingClientRect();
+      obstacles.push({id:'status',x:r.left,y:r.top,width:r.width,height:r.height});
+    }
+    const placement=placeDialogue({
+      anchor,
+      bubble:{width:bubble.offsetWidth,height:bubble.offsetHeight},
+      viewport:{width:innerWidth,height:innerHeight},
+      obstacles
+    });
+    bubble.style.left=placement.x+'px';
+    bubble.style.top=placement.y+'px';
+    bubble.style.setProperty('--tail-x',placement.tailX+'px');
+    bubble.style.setProperty('--tail-y',placement.tailY+'px');
+    bubble.dataset.tail=placement.tail;
   }
   function scenery(){
     const result=[];
@@ -132,5 +174,5 @@ export function createMoments({spots,pair,getImage,bubble}){
     return result;
   }
   return {spots,momentAt:(x,y)=>momentAt(spots,x,y),isMoment,closest:(x,y)=>closestMoment(spots,x,y),
-    arrive,stand,isSitting,seatId,shouldHidePair,tick,scenery};
+    arrive,stand,isSitting,seatId,shouldHidePair,tick,scenery,positionBubble};
 }

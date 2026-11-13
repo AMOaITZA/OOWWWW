@@ -43,7 +43,7 @@ function drawWorldObject(ctx, obj, image) {
     if (obj.kind === 'tree') {
       ctx.drawImage(image, x - 32, y - 110, 64, 112);
     } else if (obj.kind === 'bench') {
-      ctx.drawImage(image, x - 28, y - 39, 56, 40);
+      ctx.drawImage(image, x - 36, y - 51, 72, 52);
     } else if (obj.kind === 'lamp') {
 ctx.drawImage(image, x - 22, y - 94, 50, 100);    } else {
       ctx.drawImage(image, x - 24, y - 45, 48, 47);

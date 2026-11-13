@@ -94,7 +94,7 @@ for(const id of ['carta','galeria','razones','playlist','recuerdos','contador','
     expect(errors).toEqual([]);
   });
 }
-test('two complete outfits per character, switch and saved choice',async({page})=>{
+test('three outfits per character, switch and saved choice',async({page})=>{
   // PNG sintético válido: comprueba el segundo conjunto antes de que se suba su arte.
   const tiny='iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/zpwAAAAASUVORK5CYII=';
   const png=Buffer.from(tiny,'base64');
@@ -112,7 +112,7 @@ test('two complete outfits per character, switch and saved choice',async({page})
   const place=await loadAt(page,'armario');
   await tapPlace(page,place);
   await expect(page.locator('#experience-title')).toHaveText('Armario');
-  await expect(page.locator('.wardrobe-item')).toHaveCount(2);
+  await expect(page.locator('.wardrobe-item')).toHaveCount(3);
   await expect(page.getByRole('button',{name:'Segundo conjunto'})).toBeEnabled();
   await page.getByRole('button',{name:'Segundo conjunto'}).click();
   await expect(page.getByRole('button',{name:'Segundo conjunto'})).toHaveClass(/selected/);
@@ -120,7 +120,7 @@ test('two complete outfits per character, switch and saved choice',async({page})
   await page.getByRole('button',{name:'Ver caminata'}).click();
   await expect(page.getByRole('button',{name:'Detener animación'})).toBeVisible();
   await page.getByRole('button',{name:'Leo',exact:true}).click();
-  await expect(page.locator('.wardrobe-item')).toHaveCount(2);
+  await expect(page.locator('.wardrobe-item')).toHaveCount(3);
   await expect(page.getByRole('button',{name:'Conjunto original'})).toHaveClass(/selected/);
   await page.locator('#close-experience').click();
   const save=await page.evaluate(()=>JSON.parse(localStorage.getItem('oowwww-game-v1')));
@@ -135,7 +135,7 @@ test('overview navigates without teleporting and can be closed',async({page})=>{
   await page.locator('#start-game').click();
   await page.locator('#map-button').click();
   await expect(page.locator('#map-panel')).toBeVisible();
-  await expect(page.locator('#map-destinations button')).toHaveCount(13);
+  await expect(page.locator('#map-destinations button')).toHaveCount(14);
   const original=await page.evaluate(()=>JSON.parse(localStorage.getItem('oowwww-game-v1')).position);
   await page.getByRole('button',{name:'Carta',exact:true}).click();
   await expect(page.locator('#map-panel')).toBeHidden();
@@ -159,7 +159,7 @@ test('touchscreen portrait navigates and shows responsive game',async({browser})
     expect(overflow).toBeLessThanOrEqual(3);
     await page.locator('#map-button').tap();
     await expect(page.locator('#map-panel')).toBeVisible();
-    await expect(page.locator('#map-destinations button')).toHaveCount(13);
+    await expect(page.locator('#map-destinations button')).toHaveCount(14);
     await page.locator('#close-map').tap();
     await expect(page.locator('#map-panel')).toBeHidden();
     await page.locator('#help-button').tap();
@@ -235,7 +235,7 @@ test('cats can be petted and show sparkles state, bench can be used and exited',
   await expect(page.locator('#world-status')).toContainText('Acariciando a los gatitos');
   await expect(page.locator('#leo-bubble')).toBeVisible();
   await page.locator('#map-button').click();
-  await expect(page.locator('#map-destinations button')).toHaveCount(13);
+  await expect(page.locator('#map-destinations button')).toHaveCount(14);
   await expect(page.getByRole('button',{name:'Gatitos · Acariciar'})).toBeVisible();
   await expect(page.getByRole('button',{name:/Banca · Banca del jardín/})).toBeVisible();
   await page.locator('#close-map').click();
@@ -295,4 +295,44 @@ test('Leo speech bubble floats near the characters without hiding the cats',asyn
   await expect(page.locator('#world-status')).toContainText('Descansando juntos en la banca',{timeout:12000});
   await expect(bubble).toBeVisible();
   expect(errors).toEqual([]);
+});
+
+test('wedding castle opens cinematic chapters, keeps music node and can be revisited',async({page})=>{
+  const errors=[];page.on('pageerror',error=>errors.push(error.message));
+  const place=await loadAt(page,'boda');
+  await tapPlace(page,place);
+  await expect(page.locator('#experience')).toBeVisible();
+  await expect(page.locator('#experience-title')).toHaveText('Nuestra boda');
+  await expect(page.locator('.wedding-cinema')).toBeVisible();
+  await expect(page.locator('.wedding-stage-number')).toContainText('1 de 6');
+  await page.getByRole('button',{name:'Siguiente'}).click();
+  await expect(page.locator('.wedding-stage-title')).toHaveText('Nuestras promesas');
+  await page.getByRole('button',{name:'Siguiente'}).click();
+  await expect(page.locator('.wedding-stage-title')).toHaveText('El gran sí');
+  await page.getByRole('button',{name:'Siguiente'}).click();
+  await expect(page.locator('.wedding-stage-title')).toHaveText('El abrazo');
+  await page.getByRole('button',{name:'Siguiente'}).click();
+  await expect(page.locator('.wedding-stage-title')).toHaveText('¡A celebrar!');
+  await page.getByRole('button',{name:'Siguiente'}).click();
+  await expect(page.locator('.wedding-stage-title')).toHaveText('Para recordar');
+  await page.getByRole('button',{name:'Volver al principio'}).click();
+  await expect(page.locator('.wedding-stage-title')).toHaveText('La llegada');
+  await expect(page.locator('#music-audio')).toHaveCount(1);
+  await page.locator('#close-experience').click();
+  await expect(page.locator('#experience')).toBeHidden();
+  expect(errors).toEqual([]);
+});
+test('the wedding look appears in both armarios and can be selected',async({page})=>{
+  const place=await loadAt(page,'armario');
+  await tapPlace(page,place);
+  await expect(page.getByRole('button',{name:'Vestido de novia'})).toBeEnabled();
+  await page.getByRole('button',{name:'Vestido de novia'}).click();
+  await expect(page.getByRole('button',{name:'Vestido de novia'})).toHaveClass(/selected/);
+  await page.getByRole('button',{name:'Leo',exact:true}).click();
+  await expect(page.getByRole('button',{name:'Traje de boda'})).toBeEnabled();
+  await page.getByRole('button',{name:'Traje de boda'}).click();
+  await expect(page.getByRole('button',{name:'Traje de boda'})).toHaveClass(/selected/);
+  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('oowwww-game-v1')));
+  expect(saved.outfits.itza.look).toBe('boda');
+  expect(saved.outfits.leo.look).toBe('boda');
 });

@@ -1,9 +1,11 @@
 import manifest from './data/assets.json';
 import {CHARACTERS,equipmentUrls,getLookOptions} from './wardrobe.js';
+import {loadWeddingImages,weddingImage} from './wedding-assets.js';
 
 const cache=new Map(),ready=new Map();
 function load(url,{sheet=false,ground=false}={}){
   if(!url)return Promise.resolve(null);
+  if(url.startsWith('wedding:'))return loadWeddingImages().then(()=>weddingImage(url.slice(8)));
   if(cache.has(url))return cache.get(url);
   const task=new Promise(resolve=>{
     const image=new Image();image.decoding='async';
@@ -25,10 +27,10 @@ function load(url,{sheet=false,ground=false}={}){
   task.then(image=>{if(image)ready.set(url,image);});
   return task;
 }
-export const assetImage=url=>ready.get(url)||null;
+export const assetImage=url=>url?.startsWith('wedding:')?weddingImage(url.slice(8)):ready.get(url)||null;
 export const hasAsset=url=>Boolean(ready.get(url));
 export async function prepareWorldAssets(){
-  const tasks=[load(manifest.world.ground,{ground:true})];
+  const tasks=[load(manifest.world.ground,{ground:true}),loadWeddingImages()];
   for(const url of Object.values(manifest.objects))tasks.push(load(url));
   for(const url of Object.values(manifest.moments??{}))tasks.push(load(url));
   for(const who of CHARACTERS){

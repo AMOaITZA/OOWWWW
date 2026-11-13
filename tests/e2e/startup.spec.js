@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 
-test('startup diagnosis reports the exact JavaScript error',async({page})=>{
+test('enter button launches the world without JavaScript errors',async({page})=>{
   const errors=[];
   const failures=[];
   page.on('pageerror',e=>{errors.push(e.message);console.log('OOWWWW PAGEERROR:',e.stack??e.message);});
@@ -22,4 +22,6 @@ test('startup diagnosis reports the exact JavaScript error',async({page})=>{
   }));
   console.log('OOWWWW CLICK RESULT',JSON.stringify({after,errors,failures}));
   expect(after.worldHidden,JSON.stringify({errors,failures})).toBe(false);
+  expect(after.titleHidden).toBe(true);
+  expect(errors).toEqual([]);
 });

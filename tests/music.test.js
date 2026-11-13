@@ -1,22 +1,30 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import songs from '../game/data/songs.json' with {type:'json'};
-import {youtubeEmbedUrl} from '../game/music.js';
+import {existsSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
+import filenames from '../game/data/audio.json' with {type:'json'};
+import {tracks,trackUrl,parseTrackFilename} from '../game/music.js';
 
-test('the user playlist contains 24 valid, unique YouTube video IDs in order',()=>{
-  assert.equal(songs.length,24);
-  assert.equal(new Set(songs.map(song=>song.videoId)).size,24);
-  for(const song of songs){
-    assert.match(song.videoId,/^[a-zA-Z0-9_-]{11}$/);
-    assert.ok(song.title.trim());
-    assert.ok(song.artist.trim());
+test('catalog lists exactly the 37 MP3 files present in the beta',()=>{
+  assert.equal(filenames.length,37);
+  assert.equal(new Set(filenames).size,filenames.length);
+  assert.equal(tracks.length,filenames.length);
+  for(const filename of filenames){
+    assert.match(filename,/\.mp3$/i);
+    const local=new URL('../assets/game/audio/'+encodeURIComponent(filename),import.meta.url);
+    assert.ok(existsSync(fileURLToPath(local)),filename+' no existe');
   }
-  assert.equal(songs[0].videoId,'5zkWMmP0fqk');
-  assert.equal(songs.at(-1).videoId,'G5vz7UcDm-g');
 });
-test('embeds the full official YouTube video without forced autoplay',()=>{
-  const embed=youtubeEmbedUrl(songs[0].videoId);
-  assert.equal(embed,'https://www.youtube-nocookie.com/embed/5zkWMmP0fqk?playsinline=1&rel=0');
-  assert.doesNotMatch(embed,/autoplay=1/);
-  assert.throws(()=>youtubeEmbedUrl('javascript:alert(1)'),/inválido/);
+test('song titles and artists are derived from the original filenames',()=>{
+  assert.deepEqual(parseTrackFilename('Compartir - Carla Morrison - Spotimate.app.mp3'),{
+    filename:'Compartir - Carla Morrison - Spotimate.app.mp3',
+    title:'Compartir',artist:'Carla Morrison'
+  });
+  assert.equal(parseTrackFilename('Everywhere - 2017 Remaster - Fleetwood Mac - Spotimate.app.mp3').title,'Everywhere - 2017 Remaster');
+  assert.equal(parseTrackFilename('Árbol De Manzanas - Nsqk - Spotimate.app.mp3').title,'Árbol De Manzanas');
+  assert.ok(tracks.every(track=>track.title.trim()));
+});
+test('audio URLs handle spaces and accents without allowing arbitrary paths',()=>{
+  assert.equal(trackUrl('Árbol De Manzanas - Nsqk - Spotimate.app.mp3'),'/assets/game/audio/%C3%81rbol%20De%20Manzanas%20-%20Nsqk%20-%20Spotimate.app.mp3');
+  assert.throws(()=>trackUrl('../private.mp3'),/fuera del catálogo/);
 });

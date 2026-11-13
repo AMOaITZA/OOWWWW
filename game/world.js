@@ -3,7 +3,7 @@ const total=WIDTH*HEIGHT,solid=new Uint8Array(total);
 const key=(x,y)=>y*WIDTH+x;
 export const inside=(x,y)=>x>=2&&y>=2&&x<WIDTH-2&&y<HEIGHT-2;
 const seed=(x,y)=>{let n=Math.imul(x,374761393)+Math.imul(y,668265263);n=Math.imul(n^(n>>>13),1274126177);return ((n^(n>>>16))>>>0)%100;};
-export function initWorld(places,decor=[]){
+export function initWorld(places,decor=[],moments=[]){
   solid.fill(0);
   for(let y=0;y<HEIGHT;y++)for(let x=0;x<WIDTH;x++)if(!inside(x,y))solid[key(x,y)]=1;
   for(const p of places){
@@ -16,6 +16,12 @@ export function initWorld(places,decor=[]){
     if(obj.kind==='tree'||obj.kind==='rock')for(let oy=0;oy<=1;oy++)if(inside(x,y+oy))solid[key(x,y+oy)]=1;
     if(obj.kind==='bench')for(let ox=0;ox<=1;ox++)if(inside(x+ox,y))solid[key(x+ox,y)]=1;
     if(obj.kind==='lamp'&&inside(x,y))solid[key(x,y)]=1;
+  }
+  for(const spot of moments){
+    if(spot.kind==='cats'){
+      const [x,y]=spot.tile;
+      for(let dx=-1;dx<=1;dx++)if(inside(x+dx,y))solid[key(x+dx,y)]=1;
+    }
   }
 }
 export const walkable=(x,y)=>Number.isInteger(x)&&Number.isInteger(y)&&inside(x,y)&&solid[key(x,y)]===0;

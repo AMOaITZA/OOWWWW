@@ -78,15 +78,34 @@ test('cats render smaller, the seated pair renders larger and the interaction hi
   assert.deepEqual(sitDraw.slice(1),[0,0,64,48,bench.tile[0]*16-40,bench.tile[1]*16-59,80,60]);
 });
 
-test('speech lives outside the canvas; the game no longer positions a floating bubble over sprites',()=>{
-  const pair={x:24,y:33,clock:0};
-  const bubble={textContent:'',hidden:true,style:{}};
+
+test('Leo dialogue is a floating sprite-aware bubble, including after modal close',()=>{
+  const pair={x:68,y:51,clock:0,direction:'down'};
+  const changed={};
+  const bubble={textContent:'',hidden:true,style:{
+    setProperty(name,value){changed[name]=value;},
+  },dataset:{},offsetWidth:208,offsetHeight:60};
   const controller=createMoments({spots,pair,bubble,getImage:()=>({})});
-  assert.equal('positionBubble' in controller,false);
-  controller.arrive(spots.find(s=>s.kind==='bench'));
+  controller.arrive(spots.find(s=>s.kind==='cats'));
   assert.equal(bubble.hidden,false);
-  controller.tick(0.1,{active:true,dialogsOpen:true});
+  const canvas={width:480,height:270,getBoundingClientRect:()=>({
+    left:90,top:60,width:960,height:540
+  })};
+  const originalDocument=globalThis.document,originalWidth=globalThis.innerWidth,originalHeight=globalThis.innerHeight;
+  try{
+    globalThis.document={getElementById:()=>null};
+    globalThis.innerWidth=1200;
+    globalThis.innerHeight=720;
+    controller.positionBubble({x:68*16-240,y:51*16-135},canvas);
+    assert.match(bubble.style.left,/px$/);
+    assert.match(bubble.style.top,/px$/);
+    assert.ok(['bottom','top','left','right'].includes(bubble.dataset.tail));
+    assert.match(changed['--tail-x'],/px$/);
+  }finally{
+    globalThis.document=originalDocument;globalThis.innerWidth=originalWidth;globalThis.innerHeight=originalHeight;
+  }
+  controller.tick(.1,{active:true,dialogsOpen:true});
   assert.equal(bubble.hidden,true);
-  controller.tick(0.1,{active:true,dialogsOpen:false});
+  controller.tick(.1,{active:true,dialogsOpen:false});
   assert.equal(bubble.hidden,false);
 });

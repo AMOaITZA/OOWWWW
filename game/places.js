@@ -1,6 +1,6 @@
 import {TILE} from './world.js';
 export function nearestPlace(places,x,y){
-  return places.find(p=>p.kind==='wedding' ? Math.abs(x-p.tile[0]*TILE)<138&&y>=p.tile[1]*TILE-170&&y<=p.tile[1]*TILE+22 : Math.abs(x-p.tile[0]*TILE)<76&&Math.abs(y-p.tile[1]*TILE+12)<104);
+  return places.find(p=>p.kind==='wedding' ? Math.abs(x-p.tile[0]*TILE)<142&&y>=p.tile[1]*TILE-192&&y<=p.tile[1]*TILE+22 : Math.abs(x-p.tile[0]*TILE)<76&&Math.abs(y-p.tile[1]*TILE+12)<104);
 }
 const roofColor=kind=>kind==='wardrobe'?'#B5656F':kind==='tv'?'#6B4429':kind==='final'?'#E8A0A8':'#A06A3F';
 function walls(ctx,x,y){
@@ -55,7 +55,12 @@ ctx.drawImage(image, x - 22, y - 94, 50, 100);    } else {
 function weddingCastle(ctx,obj,images){
   const x=obj.tile[0]*TILE,y=obj.tile[1]*TILE;
   const castle=images('castle');
-  if(castle)ctx.drawImage(castle,x-132,y-152,264,154);
+  if(castle){
+    // Fachada y coronación separados para conservar la escala de los torreones.
+    ctx.drawImage(castle,x-132,y-152,264,154);
+    const roof=images('roof');
+    if(roof)ctx.drawImage(roof,x-140,y-188,280,86);
+  }
   else{
     ctx.fillStyle='#F6DDC7';ctx.fillRect(x-112,y-111,224,100);
     ctx.fillStyle='#C9879C';ctx.fillRect(x-124,y-136,248,27);
@@ -89,7 +94,15 @@ export function sceneObjects(places,decor,objectImage,momentImage=()=>null,weddi
   return [
     ...decor.map(obj=>({z:obj.tile[1]*TILE,draw:ctx=>drawWorldObject(ctx,obj,obj.kind==='bench'?(momentImage('benchSeat')||objectImage('bench')):objectImage(obj.kind))})),
     ...places.flatMap(obj=>obj.kind==='wedding'
-      ? [{z:(obj.tile[1]+1)*TILE,draw:ctx=>weddingCastle(ctx,obj,weddingImage)}]
+      ? [
+        {z:0,draw(ctx){
+          const path=weddingImage('petalPath');
+          if(!path)return;
+          const x=obj.tile[0]*TILE,y=obj.tile[1]*TILE;
+          for(let n=0;n<3;n++)ctx.drawImage(path,x-24,y+10+n*31,48,48);
+        }},
+        {z:(obj.tile[1]+1)*TILE,draw:ctx=>weddingCastle(ctx,obj,weddingImage)}
+      ]
       : [
         {z:obj.tile[1]*TILE,draw:ctx=>placeBase(ctx,obj,objectImage(obj.kind))},
         {z:(obj.tile[1]+2)*TILE,draw:ctx=>placeOverlays(ctx,obj,objectImage('roof'),objectImage('awning'))}

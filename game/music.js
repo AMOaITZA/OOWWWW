@@ -68,11 +68,15 @@ export function createMusicPlayer({openPlaylist=()=>{}}={}){
     seek.value=seek.disabled?'0':String(Math.round(audio.currentTime/duration*1000));
   }
   function show(){
+    // A song can finish or be selected inside a modal. Keep its controls out
+    // of the way until the dialog releases the background; audio is untouched.
+    if(dock.inert){dock.dataset.reopenAfterDialog='true';return;}
     dock.hidden=false;
     musicButton.setAttribute('aria-expanded','true');
   }
   function hide(){
     dock.hidden=true;
+    delete dock.dataset.reopenAfterDialog;
     musicButton.setAttribute('aria-expanded','false');
     musicButton.focus();
   }
@@ -90,7 +94,7 @@ export function createMusicPlayer({openPlaylist=()=>{}}={}){
       status.textContent='El navegador no pudo iniciar la reproducción.';
     }
   }
-  function setTrack(next,{autoplay=true}={}){
+  function setTrack(next,{autoplay=true,reveal=true}={}){
     index=(next+tracks.length)%tracks.length;
     audio.pause();
     audio.src=trackUrl(tracks[index].filename);
@@ -98,7 +102,7 @@ export function createMusicPlayer({openPlaylist=()=>{}}={}){
     syncPlayback();
     status.textContent='Canción seleccionada';
     try{localStorage.setItem(TRACK_KEY,tracks[index].filename);}catch{}
-    show();
+    if(reveal)show();
     if(autoplay)play();
   }
   function select(filename){
@@ -109,6 +113,9 @@ export function createMusicPlayer({openPlaylist=()=>{}}={}){
   }
 
   musicButton.addEventListener('click',()=>dock.hidden?show():hide());
+  dock.addEventListener('keydown',event=>{
+    if(event.key==='Escape'){event.preventDefault();event.stopPropagation();hide();}
+  });
   hideButton.addEventListener('click',hide);
   playButton.addEventListener('click',()=>audio.paused?play():audio.pause());
   stopButton.addEventListener('click',()=>{
@@ -136,7 +143,7 @@ export function createMusicPlayer({openPlaylist=()=>{}}={}){
   audio.addEventListener('loadedmetadata',syncPlayback);
   audio.addEventListener('waiting',()=>{status.textContent='Cargando audio…';});
   audio.addEventListener('error',()=>{status.textContent='No se pudo cargar este MP3.';syncPlayback();});
-  audio.addEventListener('ended',()=>setTrack(index+1));
+  audio.addEventListener('ended',()=>setTrack(index+1,{reveal:false}));
   syncTrack();
   syncPlayback();
   status.textContent='Elige una canción o pulsa Reproducir';

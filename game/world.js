@@ -14,7 +14,7 @@ export function initWorld(places,decor=[],moments=[]){
   for(const obj of decor){
     const [x,y]=obj.tile;
     if(obj.kind==='tree'||obj.kind==='rock')for(let oy=0;oy<=1;oy++)if(inside(x,y+oy))solid[key(x,y+oy)]=1;
-    if(obj.kind==='bench')for(let ox=0;ox<=1;ox++)if(inside(x+ox,y))solid[key(x+ox,y)]=1;
+    if(obj.kind==='bench')for(let ox=-1;ox<=1;ox++)if(inside(x+ox,y))solid[key(x+ox,y)]=1;
     if(obj.kind==='lamp'&&inside(x,y))solid[key(x,y)]=1;
   }
   for(const spot of moments){
@@ -52,12 +52,15 @@ export function findPath(from,to){
   const sx=Math.round(from.x),sy=Math.round(from.y),tx=Math.round(to.x),ty=Math.round(to.y);
   if(!walkable(sx,sy)||!walkable(tx,ty))return [];
   const start=key(sx,sy),goal=key(tx,ty);
-  if(start===goal)return [];
+  // Rejoin the cell center before a new route turns. Without this prefix,
+  // rerouting halfway through a step can cut diagonally across solid corners.
+  const prefix=from.x!==sx||from.y!==sy?[{x:sx,y:sy}]:[];
+  if(start===goal)return prefix;
   const parent=new Int32Array(total).fill(-1),cost=new Int32Array(total).fill(0x3fffffff),visited=new Uint8Array(total),open=new Heap();
   cost[start]=0;open.push(start,Math.abs(sx-tx)+Math.abs(sy-ty));
   while(open.size){
     const n=open.pop();if(visited[n])continue;visited[n]=1;
-    if(n===goal){const route=[];let step=goal;while(step!==start){route.push({x:step%WIDTH,y:Math.floor(step/WIDTH)});step=parent[step];}return route.reverse();}
+    if(n===goal){const route=[];let step=goal;while(step!==start){route.push({x:step%WIDTH,y:Math.floor(step/WIDTH)});step=parent[step];}return prefix.concat(route.reverse());}
     const x=n%WIDTH,y=Math.floor(n/WIDTH);
     for(const [dx,dy] of [[0,-1],[1,0],[0,1],[-1,0]]){
       const nx=x+dx,ny=y+dy;if(!walkable(nx,ny))continue;

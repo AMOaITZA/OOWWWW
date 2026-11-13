@@ -6,8 +6,8 @@ const CAT_DRAW_W=40;
 const CAT_DRAW_H=32;
 const SIT_FRAME_W=64;
 const SIT_FRAME_H=48;
-const SIT_DRAW_W=80;
-const SIT_DRAW_H=60;
+const SIT_DRAW_W=64;
+const SIT_DRAW_H=48;
 
 export const LEO_LINES=[
   'te amo mil ocho mil',
@@ -45,7 +45,17 @@ export function closestMoment(spots,x,y,maxDistance=4){
 
 export function createMoments({spots,pair,getImage,bubble}){
   const cats=spots.find(spot=>spot.kind==='cats');
-  let sitting=null,petRemaining=0,phraseRemaining=0;
+  let sitting=null,seatTransition=null,petRemaining=0,phraseRemaining=0;
+  const seatPoint=spot=>({x:spot.tile[0],y:spot.tile[1]+.25});
+  const smooth=t=>t*t*(3-2*t);
+  function renderPair(){
+    if(!seatTransition)return sitting?{...pair,...seatPoint(sitting),moving:false,direction:'down'}:pair;
+    const t=smooth(Math.min(1,seatTransition.elapsed/.38));
+    const to=seatTransition.rising?pair:seatPoint(seatTransition.spot);
+    return {...pair,x:seatTransition.from.x+(to.x-seatTransition.from.x)*t,
+      y:seatTransition.from.y+(to.y-seatTransition.from.y)*t,
+      moving:true,walkClock:seatTransition.elapsed,direction:seatTransition.rising?'down':'up'};
+  }
   let nextPhrase=12+Math.random()*12;
   let lastPhrase=-1;
   function say(line){
@@ -60,18 +70,27 @@ export function createMoments({spots,pair,getImage,bubble}){
     return chosen.line;
   }
   function isMoment(spot){return spots.some(item=>item.id===spot?.id);}
-  function stand(){sitting=null;}
+  function stand(){
+    if(!sitting)return;
+    const from=renderPair();
+    seatTransition={spot:sitting,from:{x:from.x,y:from.y},elapsed:0,rising:true};
+    sitting=null;
+  }
   function arrive(spot){
     if(!isMoment(spot))return false;
     if(spot.kind==='cats'){
       stand();
       petRemaining=2.8;
+      pair.direction='up';
       say(pick(['owww qué bonitaaa','miralooos, les encantan las caricias','qué bonitos están juntos']));
     }else if(sitting?.id===spot.id){
       stand();
       say('vamos a seguir caminando');
     }else{
+      const from=renderPair();
       sitting=spot;
+      seatTransition={spot,from:{x:from.x,y:from.y},elapsed:0,rising:false};
+      pair.direction='down';
       say(randomLine());
     }
     nextPhrase=24+Math.random()*22;
@@ -79,14 +98,18 @@ export function createMoments({spots,pair,getImage,bubble}){
   }
   function isSitting(){return sitting!==null;}
   function seatId(){return sitting?.id??null;}
-  function shouldHidePair(){return sitting!==null&&Boolean(getImage('pairBenchSit'));}
+  function shouldHidePair(){return sitting!==null&&!seatTransition&&Boolean(getImage('pairBenchSit'));}
   function tick(dt,{active=true,dialogsOpen=false}={}){
-    petRemaining=Math.max(0,petRemaining-dt);
-    phraseRemaining=Math.max(0,phraseRemaining-dt);
     if(!active || dialogsOpen){
       bubble.hidden=true;
       return;
     }
+    if(seatTransition){
+      seatTransition.elapsed+=dt;
+      if(seatTransition.elapsed>=.38)seatTransition=null;
+    }
+    petRemaining=Math.max(0,petRemaining-dt);
+    phraseRemaining=Math.max(0,phraseRemaining-dt);
     bubble.hidden=phraseRemaining<=0;
     nextPhrase-=dt;
     if(nextPhrase<=0){
@@ -97,27 +120,30 @@ export function createMoments({spots,pair,getImage,bubble}){
   function positionBubble(camera,canvas){
     if(bubble.hidden)return;
     const rect=canvas.getBoundingClientRect();
+    bubble.style.maxWidth=Math.min(innerWidth<=560?186:246,Math.max(80,rect.width-16))+'px';
     const sx=rect.width/canvas.width,sy=rect.height/canvas.height;
     const toScreen=(x,y)=>({x:rect.left+(x-camera.x)*sx,y:rect.top+(y-camera.y)*sy});
     const box=(id,x,y,w,h)=>{
       const p=toScreen(x,y);
       return {id,x:p.x,y:p.y,width:w*sx,height:h*sy};
     };
-    const hero=sitting
+    const displayed=renderPair();
+    const seated=sitting&&!seatTransition;
+    const hero=seated
       ?box('pair',sitting.tile[0]*TILE-SIT_DRAW_W/2,
         sitting.tile[1]*TILE-SIT_DRAW_H+1,SIT_DRAW_W,SIT_DRAW_H)
-      :box('pair',pair.x*TILE-32,pair.y*TILE-47,64,50);
-    const leoX=sitting?sitting.tile[0]*TILE-17:
-      pair.x*TILE+(pair.direction==='right'?13:-16);
-    const leoY=sitting?sitting.tile[1]*TILE-SIT_DRAW_H+12:
-      pair.y*TILE-39;
+      :box('pair',displayed.x*TILE-32,displayed.y*TILE-47,64,50);
+    const leoX=seated?sitting.tile[0]*TILE-17:
+      displayed.x*TILE+(displayed.direction==='right'?13:-16);
+    const leoY=seated?sitting.tile[1]*TILE-SIT_DRAW_H+12:
+      displayed.y*TILE-39;
     const anchor=toScreen(leoX,leoY);
     const obstacles=[hero];
     if(cats)obstacles.push(box('cats',cats.tile[0]*TILE-CAT_DRAW_W/2,
       cats.tile[1]*TILE-CAT_DRAW_H,CAT_DRAW_W,CAT_DRAW_H));
     for(const spot of spots){
       if(spot.kind==='bench')obstacles.push(box(spot.id,
-        spot.tile[0]*TILE-36,spot.tile[1]*TILE-51,72,52));
+        spot.tile[0]*TILE-28,spot.tile[1]*TILE-39,56,40));
     }
     const status=document.getElementById('world-status');
     if(status&&!status.hidden){
@@ -127,7 +153,7 @@ export function createMoments({spots,pair,getImage,bubble}){
     const placement=placeDialogue({
       anchor,
       bubble:{width:bubble.offsetWidth,height:bubble.offsetHeight},
-      viewport:{width:innerWidth,height:innerHeight},
+      viewport:{x:rect.left,y:rect.top,width:rect.width,height:rect.height},
       obstacles
     });
     bubble.style.left=placement.x+'px';
@@ -141,18 +167,18 @@ export function createMoments({spots,pair,getImage,bubble}){
     if(cats){
       result.push({z:cats.tile[1]*TILE+1,draw(ctx){
         const x=cats.tile[0]*TILE,y=cats.tile[1]*TILE;
-        const sprite=getImage(petRemaining>0?'catHappy':'catIdle');
+        const sprite=getImage(petRemaining>0&&petRemaining<2.5?'catHappy':'catIdle');
         if(sprite)ctx.drawImage(sprite,x-CAT_DRAW_W/2,y-CAT_DRAW_H,CAT_DRAW_W,CAT_DRAW_H);
         else{
           ctx.fillStyle='#8B8584';ctx.fillRect(x-18,y-26,36,25);
           ctx.fillStyle='#FFF1DC';ctx.fillRect(x-16,y-23,14,18);
         }
-        if(petRemaining>0){
+        if(petRemaining>0&&petRemaining<2.5){
           const fx=getImage('petSparkles');
           if(fx){
-            const frame=Math.min(5,Math.floor((2.8-petRemaining)/.44));
+            const frame=Math.floor((2.5-petRemaining)/.22)%4;
             ctx.drawImage(fx,frame*16,0,16,16,x-8,y-CAT_DRAW_H-18,16,16);
-            ctx.drawImage(fx,((frame+2)%6)*16,0,16,16,x+12,y-CAT_DRAW_H-12,16,16);
+            ctx.drawImage(fx,((frame+2)%4)*16,0,16,16,x+12,y-CAT_DRAW_H-12,16,16);
           }else{
             ctx.fillStyle='#FFC76E';ctx.fillRect(x-2,y-CAT_DRAW_H-10,5,5);
             ctx.fillStyle='#E8A0A8';ctx.fillRect(x+13,y-CAT_DRAW_H-6,5,5);
@@ -160,7 +186,7 @@ export function createMoments({spots,pair,getImage,bubble}){
         }
       }});
     }
-    if(sitting){
+    if(sitting&&!seatTransition){
       const sprite=getImage('pairBenchSit');
       if(sprite){
         result.push({z:sitting.tile[1]*TILE+12,draw(ctx){
@@ -174,5 +200,6 @@ export function createMoments({spots,pair,getImage,bubble}){
     return result;
   }
   return {spots,momentAt:(x,y)=>momentAt(spots,x,y),isMoment,closest:(x,y)=>closestMoment(spots,x,y),
-    arrive,stand,isSitting,seatId,shouldHidePair,tick,scenery,positionBubble};
+    arrive,stand,isSitting,seatId,shouldHidePair,tick,scenery,positionBubble,renderPair,
+    isTransitioning:()=>Boolean(seatTransition)};
 }

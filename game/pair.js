@@ -3,8 +3,18 @@ import {getSelectedLook} from './wardrobe.js';
 
 export const createPair=save=>({
   x:save.position.x,y:save.position.y,
-  direction:save.direction,clock:0,moving:false
+  direction:save.direction,clock:0,moving:false,walkClock:0,idleClock:0,wasMoving:false
 });
+export function advancePairAnimation(pair,dt){
+  if(pair.moving){
+    pair.walkClock=pair.wasMoving?(pair.walkClock??0)+dt:0;
+    pair.idleClock=0;
+  }else{
+    pair.idleClock=pair.wasMoving?0:(pair.idleClock??0)+dt;
+    pair.walkClock=0;
+  }
+  pair.wasMoving=pair.moving;
+}
 const rowOf={down:0,right:1,left:1,up:2};
 function drawPlaceholder(ctx,who,direction,frame){
   const leo=who==='leo',skin=leo?'#C98F5B':'#D9C2A3';
@@ -25,7 +35,7 @@ function drawPlaceholder(ctx,who,direction,frame){
   }
 }
 export function drawCharacter(ctx,x,y,who,direction,frame,getImage,outfits){
-  const sheet=getImage(getSelectedLook(outfits,who)?.sheet);
+  const sheet=getImage(getSelectedLook(outfits,who,url=>Boolean(getImage(url)))?.sheet);
   const row=rowOf[direction]??0;
   ctx.save();ctx.translate(Math.round(x),Math.round(y));
   if(direction==='left'){ctx.translate(32,0);ctx.scale(-1,1);}
@@ -36,7 +46,7 @@ export function drawCharacter(ctx,x,y,who,direction,frame,getImage,outfits){
 export function drawPair(ctx,pair,getImage,outfits){
   const sx=Math.round(pair.x*TILE),sy=Math.round(pair.y*TILE);
   // Un reloj para ambos: andar sincronizado aun con atuendos diferentes.
-  const frame=pair.moving?2+Math.floor(pair.clock/0.13)%4:Math.floor(pair.clock/1.4)%2;
+  const frame=pair.moving?2+Math.floor((pair.walkClock??pair.clock)/0.13)%4:Math.floor((pair.idleClock??pair.clock)/1.4)%2;
   ctx.fillStyle='#527B56';ctx.fillRect(sx-22,sy-2,44,5);
   const y=sy-46;
   if(pair.direction==='up'||pair.direction==='down'){

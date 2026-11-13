@@ -6,9 +6,7 @@
   <meta name="theme-color" content="#2E1F18">
   <title>OOWWWW — Nuestro pequeño mundo</title>
   <link rel="icon" href="/assets/images/itza.jpeg" type="image/jpeg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/game/fonts.css">
   <link rel="stylesheet" href="/game/styles.css">
 </head>
 <body>
@@ -20,6 +18,7 @@
         <h1>Para <span>Itza</span></h1>
         <p class="title-sub">Hice esto pensandoo en ti.<br>Tómate tu tiempo para ver todoo</p>
         <button id="start-game" class="pixel-button">Entrar</button>
+        <p id="asset-status" class="title-sub" role="status" aria-live="polite">Preparando nuestro mundo…</p>
         <a href="/" class="subtle-link">Visitar el modo clásico</a>
       </div>
     </section>
@@ -28,7 +27,7 @@
         <span class="brand">OOWWWW <small>Nuestro pequeño mundo</small></span>
         <div class="header-actions">
           <button id="help-button" class="hud-button" type="button">Cómo jugar</button>
-          <button id="map-button" class="hud-button" type="button">Mapa</button>
+          <button id="map-button" class="hud-button" type="button" aria-controls="map-panel" aria-expanded="false">Mapa</button>
           <button id="music-button" class="hud-button" type="button" aria-controls="music-dock" aria-expanded="false">Música</button>
           <a class="hud-button" href="/">Modo clásico</a>
         </div>
@@ -46,11 +45,11 @@
       </div>
       <div class="game-center">
         <div id="game-frame" class="game-frame">
-          <canvas id="world" width="480" height="270" aria-label="Mapa explorable de Itza y Leo"></canvas>
+          <canvas id="world" width="480" height="270" tabindex="0" aria-label="Mapa explorable de Itza y Leo" aria-describedby="game-controls"></canvas>
           <span id="world-status" class="world-status" role="status" aria-live="polite">Explora nuestro mundo</span>
         </div>
         <div id="leo-bubble" class="leo-bubble" data-tail="bottom" hidden aria-live="polite"></div>
-        <p class="game-hint">Toca el mapa para caminar. Toca a los gatos para acariciarlos y las bancas para sentarte. Cerca de ellos también puedes pulsar E.</p>
+        <p id="game-controls" class="game-hint">Toca el mapa para caminar. Usa las flechas o WASD en computadora. Toca a los gatos para acariciarlos y las bancas para sentarte. Cerca de ellos también puedes pulsar E.</p>
       </div>
       <footer class="game-footer"><span>Itza &amp; Leo</span><span id="place-counter">10 lugares por descubrir</span></footer>
       <div id="experience" class="experience" hidden role="dialog" aria-modal="true" aria-labelledby="experience-title">

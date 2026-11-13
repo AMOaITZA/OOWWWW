@@ -52,7 +52,7 @@ test('all five resources are real transparent PNGs at native pixel-art resolutio
   }
 });
 
-test('cats render smaller, the seated pair renders larger and the interaction hitboxes follow the new sizes',()=>{
+test('cats keep their readable scale and sitting uses native pixels after approaching the bench',()=>{
   const pair={x:68,y:51,clock:0};
   const bubble={textContent:'',hidden:true,style:{}};
   const controller=createMoments({spots,pair,bubble,getImage:name=>({name})});
@@ -70,12 +70,17 @@ test('cats render smaller, the seated pair renders larger and the interaction hi
   assert.deepEqual(catDraw.slice(1),[cats.tile[0]*16-20,cats.tile[1]*16-32,40,32]);
   assert.equal(momentAt(spots,cats.tile[0]*16+22,cats.tile[1]*16-20)?.id,cats.id);
   assert.equal(momentAt(spots,cats.tile[0]*16+28,cats.tile[1]*16-20)?.id,undefined);
+  pair.x=bench.arrival[0];pair.y=bench.arrival[1];
   controller.arrive(bench);
+  assert.equal(controller.shouldHidePair(),false,'Walk to the bench before switching to the sitting pose');
+  assert.equal(controller.isTransitioning(),true);
+  controller.tick(.4);
+  assert.equal(controller.shouldHidePair(),true);
   drawings.length=0;
   controller.scenery().forEach(item=>item.draw(ctx));
   const sitDraw=drawings.find(args=>args[0].name==='pairBenchSit');
   assert.ok(sitDraw,'Itza y Leo sentados visibles');
-  assert.deepEqual(sitDraw.slice(1),[0,0,64,48,bench.tile[0]*16-40,bench.tile[1]*16-59,80,60]);
+  assert.deepEqual(sitDraw.slice(1),[0,0,64,48,bench.tile[0]*16-32,bench.tile[1]*16-47,64,48]);
 });
 
 
@@ -108,4 +113,46 @@ test('Leo dialogue is a floating sprite-aware bubble, including after modal clos
   assert.equal(bubble.hidden,true);
   controller.tick(.1,{active:true,dialogsOpen:false});
   assert.equal(bubble.hidden,false);
+});
+
+
+test('standing moves smoothly back to the saved arrival instead of teleporting',()=>{
+  const bench=spots.find(s=>s.kind==='bench');
+  const pair={x:bench.arrival[0],y:bench.arrival[1],clock:0,direction:'down'};
+  const controller=createMoments({spots,pair,bubble:{hidden:true,style:{}},getImage:()=>({})});
+  controller.arrive(bench);
+  controller.tick(.19);
+  const halfway=controller.renderPair();
+  assert.ok(halfway.y<pair.y&&halfway.y>bench.tile[1]);
+  controller.tick(.2);
+  const seated=controller.renderPair();
+  controller.stand();
+  assert.equal(controller.isSitting(),false);
+  assert.equal(controller.renderPair().y,seated.y,'Standing starts at the visible seat');
+  controller.tick(.19);
+  assert.ok(controller.renderPair().y>seated.y&&controller.renderPair().y<pair.y);
+  controller.tick(.2);
+  assert.equal(controller.renderPair(),pair);
+  assert.deepEqual([pair.x,pair.y],bench.arrival,'Save position stays compatible');
+});
+
+test('cat reaction turns toward cats and pauses behind an experience',()=>{
+  const pair={x:68,y:51,clock:0,direction:'down'};
+  const bubble={textContent:'',hidden:true,style:{}};
+  const controller=createMoments({spots,pair,bubble,getImage:name=>({name})});
+  controller.arrive(spots.find(s=>s.kind==='cats'));
+  assert.equal(pair.direction,'up');
+  let names=[];
+  const ctx={drawImage(sprite){names.push(sprite.name);},fillRect(){}};
+  controller.scenery().forEach(item=>item.draw(ctx));
+  assert.ok(names.includes('catIdle'),'A short anticipation precedes the happy reaction');
+  controller.tick(.4);
+  controller.tick(10,{dialogsOpen:true});
+  names=[];
+  controller.scenery().forEach(item=>item.draw(ctx));
+  assert.ok(names.includes('catHappy'),'Reaction time does not expire behind a modal');
+  controller.tick(3);
+  names=[];
+  controller.scenery().forEach(item=>item.draw(ctx));
+  assert.ok(names.includes('catIdle'));
 });

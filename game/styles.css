@@ -191,3 +191,62 @@
  .wedding-cinema{border-width:3px;box-shadow:2px 2px 0 #6d475a}
  .wedding-vow{padding:9px;font-size:14px!important}
 }
+
+/* Pulido de lectura y controles; el arte conserva su resolución lógica. */
+.hud-button,.map-destination,.wardrobe-tab,.wardrobe-category,.wardrobe-item,
+.wardrobe-face,.music-dock button,.gallery-viewer button,.tv-controls button,
+.reasons-navigation button{min-height:44px}
+.experience-panel,.map-paper{min-width:0;scrollbar-gutter:stable;overflow-x:hidden}
+.experience-panel > .eyebrow{font-size:11px;line-height:1.6;letter-spacing:1px;margin:0 0 12px;padding-right:40px}
+.experience-panel p,.map-paper p{overflow-wrap:anywhere}
+.experience-panel .close-experience{
+  position:sticky;top:-18px;float:right;z-index:2;
+  display:grid;place-items:center;width:44px;height:44px;min-height:44px;
+  margin:-18px -10px 0 0;padding:0;background:var(--px-cream);
+  border:2px solid var(--px-wood-dark);box-shadow:2px 2px 0 var(--px-tan)
+}
+.experience-panel .close-experience:hover{background:var(--px-rose-light)}
+.wedding-cinema{width:min(100%,calc(52dvh * 16 / 9));max-height:none;flex-shrink:0}
+.wedding-controls .wedding-nav{min-height:44px;line-height:1.5;overflow-wrap:anywhere}
+.wedding-stage-caption{color:#795160}
+.wedding-stage-number,.wedding-progress{color:#805167}
+.wardrobe-availability{font:16px/1.5 'VT323',monospace!important;color:var(--px-wood-dark)}
+.wardrobe-item{overflow-wrap:anywhere;line-height:1.5}
+.map-title-row{align-items:flex-start}
+.map-title-row .hud-button{flex-shrink:0}
+input:focus-visible{outline:3px solid var(--px-rose-deep);outline-offset:3px}
+@media(max-width:560px){
+  .game-header{flex-direction:column;gap:10px;padding:4px 0 10px}
+  .brand{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+  .brand small{font-size:15px}
+  .header-actions{width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+  .header-actions .hud-button{display:grid;place-items:center;text-align:center;font-size:10px;line-height:1.5;padding:5px 3px;min-width:0}
+  .game-hint{max-width:38em;line-height:1.4}
+  .experience{padding:12px 9px}
+  .experience-panel{padding:24px 14px;max-height:calc(100dvh - 32px);box-shadow:4px 4px 0 var(--px-rose-deep)}
+  .experience-panel > .eyebrow{font-size:10px;letter-spacing:.5px;margin-bottom:10px}
+  .experience-panel .close-experience{top:-18px;margin:-18px -8px 0 0}
+  .wedding-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .wedding-controls .wedding-yes{grid-column:1/-1}
+  .wedding-controls .wedding-nav{font-size:11px;padding:8px 5px}
+  .reasons-navigation{flex-wrap:wrap;justify-content:center}
+  .counter-box{padding:10px 3px}
+  .counter-box span{font-size:10px}
+  .map-paper{padding:12px;max-height:calc(100dvh - 36px)}
+  .map-destinations{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .map-destination{font-size:10px;overflow-wrap:anywhere}
+}
+@media(max-height:480px){
+  .title-screen{overflow:auto}
+  .title-content{padding:12px}
+  .title-content h1{font-size:28px;margin:14px 0}
+  .title-content .pixel-button{margin:16px auto}
+}
+.game-frame{box-sizing:border-box}
+.asset-status{min-height:1.5em;margin:8px auto;font:16px/1.5 'VT323',monospace;color:var(--px-tan)}
+@media(min-width:561px){
+  .experience-panel:has(.wedding-ceremony){max-height:calc(100dvh - 48px)}
+  .wedding-cinema{width:min(100%,calc(max(180px,100dvh - 520px) * 16 / 9))}
+}
+/* El borde no debe alterar la proporción intrínseca 480×270 del lienzo. */
+.wedding-cinema{aspect-ratio:auto}

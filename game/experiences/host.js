@@ -10,6 +10,7 @@ import * as places from './lugares.js';
 import * as ending from './final.js';
 import * as wardrobe from './armario.js';
 import * as boda from './boda.js';
+import {activateDialog} from '../dialog.js';
 const modules={inicio:intro,carta:letter,galeria:gallery,razones:reasons,playlist,recuerdos:tv,contador:counter,lugares:places,final:ending,armario:wardrobe,boda};
 export function createHost(api){
   const panel=document.getElementById('experience');
@@ -17,31 +18,34 @@ export function createHost(api){
   const title=document.getElementById('experience-title');
   const category=document.getElementById('experience-category');
   const closeButton=document.getElementById('close-experience');
-  let cleanup=()=>{},priorFocus=null;
+  let cleanup=()=>{},releaseDialog=()=>{};
+  function show(){
+    releaseDialog=activateDialog(panel,{onClose:close,initialFocus:closeButton,
+      fallbackFocus:document.getElementById('world')});
+  }
   function open(id){
     if(!modules[id])return;
     if(!panel.hidden)close();
-    priorFocus=document.activeElement;body.replaceChildren();
+    body.replaceChildren();
     const data=content[id]||{};
     title.textContent=data.title||id;
     category.textContent=data.eyebrow||'Nuestro pequeño mundo';
     cleanup=modules[id].mount(body,data,api)||(()=>{});
-    panel.hidden=false;closeButton.focus();
+    show();
   }
   function close(){
     if(panel.hidden)return;
     cleanup();cleanup=()=>{};
-    panel.hidden=true;body.replaceChildren();
-    if(priorFocus?.isConnected)priorFocus.focus();
-    priorFocus=null;api.onClose?.();
+    releaseDialog();releaseDialog=()=>{};body.replaceChildren();
+    api.onClose?.();
   }
   function help(){
     if(!panel.hidden)close();
-    priorFocus=document.activeElement;body.replaceChildren();
+    body.replaceChildren();
     title.textContent='Cómo jugar';category.textContent='Controles';
     const p=document.createElement('p');
-    p.textContent='Toca o haz clic en el suelo para caminar. Toca una casa para acercarte y vuelve a tocarla para abrir su experiencia. En computadora también puedes usar las flechas o WASD. El armario permite cambiar los conjuntos, incluidos el traje y el vestido de boda. En el mapa general encontrarás el Castillo de nuestra boda: camina hasta su puerta y toca de nuevo el edificio para entrar a la ceremonia. Allí puedes decir «Sí, quiero», avanzar por seis escenas o reproducir la historia seguida. También encontrarás Los gatitos y dos bancas: tócalos o pulsa E cerca para acariciar o sentarte. Pulsa E otra vez o camina para levantarte.';
-    body.append(p);panel.hidden=false;closeButton.focus();
+    p.textContent='Toca o haz clic en el suelo para caminar. Toca una casa para acercarte y vuelve a tocarla para abrir su experiencia. En computadora también puedes usar las flechas o WASD, y E cerca de una entrada para abrirla. El armario permite cambiar los conjuntos, incluidos el traje y el vestido de boda. En el mapa general encontrarás el Castillo de nuestra boda: camina hasta su puerta y toca de nuevo el edificio para entrar a la ceremonia. Allí puedes decir «Sí, quiero», avanzar por seis escenas o reproducir la historia seguida. También encontrarás Los gatitos y dos bancas: tócalos o pulsa E cerca para acariciar o sentarte. Pulsa E otra vez o camina para levantarte.';
+    body.append(p);show();
   }
   closeButton.addEventListener('click',close);
   panel.addEventListener('click',event=>{if(event.target===panel)close();});

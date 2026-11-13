@@ -5,6 +5,7 @@ const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
 export function placeDialogue({anchor,bubble,viewport,obstacles=[]}){
   const w=Math.max(1,bubble.width),h=Math.max(1,bubble.height);
   const margin=8,gap=13;
+  const left=viewport.x??0,top=viewport.y??0;
   const hero=obstacles.find(o=>o.id==='pair')??{x:anchor.x-15,y:anchor.y,width:30,height:40};
   const choices=[
     {x:anchor.x-w/2,y:anchor.y-h-gap,tail:'bottom',preference:0},
@@ -18,8 +19,8 @@ export function placeDialogue({anchor,bubble,viewport,obstacles=[]}){
   ];
   let best=null;
   for(const candidate of choices){
-    const x=clamp(candidate.x,margin,Math.max(margin,viewport.width-w-margin));
-    const y=clamp(candidate.y,margin,Math.max(margin,viewport.height-h-margin));
+    const x=clamp(candidate.x,left+margin,Math.max(left+margin,left+viewport.width-w-margin));
+    const y=clamp(candidate.y,top+margin,Math.max(top+margin,top+viewport.height-h-margin));
     let score=candidate.preference*5+(Math.abs(x-candidate.x)+Math.abs(y-candidate.y))*.17;
     for(const obstacle of obstacles){
       const pad=obstacle.id==='pair'?9:6;
@@ -37,6 +38,12 @@ export function placeDialogue({anchor,bubble,viewport,obstacles=[]}){
     )*.05;
     if(best===null||score<best.score)best={x,y,tail:candidate.tail,score};
   }
+  // Clamping at an edge may move the bubble to the other side of Leo.
+  // Point the tail toward his actual position, not the original candidate.
+  if(anchor.y<best.y)best.tail='top';
+  else if(anchor.y>best.y+h)best.tail='bottom';
+  else if(anchor.x<best.x)best.tail='left';
+  else if(anchor.x>best.x+w)best.tail='right';
   const tailX=clamp(anchor.x-best.x,13,Math.max(13,w-13));
   const tailY=clamp(anchor.y-best.y,13,Math.max(13,h-13));
   return {x:Math.round(best.x),y:Math.round(best.y),tail:best.tail,

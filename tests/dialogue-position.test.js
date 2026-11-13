@@ -32,3 +32,18 @@ test('bubble stays on screen when Leo is near corners',()=>{
     assert.ok(Number.isFinite(result.tailX)&&Number.isFinite(result.tailY));
   }
 });
+
+
+test('dialogue stays inside the scene rather than escaping into the page header',()=>{
+  const viewport={x:20,y:160,width:360,height:202},bubble={width:210,height:64};
+  for(const anchor of [{x:35,y:190},{x:350,y:340},{x:200,y:220}]){
+    const result=placeDialogue({anchor,bubble,viewport,
+      obstacles:[{id:'pair',x:anchor.x-20,y:anchor.y,width:48,height:40}]});
+    assert.ok(result.x>=viewport.x+8);
+    assert.ok(result.y>=viewport.y+8);
+    assert.ok(result.x+bubble.width<=viewport.x+viewport.width-8);
+    assert.ok(result.y+bubble.height<=viewport.y+viewport.height-8);
+    if(anchor.y<result.y)assert.equal(result.tail,'top');
+    if(anchor.y>result.y+bubble.height)assert.equal(result.tail,'bottom');
+  }
+});

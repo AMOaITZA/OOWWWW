@@ -2,7 +2,7 @@ import places from './data/places.json';
 import decor from './data/decor.json';
 import momentSpots from './data/moments.json';
 import {TILE,WIDTH,HEIGHT,initWorld,walkable,closestWalkable,findPath,groundTile} from './world.js';
-import {createPair,drawPair} from './pair.js';
+import {createPair,drawPair,advancePairAnimation} from './pair.js';
 import {nearestPlace,sceneObjects} from './places.js';
 import {loadSave,writeSave} from './save.js';
 import {assetImage,prepareWorldAssets,prepareOutfit,groundImage,objectImage,momentImage} from './assets.js';
@@ -39,7 +39,7 @@ function goTo(x,y,place=null){
   if(!point){status('No se puede llegar a ese lugar');return;}
   const route=findPath(pair,point);
   if(route.length){path=route;targetPlace=place;status(place?'Caminando hacia '+place.name:'Caminando…');}
-  else if(Math.round(pair.x)===point.x&&Math.round(pair.y)===point.y){
+  else if(pair.x===point.x&&pair.y===point.y){
     path=[];targetPlace=null;
     if(place&&moments.isMoment(place)){
       moments.arrive(place);
@@ -58,6 +58,7 @@ function cameraAt(){
 }
 function pointClick(event){
   if(!active||host.isOpen()||overview.isOpen())return;
+  canvas.focus({preventScroll:true});
   const bounds=canvas.getBoundingClientRect();
   const px=(event.clientX-bounds.left)*canvas.width/bounds.width;
   const py=(event.clientY-bounds.top)*canvas.height/bounds.height;
@@ -78,20 +79,20 @@ function pointClick(event){
 }
 const overview=createMap({
   places,decor,moments:momentSpots,pair,save,
-  onNavigate:(x,y,place)=>goTo(x,y,place)
+  onNavigate:(x,y,place)=>{canvas.focus({preventScroll:true});goTo(x,y,place);}
 });
 const pressed=new Set();
 const keyDirections={arrowup:[0,-1,'up'],w:[0,-1,'up'],arrowdown:[0,1,'down'],s:[0,1,'down'],arrowleft:[-1,0,'left'],a:[-1,0,'left'],arrowright:[1,0,'right'],d:[1,0,'right']};
 function step(dt){
   pair.clock+=dt;
-  if(!active||host.isOpen()||overview.isOpen()){pair.moving=false;return;}
+  if(!active||host.isOpen()||overview.isOpen()||moments.isTransitioning()){pair.moving=false;return;}
   const direction=Object.keys(keyDirections).find(key=>pressed.has(key));
   if(direction&&!path.length){
     if(moments.isSitting())moments.stand();
     const [dx,dy,face]=keyDirections[direction];
     pair.direction=face;
     const nx=Math.round(pair.x)+dx,ny=Math.round(pair.y)+dy;
-    if(walkable(nx,ny)){path=[{x:nx,y:ny}];targetPlace=null;}
+    if(walkable(nx,ny)){path=findPath(pair,{x:nx,y:ny});targetPlace=null;}
   }
   pair.moving=path.length>0;
   if(path.length){
@@ -124,7 +125,7 @@ function draw(){
     for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++)groundTile(ctx,x,y);
   }
   const scenery=objects.concat(moments.scenery());
-  if(!moments.shouldHidePair())scenery.push({z:pair.y*TILE,draw:ctx=>drawPair(ctx,pair,assetImage,save.outfits)});
+  if(!moments.shouldHidePair())scenery.push({z:pair.y*TILE,draw:ctx=>drawPair(ctx,moments.renderPair(),assetImage,save.outfits)});
   scenery.sort((a,b)=>a.z-b.z);
   for(const item of scenery)item.draw(ctx); // objetos independientes, clasificados por profundidad
   ctx.restore();
@@ -133,7 +134,7 @@ function draw(){
 function tick(time){
   const dt=Math.min(0.05,(time-lastTime)/1000||0);lastTime=time;
   moments.tick(dt,{active,dialogsOpen:host.isOpen()||overview.isOpen()});
-  step(dt);draw();overview.repaint();saveClock+=dt;
+  step(dt);advancePairAnimation(pair,dt);draw();overview.repaint();saveClock+=dt;
   if(saveClock>10){persist();saveClock=0;}
   requestAnimationFrame(tick);
 }
@@ -143,34 +144,71 @@ function stars(){
   for(let i=0;i<110;i++){s=(1664525*s+1013904223)>>>0;const x=s%320;s=(1664525*s+1013904223)>>>0;const y=s%180;context.globalAlpha=.25+(s%70)/100;context.fillRect(x,y,i%9===0?2:1,1);}
 }
 function layout(){
-  const frame=$('game-frame'),w=Math.max(280,innerWidth-28),h=Math.max(150,innerHeight-160);
-  const scale=Math.min(Math.floor(w/480),Math.floor(h/270),4);
-  if(scale>=1){frame.style.width=480*scale+'px';frame.style.height=270*scale+'px';}
-  else{const fractional=Math.min(w/480,h/270);frame.style.width=480*fractional+'px';frame.style.height=270*fractional+'px';}
+  const frame=$('game-frame'),screen=$('game-screen');
+  if(screen.hidden)return;
+  const css=getComputedStyle(screen),border=getComputedStyle(frame);
+  const number=value=>parseFloat(value)||0;
+  const paddingX=number(css.paddingLeft)+number(css.paddingRight);
+  const paddingY=number(css.paddingTop)+number(css.paddingBottom);
+  const borderX=number(border.borderLeftWidth)+number(border.borderRightWidth);
+  const borderY=number(border.borderTopWidth)+number(border.borderBottomWidth);
+  const hint=$('game-controls'),hintStyle=getComputedStyle(hint);
+  const hintHeight=hint.offsetHeight+number(hintStyle.marginTop)+number(hintStyle.marginBottom);
+  const w=Math.max(80,screen.clientWidth-paddingX-borderX);
+  const h=Math.max(80,(window.visualViewport?.height??innerHeight)-paddingY-borderY-
+    screen.querySelector('.game-header').offsetHeight-
+    screen.querySelector('.game-footer').offsetHeight-hintHeight);
+  const integral=Math.min(Math.floor(w/480),Math.floor(h/270),4);
+  const scale=integral>=1?integral:Math.min(w/480,h/270);
+  // Border-box includes the frame: keep the actual canvas at an integer scale.
+  frame.style.width=480*scale+borderX+'px';
+  frame.style.height=270*scale+borderY+'px';
 }
 $('start-game').addEventListener('click',()=>{
-  $('title-screen').hidden=true;$('game-screen').hidden=false;active=true;layout();persist();status('Toca para caminar');
+  $('title-screen').hidden=true;$('game-screen').hidden=false;active=true;layout();canvas.focus();persist();status('Toca para caminar');
 });
 $('help-button').addEventListener('click',()=>{
   host.help();
 });
 canvas.addEventListener('pointerdown',pointClick);
 window.addEventListener('keydown',event=>{
+  if(event.defaultPrevented)return;
+  const interactive=event.target?.closest?.('input,textarea,select,button,a,[contenteditable="true"]');
   if(event.key==='Escape'&&host.isOpen()){host.close();return;}
   if(event.key==='Escape'&&overview.isOpen()){overview.close();return;}
+  if(interactive)return;
   const key=event.key.toLowerCase();
-  if(active&&key==='e'&&!host.isOpen()&&!overview.isOpen()){
+  if(active&&key==='e'&&!event.repeat&&!host.isOpen()&&!overview.isOpen()){
     const spot=moments.closest(pair.x,pair.y,4);
     if(spot){event.preventDefault();goTo(...spot.arrival,spot);return;}
+    const place=places.find(item=>Math.hypot(pair.x-item.arrival[0],pair.y-item.arrival[1])<1.5);
+    if(place){
+      event.preventDefault();
+      if(!path.length&&pair.x===place.arrival[0]&&pair.y===place.arrival[1])openPlace(place);
+      else goTo(...place.arrival,place);
+      return;
+    }
   }
   if(active&&!host.isOpen()&&!overview.isOpen()&&keyDirections[key]){
-    event.preventDefault();pressed.add(key);
-    if(path.length){path=[];targetPlace=null;}
+    event.preventDefault();
+    if(!pressed.has(key)){pressed.add(key);path=[];targetPlace=null;}
   }
 });
 window.addEventListener('keyup',event=>pressed.delete(event.key.toLowerCase()));
 window.addEventListener('blur',()=>{pressed.clear();persist();});
+document.addEventListener('oowwww-dialog-open',()=>pressed.clear());
 window.addEventListener('resize',layout);
 window.addEventListener('pagehide',persist);
 $('place-counter').textContent=save.visited.length+' / '+places.length+' lugares visitados';
-stars();prepareWorldAssets();prepareOutfit(save.outfits);requestAnimationFrame(tick);
+const startButton=$('start-game');
+startButton.disabled=true;startButton.textContent='Cargando…';
+Promise.allSettled([prepareWorldAssets(),prepareOutfit(save.outfits)]).then(results=>{
+  startButton.disabled=false;startButton.textContent='Entrar';
+  const loading=$('asset-status');
+  if(loading)loading.textContent=results.some(result=>result.status==='rejected')
+    ?'Puedes entrar. Algunos detalles tardan en estar disponibles.'
+    :'Nuestro mundo está listo';
+});
+document.fonts?.ready.then(layout);
+window.visualViewport?.addEventListener('resize',layout);
+stars();requestAnimationFrame(tick);

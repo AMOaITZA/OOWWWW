@@ -40,3 +40,32 @@ test('wedding castle has a wide obstacle and a reachable entrance',()=>{
  const route=findPath({x:30,y:25},{x:castle.arrival[0],y:castle.arrival[1]});
  assert.ok(route.length>0);
 });
+
+
+test('rerouting mid-step rejoins the grid before turning around an obstacle',()=>{
+  initWorld(places,decor);
+  const from={x:30.4,y:25};
+  const route=findPath(from,{x:30,y:26});
+  assert.deepEqual(route[0],{x:30,y:25});
+  let previous=from;
+  for(const point of route){
+    assert.ok(point.x===previous.x||point.y===previous.y,'No diagonal corner cutting');
+    assert.ok(walkable(point.x,point.y));
+    previous=point;
+  }
+  assert.deepEqual(findPath(from,{x:30,y:25}),[{x:30,y:25}],
+    'An interaction must reach the exact center even when rounding says it has arrived');
+});
+
+
+test('the castle entrance keeps both characters clear of the foreground tree',()=>{
+  const entrance=places.find(place=>place.id==='boda').arrival;
+  const pairBox={left:entrance[0]*16-32,right:entrance[0]*16+32,
+    top:entrance[1]*16-46,bottom:entrance[1]*16+2};
+  for(const tree of decor.filter(item=>item.kind==='tree'&&item.tile[1]>=entrance[1])){
+    const left=tree.tile[0]*16-32,right=left+64,top=tree.tile[1]*16-110,bottom=top+112;
+    const overlap=Math.max(0,Math.min(pairBox.right,right)-Math.max(pairBox.left,left))*
+      Math.max(0,Math.min(pairBox.bottom,bottom)-Math.max(pairBox.top,top));
+    assert.equal(overlap,0,'Foreground trees must not hide Itza or Leo at the entrance');
+  }
+});

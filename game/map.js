@@ -1,4 +1,5 @@
 import {WIDTH,HEIGHT,walkable} from './world.js';
+import {activateDialog} from './dialog.js';
 const STEP=3;
 const palette={grass:'#94B77B',grassShade:'#8BAE74',road:'#D8C69A',water:'#6D9BAC',accent:'#B5656F',ink:'#1B120E',cream:'#FFF1DC',visited:'#F2C46D'};
 export function createMap({places,decor,moments=[],pair,save,onNavigate}){
@@ -8,7 +9,7 @@ export function createMap({places,decor,moments=[],pair,save,onNavigate}){
   const closeButton=document.getElementById('close-map');
   const destinations=document.getElementById('map-destinations');
   const mapButton=document.getElementById('map-button');
-  let previousFocus=null;
+  let releaseDialog=()=>{};
   const background=document.createElement('canvas');
   background.width=WIDTH*STEP;background.height=HEIGHT*STEP;
   const land=background.getContext('2d');land.imageSmoothingEnabled=false;
@@ -47,7 +48,8 @@ export function createMap({places,decor,moments=[],pair,save,onNavigate}){
   }
   function close(){
     if(panel.hidden)return;
-    panel.hidden=true;previousFocus?.focus();previousFocus=null;
+    releaseDialog();releaseDialog=()=>{};
+    mapButton.setAttribute('aria-expanded','false');
   }
   function navigate(x,y,place){
     close();
@@ -55,7 +57,6 @@ export function createMap({places,decor,moments=[],pair,save,onNavigate}){
   }
   function open(){
     if(!panel.hidden)return;
-    previousFocus=document.activeElement;panel.hidden=false;
     destinations.replaceChildren();
     for(const place of places){
       const button=document.createElement('button');
@@ -71,7 +72,9 @@ export function createMap({places,decor,moments=[],pair,save,onNavigate}){
       button.addEventListener('click',()=>navigate(...spot.arrival,spot));
       destinations.append(button);
     }
-    repaint();closeButton.focus();
+    releaseDialog=activateDialog(panel,{onClose:close,initialFocus:closeButton,fallbackFocus:mapButton});
+    mapButton.setAttribute('aria-expanded','true');
+    repaint();
   }
   canvas.addEventListener('pointerdown',event=>{
     const rect=canvas.getBoundingClientRect();

@@ -1,0 +1,252 @@
+:root{--px-cream:#FFF1DC;--px-parchment:#F3D9B1;--px-tan:#D9C2A3;--px-wood-light:#C98F5B;--px-wood:#A06A3F;--px-wood-dark:#6B4429;--px-wood-deep:#2E1F18;--px-rose-light:#F6D1CF;--px-rose:#E8A0A8;--px-rose-deep:#B5656F;--px-amber:#F2C46D;--px-ink:#1B120E}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--px-wood-deep);color:var(--px-cream)}body{font-family:'VT323',monospace;font-size:23px;cursor:default;overflow-x:hidden}button,a{cursor:pointer}button{font:inherit}button:focus-visible,a:focus-visible{outline:3px solid var(--px-amber);outline-offset:4px}[hidden]{display:none!important}
+.title-screen{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 20%,#433044 0%,var(--px-wood-deep) 75%);overflow:hidden}.title-screen canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.title-content{text-align:center;position:relative;z-index:1;padding:24px}.eyebrow{font-family:'Silkscreen',monospace;text-transform:uppercase;font-size:14px;letter-spacing:2px;color:var(--px-rose)}.title-content h1{font-family:'Press Start 2P',monospace;font-weight:400;font-size:clamp(28px,7vw,72px);line-height:1.5}.title-content h1 span{color:var(--px-parchment)}.title-sub{color:var(--px-tan);line-height:1.4}.pixel-button{display:block;background:var(--px-rose-deep);border:3px solid var(--px-ink);color:white;padding:13px 30px;margin:30px auto 16px;box-shadow:5px 5px 0 var(--px-ink);font-family:'Silkscreen',monospace}.pixel-button:hover{background:#A86B75}.subtle-link{display:block;font-size:19px;color:var(--px-tan)}
+.game-screen{min-height:100dvh;display:flex;flex-direction:column;background:linear-gradient(#2E1F18,#493329);padding:calc(8px + env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}.game-header,.game-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;max-width:1400px;margin:0 auto}.game-header{padding:8px 0}.brand{font-family:'Silkscreen',monospace;font-size:18px}.brand small{display:block;font:18px 'VT323',monospace;color:var(--px-tan)}.header-actions{display:flex;gap:8px;flex-wrap:wrap}.hud-button{font:16px 'Silkscreen',monospace;padding:7px 10px;text-decoration:none;color:var(--px-cream);background:var(--px-wood-dark);border:2px solid var(--px-ink)}.game-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0}.game-frame{position:relative;width:min(100%,960px);aspect-ratio:16/9;border:4px solid var(--px-ink);background:#91B079;box-shadow:8px 8px 0 #1B120E;overflow:hidden}.game-frame canvas{display:block;width:100%;height:100%;object-fit:fill;image-rendering:pixelated;touch-action:none;cursor:crosshair}.world-status{position:absolute;left:8px;bottom:7px;max-width:calc(100% - 16px);font:13px 'Silkscreen',monospace;background:#2E1F18DD;color:var(--px-cream);padding:5px 7px;pointer-events:none}.game-hint{font-size:19px;color:var(--px-tan);text-align:center;margin:15px 0}.game-footer{color:var(--px-tan);font-size:18px;padding:8px 0}.experience{position:fixed;inset:0;background:#1B120EEB;z-index:30;display:grid;place-items:center;padding:20px;overflow:auto}.experience-panel{position:relative;width:min(600px,100%);max-height:90dvh;overflow:auto;padding:30px 25px;background:var(--px-cream);color:var(--px-ink);border:5px solid var(--px-ink);box-shadow:9px 9px 0 var(--px-rose-deep)}.experience-panel h2{font:clamp(17px,3vw,24px)/1.8 'Press Start 2P',monospace;overflow-wrap:anywhere}.experience-panel .eyebrow{color:var(--px-rose-deep)}.experience-panel p{font-size:25px}.close-experience{position:absolute;right:12px;top:8px;background:none;border:none;color:var(--px-ink);font-size:34px}.experience-panel a{display:inline-block;background:var(--px-wood-dark);border:3px solid var(--px-ink);color:var(--px-cream);padding:9px 16px;text-decoration:none;font-family:'Silkscreen',monospace;font-size:15px;margin-top:6px}
+@media(max-width:560px){.game-header{align-items:flex-start}.brand{font-size:14px}.brand small{font-size:14px}.hud-button{font-size:12px;padding:6px}.game-frame{border-width:3px;box-shadow:4px 4px 0 var(--px-ink)}.game-hint{font-size:16px}.world-status{font-size:9px}.title-content h1{font-size:30px}.eyebrow{font-size:11px}.game-footer{font-size:15px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}}
+
+/* Experiencias del juego: paneles internos sin estilos del modo clásico. */
+#experience-content{display:grid;gap:16px;margin-top:14px}
+#experience-content p{margin:0;line-height:1.35;white-space:pre-line}
+.experience-panel{width:min(780px,100%);max-height:min(90dvh,800px);overscroll-behavior:contain}
+.experience-panel h2{font-size:clamp(14px,2.3vw,21px);line-height:1.5;margin:0;padding-right:22px}
+.experience-panel .pixel-action,.experience-panel button{cursor:pointer}
+.experience-panel button:disabled{opacity:.42;cursor:not-allowed}
+.experience-panel button:focus-visible{outline:3px solid var(--px-rose-deep);outline-offset:3px}
+.experience-heading{font-family:'Silkscreen',monospace}
+.intro-portrait{display:block;margin:0 auto;width:min(240px,65%);height:auto;image-rendering:pixelated}
+.intro-quote,.final-quote{font-family:'Silkscreen',monospace;font-size:clamp(19px,3vw,26px)!important;line-height:1.5!important;color:var(--px-wood-dark)}
+.letter-original{padding:16px;background:#FFF8EA;border:3px solid #D9C2A3;white-space:pre-wrap!important;font-size:clamp(20px,2.8vw,26px)!important;line-height:1.5!important}
+.signature{text-align:right;font-family:'Silkscreen',monospace}
+.memory-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:12px}
+.photo-tile{position:relative;display:block;padding:0;border:3px solid var(--px-ink);background:var(--px-parchment);aspect-ratio:1/1;overflow:hidden;min-width:0;cursor:pointer}
+.photo-tile img{width:100%;height:100%;object-fit:cover;image-rendering:auto}
+.photo-number{position:absolute;bottom:0;right:0;color:var(--px-cream);background:var(--px-ink);padding:3px 6px;font-family:'Silkscreen',monospace;font-size:11px}
+.gallery-viewer{text-align:center}
+.gallery-viewer[hidden],.tv-display.off .tv-image{display:none}
+.gallery-viewer img{display:block;margin:auto;max-height:48vh;max-width:100%;object-fit:contain;image-rendering:auto}
+.gallery-viewer p{margin:12px auto!important;max-width:650px}
+.gallery-viewer button,.reasons-navigation button,.tv-controls button,.wardrobe-tab,.wardrobe-category,.wardrobe-item{border:2px solid var(--px-ink);padding:8px 11px;background:var(--px-parchment);color:var(--px-ink);box-shadow:2px 2px 0 var(--px-ink);font:15px 'Silkscreen',monospace}
+.reasons-paper{border:4px solid var(--px-wood-dark);padding:18px;background:#FFF8EA;box-shadow:5px 5px 0 var(--px-tan)}
+.reasons-list{padding-left:2em;margin:0;min-height:200px}
+.reasons-list li{font-size:23px;margin:5px 0;padding-left:4px}
+.reasons-navigation{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:15px}
+.reasons-count{font-family:'Silkscreen',monospace;font-size:14px}
+.playlist-embed{border:0;width:100%;height:352px;border-radius:4px;max-width:100%}
+.tv-console{padding:14px;background:#A06A3F;border:6px solid #2E1F18;box-shadow:6px 6px 0 #6B4429}
+.tv-display{display:grid;place-items:center;min-height:280px;padding:14px;background:#2E302D;border:6px solid #1B120E;color:#FFF1DC;text-align:center}
+.tv-display.off{background:repeating-linear-gradient(0deg,#292E2E,#292E2E 3px,#333739 3px,#333739 5px)}
+.tv-inner{width:100%;display:grid;justify-items:center;gap:12px}
+.tv-image{width:min(100%,380px);height:195px;object-fit:contain;image-rendering:auto}
+.tv-memory{font-size:clamp(21px,3vw,27px)!important}
+.tv-display.off .tv-inner{display:block}
+.tv-number{display:block;text-align:center;font:14px 'Silkscreen',monospace;margin:8px}
+.tv-controls{display:flex;align-items:center;justify-content:center;gap:18px}
+.counter-grid-game{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.counter-box{padding:12px 5px;border:3px solid var(--px-wood-dark);background:var(--px-parchment);display:grid;justify-items:center;gap:3px}
+.counter-box strong{font:clamp(20px,4vw,32px) 'VT323',monospace}
+.counter-box span{font:clamp(11px,2.5vw,16px) 'Silkscreen',monospace}
+.place-memory{background:#FFF8EA;border-left:5px solid var(--px-rose-deep);padding:13px}
+.place-memory h3{font:18px 'Silkscreen',monospace;margin:0 0 9px}
+.final-pair{display:grid;place-items:center;background:var(--px-parchment);border:3px solid var(--px-wood-dark)}
+.final-pair img{max-height:230px;object-fit:contain;image-rendering:pixelated}
+.final-chapter,.final-question{font-family:'Silkscreen',monospace;text-align:center}
+.final-footer-love{background:var(--px-parchment);padding:14px}
+.final-ps{font-style:italic}
+.wardrobe-info{color:var(--px-wood-dark);font-size:18px!important;font-family:'Silkscreen',monospace}
+.wardrobe-layout{display:grid;grid-template-columns:minmax(160px,200px) minmax(0,1fr);gap:20px;align-items:start}
+.wardrobe-left{position:sticky;top:0;display:grid;gap:12px}
+.wardrobe-tabs{display:flex;gap:5px}
+.wardrobe-tab{flex:1;min-width:0}
+.wardrobe-preview{width:100%;height:auto;aspect-ratio:160/125;image-rendering:pixelated;border:4px solid var(--px-ink);background:var(--px-parchment)}
+.wardrobe-categories{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.wardrobe-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.wardrobe-category.selected,.wardrobe-tab.selected,.wardrobe-item.selected{background:var(--px-rose-deep);color:#FFF1DC}
+@media(max-width:600px){.wardrobe-layout{grid-template-columns:1fr}.wardrobe-left{position:static;max-width:180px;justify-self:center}.wardrobe-tabs{width:180px}.experience-panel{padding:24px 14px}.memory-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.reasons-list li{font-size:20px}.reasons-paper{padding:10px}.tv-display{min-height:230px}.tv-image{height:140px}}
+
+/* El visor lógico se amplía por múltiplos enteros cuando cabe en pantalla. */
+.game-frame{box-sizing:content-box;max-width:none}
+
+.wardrobe-direction{display:flex;gap:4px}
+.wardrobe-face{flex:1;min-width:0;border:2px solid var(--px-ink);padding:5px 3px;background:var(--px-parchment);color:var(--px-ink);font:10px 'Silkscreen',monospace;cursor:pointer}
+.wardrobe-face.selected{background:var(--px-rose-deep);color:#FFF1DC}
+
+/* Plano top-down con selector de destino y la misma navegación A* del mundo */
+.map-panel{position:fixed;z-index:25;inset:0;background:#1B120ED8;padding:calc(12px + env(safe-area-inset-top)) 12px calc(12px + env(safe-area-inset-bottom));display:grid;place-items:center;overflow:auto}
+.map-paper{background:var(--px-cream);color:var(--px-ink);border:5px solid var(--px-ink);box-shadow:8px 8px 0 var(--px-wood-dark);width:min(800px,100%);max-height:94dvh;overflow:auto;padding:16px}
+.map-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.map-title-row h2{font:clamp(13px,2.5vw,19px)/1.5 'Press Start 2P',monospace}
+.map-paper p{margin:6px 0 14px;font-size:21px}
+.map-paper canvas{display:block;image-rendering:pixelated;touch-action:none;border:3px solid var(--px-ink);width:min(100%,600px);height:auto;aspect-ratio:3/2;margin:0 auto 14px;cursor:crosshair}
+.map-destinations{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.map-destination{border:2px solid var(--px-ink);padding:8px;background:var(--px-parchment);color:var(--px-ink);font:12px/1.5 'Silkscreen',monospace;cursor:pointer;text-align:left}
+.map-destination.visited{background:var(--px-amber)}
+.map-destination:hover{background:var(--px-rose-light)}
+.map-title-row .hud-button{background:var(--px-wood-dark);color:var(--px-cream)}
+
+.final-action-game{justify-self:center;display:block;background:var(--px-rose-deep);color:var(--px-cream);border:3px solid var(--px-ink);box-shadow:4px 4px 0 var(--px-ink);padding:10px 22px;cursor:pointer;font:16px 'Silkscreen',monospace}
+.final-action-game:hover{background:var(--px-wood-dark)}
+
+/* Armario simplificado: dos hojas completas por personaje, sin ranuras de prendas. */
+.wardrobe-items{grid-template-columns:repeat(3,minmax(0,1fr))}
+.wardrobe-item:disabled{opacity:.55;cursor:not-allowed}
+.wardrobe-left>.wardrobe-category{width:100%}
+@media(max-width:520px){.wardrobe-items{grid-template-columns:1fr}}
+
+/* Reproductor compacto: audio sigue montado al cerrar experiencias. */
+.music-dock{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:40;width:min(365px,calc(100vw - 24px));padding:12px;background:var(--px-parchment);color:var(--px-ink);border:4px solid var(--px-ink);box-shadow:5px 5px 0 var(--px-rose-deep)}
+.music-dock-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.music-dock-heading{display:grid;gap:3px;min-width:0}
+.music-kicker{font:10px 'Silkscreen',monospace;color:var(--px-wood-dark);text-transform:uppercase}
+.music-dock-heading strong{font:clamp(11px,1.7vw,14px)/1.45 'Silkscreen',monospace;overflow-wrap:anywhere}
+.music-dock-heading span:last-child{font:20px 'VT323',monospace;color:var(--px-wood-dark)}
+.music-dock button{padding:8px;background:var(--px-wood-dark);color:var(--px-cream);border:2px solid var(--px-ink);font:10px 'Silkscreen',monospace;cursor:pointer;min-height:36px}
+.music-dock button:focus-visible{outline:3px solid var(--px-rose-deep);outline-offset:2px}
+.music-dock-close{flex-shrink:0}
+.music-status{margin:7px 0!important;min-height:15px;font:12px 'VT323',monospace}
+.music-seek-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px}
+.music-input-label{font:10px 'Silkscreen',monospace}
+.music-seek-row input,.music-volume input{width:100%;min-width:0;accent-color:var(--px-rose-deep);cursor:pointer}
+.music-seek-row span{font:14px 'VT323',monospace;white-space:nowrap}
+.music-dock-controls{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:7px;margin:10px 0}
+.music-dock-bottom{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px}
+.music-volume{display:grid;grid-template-columns:auto minmax(40px,1fr);align-items:center;gap:6px;font:14px 'VT323',monospace}
+.playlist-guide{font-size:22px!important}
+.playlist-search{width:100%;padding:10px 12px;font:19px 'VT323',monospace;color:var(--px-ink);background:#FFF8EA;border:3px solid var(--px-wood-dark)}
+.playlist-song-count{font:12px 'Silkscreen',monospace!important;margin:10px 0}
+.playlist-song-list{display:grid;gap:7px;max-height:min(400px,48dvh);overflow:auto;padding:3px 5px 5px 0}
+.playlist-song{display:grid;gap:3px;width:100%;padding:11px 12px;text-align:left;background:#FFF8EA;color:var(--px-ink);border:3px solid var(--px-wood-dark);cursor:pointer}
+.playlist-song:hover,.playlist-song:focus-visible{background:var(--px-rose-light)}
+.playlist-song-title{font:13px/1.55 'Silkscreen',monospace;overflow-wrap:anywhere}
+.playlist-song-artist{font:21px 'VT323',monospace;color:var(--px-wood-dark)}
+.playlist-empty{padding:12px}
+@media(max-width:560px){
+  .music-dock{left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));width:auto;padding:9px;box-shadow:3px 3px 0 var(--px-rose-deep)}
+  .music-dock-controls button{font-size:9px}
+  .music-dock-bottom button{font-size:9px}
+  .music-dock-heading strong{font-size:12px}
+  .experience:has(~ .music-dock:not([hidden])){align-items:start;padding-bottom:240px}
+  .experience:has(~ .music-dock:not([hidden])) .experience-panel{max-height:max(230px,calc(100dvh - 260px))}
+}
+
+/* Globo pixel art flotante: se ubica junto a Leo sin cubrir a los personajes. */
+.leo-bubble{
+  position:fixed;top:0;left:0;z-index:20;pointer-events:none;
+  width:max-content;max-width:min(246px,calc(100vw - 20px));
+  padding:8px 11px;background:var(--px-cream);
+  color:var(--px-wood-deep);border:3px solid var(--px-ink);
+  box-shadow:3px 3px 0 var(--px-rose-deep);
+  font:11px/1.5 'Silkscreen',monospace;text-align:center;
+  overflow-wrap:break-word;white-space:normal;
+}
+.leo-bubble[hidden]{display:none}
+.leo-bubble::after{
+  content:'';position:absolute;width:11px;height:11px;
+  background:var(--px-cream);transform:rotate(45deg);
+}
+.leo-bubble[data-tail="bottom"]::after{
+  bottom:-8px;left:calc(var(--tail-x,50%) - 6px);
+  border-right:3px solid var(--px-ink);border-bottom:3px solid var(--px-ink);
+}
+.leo-bubble[data-tail="top"]::after{
+  top:-8px;left:calc(var(--tail-x,50%) - 6px);
+  border-top:3px solid var(--px-ink);border-left:3px solid var(--px-ink);
+}
+.leo-bubble[data-tail="left"]::after{
+  left:-8px;top:calc(var(--tail-y,50%) - 6px);
+  border-left:3px solid var(--px-ink);border-bottom:3px solid var(--px-ink);
+}
+.leo-bubble[data-tail="right"]::after{
+  right:-8px;top:calc(var(--tail-y,50%) - 6px);
+  border-top:3px solid var(--px-ink);border-right:3px solid var(--px-ink);
+}
+@media(max-width:560px){
+  .leo-bubble{max-width:min(186px,calc(100vw - 20px));font-size:9px;
+    padding:6px 8px;line-height:1.45;border-width:2px;box-shadow:2px 2px 0 var(--px-rose-deep)}
+}
+.map-destination.moment-destination{background:#FFF1DC;border-color:#B5656F}
+.map-destination.moment-destination:hover{background:#F6D1CF}
+
+/* Castillo y escenas de boda: pixel art accesible, sin tapar controles. */
+.wedding-ceremony{display:grid;gap:10px;justify-items:center;text-align:center}
+.wedding-stage-number,.wedding-progress{font:11px/1.5 'Silkscreen',monospace!important;color:#956078;letter-spacing:1px}
+.wedding-stage-title{font:clamp(18px,3.4vw,27px)/1.45 'Silkscreen',monospace;margin:0;color:#7d475d}
+.wedding-stage-caption{font:clamp(15px,3vw,20px)/1.4 'VT323',monospace!important;color:#9f6b78}
+.wedding-cinema{display:block;image-rendering:pixelated;width:100%;height:auto;aspect-ratio:16/9;max-height:52dvh;border:5px solid #9b6477;box-shadow:5px 5px 0 #6d475a;background:#312a4a}
+.wedding-vow{font:clamp(17px,2.6vw,23px)/1.55 'Silkscreen',monospace!important;max-width:620px;padding:12px;background:#fff9eb;border:3px double #dca0ae;color:#6d4654}
+.wedding-controls{width:100%;display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+.wedding-controls .wedding-nav{min-height:43px;padding:8px 10px;min-width:110px;font:clamp(11px,2vw,13px) 'Silkscreen',monospace;color:#fff7ee;background:#986075;border:3px solid #472d3b;box-shadow:2px 2px 0 #472d3b}
+.wedding-controls .wedding-next{background:#ad687e}
+.wedding-controls .wedding-yes{background:#b95477;color:#fffdf7;animation:wedding-pulse 2.2s ease-in-out infinite}
+.wedding-controls .wedding-auto[aria-pressed="true"]{background:#6d4b76;border-color:#4b3255}
+.wedding-controls .wedding-nav:focus-visible{outline:3px solid #f3c78a;outline-offset:3px}
+.wedding-controls .wedding-nav:disabled{opacity:.48;cursor:not-allowed}
+@keyframes wedding-pulse{0%,100%{box-shadow:2px 2px 0 #472d3b}50%{box-shadow:2px 2px 0 #472d3b,0 0 0 3px #f4c7d0}}
+@media(prefers-reduced-motion:reduce){.wedding-controls .wedding-yes{animation:none}}
+
+@media(max-width:560px){
+ .experience:has(.wedding-ceremony){padding:8px 7px}
+ .experience-panel:has(.wedding-ceremony){padding:18px 10px;max-height:96dvh}
+ .wedding-controls .wedding-nav{flex:1;min-width:0;font-size:10px}
+ .wedding-cinema{border-width:3px;box-shadow:2px 2px 0 #6d475a}
+ .wedding-vow{padding:9px;font-size:14px!important}
+}
+
+/* Pulido de lectura y controles; el arte conserva su resolución lógica. */
+.hud-button,.map-destination,.wardrobe-tab,.wardrobe-category,.wardrobe-item,
+.wardrobe-face,.music-dock button,.gallery-viewer button,.tv-controls button,
+.reasons-navigation button{min-height:44px}
+.experience-panel,.map-paper{min-width:0;scrollbar-gutter:stable;overflow-x:hidden}
+.experience-panel > .eyebrow{font-size:11px;line-height:1.6;letter-spacing:1px;margin:0 0 12px;padding-right:40px}
+.experience-panel p,.map-paper p{overflow-wrap:anywhere}
+.experience-panel .close-experience{
+  position:sticky;top:-18px;float:right;z-index:2;
+  display:grid;place-items:center;width:44px;height:44px;min-height:44px;
+  margin:-18px -10px 0 0;padding:0;background:var(--px-cream);
+  border:2px solid var(--px-wood-dark);box-shadow:2px 2px 0 var(--px-tan)
+}
+.experience-panel .close-experience:hover{background:var(--px-rose-light)}
+.wedding-cinema{width:min(100%,calc(52dvh * 16 / 9));max-height:none;flex-shrink:0}
+.wedding-controls .wedding-nav{min-height:44px;line-height:1.5;overflow-wrap:anywhere}
+.wedding-stage-caption{color:#795160}
+.wedding-stage-number,.wedding-progress{color:#805167}
+.wardrobe-availability{font:16px/1.5 'VT323',monospace!important;color:var(--px-wood-dark)}
+.wardrobe-item{overflow-wrap:anywhere;line-height:1.5}
+.map-title-row{align-items:flex-start}
+.map-title-row .hud-button{flex-shrink:0}
+input:focus-visible{outline:3px solid var(--px-rose-deep);outline-offset:3px}
+@media(max-width:560px){
+  .game-header{flex-direction:column;gap:10px;padding:4px 0 10px}
+  .brand{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+  .brand small{font-size:15px}
+  .header-actions{width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+  .header-actions .hud-button{display:grid;place-items:center;text-align:center;font-size:10px;line-height:1.5;padding:5px 3px;min-width:0}
+  .game-hint{max-width:38em;line-height:1.4}
+  .experience{padding:12px 9px}
+  .experience-panel{padding:24px 14px;max-height:calc(100dvh - 32px);box-shadow:4px 4px 0 var(--px-rose-deep)}
+  .experience-panel > .eyebrow{font-size:10px;letter-spacing:.5px;margin-bottom:10px}
+  .experience-panel .close-experience{top:-18px;margin:-18px -8px 0 0}
+  .wedding-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .wedding-controls .wedding-yes{grid-column:1/-1}
+  .wedding-controls .wedding-nav{font-size:11px;padding:8px 5px}
+  .reasons-navigation{flex-wrap:wrap;justify-content:center}
+  .counter-box{padding:10px 3px}
+  .counter-box span{font-size:10px}
+  .map-paper{padding:12px;max-height:calc(100dvh - 36px)}
+  .map-destinations{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .map-destination{font-size:10px;overflow-wrap:anywhere}
+}
+@media(max-height:480px){
+  .title-screen{overflow:auto}
+  .title-content{padding:12px}
+  .title-content h1{font-size:28px;margin:14px 0}
+  .title-content .pixel-button{margin:16px auto}
+}
+.game-frame{box-sizing:border-box}
+.asset-status{min-height:1.5em;margin:8px auto;font:16px/1.5 'VT323',monospace;color:var(--px-tan)}
+@media(min-width:561px){
+  .experience-panel:has(.wedding-ceremony){max-height:calc(100dvh - 48px)}
+  .wedding-cinema{width:min(100%,calc(max(180px,100dvh - 520px) * 16 / 9))}
+}
+/* El borde no debe alterar la proporción intrínseca 480×270 del lienzo. */
+.wedding-cinema{aspect-ratio:auto}

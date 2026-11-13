@@ -1,0 +1,31 @@
+name: Verificar videojuego OOWWWW
+on:
+  push:
+    branches: [feat/game-phase-0]
+  pull_request:
+    paths:
+      - 'game/**'
+      - 'game.html'
+      - 'vite.config.js'
+      - 'package.json'
+      - 'tests/**'
+      - '.github/workflows/verify-game.yml'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test tests/e2e/startup.spec.js
+      - run: npm run test:e2e
+      - name: Verify both HTML entries
+        run: |
+          test -f dist/index.html
+          test -f dist/game.html
+      - run: npm run art:check

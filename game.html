@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2E1F18">
+  <title>OOWWWW — Nuestro pequeño mundo</title>
+  <link rel="icon" href="/assets/images/itza.jpeg" type="image/jpeg">
+  <link rel="stylesheet" href="/game/fonts.css">
+  <link rel="stylesheet" href="/game/styles.css">
+</head>
+<body>
+  <main id="app">
+    <section id="title-screen" class="title-screen" aria-label="Pantalla de título">
+      <canvas id="title-stars" aria-hidden="true"></canvas>
+      <div class="title-content">
+        <p class="eyebrow">para la persona que alegra mis días</p>
+        <h1>Para <span>Itza</span></h1>
+        <p class="title-sub">Hice esto pensandoo en ti.<br>Tómate tu tiempo para ver todoo</p>
+        <button id="start-game" class="pixel-button">Entrar</button>
+        <p id="asset-status" class="title-sub" role="status" aria-live="polite">Preparando nuestro mundo…</p>
+        <a href="/" class="subtle-link">Visitar el modo clásico</a>
+      </div>
+    </section>
+    <section id="game-screen" class="game-screen" hidden aria-label="Nuestro mundo">
+      <header class="game-header">
+        <span class="brand">OOWWWW <small>Nuestro pequeño mundo</small></span>
+        <div class="header-actions">
+          <button id="help-button" class="hud-button" type="button">Cómo jugar</button>
+          <button id="map-button" class="hud-button" type="button" aria-controls="map-panel" aria-expanded="false">Mapa</button>
+          <button id="music-button" class="hud-button" type="button" aria-controls="music-dock" aria-expanded="false">Música</button>
+          <a class="hud-button" href="/">Modo clásico</a>
+        </div>
+      </header>
+      <div id="map-panel" class="map-panel" hidden role="dialog" aria-modal="true" aria-labelledby="map-title">
+        <div class="map-paper">
+          <header class="map-title-row">
+            <h2 id="map-title">Nuestro pequeño mundo</h2>
+            <button id="close-map" class="hud-button" type="button" aria-label="Cerrar mapa">Cerrar</button>
+          </header>
+          <p>Selecciona un lugar y caminaremos hasta él. Tócalo de nuevo cuando lleguemos para entrar.</p>
+          <canvas id="overview" width="360" height="240" aria-label="Mapa general: elige un punto para caminar"></canvas>
+          <div id="map-destinations" class="map-destinations" aria-label="Lugares del mundo"></div>
+        </div>
+      </div>
+      <div class="game-center">
+        <div id="game-frame" class="game-frame">
+          <canvas id="world" width="480" height="270" tabindex="0" aria-label="Mapa explorable de Itza y Leo" aria-describedby="game-controls"></canvas>
+          <span id="world-status" class="world-status" role="status" aria-live="polite">Explora nuestro mundo</span>
+        </div>
+        <div id="leo-bubble" class="leo-bubble" data-tail="bottom" hidden aria-live="polite"></div>
+        <p id="game-controls" class="game-hint">Toca el mapa para caminar. Usa las flechas o WASD en computadora. Toca a los gatos para acariciarlos y las bancas para sentarte. Cerca de ellos también puedes pulsar E.</p>
+      </div>
+      <footer class="game-footer"><span>Itza &amp; Leo</span><span id="place-counter">10 lugares por descubrir</span></footer>
+      <div id="experience" class="experience" hidden role="dialog" aria-modal="true" aria-labelledby="experience-title">
+        <div class="experience-panel">
+          <button id="close-experience" type="button" class="close-experience" aria-label="Cerrar">×</button>
+          <p class="eyebrow" id="experience-category">Nuestro mundo</p>
+          <h2 id="experience-title"></h2>
+          <div id="experience-content"></div>
+        </div>
+      </div>
+      <aside id="music-dock" class="music-dock" hidden aria-label="Reproductor musical">
+        <div class="music-dock-header">
+          <div class="music-dock-heading">
+            <span class="music-kicker">Nuestra música</span>
+            <strong id="music-track-title">Canción</strong>
+            <span id="music-track-artist">Artista</span>
+          </div>
+          <button id="music-close" class="music-dock-close" type="button" aria-label="Minimizar reproductor">Minimizar</button>
+        </div>
+        <p id="music-status" class="music-status" role="status" aria-live="polite">Elige una canción</p>
+        <div class="music-seek-row">
+          <label for="music-seek" class="music-input-label">Progreso</label>
+          <input id="music-seek" type="range" min="0" max="1000" value="0" disabled aria-label="Posición de la canción">
+          <span id="music-time">0:00 / 0:00</span>
+        </div>
+        <div class="music-dock-controls">
+          <button id="music-prev" type="button" aria-label="Canción anterior">Anterior</button>
+          <button id="music-play" type="button" aria-label="Reproducir música">Reproducir</button>
+          <button id="music-next" type="button" aria-label="Canción siguiente">Siguiente</button>
+        </div>
+        <p id="music-track-number" class="music-track-number" aria-live="polite">1 / 37</p>
+        <div class="music-dock-bottom">
+          <label class="music-volume" for="music-volume">Volumen
+            <input id="music-volume" type="range" min="0" max="100" value="75">
+          </label>
+          <button id="music-stop" type="button">Detener</button>
+          <button id="music-list" type="button">Lista</button>
+        </div>
+      </aside>
+      <audio id="music-audio" preload="none"></audio>
+    </section>
+  </main>
+  <script type="module" src="/game/main.js"></script>
+</body>
+</html>

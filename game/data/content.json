@@ -1,0 +1,330 @@
+{
+  "inicio": {
+    "eyebrow": "un pequeño espacio, hecho para ti",
+    "title": "Todo lo bueno\nme recuerda a ti",
+    "text": "Baja despacio. Cada sección tiene algo especial para ti.",
+    "photo": "/assets/images/pareja_ojos_abiertos.png"
+  },
+  "carta": {
+    "title": "Para Itza",
+    "text": "Quiero que sepas algo, aunque a veces no encuentre la forma exacta de decirlo: te amo mucho más de lo que imaginas.\n\nSé que no siempre hago las cosas bien. Que hay días en los que me equivoco, en los que no digo lo correcto o no actúo como debería. Pero también sé que cada día intento ser mejor, no por obligación, sino porque quiero merecer lo que tú me das.\n\nAntes pensaba que nadie cambiaba de verdad por amor. Que era una de esas frases bonitas. Tú me hiciste entender que sí se puede cambiar por alguien, cuando esa persona realmente importa. Y tú importas, más de lo que las palabras pueden explicar.\n\nHan pasado cosas buenas y cosas difíciles entre nosotros, pero si me preguntas si ha valido la pena, la respuesta siempre va a ser sí. Conocerte ha sido, lo mejor que me ha pasado.\n\nDesde el primer día que hablamos no he podido dejar de pensar en ti. Ha pasado el tiempo y sigue siendo igual: pienso en ti todos los días, en algún momento o todo el día pero siempre estas en mi mente.\n\nQuiero que sepas también que nunca podría odiarte. Puede que algún día dudes de eso, así que quiero dejarlo escrito aquí, para que lo recuerdes siempre que lo necesites: jamás podría sentir eso por ti.\n\nCada mensaje tuyo mejora mi día, incluso cuando es solo un \"hola\". Desde el momento en que sé que voy a verte, ya soy feliz. Soy feliz cuando estoy contigo, y también cuando nos despedimos, porque sé que voy a volver a verte pronto.\n\nEres una persona increíble, y creo que a veces no te das cuenta de todo lo que eres. Eres linda, amorosa, divertida, atenta, observadora, sensible. Eres hermosa, de una forma que no depende de nada externo. Y eres resiliente: siempre encuentras la manera de salir adelante, pase lo que pase. Eso es algo que admiro profundamente en ti.\n\nA veces te miro y siento que tienes pequeñas estrellitas iluminándote a tu alrededor.\n\nTe amo muchísimo. Y quiero que sepas que siempre va a ser así.",
+    "signature": "— con todo mi amor, de leito"
+  },
+  "galeria": {
+    "eyebrow": "03 — instantes",
+    "title": "Galería",
+    "text": "Cada foto cuando le picaas sale algo(Todos esos somo tu y yo obvio el mas oscurito jajaja).",
+    "photos": [
+      {
+        "src": "/assets/images/Primerasalida2.jpeg",
+        "caption": "La primera vez que nos vimoos y nos sentamos en una banquita, que yo tenia la mochila abierta cuando te vii jajajaja"
+      },
+      {
+        "src": "/assets/images/Barriochino2.jpeg",
+        "caption": "En el centro, cuando fuimos al barrio chino y no me callaba, ese dia pense que te habia caido mal jajaja por tanto hablar"
+      },
+      {
+        "src": "/assets/images/Cafédegatos.jpeg",
+        "caption": "En el cafesito de gatoos, esee dia lo recurdo constantemente fuee la primera vez que nos dimos un beso"
+      },
+      {
+        "src": "/assets/images/Primerasalida.jpeg",
+        "caption": "Cuando el taxi ese nos fue a dejar quien sabee dondee jaajjaa"
+      },
+      {
+        "src": "/assets/images/Maincraft1.jpeg",
+        "caption": "Cuandoo jugabamos minecraft y teniamos nuestra casitaa y los mil gatos jajaja"
+      },
+      {
+        "src": "/assets/images/Dibujitos.jpeg",
+        "caption": "Cuandoo te hacia dibujitos "
+      },
+      {
+        "src": "/assets/images/noviapedida.jpeg",
+        "caption": "Esee día te pedí que fueraas mi novia "
+      },
+      {
+        "src": "/assets/images/bautizo.jpeg",
+        "caption": "Esee día sentados en las banquitas mee queria quedar así contigo todoo el día, en la misa haciendo de todo menos poner atención jajajajaj "
+      }
+    ]
+  },
+  "razones": {
+    "eyebrow": "04 — sin motivo aparente, con todos los motivos",
+    "title": "Razones",
+    "text": "Ciento cuatro razones, y ninguna es la última.",
+    "items": [
+      "Su sonrisa ilumina mi día",
+      "Es muy inteligente",
+      "Es muy chistosa",
+      "Me hace sentir especial",
+      "Siempre está para mí",
+      "Es detallista",
+      "Su voz es hermosa",
+      "Su mirada me dejaa asi de que wow jaajjaa",
+      "Me inspira a ser mejor",
+      "Es muy tierna",
+      "Hace que todo sea más bonito",
+      "Me escucha con mucha atención",
+      "Sus abrazos son mágicos",
+      "Se preocupa por mí",
+      "Nos reímos por cualquier tontería",
+      "Siempre tiene algo lindo que decir",
+      "Sus mensajes me alegran el día",
+      "Tiene un corazón gigante",
+      "Es única y especial",
+      "Me acepta como soy",
+      "Me hace sentir amado",
+      "Su forma de hablar me encanta",
+      "Tiene unas ocurrencias jajaaja",
+      "Es creativa",
+      "Tiene un vibrante espíritu",
+      "Me hace sentir en tan en paz",
+      "Se ve hermosa sin esfuerzo",
+      "Me motiva sin querer hacerlo",
+      "Es sincera",
+      "Es fuerte y valiente",
+      "Siempre tiene una sonrisa lista",
+      "Me hace sentir paz",
+      "Es mi lugar feliz",
+      "La forma en que dice mi nombre",
+      "Tiene sueños grandes",
+      "Me comparte sus pensamientos",
+      "Siempre está aprendiendo",
+      "Es noble",
+      "Tiene una risa contagiosa",
+      "Es amorosa con los que quiere",
+      "Me hace sentir afortunado",
+      "Tiene estilo propio",
+      "Se ve hermosa en todos lados",
+      "Es paciente",
+      "Me cuida",
+      "Le gusta compartir lo que le gusta",
+      "Me entiende sin palabras, solo con ver mis caraas",
+      "Es honesta conmigo",
+      "Me hace reír cuando lo necesito",
+      "Hace que todo sea más divertido",
+      "Confía en mí, muchas veces mas de lo que yo lo hago",
+      "Es mi mejor compañía",
+      "Siempre tiene un consejo sabio",
+      "Es apasionada en lo que hace",
+      "Me hace sentir importante",
+      "Está llena de luz",
+      "Es respetuosa",
+      "Me enseña cosas nuevas",
+      "Es un rayo de sol en días nublados",
+      "Le brillan los ojitos cuando habla de lo que ama",
+      "Tiene buen gusto musical",
+      "Tiene un muy buenos gustos en todoo",
+      "Me hace sentir afortunado de tenerla",
+      "Me calma con solo mirarme",
+      "Su forma de amar es hermosa",
+      "Me hace soñar despierto",
+      "Es muy observadora",
+      "Me soporta jajajaja",
+      "Me hace sentir visto",
+      "Siempre encuentra lo bueno en todo",
+      "Le importan los detalles",
+      "Está llena de pasión por lo que se proponee(por eso es muuy buena en todo)",
+      "Me hace sentir valiente",
+      "Es dulce hasta cuando está enojada",
+      "No le da miedo ser ella misma",
+      "Tiene una energía que contagia",
+      "Es súper linda con los animales (más con los gatos)",
+      "Siempre sabe qué decir",
+      "Me sorprende todo el tiempo",
+      "Es mi lugar seguro",
+      "No necesito nada más cuando estoy con ella",
+      "Me hace sentir orgulloso",
+      "Me da ganas de abrazarla siempre",
+      "Me hace sentir cositas en mi panza jajaa",
+      "Me da paz con su voz",
+      "Su forma de ver el mundo",
+      "Cada que me pasa algo me dan muchas ganas de mandarle msj y decirlee",
+      "Es tan humana, tan real",
+      "Puede con todo",
+      "No se rinde fácil",
+      "Su cariño",
+      "Su forma de amar me inspira",
+      "Me trata con dulzura",
+      "Es alguien con quien puedo ser yo",
+      "Tiene esa chispa que no se apaga",
+      "Siempre me hace sentir especial",
+      "Le da sentido a mis días",
+      "Es mi mejor historia",
+      "Es mi motivación constante",
+      "Por ella creo en el amor",
+      "Me llena el corazón",
+      "Quiero compartir todo con ella",
+      "Es mi persona favorita",
+      "Es todo lo que está bien"
+    ]
+  },
+  "playlist": {
+    "eyebrow": "05 — para escuchar mientras lees esto otra vez",
+    "title": "Playlist",
+    "text": "Algunas canciones que tee dedicoo y siempre que encuentro una laa metoo.",
+    "embed": "https://open.spotify.com/embed/playlist/0W09mSxBLSwyHqd6LJIu2y?utm_source=generator&si=abef1f53dbcd4f1b"
+  },
+  "recuerdos": {
+    "eyebrow": "06 — Cosas que me recuerdan a ti",
+    "title": "Cosas que me recuerdan a ti",
+    "text": "Picale a la tele pa que inicien los recuerdos",
+    "memories": [
+      {
+        "icon": "fa-solid fa-crown",
+        "text": "Las princesas, tuu princesa favoritaa tiana",
+        "gif": "https://i.pinimg.com/originals/b5/94/62/b59462b846804e1b74867da52bc9fa18.gif"
+      },
+      {
+        "icon": "fa-solid fa-cat",
+        "text": "Los gatos, tuu cowii",
+        "gif": "https://i.pinimg.com/originals/73/0d/75/730d75ed729397068c7a89fa7476e305.gif"
+      },
+      {
+        "icon": "fa-solid fa-feather",
+        "text": "Los poemas, eres mi poeta favorita",
+        "gif": "https://i.pinimg.com/originals/35/a4/9f/35a49f984ff49587e862a97678cd8ffe.gif"
+      },
+      {
+        "icon": "fa-solid fa-book",
+        "text": "Los libros, pq siempree estas buscando leer algo nuevo",
+        "gif": "https://i.pinimg.com/originals/88/19/3c/88193c414f5a372fba4b796d4188f399.gif"
+      },
+      {
+        "icon": "fa-solid fa-flask",
+        "text": "La química, tee encanta y te hubiera gustado estudiarla, aparte de que eres muy buena",
+        "gif": "https://i.pinimg.com/originals/53/68/e0/5368e02b992a6a4a5f5d45990d51fe73.gif"
+      },
+      {
+        "icon": "fa-solid fa-landmark",
+        "text": "Los museos,por tuu increible interes en el artee",
+        "gif": "https://i.pinimg.com/originals/95/6b/42/956b42ff1e70e4a535d4bc888f9cbb6a.gif"
+      },
+      {
+        "icon": "fa-solid fa-ghost",
+        "text": "Five Nights at Freddy's, por que te gustaa mucho y por la carta que te dii de fnaf",
+        "gif": "https://i.pinimg.com/originals/09/44/c5/0944c5d6f9196a783d0c93a46b35e45d.gif"
+      },
+      {
+        "icon": "fa-solid fa-sun",
+        "text": "El sol, por tus pequitas",
+        "gif": "https://i.pinimg.com/originals/eb/b9/46/ebb946e99e5ff654fdaf45112ddac4c7.gif"
+      },
+      {
+        "icon": "fa-solid fa-star",
+        "text": "Las estrellas, porque tu nombre me hace pensar en ellas",
+        "gif": "https://i.pinimg.com/originals/5c/1f/e7/5c1fe720f60d9fb0dc6e9ce24d75d456.gif"
+      },
+      {
+        "icon": "fa-solid fa-pen-fancy",
+        "text": "Los tatuajes, porque siempre te has querido hacer uno",
+        "gif": "https://i.pinimg.com/originals/23/01/20/2301201caa9227c7f71995e76f0a6b9d.gif"
+      },
+      {
+        "icon": "fa-solid fa-hands-holding",
+        "text": "Los abrazos, porque siempre que me siento mal imagino un abrazo tuyo y me hacen sentir bien",
+        "gif": "https://i.pinimg.com/originals/23/4e/7d/234e7d7988a0718f9f93c183bd580f1b.gif"
+      },
+      {
+        "icon": "fa-solid fa-cube",
+        "text": "Roblox, por todas las veces que hemos jugado juntos",
+        "gif": "https://i.pinimg.com/originals/ee/c5/b7/eec5b749993595ef9eb118c1b4e2a187.gif"
+      },
+      {
+        "icon": "fa-solid fa-fish",
+        "text": "Ponyo, es una de esas peliculas que se quedaron en nuestros recuerdos una de tantaas",
+        "gif": "https://i.pinimg.com/originals/26/99/36/269936f9802ac996efb7ef73931000de.gif"
+      },
+      {
+        "icon": "fa-solid fa-heart",
+        "text": "Takopi, una de las series que mas nos gustoo",
+        "gif": "https://i.pinimg.com/originals/54/68/95/5468950bef5f4fa34d0ec229e6a2f0e5.gif"
+      },
+      {
+        "icon": "fa-solid fa-cubes",
+        "text": "Minecraft, por nuestraa temporada de jugar jajaja",
+        "gif": "https://i.pinimg.com/originals/6e/85/f7/6e85f7e0111ac569249afb790efff78f.gif"
+      },
+      {
+        "icon": "fa-solid fa-masks-theater",
+        "text": "Jax, pq dices que te identificas con él",
+        "gif": "https://i.pinimg.com/originals/a4/f5/99/a4f59923c92743588f9b9ec5fa9bc4bb.gif"
+      },
+      {
+        "icon": "fa-solid fa-umbrella-beach",
+        "text": "Hawái, porque siempre dices que quieres ir",
+        "gif": "https://i.pinimg.com/originals/06/cb/a8/06cba8401060eb4c5c011097add56fca.gif"
+      },
+      {
+        "icon": "fa-solid fa-music",
+        "text": "Michael Jackson, porque bailabas como él jajaja",
+        "gif": "https://i.pinimg.com/originals/65/e8/87/65e887ab53b62db9b9ac5fe7b3206583.gif"
+      },
+      {
+        "icon": "fa-solid fa-shapes",
+        "text": "Playmobil, tus juguetes favoritos",
+        "gif": "https://i.pinimg.com/originals/69/6c/ad/696cad7d49b8cfcb25e4725d579098fa.gif"
+      },
+      {
+        "icon": "fa-solid fa-moon",
+        "text": "Las noches, porque siempre pienso en ti cuando llegan",
+        "gif": "https://i.pinimg.com/originals/1a/4e/a5/1a4ea50c266ca383edca5a61c8f89508.gif"
+      },
+      {
+        "icon": "fa-solid fa-clapperboard",
+        "text": "Las peliculas, cada que veo una me imagino viendola contigoo",
+        "gif": "https://i.pinimg.com/originals/c1/17/dc/c117dcce4c730c9e6dae1dce2ce76cb6.gif"
+      }
+    ]
+  },
+  "contador": {
+    "eyebrow": "07 — llevamos contando",
+    "title": "Desde aquel día que empezamos a hablar",
+    "text": "y contando, sin ninguna prisa por terminar 👻👻👻.",
+    "since": "2025-04-03T00:00:00"
+  },
+  "lugares": {
+    "eyebrow": "08 — un mapa",
+    "title": "Lugares nuestros",
+    "cards": [
+      {
+        "title": "El centro",
+        "text": "El centro nunca falla jajaja, tantas veces que hemos ido y todas se me hacen tan especiales como la primera."
+      },
+      {
+        "title": "En el parquesitoo afuera del mb",
+        "text": "El lugar donde siempree nos quedabamos de veer y yo te esperabaa con muchas ganas de vertee."
+      },
+      {
+        "title": "La plazaa a la que siempre ibamos",
+        "text": "La plazaa para ir al cineee, para comer, para pasaar el ratoo o simplementee para estar juntitos."
+      }
+    ]
+  },
+  "final": {
+    "eyebrow": "09 — antes de cerrar esto",
+    "title": "Gracias por ser\nmi más grande amor",
+    "text": "Esto fue un rato mío pensando en ti, convertido en algo que puedas ver y conservar.",
+    "chapter": "FIN DEL CAPÍTULO 1",
+    "question": "¿CONTINUAR?",
+    "continuation": "Insertar corazón para seguir juntos ♥",
+    "footer": "Con todo mi amor, te amo mil ocho mil.\n\n      Algún día viajaremos juntos por todo el mundo, te lo prometo.",
+    "from": "Leito",
+    "to": "Itza",
+    "ps": "P.D. Esta página se actualiza cada que yo le muevo jajaja, así que métete de vez en cuandoo a ver si ya le metí algo nuevo. ",
+    "action": "Para siempre",
+    "photo": "/assets/images/pareja_mirandose.png",
+    "kissPhoto": "/assets/images/pareja_beso.png",
+    "actionAfter": "Te amo"
+  },
+  "armario": {
+    "title": "Armario",
+    "eyebrow": "Nuestra ropa"
+  },
+  "boda": {
+    "title": "Nuestra boda",
+    "eyebrow": "Un castillo, seis capítulos y una promesa",
+    "text": "Nuestro pequeño cuento de hadas"
+  }
+}

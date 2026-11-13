@@ -1,0 +1,170 @@
+[
+  {
+    "kind": "tree",
+    "tile": [
+      20,
+      14
+    ]
+  },
+  {
+    "kind": "tree",
+    "tile": [
+      37,
+      13
+    ]
+  },
+  {
+    "kind": "tree",
+    "tile": [
+      53,
+      12
+    ]
+  },
+  {
+    "kind": "tree",
+    "tile": [
+      73,
+      11
+    ]
+  },
+  {
+    "kind": "tree",
+    "tile": [
+      88,
+      13
+    ]
+  },
+  {
+    "kind": "tree",
+    "tile": [
+      108,
+      18
+    ]
+  },
+  {
+    "kind": "tree",
+    "tile": [
+      113,
+      58
+    ]
+  },
+  {
+    "kind": "tree",
+    "tile": [
+      106,
+      69
+    ]
+  },
+  {
+    "kind": "tree",
+    "tile": [
+      92,
+      68
+    ]
+  },
+  {
+    "kind": "tree",
+    "tile": [
+      74,
+      73
+    ]
+  },
+  {
+    "kind": "tree",
+    "tile": [
+      53,
+      72
+    ]
+  },
+  {
+    "kind": "tree",
+    "tile": [
+      37,
+      72
+    ]
+  },
+  {
+    "kind": "tree",
+    "tile": [
+      13,
+      71
+    ]
+  },
+  {
+    "kind": "tree",
+    "tile": [
+      12,
+      52
+    ]
+  },
+  {
+    "kind": "tree",
+    "tile": [
+      7,
+      23
+    ]
+  },
+  {
+    "kind": "tree",
+    "tile": [
+      40,
+      33
+    ]
+  },
+  {
+    "kind": "tree",
+    "tile": [
+      71,
+      35
+    ]
+  },
+  {
+    "kind": "rock",
+    "tile": [
+      52,
+      53
+    ]
+  },
+  {
+    "kind": "rock",
+    "tile": [
+      92,
+      19
+    ]
+  },
+  {
+    "kind": "bench",
+    "tile": [
+      24,
+      31
+    ]
+  },
+  {
+    "kind": "bench",
+    "tile": [
+      76,
+      47
+    ]
+  },
+  {
+    "kind": "lamp",
+    "tile": [
+      29,
+      34
+    ]
+  },
+  {
+    "kind": "lamp",
+    "tile": [
+      55,
+      40
+    ]
+  },
+  {
+    "kind": "lamp",
+    "tile": [
+      82,
+      43
+    ]
+  }
+]

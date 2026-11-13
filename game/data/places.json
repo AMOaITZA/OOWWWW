@@ -1,0 +1,156 @@
+[
+  {
+    "id": "inicio",
+    "name": "Inicio",
+    "kind": "house",
+    "tile": [
+      30,
+      18
+    ],
+    "arrival": [
+      30,
+      22
+    ],
+    "classic": "#hero"
+  },
+  {
+    "id": "carta",
+    "name": "Carta",
+    "kind": "letter",
+    "tile": [
+      45,
+      17
+    ],
+    "arrival": [
+      45,
+      21
+    ],
+    "classic": "#carta"
+  },
+  {
+    "id": "galeria",
+    "name": "Galería",
+    "kind": "gallery",
+    "tile": [
+      63,
+      18
+    ],
+    "arrival": [
+      63,
+      22
+    ],
+    "classic": "#galeria"
+  },
+  {
+    "id": "razones",
+    "name": "Razones",
+    "kind": "book",
+    "tile": [
+      81,
+      23
+    ],
+    "arrival": [
+      81,
+      27
+    ],
+    "classic": "#razones"
+  },
+  {
+    "id": "playlist",
+    "name": "Playlist",
+    "kind": "playlist",
+    "tile": [
+      94,
+      39
+    ],
+    "arrival": [
+      94,
+      43
+    ],
+    "classic": "#playlist"
+  },
+  {
+    "id": "recuerdos",
+    "name": "Cosas que me recuerdan a ti",
+    "kind": "tv",
+    "tile": [
+      83,
+      56
+    ],
+    "arrival": [
+      83,
+      60
+    ],
+    "classic": "#detalles"
+  },
+  {
+    "id": "contador",
+    "name": "Contador",
+    "kind": "clock",
+    "tile": [
+      64,
+      60
+    ],
+    "arrival": [
+      64,
+      64
+    ],
+    "classic": "#contador"
+  },
+  {
+    "id": "lugares",
+    "name": "Lugares",
+    "kind": "places",
+    "tile": [
+      44,
+      60
+    ],
+    "arrival": [
+      44,
+      64
+    ],
+    "classic": "#lugares"
+  },
+  {
+    "id": "final",
+    "name": "Final",
+    "kind": "final",
+    "tile": [
+      24,
+      57
+    ],
+    "arrival": [
+      24,
+      61
+    ],
+    "classic": "#final"
+  },
+  {
+    "id": "armario",
+    "name": "Armario",
+    "kind": "wardrobe",
+    "tile": [
+      14,
+      38
+    ],
+    "arrival": [
+      14,
+      42
+    ],
+    "classic": null
+  },
+  {
+    "id": "boda",
+    "name": "Castillo de nuestra boda",
+    "kind": "wedding",
+    "tile": [
+      105,
+      51
+    ],
+    "arrival": [
+      105,
+      56
+    ],
+    "classic": null
+  }
+]

@@ -1,0 +1,81 @@
+{
+  "version": 4,
+  "description": "Tres conjuntos completos por personaje, incluido el traje y vestido de boda; el atlas indexado contiene 19 sprites de la ceremonia.",
+  "world": {
+    "ground": "/assets/game/world/ground.png"
+  },
+  "objects": {
+    "house": "/assets/game/objects/house.png",
+    "letter": "/assets/game/objects/letter.png",
+    "gallery": "/assets/game/objects/gallery.png",
+    "book": "/assets/game/objects/book.png",
+    "playlist": "/assets/game/objects/playlist.png",
+    "tv": "/assets/game/objects/tv.png",
+    "clock": "/assets/game/objects/clock.png",
+    "places": "/assets/game/objects/places.png",
+    "final": "/assets/game/objects/final.png",
+    "wardrobe": "/assets/game/objects/wardrobe.png",
+    "tree": "/assets/game/objects/tree.png",
+    "rock": "/assets/game/objects/rock.png",
+    "bench": "/assets/game/objects/bench.png",
+    "lamp": "/assets/game/objects/lamp.png",
+    "roof": "/assets/game/objects/roof.png",
+    "awning": "/assets/game/objects/awning.png"
+  },
+  "characters": {
+    "leo": {
+      "looks": [
+        {
+          "id": "principal",
+          "name": "Conjunto original",
+          "sheet": "/assets/game/characters/leo/look-01.png"
+        },
+        {
+          "id": "alternativo",
+          "name": "Segundo conjunto",
+          "sheet": "/assets/game/characters/leo/look-02.png"
+        },
+        {
+          "id": "boda",
+          "name": "Traje de boda",
+          "sheet": "wedding:leo-walk"
+        }
+      ]
+    },
+    "itza": {
+      "looks": [
+        {
+          "id": "principal",
+          "name": "Conjunto original",
+          "sheet": "/assets/game/characters/itza/look-01.png"
+        },
+        {
+          "id": "alternativo",
+          "name": "Segundo conjunto",
+          "sheet": "/assets/game/characters/itza/look-02.png"
+        },
+        {
+          "id": "boda",
+          "name": "Vestido de novia",
+          "sheet": "wedding:itza-walk"
+        }
+      ]
+    }
+  },
+  "moments": {
+    "catIdle": "/assets/game/moments/cat-duo-idle.png",
+    "catHappy": "/assets/game/moments/cat-duo-happy.png",
+    "petSparkles": "/assets/game/moments/pet-sparkles-sheet.png",
+    "pairBenchSit": "/assets/game/moments/pair-bench-sit-sheet.png",
+    "benchSeat": "/assets/game/moments/bench-seat-wide.png"
+  },
+  "wedding": {
+    "atlas": "/assets/game/wedding/atlas.png",
+    "logicalSize": [
+      720,
+      342
+    ],
+    "resourceCount": 19,
+    "note": "Los recortes y dimensiones de los sprites están definidos en game/wedding-assets.js."
+  }
+}

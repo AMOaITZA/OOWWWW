@@ -34,6 +34,11 @@
           "id": "alternativo",
           "name": "Segundo conjunto",
           "sheet": "/assets/game/characters/leo/look-02.png"
+        },
+        {
+          "id": "boda",
+          "name": "Traje de boda",
+          "sheet": "wedding:leo-walk"
         }
       ]
     },
@@ -48,6 +53,11 @@
           "id": "alternativo",
           "name": "Segundo conjunto",
           "sheet": "/assets/game/characters/itza/look-02.png"
+        },
+        {
+          "id": "boda",
+          "name": "Vestido de novia",
+          "sheet": "wedding:itza-walk"
         }
       ]
     }
@@ -58,5 +68,20 @@
     "petSparkles": "/assets/game/moments/pet-sparkles-sheet.png",
     "pairBenchSit": "/assets/game/moments/pair-bench-sit-sheet.png",
     "benchSeat": "/assets/game/moments/bench-seat-wide.png"
+  },
+  "wedding": {
+    "castle": "/assets/game/wedding/castle.svg",
+    "roof": "/assets/game/wedding/roof.svg",
+    "arch": "/assets/game/wedding/arch.svg",
+    "flower": "/assets/game/wedding/flower.svg",
+    "bench": "/assets/game/wedding/bench.svg",
+    "emblem": "/assets/game/wedding/emblem.svg",
+    "idle": "/assets/game/wedding/idle.svg",
+    "vows": "/assets/game/wedding/vows.svg",
+    "kiss": "/assets/game/wedding/kiss.svg",
+    "hug": "/assets/game/wedding/hug.svg",
+    "celebrate": "/assets/game/wedding/celebrate.svg",
+    "hearts": "/assets/game/wedding/hearts.svg",
+    "sparkles": "/assets/game/wedding/sparkles.svg"
   }
 }

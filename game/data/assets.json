@@ -1,6 +1,6 @@
 {
-  "version": 4,
-  "description": "Tres conjuntos completos por personaje, incluido el traje y vestido de boda; el atlas indexado contiene 19 sprites de la ceremonia.",
+  "version": 5,
+  "description": "Tres conjuntos instalados por personaje; arte de boda ilustrado y recursos originales conservados.",
   "world": {
     "ground": "/assets/game/world/ground.png"
   },
@@ -66,8 +66,9 @@
     "catIdle": "/assets/game/moments/cat-duo-idle.png",
     "catHappy": "/assets/game/moments/cat-duo-happy.png",
     "petSparkles": "/assets/game/moments/pet-sparkles-sheet.png",
-    "pairBenchSit": "/assets/game/moments/pair-bench-sit-sheet.png",
-    "benchSeat": "/assets/game/moments/bench-seat-wide.png"
+    "pairBenchSit": "/assets/game/moments/pair-bench-sit-v2.png",
+    "benchSeat": "/assets/game/moments/bench-seat-wide.png",
+    "pairBenchSitOriginal": "/assets/game/moments/pair-bench-sit-sheet.png"
   },
   "wedding": {
     "atlas": "/assets/game/wedding/atlas.png",
@@ -76,6 +77,10 @@
       342
     ],
     "resourceCount": 19,
-    "note": "Los recortes y dimensiones de los sprites están definidos en game/wedding-assets.js."
+    "note": "Los recortes y dimensiones de los sprites están definidos en game/wedding-assets.js.",
+    "background": "/assets/game/wedding/cinematic-background.png",
+    "castle": "/assets/game/wedding/castle-v2.png",
+    "arch": "/assets/game/wedding/arch-v2.png",
+    "seatedPair": "/assets/game/wedding/pair-bench-v2.png"
   }
 }

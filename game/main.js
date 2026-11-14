@@ -1,4 +1,5 @@
 import places from './data/places.json';
+import {castleApproachLift} from './castle-layout.js';
 import decor from './data/decor.json';
 import momentSpots from './data/moments.json';
 import {TILE,WIDTH,HEIGHT,initWorld,walkable,closestWalkable,findPath,groundTile} from './world.js';
@@ -53,8 +54,11 @@ function openPlace(place){
   persist();
 }
 function cameraAt(){
+  const castle=places.find(place=>place.id==='boda');
+  // Lift the final approach without changing the world's 1:1 pointer geometry.
+  const lift=castleApproachLift(pair,castle);
   return {x:Math.max(0,Math.min(WIDTH*TILE-canvas.width,Math.round(pair.x*TILE-canvas.width/2))),
-    y:Math.max(0,Math.min(HEIGHT*TILE-canvas.height,Math.round(pair.y*TILE-canvas.height/2)))};
+    y:Math.max(0,Math.min(HEIGHT*TILE-canvas.height,Math.round(pair.y*TILE-canvas.height/2)-lift))};
 }
 function pointClick(event){
   if(!active||host.isOpen()||overview.isOpen())return;
@@ -112,10 +116,12 @@ function step(dt){
     }else{pair.x+=dx/dist*speed;pair.y+=dy/dist*speed;}
   }
 }
-const objects=sceneObjects(places,decor,objectImage,momentImage,weddingImage);
+const objects=sceneObjects(places,decor,objectImage,momentImage,weddingImage,
+  tile=>moments.shouldHidePair()&&momentSpots.some(spot=>spot.id===moments.seatId()&&spot.tile[0]===tile[0]&&spot.tile[1]===tile[1]));
 function draw(){
   if(!active)return;
   const camera=cameraAt();
+  canvas.dataset.cameraX=String(camera.x);canvas.dataset.cameraY=String(camera.y);
   ctx.save();ctx.translate(-camera.x,-camera.y);
   const ground=groundImage();
   if(ground)ctx.drawImage(ground,0,0);

@@ -1,4 +1,5 @@
 import manifest from './data/assets.json' with {type:'json'};
+import {relightImageData} from './palette.js';
 
 // El atlas versionado es la fuente principal. Los dibujos de respaldo solo
 // se crean si falla su carga; no se solicitan nombres de archivo opcionales.
@@ -183,7 +184,14 @@ export function drawWeddingCastle(ctx,castle,roof,x,y){
 }
 
 async function load(){
-  const atlas=await image(manifest.wedding?.atlas||'/assets/game/wedding/atlas.png');
+  const [atlas,background,castleV2,archV2,seatedV2]=await Promise.all([
+    image(manifest.wedding?.atlas||'/assets/game/wedding/atlas.png'),
+    image(manifest.wedding.background),image(manifest.wedding.castle),image(manifest.wedding.arch),image(manifest.wedding.seatedPair)
+  ]);
+  if(background&&background.naturalWidth===480&&background.naturalHeight===270)cache.set('cinematic-background',background);
+  if(castleV2&&castleV2.naturalWidth===336&&castleV2.naturalHeight===224)cache.set('castle-v2',castleV2);
+  if(archV2&&archV2.naturalWidth===80&&archV2.naturalHeight===96)cache.set('arch-v2',archV2);
+  if(seatedV2&&seatedV2.naturalWidth===128&&seatedV2.naturalHeight===48)cache.set('wedding-bench-v2',seatedV2);
   if(atlas&&atlas.naturalWidth===720&&atlas.naturalHeight===342){
     const regions={
       castle:[0,0,264,154],'itza-walk':[264,0,192,144],
@@ -205,6 +213,7 @@ async function load(){
       const rgba=ctx.getImageData(0,0,w,h);
       for(let i=3;i<rgba.data.length;i+=4)
         rgba.data[i]=rgba.data[i]>=128?255:0;
+      if(['leo-walk','itza-walk','idle','vows','kiss','hug','celebrate','wedding-bench'].includes(name))relightImageData(rgba.data);
       ctx.putImageData(rgba,0,0);
       c.dataset.weddingSource='atlas';
       cache.set(name,c);

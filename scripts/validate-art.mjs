@@ -16,12 +16,17 @@ for(const [kind,url] of Object.entries(manifest.objects))
 for(const who of ['leo','itza']){
   const looks=manifest.characters[who]?.looks??[];
   if(looks.length>3)errors.push(who+': solo se permiten tres conjuntos completos');
-  for(const look of looks)add(look.sheet,{size:[192,144],frame:[32,48],palette:true,optional:look.id==='alternativo'});
+  for(const look of looks)add(look.sheet,{size:[192,144],frame:[32,48],palette:look.id==='principal',character:true,generated:look.id==='alternativo'});
 }
-const momentSizes={catIdle:[80,64],catHappy:[80,64],petSparkles:[96,16],pairBenchSit:[128,48],benchSeat:[56,40]};
+const newSeatedSheet=manifest.moments?.pairBenchSit?.endsWith('/pair-bench-sit-v2.png');
+const momentSizes={catIdle:[80,64],catHappy:[80,64],petSparkles:[96,16],pairBenchSit:newSeatedSheet?[160,64]:[128,48],pairBenchSitOriginal:[128,48],benchSeat:[56,40]};
 for(const [kind,url] of Object.entries(manifest.moments??{}))
-  add(url,{size:momentSizes[kind],blankFrames:kind==='petSparkles'?[4,5]:[],frame:{catIdle:[80,64],catHappy:[80,64],petSparkles:[16,16],pairBenchSit:[64,48]}[kind]});
+  add(url,{size:momentSizes[kind],blankFrames:kind==='petSparkles'?[4,5]:[],frame:{catIdle:[80,64],catHappy:[80,64],petSparkles:[16,16],pairBenchSit:newSeatedSheet?[80,64]:[64,48],pairBenchSitOriginal:[64,48]}[kind]});
 add(manifest.wedding?.atlas,{size:manifest.wedding.logicalSize,normalizedAlpha:true});
+add(manifest.wedding?.background,{size:[480,270],opaque:true,generated:true});
+add(manifest.wedding?.castle,{size:[336,224],generated:true});
+add(manifest.wedding?.arch,{size:[80,96],generated:true});
+add(manifest.wedding?.seatedPair,{size:[128,48],frame:[64,48],generated:true});
 const regions={
   castle:[0,0,264,154],'itza-walk':[264,0,192,144],'leo-walk':[456,0,192,144],
   roof:[0,154,280,86],arch:[280,154,64,86],bench:[344,154,68,68],vows:[412,154,256,48],
@@ -51,27 +56,47 @@ for(const [url,options] of images){
   if(options.size&&(png.width!==options.size[0]||png.height!==options.size[1]))
     errors.push(url+': '+png.width+'×'+png.height+'; debe ser '+options.size.join('×'));
   let transparent=0,partial=0,visible=0;
+  const assetPalette=new Set();
   for(let i=0;i<png.data.length;i+=4){
     const a=png.data[i+3];
     if(a===0)transparent++;
     else if(a!==255)partial++;
-    if(a>=128)visible++;
+    if(a>=128){visible++;assetPalette.add([png.data[i],png.data[i+1],png.data[i+2]].join(','));}
     if(a===255&&options.palette)palette.add([png.data[i],png.data[i+1],png.data[i+2]].join(','));
   }
   if(!options.opaque&&transparent===0)errors.push(url+': el fondo debe ser transparente');
-  if(options.opaque&&(transparent||partial))errors.push(url+': el suelo debe ser opaco');
+  if(options.opaque&&(transparent||partial))errors.push(url+': este fondo debe ser opaco');
   if(!visible){
     if(options.emptyAllowed)warnings.push(url+': reserva heredada totalmente transparente; no aporta dibujo');
     else errors.push(url+': imagen completamente vacía');
   }
   if(partial&&!options.normalizedAlpha)errors.push(url+': '+partial+' píxeles con alfa intermedio');
   if(partial&&options.normalizedAlpha)warnings.push(url+': '+partial+' píxeles con alfa intermedio; el render aplica umbral 128');
+  if(options.generated&&assetPalette.size>512)warnings.push(url+': '+assetPalette.size+' colores; revisar economía de paleta en la captura real');
   if(options.frame){
     const [fw,fh]=options.frame;
     if(png.width%fw||png.height%fh)errors.push(url+': cuadrícula de frames incompatible');
-    else for(let y=0;y<png.height;y+=fh)for(let x=0;x<png.width;x+=fw)
-      if(!visibleIn(png,x,y,fw,fh)&&!options.blankFrames?.includes((y/fh)*(png.width/fw)+x/fw))
-        errors.push(url+': frame vacío en ['+x/fw+','+y/fh+']');
+    else {
+      const footLines=[];
+      for(let y=0;y<png.height;y+=fh)for(let x=0;x<png.width;x+=fw){
+        const frame=(y/fh)*(png.width/fw)+x/fw;
+        if(!visibleIn(png,x,y,fw,fh)&&!options.blankFrames?.includes(frame))
+          errors.push(url+': frame vacío en ['+x/fw+','+y/fh+']');
+        if(options.character){
+          let minX=fw,minY=fh,maxX=-1,maxY=-1;
+          for(let fy=0;fy<fh;fy++)for(let fx=0;fx<fw;fx++){
+            if(png.data[((y+fy)*png.width+x+fx)*4+3]<128)continue;
+            minX=Math.min(minX,fx);minY=Math.min(minY,fy);
+            maxX=Math.max(maxX,fx);maxY=Math.max(maxY,fy);
+          }
+          if(minX===0||maxX===fw-1||minY===0)
+            errors.push(url+': frame ['+x/fw+','+y/fh+'] toca un borde lateral/superior; posible recorte');
+          if(maxY>=0)footLines.push(maxY);
+        }
+      }
+      if(footLines.length&&Math.max(...footLines)-Math.min(...footLines)>1)
+        errors.push(url+': línea de pies desalineada entre frames ('+Math.min(...footLines)+'..'+Math.max(...footLines)+')');
+    }
   }
   if(url===manifest.wedding?.atlas){
     if(Object.keys(regions).length!==manifest.wedding.resourceCount)errors.push('El número de regiones de boda no coincide con el manifiesto');
@@ -86,4 +111,4 @@ if(palette.size>MAX_APPROVED_COLORS)errors.push('Paleta combinada del mundo: '+p
 console.log('PNG presentes:',present,'| opcionales ausentes:',optionalMissing,'| colores del mundo:',palette.size);
 for(const message of warnings)console.log('OBSERVACIÓN',message);
 if(errors.length){for(const message of errors)console.error('ERROR',message);process.exitCode=1;}
-else console.log('Dimensiones, recursos obligatorios, frames, regiones, alfa y paleta: comprobación aprobada');
+else console.log('Dimensiones, recursos obligatorios, frames, anclajes, regiones, alfa y paleta: comprobación aprobada');

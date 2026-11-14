@@ -69,3 +69,34 @@ test('the castle entrance keeps both characters clear of the foreground tree',()
     assert.equal(overlap,0,'Foreground trees must not hide Itza or Leo at the entrance');
   }
 });
+
+test('the expanded castle footprint leaves every existing destination reachable',()=>{
+  const castle=places.find(place=>place.id==='boda');
+  assert.deepEqual(castle.arrival,[105,54]);
+  assert.equal(walkable(95,51),false,'The wider west facade blocks passage');
+  assert.equal(walkable(115,51),false,'The wider east facade blocks passage');
+  assert.equal(walkable(105,38),false,'The taller building blocks the upper row');
+  assert.ok(walkable(94,43),'The neighboring playlist arrival stays free');
+  assert.ok(walkable(105,53),'The landing is reachable directly before the doorway');
+  for(const destination of places){
+    assert.ok(findPath({x:30,y:25},{x:destination.arrival[0],y:destination.arrival[1]}).length,destination.id);
+  }
+});
+
+test('castle approach frames the illustrated crown and both characters together',async()=>{
+  const {castleWorldBounds,castleApproachLift,CASTLE_LAYOUT}=await import('../game/castle-layout.js');
+  const castle=places.find(place=>place.id==='boda');
+  const pair={x:castle.arrival[0],y:castle.arrival[1]};
+  const bounds=castleWorldBounds(castle);
+  const cameraY=pair.y*16-135-castleApproachLift(pair,castle);
+  const pngjs=await import('pngjs');
+  const image=pngjs.PNG.sync.read(readFileSync(new URL('../assets/game/wedding/castle-v2.png',import.meta.url)));
+  let contentTop=image.height;
+  for(let y=0;y<image.height;y++)for(let x=0;x<image.width;x++)
+    if(image.data[(y*image.width+x)*4+3]>=128)contentTop=Math.min(contentTop,y);
+  assert.ok(bounds.y+contentTop-cameraY>=6,'The actual illustrated crown has breathing room');
+  assert.ok(pair.y*16+2-cameraY<=264,'Both characters keep their shoes in view');
+  assert.ok(CASTLE_LAYOUT.width/264>=1.25&&CASTLE_LAYOUT.width/264<=1.4);
+  assert.equal(castleApproachLift({x:30,y:25},castle),0,'Ordinary exploration keeps its camera');
+  assert.equal(castleApproachLift(pair,null),0);
+});

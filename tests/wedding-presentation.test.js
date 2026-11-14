@@ -5,7 +5,7 @@ import pngjs from 'pngjs';
 import {WEDDING_STAGES,stageFor,weddingPose} from '../game/experiences/boda.js';
 import {drawWeddingCastle} from '../game/wedding-assets.js';
 
-const regions={idle:[0,240],vows:[412,154],kiss:[128,240],hug:[320,240],celebrate:[0,288]};
+const regions={idle:[0,240],vows:[412,154],kiss:[128,240],hug:[320,240],celebrate:[0,288],'wedding-bench':[448,240]};
 const atlas=pngjs.PNG.sync.read(readFileSync(new URL('../assets/game/wedding/atlas.png',import.meta.url)));
 
 test('romantic gestures reach their last pose and hold it until the chapter changes',()=>{
@@ -22,10 +22,12 @@ test('real atlas frames keep their feet on the ground and their couple centered'
     for(let f=0;f<stage.frames;f++){
       const time=stage.duration*(f+(stage.id==='welcome'?2:0));
       const pose=weddingPose(stage,time);
-      const [sx,sy]=regions[stage.asset];
+      const source=stage.asset==='wedding-bench-v2'
+        ?pngjs.PNG.sync.read(readFileSync(new URL('../assets/game/wedding/pair-bench-v2.png',import.meta.url))):atlas;
+      const [sx,sy]=regions[stage.asset]||[0,0];
       let left=64,right=0,bottom=0;
       for(let y=0;y<48;y++)for(let x=0;x<64;x++){
-        if(atlas.data[((sy+y)*atlas.width+sx+pose.sourceX+x)*4+3]>=128){
+        if(source.data[((sy+y)*source.width+sx+pose.sourceX+x)*4+3]>=128){
           left=Math.min(left,x);right=Math.max(right,x+1);bottom=Math.max(bottom,y+1);
         }
       }

@@ -1,13 +1,10 @@
 import {TILE} from './world.js';
 import {placeDialogue} from './dialogue-position.js';
+import {seatedGeometry,drawSeatedPair,benchGeometry,BENCH_WIDTH,BENCH_HEIGHT} from './seating.js';
 
 // Tamaños de dibujo (no alteran el tamaño original de los archivos PNG).
 const CAT_DRAW_W=40;
 const CAT_DRAW_H=32;
-const SIT_FRAME_W=64;
-const SIT_FRAME_H=48;
-const SIT_DRAW_W=64;
-const SIT_DRAW_H=48;
 
 export const LEO_LINES=[
   'te amo mil ocho mil',
@@ -33,7 +30,7 @@ export function momentAt(spots,x,y){
     const sx=spot.tile[0]*TILE,sy=spot.tile[1]*TILE;
     return spot.kind==='cats'
       ? Math.abs(x-sx)<CAT_DRAW_W/2+4&&y>=sy-CAT_DRAW_H-4&&y<=sy+10
-      : Math.abs(x-sx)<39&&y>=sy-54&&y<=sy+12;
+      : Math.abs(x-sx)<BENCH_WIDTH/2+6&&y>=sy-BENCH_HEIGHT-20&&y<=sy+12;
   })??null;
 }
 export function closestMoment(spots,x,y,maxDistance=4){
@@ -46,7 +43,13 @@ export function closestMoment(spots,x,y,maxDistance=4){
 export function createMoments({spots,pair,getImage,bubble}){
   const cats=spots.find(spot=>spot.kind==='cats');
   let sitting=null,seatTransition=null,petRemaining=0,phraseRemaining=0;
-  const seatPoint=spot=>({x:spot.tile[0],y:spot.tile[1]+.25});
+  const seatPoint=spot=>{
+    const pose=seatedGeometry(getImage('pairBenchSit'),Math.floor(pair.clock/1.25)%2,
+      spot.tile[0]*TILE,spot.tile[1]*TILE+1);
+    // Match the head center at the last approach frame; switching poses must
+    // not make the faces jump upward because the seated sheet has less padding.
+    return {x:spot.tile[0],y:(pose.anchor.y+39)/TILE};
+  };
   const smooth=t=>t*t*(3-2*t);
   function renderPair(){
     if(!seatTransition)return sitting?{...pair,...seatPoint(sitting),moving:false,direction:'down'}:pair;
@@ -129,21 +132,21 @@ export function createMoments({spots,pair,getImage,bubble}){
     };
     const displayed=renderPair();
     const seated=sitting&&!seatTransition;
-    const hero=seated
-      ?box('pair',sitting.tile[0]*TILE-SIT_DRAW_W/2,
-        sitting.tile[1]*TILE-SIT_DRAW_H+1,SIT_DRAW_W,SIT_DRAW_H)
+    const pose=seated?seatedGeometry(getImage('pairBenchSit'),Math.floor(pair.clock/1.25)%2,
+      sitting.tile[0]*TILE,sitting.tile[1]*TILE+1):null;
+    const hero=pose?box('pair',pose.x,pose.y,pose.width,pose.height)
       :box('pair',displayed.x*TILE-32,displayed.y*TILE-47,64,50);
-    const leoX=seated?sitting.tile[0]*TILE-17:
-      displayed.x*TILE+(displayed.direction==='right'?13:-16);
-    const leoY=seated?sitting.tile[1]*TILE-SIT_DRAW_H+12:
-      displayed.y*TILE-39;
+    const leoX=pose?pose.anchor.x:displayed.x*TILE+(displayed.direction==='right'?13:-16);
+    const leoY=pose?pose.anchor.y:displayed.y*TILE-39;
     const anchor=toScreen(leoX,leoY);
     const obstacles=[hero];
     if(cats)obstacles.push(box('cats',cats.tile[0]*TILE-CAT_DRAW_W/2,
       cats.tile[1]*TILE-CAT_DRAW_H,CAT_DRAW_W,CAT_DRAW_H));
     for(const spot of spots){
-      if(spot.kind==='bench')obstacles.push(box(spot.id,
-        spot.tile[0]*TILE-28,spot.tile[1]*TILE-39,56,40));
+      if(spot.kind==='bench'){
+        const b=benchGeometry(spot.tile[0]*TILE,spot.tile[1]*TILE+1);
+        obstacles.push(box(spot.id,b.x,b.y,b.width,b.height));
+      }
     }
     const status=document.getElementById('world-status');
     if(status&&!status.hidden){
@@ -192,8 +195,7 @@ export function createMoments({spots,pair,getImage,bubble}){
         result.push({z:sitting.tile[1]*TILE+12,draw(ctx){
           const x=sitting.tile[0]*TILE,y=sitting.tile[1]*TILE;
           const frame=Math.floor(pair.clock/1.25)%2;
-          ctx.drawImage(sprite,frame*SIT_FRAME_W,0,SIT_FRAME_W,SIT_FRAME_H,
-            x-SIT_DRAW_W/2,y-SIT_DRAW_H+1,SIT_DRAW_W,SIT_DRAW_H);
+          drawSeatedPair(ctx,sprite,frame,x,y+1);
         }});
       }
     }

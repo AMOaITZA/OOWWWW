@@ -8,7 +8,7 @@ export const WEDDING_STAGES=[
   {id:'kiss',name:'El gran sí',caption:'El momento especial',line:'Y hoy, en este cuento que construimos, volvemos a decir que sí.',asset:'kiss',frames:3,duration:1},
   {id:'hug',name:'El abrazo',caption:'Siempre juntos',line:'Un abrazo que dice mucho más que cualquier palabra.',asset:'hug',frames:2,duration:1.2},
   {id:'celebrate',name:'¡A celebrar!',caption:'Nuestra historia continúa',line:'¡Que nunca nos falten motivos para celebrarnos!',asset:'celebrate',frames:3,duration:.85},
-  {id:'end',name:'Para recordar',caption:'Un recuerdo para siempre',line:'Te volvería a elegir en cada una de nuestras historias.',asset:'idle',frames:2,duration:1.25}
+  {id:'end',name:'Para recordar',caption:'Un recuerdo para siempre',line:'Te volvería a elegir en cada una de nuestras historias.',asset:'wedding-bench-v2',frames:2,duration:1.8}
 ];
 export const stageFor=index=>WEDDING_STAGES[Math.min(WEDDING_STAGES.length-1,Math.max(0,index))];
 const CHAPTER_SECONDS=[7,10,7,8,9,12];
@@ -17,14 +17,16 @@ const CHAPTER_SECONDS=[7,10,7,8,9,12];
 const PAIR_ANCHORS={
   idle:{feet:[44,44],x:[-2,2]},vows:{feet:[48,48,48,48],x:[-4,0,0,3]},
   kiss:{feet:[48,48,48],x:[12,2,-12]},hug:{feet:[48,48],x:[-6,0]},
-  celebrate:{feet:[44,48,44],x:[-2,0,2]}
+  celebrate:{feet:[44,48,44],x:[-2,0,2]},
+  'wedding-bench':{feet:[48,48],x:[-7,-4]},
+  'wedding-bench-v2':{feet:[47,47],x:[0,0]}
 };
 function poseFrame(stage,time,reduced){
   if(reduced)return ['vows','kiss','hug'].includes(stage.id)?stage.frames-1:0;
   const step=Math.floor(time/stage.duration);
   // Los votos y el beso avanzan una vez y sostienen la pose, sin rebobinarla.
   if(['vows','kiss','hug'].includes(stage.id))return Math.min(stage.frames-1,step);
-  if(stage.id==='end')return 0;
+  if(stage.id==='end')return time%5>4.7?1:0;
   if(stage.id==='celebrate')return [0,1,2,1][step%4];
   return step%stage.frames;
 }
@@ -77,37 +79,52 @@ export function mount(root,_data,api){
 
   function rectangle(x,y,w,h,color){ctx.fillStyle=color;ctx.fillRect(Math.round(x),Math.round(y),w,h);}
   function drawBackdrop(time){
-    rectangle(0,0,480,270,'#6d5875');
-    const bands=['#75617d','#7d6885','#8d7590','#997f91','#a88f97','#c0a19a'];
-    for(let y=0;y<180;y+=15)rectangle(0,y,480,15,bands[Math.min(5,Math.floor(y/30))]);
-    rectangle(0,180,480,90,'#97ac87');
-    rectangle(0,231,480,39,'#c5a799');
-    for(let y=235;y<270;y+=13)for(let x=Math.floor(y/13)%2?0:13;x<480;x+=26)
-      rectangle(x,y,24,1,'#e8c5ad');
-    for(let i=0;i<18;i++){
+    const illustrated=api.getWeddingImage('cinematic-background');
+    const stage=stageFor(index);
+    if(illustrated){
+      // The backdrop contains the far garden/architecture only. A one-pixel
+      // drift adds depth while the independent foreground sprites stay sharp.
+      if(reduced)ctx.drawImage(illustrated,0,0,480,270);
+      else ctx.drawImage(illustrated,-2+Math.round(Math.sin(time*.18)),-1,484,484*270/480);
+      const light={welcome:['#F7CAA0',.035],vows:['#FFE3BC',.05],kiss:['#F6C5BA',.075],
+        hug:['#EDC5C4',.045],celebrate:['#FFDBA0',.055],end:['#D5BDDE',.055]}[stage.id];
+      ctx.fillStyle=light[0];ctx.globalAlpha=light[1];ctx.fillRect(0,0,480,270);ctx.globalAlpha=1;
+    }else{
+      rectangle(0,0,480,270,'#6d5875');
+      const bands=['#75617d','#7d6885','#8d7590','#997f91','#a88f97','#c0a19a'];
+      for(let y=0;y<180;y+=15)rectangle(0,y,480,15,bands[Math.min(5,Math.floor(y/30))]);
+      rectangle(0,180,480,90,'#97ac87');
+      rectangle(0,231,480,39,'#c5a799');
+      for(let y=235;y<270;y+=13)for(let x=Math.floor(y/13)%2?0:13;x<480;x+=26)
+        rectangle(x,y,24,1,'#e8c5ad');
+      rectangle(142,184,196,5,'#84977a');
+      if(!drawWeddingCastle(ctx,api.getWeddingImage('castle'),api.getWeddingImage('roof'),108,39)){
+        rectangle(150,85,180,100,'#f8ddc4');rectangle(143,73,194,17,'#ce8f9f');
+        rectangle(224,130,32,55,'#9e5e67');
+      }
+    }
+    for(let i=0;i<12;i++){
       const x=(i*97+43)%480,y=(i*53+17)%100;
       const pulse=!reduced&&Math.sin(time*.7+i*1.87)>.65;
       rectangle(x,y,pulse?2:1,pulse?2:1,i%3===0?'#fff4c9':'#e9bed1');
     }
-    // Sombra y zócalo conectan la fachada con el jardín.
-    rectangle(142,184,196,5,'#84977a');
-    if(!drawWeddingCastle(ctx,api.getWeddingImage('castle'),api.getWeddingImage('roof'),108,39)){
-      rectangle(150,85,180,100,'#f8ddc4');rectangle(143,73,194,17,'#ce8f9f');
-      rectangle(224,130,32,55,'#9e5e67');
-    }
-    // El recurso petalPath es una loseta con fondo crema: aquí sus bordes
-    // formarían un cuadrado flotante. Distribuimos pétalos sobre el suelo.
+    // Sparse petals sit on the floor without opaque atlas tiles.
     for(let i=0;i<14;i++)rectangle(215+(i*19)%52,222+(i*13)%39,2,1,i%2?'#e1a7b6':'#f5d8cd');
-    // El arco conserva su relación 64:86, ampliado exactamente al doble.
-    const arch=api.getWeddingImage('arch');
-    if(arch)ctx.drawImage(arch,176,65,128,172);
-    for(const x of [143,337]){
+    // Both arch generations keep their intrinsic ratio at an integer 2×.
+    // The illustrated background never bakes an altar or the protagonists in.
+    const newArch=api.getWeddingImage('arch-v2'),arch=newArch||api.getWeddingImage('arch');
+    if(newArch)ctx.drawImage(newArch,160,44,160,192);
+    else if(arch)ctx.drawImage(arch,176,65,128,172);
+    if(!illustrated)for(const x of [143,337]){
       const flower=api.getWeddingImage('flower');
       if(flower)ctx.drawImage(flower,x-16,201,32,40);
     }
     const bench=api.getWeddingImage('bench');
-    if(bench&&stageFor(index).id==='end'){
-      ctx.drawImage(bench,31,188,68,68);ctx.drawImage(bench,381,188,68,68);
+    if(bench&&stageFor(index).id==='end'&&!illustrated){
+      // Crop measured transparent margins, then scale uniformly: decorative
+      // benches have the same visual seat height as the couple's own bench.
+      ctx.drawImage(bench,12,15,46,42,18,184,92,84);
+      ctx.drawImage(bench,12,15,46,42,370,184,92,84);
     }
     // Pétalos laterales discretos; nunca cruzan las caras de la pareja.
     for(let i=0;i<6;i++){
@@ -117,7 +134,7 @@ export function mount(root,_data,api){
     }
   }
   function drawPairSprite(stage,time){
-    const image=api.getWeddingImage(stage.asset);
+    const image=api.getWeddingImage(stage.asset)||(stage.asset==='wedding-bench-v2'?api.getWeddingImage('wedding-bench'):null);
     const pose=weddingPose(stage,time,reduced);
     // Misma escala entera en todos los capítulos: contornos nítidos, sin estirar.
     ctx.fillStyle='#798773';ctx.globalAlpha=.35;
@@ -131,6 +148,7 @@ export function mount(root,_data,api){
       }
     }
     canvas.dataset.frame=String(pose.frame);
+    canvas.dataset.backdrop=api.getWeddingImage('cinematic-background')?'illustrated':'fallback';
   }
   function particles(time,stage){
     if(reduced||!['kiss','celebrate','end'].includes(stage.id))return;

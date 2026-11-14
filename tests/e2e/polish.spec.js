@@ -1,4 +1,7 @@
 import {test,expect} from '@playwright/test';
+import {readFileSync} from 'node:fs';
+const places=JSON.parse(readFileSync(new URL('../../game/data/places.json',import.meta.url),'utf8'));
+const wedding=places.find(place=>place.id==='boda');
 
 async function enter(page,position={x:30,y:25}){
   await page.addInitScript(position=>localStorage.setItem('oowwww-game-v1',JSON.stringify({
@@ -9,10 +12,17 @@ async function enter(page,position={x:30,y:25}){
   await expect(page.locator('#world')).toBeVisible();
 }
 async function openWedding(page){
-  await enter(page,{x:105,y:56});
-  const box=await page.locator('#world').boundingBox();
-  await page.locator('#world').click({position:{x:box.width/2,y:box.height*55/270}});
+  await enter(page,{x:wedding.arrival[0],y:wedding.arrival[1]});
+  await tapWedding(page);
   await expect(page.locator('.wedding-cinema')).toBeVisible();
+}
+async function tapWedding(page){
+  const position=await page.locator('#world').evaluate((canvas,place)=>{
+    const r=canvas.getBoundingClientRect();
+    return {x:(place.tile[0]*16-Number(canvas.dataset.cameraX))*r.width/480,
+      y:(place.tile[1]*16-40-Number(canvas.dataset.cameraY))*r.height/270};
+  },wedding);
+  await page.locator('#world').click({position});
 }
 
 test('dialogs contain keyboard focus, restore the trigger and keep music mounted',async({page})=>{
@@ -71,8 +81,7 @@ for(const size of [{width:375,height:812},{width:812,height:375},{width:1440,hei
   await testInfo.attach('wedding-'+size.width,{body:await page.screenshot(),contentType:'image/png'});
   await page.keyboard.press('Escape');
   await expect(page.locator('#experience')).toBeHidden();
-  const box=await page.locator('#world').boundingBox();
-  await page.locator('#world').click({position:{x:box.width/2,y:box.height*55/270}});
+  await tapWedding(page);
   await expect(page.locator('.wedding-stage-title')).toHaveText('La llegada');
   expect(errors).toEqual([]);expect(failed).toEqual([]);
  });
@@ -113,7 +122,7 @@ test('reduced motion keeps wedding artwork still and navigation usable',async({p
 
 test('missing wedding atlas uses an identified fallback without speculative image requests',async({page})=>{
   const speculative=[];
-  page.on('request',req=>{if(/\/wedding\/(castle|roof|arch|pair-).*\.png/.test(req.url()))speculative.push(req.url());});
+  page.on('request',req=>{if(/\/wedding\/(?:(?:castle|roof|arch)\.png|pair-wedding-[^/]+\.png)(?:\?|$)/.test(req.url()))speculative.push(req.url());});
   await page.route('**/assets/game/wedding/atlas.png',route=>route.fulfill({status:404,body:''}));
   await openWedding(page);
   await expect(page.locator('.wedding-art-notice')).toContainText(/respaldo/);

@@ -1,7 +1,33 @@
 import {TILE} from './world.js';
-import {drawWeddingCastle} from './wedding-assets.js';
+import {drawBench} from './seating.js';
+import {drawWeddingCastle,weddingImage as loadedWeddingImage} from './wedding-assets.js';
+import {castleWorldBounds} from './castle-layout.js';
+const castleMasks=new WeakMap();
+function opaqueCastleHit(place,image,x,y){
+  const bounds=castleWorldBounds(place);
+  const width=image.naturalWidth||image.width,height=image.naturalHeight||image.height;
+  const px=Math.floor((x-bounds.x)*width/bounds.width);
+  const py=Math.floor((y-bounds.y)*height/bounds.height);
+  if(px<0||py<0||px>=width||py>=height)return false;
+  if(typeof document==='undefined')return true;
+  let mask=castleMasks.get(image);
+  if(!mask){
+    const sample=document.createElement('canvas');sample.width=width;sample.height=height;
+    const context=sample.getContext('2d',{willReadFrequently:true});
+    context.drawImage(image,0,0);mask=context.getImageData(0,0,width,height).data;
+    castleMasks.set(image,mask);
+  }
+  return mask[(py*width+px)*4+3]>=128;
+}
 export function nearestPlace(places,x,y){
-  return places.find(p=>p.kind==='wedding' ? Math.abs(x-p.tile[0]*TILE)<142&&y>=p.tile[1]*TILE-192&&y<=p.tile[1]*TILE+22 : Math.abs(x-p.tile[0]*TILE)<76&&Math.abs(y-p.tile[1]*TILE+12)<104);
+  const illustrated=loadedWeddingImage('castle-v2');
+  const castle=places.find(place=>place.kind==='wedding');
+  // The complete castle has generous transparent margins next to Playlist.
+  // Hit its painted pixels, not the empty rectangular canvas over that house.
+  if(castle&&illustrated&&opaqueCastleHit(castle,illustrated,x,y))return castle;
+  return places.find(p=>p.kind==='wedding'
+    ?!illustrated&&Math.abs(x-p.tile[0]*TILE)<174&&y>=p.tile[1]*TILE-218&&y<=p.tile[1]*TILE+28
+    :Math.abs(x-p.tile[0]*TILE)<76&&Math.abs(y-p.tile[1]*TILE+12)<104);
 }
 const roofColor=kind=>kind==='wardrobe'?'#B5656F':kind==='tv'?'#6B4429':kind==='final'?'#E8A0A8':'#A06A3F';
 function walls(ctx,x,y){
@@ -44,7 +70,7 @@ function drawWorldObject(ctx, obj, image) {
     if (obj.kind === 'tree') {
       ctx.drawImage(image, x - 32, y - 110, 64, 112);
     } else if (obj.kind === 'bench') {
-      ctx.drawImage(image, x - 28, y - 39, 56, 40);
+      drawBench(ctx,image,x,y+1);
     } else if (obj.kind === 'lamp') {
 // Escala uniforme 2×; anclaje en el último píxel visible de la base.
       ctx.drawImage(image, x - 48, y - 81, 96, 94);    } else {
@@ -56,23 +82,50 @@ function drawWorldObject(ctx, obj, image) {
 }
 function weddingCastle(ctx,obj,images){
   const x=obj.tile[0]*TILE,y=obj.tile[1]*TILE;
-  const castle=images('castle');
-  if(castle){
-    drawWeddingCastle(ctx,castle,images('roof'),x-132,y-152);
-  }
-  else{
-    ctx.fillStyle='#F6DDC7';ctx.fillRect(x-112,y-111,224,100);
-    ctx.fillStyle='#C9879C';ctx.fillRect(x-124,y-136,248,27);
-    for(const bx of [x-121,x+88]){
-      ctx.fillStyle='#F6DDC7';ctx.fillRect(bx,y-136,33,121);
-      ctx.fillStyle='#B5656F';ctx.fillRect(bx-8,y-148,49,15);
-      ctx.fillStyle='#FFF0D1';ctx.fillRect(bx+11,y-105,10,35);
+  const illustrated=images('castle-v2');
+  if(illustrated){
+    // One complete building: no second roof over the new illustration.
+    // The 336×224 box is 1.27× wider than the old 264px facade.
+    const bounds=castleWorldBounds(obj);
+    ctx.drawImage(illustrated,bounds.x,bounds.y,bounds.width,bounds.height);
+  }else{
+    const castle=images('castle');
+    if(castle)drawWeddingCastle(ctx,castle,images('roof'),x-132,y-152);
+    else{
+      ctx.fillStyle='#F6DDC7';ctx.fillRect(x-112,y-111,224,100);
+      ctx.fillStyle='#C9879C';ctx.fillRect(x-124,y-136,248,27);
+      ctx.fillStyle='#A76972';ctx.fillRect(x-19,y-62,38,51);
     }
-    ctx.fillStyle='#A76972';ctx.fillRect(x-19,y-62,38,51);
-    ctx.fillStyle='#F7C77A';ctx.fillRect(x-12,y-56,24,45);
   }
-  ctx.fillStyle='#FFF1DC';ctx.fillRect(x-7,y+1,14,7);
-  ctx.fillStyle='#B5656F';ctx.fillRect(x-4,y+3,8,4);
+}
+function weddingGarden(ctx,obj,images){
+  const x=obj.tile[0]*TILE,y=obj.tile[1]*TILE;
+  // A shared warm stone landing joins the garden, steps and arrival point.
+  ctx.fillStyle='#B9AA83';ctx.fillRect(x-38,y+1,76,4);
+  ctx.fillStyle='#DBC7A0';ctx.fillRect(x-32,y+4,64,56);
+  ctx.fillStyle='#F0D8B0';ctx.fillRect(x-29,y+5,58,2);
+  ctx.fillStyle='#C1AC8B';
+  for(let row=0;row<4;row++)ctx.fillRect(x-28,y+16+row*13,56,1);
+  // Low rose beds frame a clear approach instead of blocking the door.
+  for(const side of [-1,1]){
+    const at=x+side*67;
+    ctx.fillStyle='#71875D';ctx.fillRect(at-21,y+18,42,9);
+    ctx.fillStyle='#8B9D6B';ctx.fillRect(at-18,y+13,36,9);
+    for(let n=0;n<5;n++){
+      const fx=at-15+n*7,fy=y+12+(n%2)*4;
+      ctx.fillStyle=n%2?'#C88A96':'#E8A9AF';ctx.fillRect(fx,fy,4,3);
+      ctx.fillStyle='#F7D8BD';ctx.fillRect(fx+1,fy,1,1);
+    }
+    ctx.fillStyle='#A48B67';ctx.fillRect(at-23,y+27,46,3);
+  }
+  for(let n=0;n<16;n++){
+    ctx.fillStyle=n%2?'#E3A5AD':'#F2D7B6';
+    ctx.fillRect(x-24+(n*19)%48,y+20+(n*11)%40,2,1);
+  }
+  // Keep the entrance mark visible without painting a second doorway.
+  const [ax,ay]=obj.arrival;
+  ctx.fillStyle='#7A5B51';ctx.fillRect(ax*TILE-5,ay*TILE+6,10,3);
+  ctx.fillStyle='#F2C46D';ctx.fillRect(ax*TILE-2,ay*TILE+5,4,2);
 }
 function placeBase(ctx,obj,image){
   const x=obj.tile[0]*TILE,y=obj.tile[1]*TILE;
@@ -89,18 +142,18 @@ function placeOverlays(ctx,obj,roofImage,awningImage){
   ctx.fillStyle='#2E1F18';ctx.fillRect(ax*TILE-5,ay*TILE-5,10,10);
   ctx.fillStyle='#F2C46D';ctx.fillRect(ax*TILE-3,ay*TILE-3,6,6);
 }
-export function sceneObjects(places,decor,objectImage,momentImage=()=>null,weddingImage=()=>null){
+export function sceneObjects(places,decor,objectImage,momentImage=()=>null,weddingImage=()=>null,hideBench=()=>false){
   return [
-    ...decor.map(obj=>({z:obj.tile[1]*TILE,draw:ctx=>drawWorldObject(ctx,obj,obj.kind==='bench'?(momentImage('benchSeat')||objectImage('bench')):objectImage(obj.kind))})),
+    ...decor.map(obj=>({z:obj.tile[1]*TILE,draw(ctx){
+      // The seated-pair image contains its own complete bench. Drawing both
+      // would leave a second backrest peeking above the couple's heads.
+      if(obj.kind==='bench'&&hideBench(obj.tile))return;
+      drawWorldObject(ctx,obj,obj.kind==='bench'?(momentImage('benchSeat')||objectImage('bench')):objectImage(obj.kind));
+    }})),
     ...places.flatMap(obj=>obj.kind==='wedding'
       ? [
-        {z:0,draw(ctx){
-          const path=weddingImage('petalPath');
-          if(!path)return;
-          const x=obj.tile[0]*TILE,y=obj.tile[1]*TILE;
-          for(let n=0;n<3;n++)ctx.drawImage(path,x-24,y+10+n*31,48,48);
-        }},
-        {z:(obj.tile[1]+1)*TILE,draw:ctx=>weddingCastle(ctx,obj,weddingImage)}
+        {z:0,draw:ctx=>weddingGarden(ctx,obj,weddingImage)},
+        {z:obj.tile[1]*TILE+13,draw:ctx=>weddingCastle(ctx,obj,weddingImage)}
       ]
       : [
         {z:obj.tile[1]*TILE,draw:ctx=>placeBase(ctx,obj,objectImage(obj.kind))},

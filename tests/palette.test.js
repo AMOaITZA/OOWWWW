@@ -2,48 +2,43 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import pngjs from 'pngjs';
-import {relightPixel,relightImageData} from '../game/palette.js';
 
+// These are the original reference complexion colours, preserved when the
+// new generated characters are packed. Lighting is baked into the new art.
 const skin=[[199,135,104],[146,103,89],[211,178,160]];
-test('lighting preserves all original skin RGB values exactly',()=>{
-  for(const color of skin)assert.deepEqual(relightPixel(...color),color);
-});
-test('lighting lifts a named dark hair shade without altering alpha',()=>{
-  const original=[26,25,31];
-  const lit=relightPixel(...original);
-  assert.ok(lit.reduce((sum,value)=>sum+value,0)>original.reduce((sum,value)=>sum+value,0));
-  const data=new Uint8ClampedArray([...original,255,...skin[0],128,0,0,0,0]);
-  relightImageData(data);
-  assert.deepEqual([...data.slice(4,8)],[...skin[0],128]);
-  assert.deepEqual([data[3],data[7],data[11]],[255,128,0]);
-});
-test('every skin pixel in both original sheets retains its exact color after relighting',()=>{
-  const protectedColors=new Set(skin.map(color=>color.join(',')));
-  for(const who of ['leo','itza']){
-    const original=pngjs.PNG.sync.read(readFileSync(new URL('../assets/game/characters/'+who+'/look-01.png',import.meta.url)));
-    const result=new Uint8ClampedArray(original.data);
-    relightImageData(result);
-    let preserved=0;
-    for(let i=0;i<original.data.length;i+=4){
-      if(!original.data[i+3]||!protectedColors.has([...original.data.slice(i,i+3)].join(',')))continue;
-      assert.deepEqual([...result.slice(i,i+4)],[...original.data.slice(i,i+4)],who+' piel alterada en píxel '+i/4);
-      preserved++;
+const skinKey=color=>color.join(',');
+const sources=['leo','itza'].flatMap(who=>[
+  'assets/game/characters/'+who+'/look-01.png',
+  'assets/game/characters/'+who+'/look-02.png',
+  'assets/game/wedding/characters/'+who+'-walk.png'
+]);
+
+test('all current walking looks retain the reference skin palette as actual opaque pixels',()=>{
+  for(const path of sources){
+    const image=pngjs.PNG.sync.read(readFileSync(new URL('../'+path,import.meta.url)));
+    const counts=new Map(skin.map(color=>[skinKey(color),0]));
+    for(let i=0;i<image.data.length;i+=4){
+      const key=[...image.data.slice(i,i+3)].join(',');
+      if(!counts.has(key)||!image.data[i+3])continue;
+      assert.equal(image.data[i+3],255,path+' piel con alfa intermedia');
+      counts.set(key,counts.get(key)+1);
     }
-    assert.ok(preserved>1000,'La prueba debe cubrir piel real, no una hoja vacía');
+    assert.ok(counts.get(skinKey(skin[0]))>0,path+' debe conservar el tono de piel principal');
+    assert.ok(counts.get(skinKey(skin[1]))>0,path+' debe conservar la sombra de piel de referencia');
   }
 });
 
-test('wedding indexed shadow is lit while every warm atlas pixel keeps its RGB',()=>{
-  const atlas=pngjs.PNG.sync.read(readFileSync(new URL('../assets/game/wedding/atlas.png',import.meta.url)));
-  const lit=new Uint8ClampedArray(atlas.data);relightImageData(lit);
-  let warmPreserved=0,shadowChanged=0;
-  for(let i=0;i<atlas.data.length;i+=4){
-    const [r,g,b,a]=atlas.data.slice(i,i+4);if(a<128)continue;
-    if(r===25&&g===22&&b===25){
-      assert.deepEqual([...lit.slice(i,i+3)],[42,39,46]);shadowChanged++;
+test('the front-facing faces keep the reference complexion in every walking frame',()=>{
+  for(const path of sources){
+    const image=pngjs.PNG.sync.read(readFileSync(new URL('../'+path,import.meta.url)));
+    for(let col=0;col<6;col++){
+      let mainSkin=0;
+      // Faces occupy the upper half; outfit colours below cannot satisfy this.
+      for(let y=1;y<26;y++)for(let x=1;x<31;x++){
+        const i=(y*image.width+col*32+x)*4;
+        if(image.data[i+3]===255&&skin[0].every((value,j)=>image.data[i+j]===value))mainSkin++;
+      }
+      assert.ok(mainSkin>0,path+' necesita piel de referencia en la cara del frame '+col);
     }
-    if(r-g>=15&&g>=b){assert.deepEqual([...lit.slice(i,i+4)],[r,g,b,a]);warmPreserved++;}
   }
-  assert.ok(shadowChanged>10000,'Debe iluminar sombras reales del atlas');
-  assert.ok(warmPreserved>10000,'Los tonos cálidos reales, incluida la piel, deben conservarse');
 });

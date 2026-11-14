@@ -82,7 +82,11 @@ test('cats keep their readable scale and sitting crops transparent margins befor
   controller.scenery().forEach(item=>item.draw(ctx));
   const sitDraw=drawings.find(args=>args[0].name==='pairBenchSit');
   assert.ok(sitDraw,'Itza y Leo sentados visibles');
-  assert.deepEqual(sitDraw.slice(1),[15,7,36,36,bench.tile[0]*16-36,bench.tile[1]*16-71,72,72]);
+  const [,sx,sy,sw,sh,dx,dy,dw,dh]=sitDraw;
+  assert.ok(sx>=0&&sy>=0&&sx+sw<=80&&sy+sh<=64,'Crop stays in the current 80×64 cell');
+  assert.equal(dw/sw,dh/sh,'Uniform seated proportions');
+  assert.ok(dw<=BENCH_WIDTH);
+  assert.equal(dy+dh,bench.tile[1]*16+1,'Pair and bench share the ground');
 });
 
 
@@ -160,24 +164,19 @@ test('cat reaction turns toward cats and pauses behind an experience',()=>{
 });
 
 
-test('real seated heads regain standing facial scale without stretching their aspect',()=>{
-  const sprite=pngjs.PNG.sync.read(readFileSync(new URL('../assets/game/moments/pair-bench-sit-sheet.png',import.meta.url)));
+test('current seated characters keep native proportions and a stable ground anchor',()=>{
+  const sprite=pngjs.PNG.sync.read(readFileSync(new URL('../assets/game/moments/pair-bench-sit-v2.png',import.meta.url)));
   const frames=opaqueFrameBounds(sprite);
-  assert.deepEqual(frames.map(({x,y,width,height})=>({x,y,width,height})),[
-    {x:15,y:7,width:36,height:36},{x:13,y:7,width:36,height:36}
-  ]);
   const first=seatedGeometry(sprite,0,100,200),second=seatedGeometry(sprite,1,100,200);
   for(const pose of [first,second]){
-    assert.equal(pose.scale,2,'13px head is restored to26px, matching standing heads');
+    assert.equal(pose.scale,1,'Current full-size faces retain native pixels');
     assert.equal(pose.width/pose.source.width,pose.height/pose.source.height,'Uniform pixels');
-    assert.equal(pose.y+pose.height,200,'Actual alpha bottom, not transparent cell bottom, stays on the ground');
+    assert.equal(pose.y+pose.height,200,'Actual alpha bottom stays grounded');
+    assert.ok(pose.width<=BENCH_WIDTH,'Both characters fit on the bench');
   }
-  assert.equal(frames[0].headWidth*first.scale,26);
-  assert.equal(first.x,second.x,'Transparent padding changes must not shift the pair');
-  assert.equal(first.y,second.y);
-  const bench=benchGeometry(100,200);
-  assert.deepEqual(bench,{x:61,y:144,width:78,height:56});
-  assert.ok(first.width<=BENCH_WIDTH,'Both characters fit on the enlarged bench');
+  assert.equal(first.x,second.x);assert.equal(first.y,second.y);
+  assert.equal(frames.length,2);
+  assert.deepEqual(benchGeometry(100,200),{x:61,y:144,width:78,height:56});
   assert.equal(BENCH_HEIGHT,56);
 });
 

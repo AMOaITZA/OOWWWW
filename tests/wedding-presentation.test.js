@@ -17,11 +17,12 @@ test('romantic gestures reach their last pose and hold it until the chapter chan
     assert.equal(weddingPose(stage,0).frame,0,'Repetir vuelve al principio');
   }
 });
-test('real atlas frames keep their feet on the ground and their couple centered',()=>{
+test('all renewed ceremony frames keep their feet grounded and their couple centered',()=>{
   for(const stage of WEDDING_STAGES){
     for(let f=0;f<stage.frames;f++){
-      const time=stage.duration*(f+(stage.id==='welcome'?2:0));
+      const time=stage.id==='end'?(f===1?4.8:0):stage.duration*(f+(stage.id==='welcome'?2:0));
       const pose=weddingPose(stage,time);
+      assert.equal(pose.frame,f,'La prueba debe visitar cada fotograma real de '+stage.id);
       const source=stage.asset==='wedding-bench-v2'
         ?pngjs.PNG.sync.read(readFileSync(new URL('../assets/game/wedding/pair-bench-v2.png',import.meta.url))):atlas;
       const [sx,sy]=regions[stage.asset]||[0,0];

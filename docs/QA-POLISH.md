@@ -1,5 +1,8 @@
 # Revisión técnica y artística de OOWWWW
 
+> Informe de la primera revisión. La entrega posterior con recursos generados está
+> documentada en [QA de arte V2](QA-ART-V2.md).
+
 Trabajo sobre `feat/game-phase-0`, partiendo de
 `d350f4f24c5951cef34da7a0ca5fe58129ca6486`, para el PR #1.
 `main` sigue en `57cc5955b0b0ac6a3d3678a690d184b5831758c5`.

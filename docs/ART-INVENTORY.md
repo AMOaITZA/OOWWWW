@@ -1,5 +1,9 @@
 # Inventario gráfico comprobado
 
+> **Inventario histórico de la revisión anterior.** Los dos segundos conjuntos ya existen.
+> El estado actual, los siete recursos nuevos y sus dimensiones están en
+> [Recursos V2](ART-RESOURCES-V2.md). Los PNG originales listados aquí se conservan.
+
 Auditoría del contenido de `feat/game-phase-0`, sin regenerar ni modificar los
 PNG. Los tamaños se leyeron de los archivos; el atlas está versionado como PNG
 real de **32.374 bytes**. La clasificación «adecuado» significa compatible con

@@ -12,16 +12,16 @@ n.º 1. No se fusiona con `main` sin aprobación explícita.
   Además, tres puntos interactivos: una pareja de gatitos y dos bancas.
   El mapa muestra **14 destinos**.
 - Itza y Leo conservan sus atuendos seleccionados y la posición guardada.
-  El armario conserva tres identificadores: original, alternativa opcional y boda.
-  Solo se habilitan las imágenes instaladas: original y boda. Los dos
-  `look-02.png` siguen pendientes y no producen solicitudes HTTP.
+  El armario conserva tres identificadores: original, alternativa y boda.
+  Los tres conjuntos ya tienen recursos reales y están disponibles para ambos
+  personajes. Los segundos conjuntos se guardan con el mismo id `alternativo`.
 - Globo de frases de Leo que se recoloca para no tapar la pareja ni los gatos.
 - Reproductor de audio local persistente, controles y catálogo de canciones.
 
 ## El castillo de boda
 
 Está en `game/data/places.json` como `boda`, situado en [105, 51]
-con acceso por [105, 56]. La entrada es transitable y se comprueba
+con acceso por [105, 54]. La entrada es transitable y se comprueba
 automáticamente desde el punto de inicio.
 
 Selecciona **Castillo de nuestra boda** en el mapa y camina hasta él;
@@ -39,7 +39,7 @@ automáticamente.
 
 ### Recursos gráficos
 
-**Los 19 sprites definitivos** se encuentran en un solo PNG indexado:
+Los 19 sprites originales de boda se conservan como respaldo en un PNG indexado:
 
 `assets/game/wedding/atlas.png` — **720 × 342 píxeles**, aproximadamente
 32 KB. El archivo ya está versionado; **no hay que descargar ni ensamblar
@@ -53,7 +53,8 @@ artefacto original; poses de banca; fachada del castillo, techo
 reconstruido, arco, flores, emblema, banco, toldo, enredaderas,
 camino de pétalos, corazones y destellos. Los recursos originales se
 procesaron desde las imágenes del usuario sin modificar el modo clásico.
-Esta revisión conserva todos esos PNG sin regenerarlos.
+La nueva revisión conserva ese atlas y añade recursos independientes para
+el castillo, el arco, el jardín cinematográfico y la pose final sentada.
 
 ## Probar en Windows / VS Code
 
@@ -96,13 +97,16 @@ sin interacción del visitante.
 
 ## Revisión de continuidad visual e interacción
 
-- La fachada y la coronación del castillo comparten composición en mapa y
-  ceremonia: se evitan las torres duplicadas. El arco, las flores y las bancas
-  respetan su proporción. Las lámparas del mapa usan escala uniforme 2×.
+- El castillo del mapa usa ahora una ilustración completa de 336 × 224;
+  su silueta visible es aproximadamente 1,35 veces más ancha. La cámara se
+  eleva al acercarse para encuadrar las torres y la pareja. La boda usa un
+  jardín ilustrado independiente, sin duplicar esa fachada sobre el fondo.
 - Las poses de boda comparten escala 2× y anclaje de pies/centro medido por
   frame. Votos, beso y abrazo terminan en una pose sostenida. Hay fundido
   entre capítulos, repetición completa y respeto de movimiento reducido.
-- Las bancas incorporan aproximación y levantamiento de 0,38 s; los gatos
+- Las bancas incorporan aproximación y levantamiento de 0,38 s y una nueva
+  pareja sentada de dos celdas 80 × 64. El recorte visible 75 × 59 se dibuja
+  a 1×; las cabezas tienen una escala comparable a la de pie. Los gatos
   tienen anticipación, reacción y cuatro frames visibles de destellos.
 - Los globos permanecen en el área del juego y conservan las frases originales.
   Los cambios de ruta a mitad de paso regresan al centro de la casilla.
@@ -119,3 +123,18 @@ sin interacción del visitante.
 Consulta la [guía visual](../docs/ART-DIRECTION.md), el
 [inventario y prompts](../docs/ART-INVENTORY.md) y el
 [informe de pruebas y capturas](../docs/QA-POLISH.md).
+
+
+## Recursos visuales V2
+
+Se crearon e integraron siete PNG: dos hojas de segundos conjuntos, pareja
+sentada cotidiana, pareja sentada de boda, castillo completo, arco floral y
+fondo cinematográfico. Los originales y el sitio clásico siguen presentes.
+La iluminación usa sustituciones específicas de pelo/ropa; los colores de piel
+originales permanecen idénticos y están cubiertos por pruebas de píxeles reales.
+
+- [Inventario V2 y proceso de generación](../docs/ART-RESOURCES-V2.md)
+- [Pruebas y comparación visual V2](../docs/QA-ART-V2.md)
+- `npm run art:check` valida dimensiones, cuadrículas, alfa y recursos instalados.
+- `node scripts/capture-art.mjs` toma capturas reales con Vite ya en ejecución.
+  Usa `BASELINE_URL` para comparar una revisión anterior servida por separado.

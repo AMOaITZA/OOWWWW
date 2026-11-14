@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {existsSync} from 'node:fs';
 import {catalogs,getLookOptions,getChoice,chooseOutfit,equipmentUrls} from '../game/wardrobe.js';
 test('characters have original, alternate and ceremony looks without layered parts',()=>{
   for(const who of ['leo','itza']){
@@ -52,4 +53,17 @@ test('unavailable saved looks fall back without erasing the saved preference',()
 });
 test('no loaded sheets means no available selection',()=>{
   assert.equal(getChoice({leo:{look:'principal'}},'leo',()=>false),null);
+});
+
+test('both alternate selections resolve to installed PNGs and keep their saved identifiers',()=>{
+  const installed=sheet=>sheet.startsWith('wedding:')||existsSync(new URL('..'+sheet,import.meta.url));
+  const outfits={leo:{look:'principal'},itza:{look:'boda'}};
+  for(const who of ['leo','itza']){
+    const look=getLookOptions(who).find(option=>option.id==='alternativo');
+    assert.ok(installed(look.sheet),who+' debe tener un segundo conjunto real');
+    assert.equal(chooseOutfit(outfits,who,'alternativo',installed),true);
+  }
+  const saved=JSON.parse(JSON.stringify(outfits));
+  assert.equal(getChoice(saved,'leo',installed),'alternativo');
+  assert.equal(getChoice(saved,'itza',installed),'alternativo');
 });

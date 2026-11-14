@@ -22,8 +22,8 @@ async function tapPlace(page,place){
   await page.evaluate(p=>{
     const canvas=document.getElementById('world'),rect=canvas.getBoundingClientRect();
     const save=JSON.parse(localStorage.getItem('oowwww-game-v1'));
-    const cameraX=Math.max(0,Math.min(1920-480,Math.round(save.position.x*16-240)));
-    const cameraY=Math.max(0,Math.min(1280-270,Math.round(save.position.y*16-135)));
+    const cameraX=Number(canvas.dataset.cameraX??Math.max(0,Math.min(1920-480,Math.round(save.position.x*16-240))));
+    const cameraY=Number(canvas.dataset.cameraY??Math.max(0,Math.min(1280-270,Math.round(save.position.y*16-135))));
     const wx=p.tile[0]*16,wy=p.tile[1]*16;
     const clientX=rect.left+(wx-cameraX)*rect.width/480,clientY=rect.top+(wy-cameraY)*rect.height/270;
     canvas.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,clientX,clientY,pointerType:'mouse'}));
@@ -94,29 +94,42 @@ for(const id of ['carta','galeria','razones','playlist','recuerdos','contador','
     expect(errors).toEqual([]);
   });
 }
-test('only installed outfits can be selected and wedding choices persist',async({page})=>{
-  const missingRequests=[];
-  page.on('request',request=>{if(request.url().includes('look-02.png'))missingRequests.push(request.url());});
+test('all three real outfits are available and alternate choices persist independently',async({page})=>{
+  const failures=[];
+  page.on('response',response=>{
+    if(response.url().includes('look-02.png')&&response.status()>=400)failures.push(response.url());
+  });
+  for(const who of ['leo','itza']){
+    const resource=await page.request.get('/assets/game/characters/'+who+'/look-02.png');
+    expect(resource.status()).toBe(200);
+    expect(resource.headers()['content-type']).toContain('image/png');
+    expect((await resource.body()).length).toBeGreaterThan(100);
+  }
   const place=await loadAt(page,'armario');
   await tapPlace(page,place);
   await expect(page.locator('.wardrobe-item')).toHaveCount(3);
-  await expect(page.getByRole('button',{name:/Segundo conjunto/})).toBeDisabled();
-  await page.getByRole('button',{name:'Vestido de novia'}).click();
-  await expect(page.getByRole('button',{name:'Vestido de novia'})).toHaveClass(/selected/);
+  await expect(page.getByRole('button',{name:'Segundo conjunto',exact:true})).toBeEnabled();
+  await page.getByRole('button',{name:'Segundo conjunto',exact:true}).click();
+  await expect(page.getByRole('button',{name:'Segundo conjunto',exact:true})).toHaveAttribute('aria-pressed','true');
   await page.getByRole('button',{name:'Lado'}).click();
   await page.getByRole('button',{name:'Ver caminata'}).click();
   await expect(page.getByRole('button',{name:'Detener animación'})).toBeVisible();
   await page.getByRole('button',{name:'Leo',exact:true}).click();
-  await expect(page.getByRole('button',{name:/Segundo conjunto/})).toBeDisabled();
+  await expect(page.getByRole('button',{name:'Segundo conjunto',exact:true})).toBeEnabled();
   await expect(page.getByRole('button',{name:'Conjunto original'})).toHaveClass(/selected/);
+  await page.getByRole('button',{name:'Segundo conjunto',exact:true}).click();
   await page.locator('#close-experience').click();
   const save=await page.evaluate(()=>JSON.parse(localStorage.getItem('oowwww-game-v1')));
-  expect(save.outfits.itza.look).toBe('boda');
-  expect(save.outfits.leo.look??'principal').toBe('principal');
+  expect(save.outfits.itza.look).toBe('alternativo');
+  expect(save.outfits.leo.look).toBe('alternativo');
   await page.reload();await page.locator('#start-game').click();
   await tapPlace(page,place);
-  await expect(page.getByRole('button',{name:'Vestido de novia'})).toHaveClass(/selected/);
-  expect(missingRequests).toEqual([]);
+  await expect(page.getByRole('button',{name:'Segundo conjunto',exact:true})).toHaveClass(/selected/);
+  await expect(page.getByRole('button',{name:'Vestido de novia'})).toBeEnabled();
+  await page.getByRole('button',{name:'Leo',exact:true}).click();
+  await expect(page.getByRole('button',{name:'Segundo conjunto',exact:true})).toHaveClass(/selected/);
+  await expect(page.getByRole('button',{name:'Traje de boda'})).toBeEnabled();
+  expect(failures).toEqual([]);
 });
 test('overview navigates without teleporting and can be closed',async({page})=>{
   await page.goto('/game.html');

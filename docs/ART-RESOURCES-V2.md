@@ -1,5 +1,9 @@
 # OOWWWW — recursos visuales V2
 
+> **Informe histórico V2.** El look 1 y las animaciones de boda se sustituyeron
+> después por [los personajes V3](CHARACTERS-V3.md); su estado y capturas actuales
+> están en [QA V3](QA-CHARACTERS-V3.md).
+
 Se generaron e integraron **siete PNG reales**, usando las referencias aportadas
 por el usuario y los sprites existentes de Leo e Itza. El trabajo se limita a
 `feat/game-phase-0`; los primeros conjuntos, el atlas, las fotos, cartas,

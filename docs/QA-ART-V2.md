@@ -1,5 +1,9 @@
 # OOWWWW — comprobación de recursos visuales V2
 
+> **Informe histórico V2.** El look 1 y las animaciones de boda se sustituyeron
+> después por [los personajes V3](CHARACTERS-V3.md); su estado y capturas actuales
+> están en [QA V3](QA-CHARACTERS-V3.md).
+
 Revisión sobre `feat/game-phase-0` a partir de
 `371141632a2617e15ebfbf3f1ad506cdc57a4841`. Se conserva el PR #1 en borrador.
 Los siete PNG nuevos están descritos en [Recursos V2](ART-RESOURCES-V2.md).

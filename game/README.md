@@ -39,7 +39,7 @@ automáticamente.
 
 ### Recursos gráficos
 
-Los 19 sprites originales de boda se conservan como respaldo en un PNG indexado:
+El atlas de boda conserva 19 regiones de decoración y personajes actualizados:
 
 `assets/game/wedding/atlas.png` — **720 × 342 píxeles**, aproximadamente
 32 KB. El archivo ya está versionado; **no hay que descargar ni ensamblar
@@ -53,8 +53,9 @@ artefacto original; poses de banca; fachada del castillo, techo
 reconstruido, arco, flores, emblema, banco, toldo, enredaderas,
 camino de pétalos, corazones y destellos. Los recursos originales se
 procesaron desde las imágenes del usuario sin modificar el modo clásico.
-La nueva revisión conserva ese atlas y añade recursos independientes para
-el castillo, el arco, el jardín cinematográfico y la pose final sentada.
+La revisión V3 reemplaza todas las regiones de personajes de ese atlas por
+el mismo estilo de las nuevas poses sentadas y añade siete hojas individuales
+para carga de contingencia. No se conserva arte anterior de personajes como respaldo.
 
 ## Probar en Windows / VS Code
 
@@ -130,11 +131,25 @@ Consulta la [guía visual](../docs/ART-DIRECTION.md), el
 Se crearon e integraron siete PNG: dos hojas de segundos conjuntos, pareja
 sentada cotidiana, pareja sentada de boda, castillo completo, arco floral y
 fondo cinematográfico. Los originales y el sitio clásico siguen presentes.
-La iluminación usa sustituciones específicas de pelo/ropa; los colores de piel
-originales permanecen idénticos y están cubiertos por pruebas de píxeles reales.
+Los personajes V3 traen la iluminación integrada en su arte. La paleta de piel
+de referencia se mantiene y se comprueba en las caras de los fotogramas reales.
 
 - [Inventario V2 y proceso de generación](../docs/ART-RESOURCES-V2.md)
 - [Pruebas y comparación visual V2](../docs/QA-ART-V2.md)
 - `npm run art:check` valida dimensiones, cuadrículas, alfa y recursos instalados.
 - `node scripts/capture-art.mjs` toma capturas reales con Vite ya en ejecución.
   Usa `BASELINE_URL` para comparar una revisión anterior servida por separado.
+
+
+## Personajes V3: estilo unificado
+
+El look 1 de ambos, los trajes de caminar de boda y las secuencias de llegada,
+votos, beso, abrazo y celebración se generaron de nuevo siguiendo la pareja
+sentada de boda que se tomó como referencia. El look 2 y las poses sentadas V2
+ya usan ese estilo y se mantienen. Se retiró la banca pequeña anterior y los
+personajes provisionales dibujados por código.
+
+El atlas y las hojas individuales contienen los mismos píxeles nuevos; si el
+atlas falla, se cargan los PNG individuales. Se mantienen los identificadores
+de atuendo y las partidas. Véanse [personajes V3](../docs/CHARACTERS-V3.md) y
+[validación y capturas](../docs/QA-CHARACTERS-V3.md).

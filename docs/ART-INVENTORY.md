@@ -1,8 +1,9 @@
 # Inventario gráfico comprobado
 
 > **Inventario histórico de la revisión anterior.** Los dos segundos conjuntos ya existen.
-> El estado actual, los siete recursos nuevos y sus dimensiones están en
-> [Recursos V2](ART-RESOURCES-V2.md). Los PNG originales listados aquí se conservan.
+> La entrega V2 y sus siete recursos están en
+> [Recursos V2](ART-RESOURCES-V2.md). El estado actual de los personajes está
+> en [Personajes V3](CHARACTERS-V3.md); sus versiones anteriores se han sustituido.
 
 Auditoría del contenido de `feat/game-phase-0`, sin regenerar ni modificar los
 PNG. Los tamaños se leyeron de los archivos; el atlas está versionado como PNG

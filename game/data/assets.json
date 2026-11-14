@@ -1,6 +1,6 @@
 {
-  "version": 5,
-  "description": "Tres conjuntos instalados por personaje; arte de boda ilustrado y recursos originales conservados.",
+  "version": 6,
+  "description": "Tres conjuntos coherentes por personaje y todas las animaciones de boda renovadas en estilo chibi limpio.",
   "world": {
     "ground": "/assets/game/world/ground.png"
   },
@@ -67,8 +67,7 @@
     "catHappy": "/assets/game/moments/cat-duo-happy.png",
     "petSparkles": "/assets/game/moments/pet-sparkles-sheet.png",
     "pairBenchSit": "/assets/game/moments/pair-bench-sit-v2.png",
-    "benchSeat": "/assets/game/moments/bench-seat-wide.png",
-    "pairBenchSitOriginal": "/assets/game/moments/pair-bench-sit-sheet.png"
+    "benchSeat": "/assets/game/moments/bench-seat-wide.png"
   },
   "wedding": {
     "atlas": "/assets/game/wedding/atlas.png",
@@ -77,10 +76,19 @@
       342
     ],
     "resourceCount": 19,
-    "note": "Los recortes y dimensiones de los sprites están definidos en game/wedding-assets.js.",
+    "note": "Atlas con 19 regiones; todos los personajes han sido sustituidos. Las hojas independientes conservan el nuevo estilo si falla el atlas.",
     "background": "/assets/game/wedding/cinematic-background.png",
     "castle": "/assets/game/wedding/castle-v2.png",
     "arch": "/assets/game/wedding/arch-v2.png",
-    "seatedPair": "/assets/game/wedding/pair-bench-v2.png"
+    "seatedPair": "/assets/game/wedding/pair-bench-v2.png",
+    "characters": {
+      "leo-walk": "/assets/game/wedding/characters/leo-walk.png",
+      "itza-walk": "/assets/game/wedding/characters/itza-walk.png",
+      "idle": "/assets/game/wedding/characters/idle.png",
+      "vows": "/assets/game/wedding/characters/vows.png",
+      "kiss": "/assets/game/wedding/characters/kiss.png",
+      "hug": "/assets/game/wedding/characters/hug.png",
+      "celebrate": "/assets/game/wedding/characters/celebrate.png"
+    }
   }
 }

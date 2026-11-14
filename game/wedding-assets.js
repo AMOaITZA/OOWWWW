@@ -1,12 +1,14 @@
 import manifest from './data/assets.json' with {type:'json'};
-import {relightImageData} from './palette.js';
 
-// El atlas versionado es la fuente principal. Los dibujos de respaldo solo
-// se crean si falla su carga; no se solicitan nombres de archivo opcionales.
+// El atlas y sus hojas independientes contienen los mismos personajes nuevos.
+// Solo la decoración admite dibujos de contingencia; nunca se recrean figuras
+// de otra dirección artística cuando una imagen tarda o falla.
 const cache=new Map();
 let loading=null;
 let assetStatus='loading';
+let characterSource='unavailable';
 export const weddingAssetStatus=()=>assetStatus;
+export const weddingCharacterSource=()=>characterSource;
 export const weddingImage=key=>cache.get(key)||null;
 const px=(ctx,x,y,w,h,color)=>{ctx.fillStyle=color;ctx.fillRect(Math.round(x),Math.round(y),w,h);};
 const canvas=(w,h)=>{
@@ -15,6 +17,7 @@ const canvas=(w,h)=>{
   return c;
 };
 async function image(url){
+  if(!url)return null;
   return new Promise(resolve=>{
     const img=new Image();img.decoding='async';
     img.onload=()=>resolve(img);
@@ -124,51 +127,6 @@ function makeEffect(kind){
   }
   return c;
 }
-function makeWalk(source,who){
-  const c=canvas(192,144),ctx=c.getContext('2d');
-  for(let row=0;row<3;row++)for(let col=0;col<6;col++){
-    const x=col*32,y=row*48;
-    if(source)ctx.drawImage(source,x,y,32,48,x,y,32,48);
-    else {
-      px(ctx,x+8,y+4,16,16,'#221f29');px(ctx,x+10,y+12,12,9,'#b58271');
-      px(ctx,x+8,y+22,16,20,'#29242f');
-    }
-    // Añadimos la ropa formal a la silueta existente.
-    if(who==='leo'){
-      px(ctx,x+8,y+25,16,15,'#252127');px(ctx,x+13,y+25,6,10,'#fff2d7');
-      px(ctx,x+15,y+25,2,12,'#cba16f');px(ctx,x+7,y+36,8,7,'#252127');
-      px(ctx,x+17,y+36,8,7,'#252127');px(ctx,x+21,y+26,2,3,'#bf5665');
-    }else{
-      px(ctx,x+8,y+25,16,8,'#fff0d5');
-      px(ctx,x+6,y+32,20,9,'#ffe1c2');
-      px(ctx,x+4,y+38,24,6,'#fff0d5');
-      px(ctx,x+13,y+26,7,3,'#eac4b3');
-    }
-  }
-  return c;
-}
-function makePair(sheetLeo,sheetItza,kind){
-  const frames={idle:2,vows:4,kiss:3,hug:2,celebrate:3,bench:2}[kind];
-  const c=canvas(frames*64,48),ctx=c.getContext('2d');
-  for(let f=0;f<frames;f++){
-    const at=f*64;
-    const leo=kind==='vows'&&f>0?16:kind==='kiss'?15+(f===0?0:3):kind==='hug'?15:kind==='celebrate'?16:14;
-    const itza=kind==='vows'&&f>0?31:kind==='kiss'?28-(f===0?0:2):kind==='hug'?27:kind==='celebrate'?29:30;
-    const bounce=kind==='celebrate'&&f===1?3:0;
-    ctx.drawImage(sheetLeo,0,0,32,48,at+leo-10,-bounce,32,48);
-    ctx.drawImage(sheetItza,0,0,32,48,at+itza-10,-bounce,32,48);
-    if(kind==='vows'||kind==='kiss')px(ctx,at+29,30,6,3,'#d5a17f');
-    if(kind==='hug')px(ctx,at+28,29,10,4,'#cb9882');
-    if(kind==='celebrate'){
-      flower(ctx,at+14+f*7,8+f%2,2);flower(ctx,at+46-f*6,9+f,2);
-    }
-    if(kind==='bench'){
-      px(ctx,at+4,33,56,6,'#9d6776');
-      px(ctx,at+6,39,7,7,'#a8797c');px(ctx,at+51,39,7,7,'#a8797c');
-    }
-  }
-  return c;
-}
 // Composición compartida por el mapa y la ceremonia: el atlas de fachada ya
 // contiene tejados. Recortamos esa coronación antes de colocar el techo nuevo,
 // alineado con las torres, para evitar dos filas de torreones superpuestas.
@@ -191,7 +149,9 @@ async function load(){
   if(background&&background.naturalWidth===480&&background.naturalHeight===270)cache.set('cinematic-background',background);
   if(castleV2&&castleV2.naturalWidth===336&&castleV2.naturalHeight===224)cache.set('castle-v2',castleV2);
   if(archV2&&archV2.naturalWidth===80&&archV2.naturalHeight===96)cache.set('arch-v2',archV2);
-  if(seatedV2&&seatedV2.naturalWidth===128&&seatedV2.naturalHeight===48)cache.set('wedding-bench-v2',seatedV2);
+  if(seatedV2&&seatedV2.naturalWidth===128&&seatedV2.naturalHeight===48){
+    cache.set('wedding-bench-v2',seatedV2);cache.set('wedding-bench',seatedV2);
+  }
   if(atlas&&atlas.naturalWidth===720&&atlas.naturalHeight===342){
     const regions={
       castle:[0,0,264,154],'itza-walk':[264,0,192,144],
@@ -213,35 +173,30 @@ async function load(){
       const rgba=ctx.getImageData(0,0,w,h);
       for(let i=3;i<rgba.data.length;i+=4)
         rgba.data[i]=rgba.data[i]>=128?255:0;
-      if(['leo-walk','itza-walk','idle','vows','kiss','hug','celebrate','wedding-bench'].includes(name))relightImageData(rgba.data);
       ctx.putImageData(rgba,0,0);
       c.dataset.weddingSource='atlas';
       cache.set(name,c);
     }
-    assetStatus='atlas';
+    if(!cache.has('wedding-bench-v2'))cache.set('wedding-bench-v2',cache.get('wedding-bench'));
+    characterSource='atlas';assetStatus='atlas';
     return;
   }
-  // Contingencia explícita para una instalación incompleta, conservando la
-  // identidad de los protagonistas. No hace peticiones HEAD/404 adicionales.
-  const [leo,itza]=await Promise.all([
-    image('/assets/game/characters/leo/look-01.png'),
-    image('/assets/game/characters/itza/look-01.png')
-  ]);
-  const leoWedding=makeWalk(leo,'leo'),itzaWedding=makeWalk(itza,'itza');
-  const fallback={
-    'leo-walk':leoWedding,'itza-walk':itzaWedding,
-    castle:makeCastle(),roof:makeRoof(),arch:makeArch(),flower:makeFlower(),
-    bench:makeBench(),emblem:makeEffect('hearts'),
-    idle:makePair(leoWedding,itzaWedding,'idle'),
-    vows:makePair(leoWedding,itzaWedding,'vows'),
-    kiss:makePair(leoWedding,itzaWedding,'kiss'),
-    hug:makePair(leoWedding,itzaWedding,'hug'),
-    celebrate:makePair(leoWedding,itzaWedding,'celebrate'),
-    'wedding-bench':makePair(leoWedding,itzaWedding,'bench'),
-    hearts:makeEffect('hearts'),sparkles:makeEffect('sparkles')
+  // Se cargan archivos reales del mismo estilo, sin ropa dibujada encima de
+  // otras figuras ni recortes antiguos. Las dimensiones son parte del contrato.
+  const sizes={
+    'leo-walk':[192,144],'itza-walk':[192,144],idle:[128,48],vows:[256,48],
+    kiss:[192,48],hug:[128,48],celebrate:[192,48]
   };
-  for(const [name,resource] of Object.entries(fallback))cache.set(name,resource);
-  assetStatus='fallback';
+  await Promise.all(Object.entries(manifest.wedding.characters??{}).map(async([key,url])=>{
+    const im=await image(url),size=sizes[key];
+    if(im&&size&&im.naturalWidth===size[0]&&im.naturalHeight===size[1])cache.set(key,im);
+  }));
+  const decoration={castle:makeCastle(),roof:makeRoof(),arch:makeArch(),flower:makeFlower(),
+    bench:makeBench(),emblem:makeEffect('hearts'),hearts:makeEffect('hearts'),sparkles:makeEffect('sparkles')};
+  for(const [name,resource] of Object.entries(decoration))cache.set(name,resource);
+  const complete=Object.keys(sizes).every(key=>cache.has(key))&&cache.has('wedding-bench-v2');
+  characterSource=complete?'standalone':'unavailable';
+  assetStatus=complete?'fallback':'error';
 }
 export function loadWeddingImages(){
   if(!loading)loading=load().catch(error=>{assetStatus='error';console.warn('[OOWWWW] Boda: no se pudo cargar el arte',error);});

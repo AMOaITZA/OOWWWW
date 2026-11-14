@@ -1,5 +1,6 @@
 import {node,labeledButton} from './dom.js';
 import {drawWeddingCastle,weddingAssetStatus} from '../wedding-assets.js';
+import PAIR_ANCHORS from '../data/character-frames.json' with {type:'json'};
 
 // La ceremonia conserva el reproductor montado: nunca solicita reproducción de audio.
 export const WEDDING_STAGES=[
@@ -12,15 +13,8 @@ export const WEDDING_STAGES=[
 ];
 export const stageFor=index=>WEDDING_STAGES[Math.min(WEDDING_STAGES.length-1,Math.max(0,index))];
 const CHAPTER_SECONDS=[7,10,7,8,9,12];
-// Los lienzos originales tienen márgenes distintos. Compensarlos al dibujar
-// mantiene los zapatos en el mismo suelo y evita saltos laterales entre poses.
-const PAIR_ANCHORS={
-  idle:{feet:[44,44],x:[-2,2]},vows:{feet:[48,48,48,48],x:[-4,0,0,3]},
-  kiss:{feet:[48,48,48],x:[12,2,-12]},hug:{feet:[48,48],x:[-6,0]},
-  celebrate:{feet:[44,48,44],x:[-2,0,2]},
-  'wedding-bench':{feet:[48,48],x:[-7,-4]},
-  'wedding-bench-v2':{feet:[47,47],x:[0,0]}
-};
+// El empaquetador registra pies y centros de los nuevos fotogramas reales.
+// La ceremonia usa esos anclajes en todas las poses, incluido el asiento.
 function poseFrame(stage,time,reduced){
   if(reduced)return ['vows','kiss','hug'].includes(stage.id)?stage.frames-1:0;
   const step=Math.floor(time/stage.duration);
@@ -140,13 +134,6 @@ export function mount(root,_data,api){
     ctx.fillStyle='#798773';ctx.globalAlpha=.35;
     ctx.fillRect(pose.x+32,pose.y+pose.sourceFeet*2,64,4);ctx.globalAlpha=1;
     if(image)ctx.drawImage(image,pose.sourceX,0,64,48,pose.x,pose.y,pose.width,pose.height);
-    else{
-      for(let i=0;i<2;i++){
-        const x=i?247:209;
-        rectangle(x,161,24,28,'#211d29');rectangle(x+4,174,17,15,'#c48d77');
-        rectangle(x+1,189,24,41,i?'#fff0d6':'#27252c');
-      }
-    }
     canvas.dataset.frame=String(pose.frame);
     canvas.dataset.backdrop=api.getWeddingImage('cinematic-background')?'illustrated':'fallback';
   }

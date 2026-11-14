@@ -1,5 +1,4 @@
 import manifest from './data/assets.json';
-import {litCanvas} from './palette.js';
 import {CHARACTERS,equipmentUrls,getLookOptions} from './wardrobe.js';
 import {loadWeddingImages,weddingImage} from './wedding-assets.js';
 
@@ -23,7 +22,7 @@ function load(url,{sheet=false,ground=false}={}){
         console.warn('[OOWWWW] Suelo inválido:',url,'se requieren 1920×1280');
         resolve(null);return;
       }
-      resolve(sheet&&url.endsWith('/look-01.png')?litCanvas(image):image);
+      resolve(image);
     };
     image.onerror=()=>resolve(null);
     image.src=url;
@@ -45,7 +44,7 @@ export async function prepareWorldAssets(){
 }
 export function groundImage(){return assetImage(manifest.world.ground);}
 export function objectImage(kind){return assetImage(manifest.objects[kind]);}
-export function momentImage(kind){return assetImage(manifest.moments?.[kind])||(kind==='pairBenchSit'?assetImage(manifest.moments.pairBenchSitOriginal):null);}
+export function momentImage(kind){return assetImage(manifest.moments?.[kind]);}
 export async function prepareOutfit(outfits){
   // Always keep a real original sheet ready when a saved optional look is absent.
   const urls=new Set([...equipmentUrls(outfits),...CHARACTERS.map(who=>getLookOptions(who)[0]?.sheet)]);

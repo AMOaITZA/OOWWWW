@@ -1,8 +1,7 @@
 // Measured opaque bounds, rather than transparent cell dimensions, define the
-// visible size of bench art. The original pair's heads are 13 px across while
-// a standing head is 26–27 px; an integer 2× restores that facial scale.
+// visible size of the current generated bench art.
 const cache=new WeakMap();
-const originalFrames=[{x:15,y:7,width:36,height:36},{x:13,y:7,width:36,height:36}];
+const defaultFrames=[{x:2,y:4,width:75,height:59},{x:2,y:4,width:75,height:59}];
 export const BENCH_VISIBLE={x:9,y:7,width:39,height:28};
 export const BENCH_SCALE=2;
 export const BENCH_WIDTH=BENCH_VISIBLE.width*BENCH_SCALE;
@@ -33,10 +32,10 @@ export function opaqueFrameBounds({data,width,height},frameCount=2){
 }
 
 function framesFor(image){
-  if(!image||typeof image!=='object')return {frames:originalFrames,frameWidth:64,scale:2};
+  if(!image||typeof image!=='object')return {frames:defaultFrames,frameWidth:80,scale:1};
   if(cache.has(image))return cache.get(image);
   const width=image.naturalWidth||image.width,height=image.naturalHeight||image.height;
-  let result={frames:originalFrames,frameWidth:64,scale:2};
+  let result={frames:defaultFrames,frameWidth:80,scale:1};
   if(width&&height){
     try{
       let pixels=image;
@@ -47,8 +46,8 @@ function framesFor(image){
       }
       const frames=opaqueFrameBounds(pixels);
       const headWidth=Math.max(...frames.map(frame=>frame.headWidth));
-      // A future correctly proportioned sheet already has ~26px heads and
-      // stays at 1×. The inherited miniature sheet requires 2×, never stretch.
+      // Select an integer uniform scale from the actual head span; the
+      // installed full-size heads keep their native 1× pixels.
       result={frames,frameWidth:width/2,scale:Math.max(1,Math.min(2,Math.round(26/headWidth)))};
     }catch{/* A fallback remains readable before pixels can be inspected. */}
   }

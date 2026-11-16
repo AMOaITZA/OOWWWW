@@ -15,6 +15,12 @@ n.º 1. No se fusiona con `main` sin aprobación explícita.
   El armario conserva tres identificadores: original, alternativa y boda.
   Los tres conjuntos ya tienen recursos reales y están disponibles para ambos
   personajes. Los segundos conjuntos se guardan con el mismo id `alternativo`.
+- El look 1 de Itza lleva chamarra de cuero negra y mezclilla azul. Leo lleva
+  rompevientos rojo con franja hueso del hombro a la muñeca, pantalón negro y
+  tenis blancos. Las bancas conservan por separado la ropa de cada personaje.
+- Los diez destinos ordinarios tienen arquitectura propia: casa, correo,
+  galería-invernadero, librería, café musical, cine, reloj, gazebo, capilla y
+  boutique. El terreno tiene caminos claros, flores y senderos de piedra.
 - Globo de frases de Leo que se recoloca para no tapar la pareja ni los gatos.
 - Reproductor de audio local persistente, controles y catálogo de canciones.
 
@@ -42,7 +48,7 @@ automáticamente.
 El atlas de boda conserva 19 regiones de decoración y personajes actualizados:
 
 `assets/game/wedding/atlas.png` — **720 × 342 píxeles**, aproximadamente
-32 KB. El archivo ya está versionado; **no hay que descargar ni ensamblar
+73 KB. El archivo ya está versionado; **no hay que descargar ni ensamblar
 partes adicionales**. El juego recorta las regiones en
 `game/wedding-assets.js`, convierte bordes a alfa 0/255 y las renderiza
 sin suavizado.
@@ -105,9 +111,10 @@ sin interacción del visitante.
 - Las poses de boda comparten escala 2× y anclaje de pies/centro medido por
   frame. Votos, beso y abrazo terminan en una pose sostenida. Hay fundido
   entre capítulos, repetición completa y respeto de movimiento reducido.
-- Las bancas incorporan aproximación y levantamiento de 0,38 s y una nueva
-  pareja sentada de dos celdas 80 × 64. El recorte visible 75 × 59 se dibuja
-  a 1×; las cabezas tienen una escala comparable a la de pie. Los gatos
+- Las bancas incorporan aproximación y levantamiento de 0,38 s. El asiento de
+  52 píxeles visibles y las figuras se dibujan a 1×. Cada personaje tiene tres
+  hojas sentadas de 64 × 48: las nueve combinaciones conservan la ropa elegida.
+  Las cabezas tienen una escala comparable a la de pie. Los gatos
   tienen anticipación, reacción y cuatro frames visibles de destellos.
 - Los globos permanecen en el área del juego y conservan las frases originales.
   Los cambios de ruta a mitad de paso regresan al centro de la casilla.
@@ -143,13 +150,25 @@ de referencia se mantiene y se comprueba en las caras de los fotogramas reales.
 
 ## Personajes V3: estilo unificado
 
-El look 1 de ambos, los trajes de caminar de boda y las secuencias de llegada,
+En V3, el look 1 de ambos, los trajes de caminar de boda y las secuencias de llegada,
 votos, beso, abrazo y celebración se generaron de nuevo siguiendo la pareja
-sentada de boda que se tomó como referencia. El look 2 y las poses sentadas V2
-ya usan ese estilo y se mantienen. Se retiró la banca pequeña anterior y los
+sentada de boda que se tomó como referencia. El look 2 mantiene ese estilo.
+Se retiró la banca pequeña anterior y los
 personajes provisionales dibujados por código.
 
 El atlas y las hojas individuales contienen los mismos píxeles nuevos; si el
 atlas falla, se cargan los PNG individuales. Se mantienen los identificadores
 de atuendo y las partidas. Véanse [personajes V3](../docs/CHARACTERS-V3.md) y
 [validación y capturas](../docs/QA-CHARACTERS-V3.md).
+
+## Vestuario, bancas y mundo V4
+
+V4 precisa la ropa principal y sustituye la pareja cotidiana sentada con ropa
+fija por seis hojas independientes. El look verde y cualquier combinación se
+conservan al sentarse. La banca pequeña se dibuja aparte y no cambia la partida.
+Los edificios completos reemplazan las fachadas genéricas en los diez destinos;
+sus puntos de llegada siguen conectados por caminos transitables.
+
+Consulta [recursos V4](../docs/WORLD-V4.md),
+[trazabilidad](../docs/WORLD-V4-GENERATION.json) y
+[comparativas y pruebas V4](../docs/QA-WORLD-V4.md).

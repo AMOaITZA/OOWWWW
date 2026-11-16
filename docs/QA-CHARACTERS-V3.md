@@ -1,5 +1,8 @@
 # OOWWWW — QA de personajes V3
 
+> Informe histórico. Las correcciones posteriores de ropa, bancas y mundo y
+> sus pruebas actuales están en [QA V4](QA-WORLD-V4.md).
+
 Esta entrega responde a la sustitución de todos los personajes anteriores del
 look 1 y de boda por el estilo de la pareja sentada nueva elegida por el usuario.
 Se trabaja exclusivamente en `feat/game-phase-0`, desde `c781c9c`.

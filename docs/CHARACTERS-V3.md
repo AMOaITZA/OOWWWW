@@ -1,5 +1,8 @@
 # OOWWWW — unificación de Leo e Itza, V3
 
+> Documento de la entrega V3. [V4](WORLD-V4.md) precisa el look 1 y reemplaza
+> la pareja cotidiana sentada por poses independientes para cada atuendo.
+
 Esta revisión sustituye el arte anterior del look 1, los trajes de caminar de
 boda y las secuencias de la ceremonia por el estilo chibi limpio de la nueva
 pareja sentada que el usuario señaló como referencia. Se mantienen sus rasgos

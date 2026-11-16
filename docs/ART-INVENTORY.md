@@ -3,7 +3,8 @@
 > **Inventario histórico de la revisión anterior.** Los dos segundos conjuntos ya existen.
 > La entrega V2 y sus siete recursos están en
 > [Recursos V2](ART-RESOURCES-V2.md). El estado actual de los personajes está
-> en [Personajes V3](CHARACTERS-V3.md); sus versiones anteriores se han sustituido.
+> en [Personajes V3](CHARACTERS-V3.md). La ropa principal, las poses de banca,
+> los edificios y el terreno vigentes están en [Mundo V4](WORLD-V4.md).
 
 Auditoría del contenido de `feat/game-phase-0`, sin regenerar ni modificar los
 PNG. Los tamaños se leyeron de los archivos; el atlas está versionado como PNG

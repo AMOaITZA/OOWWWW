@@ -1,8 +1,8 @@
 {
-  "version": 6,
-  "description": "Tres conjuntos coherentes por personaje y todas las animaciones de boda renovadas en estilo chibi limpio.",
+  "version": 7,
+  "description": "Ropa principal corregida, tres atuendos sentados independientes por personaje y diez arquitecturas completas sobre terreno florido.",
   "world": {
-    "ground": "/assets/game/world/ground.png"
+    "ground": "/assets/game/world/ground-v4.png"
   },
   "objects": {
     "house": "/assets/game/objects/house.png",
@@ -66,8 +66,7 @@
     "catIdle": "/assets/game/moments/cat-duo-idle.png",
     "catHappy": "/assets/game/moments/cat-duo-happy.png",
     "petSparkles": "/assets/game/moments/pet-sparkles-sheet.png",
-    "pairBenchSit": "/assets/game/moments/pair-bench-sit-v2.png",
-    "benchSeat": "/assets/game/moments/bench-seat-wide.png"
+    "benchSeat": "/assets/game/moments/bench-seat-v4.png"
   },
   "wedding": {
     "atlas": "/assets/game/wedding/atlas.png",
@@ -89,6 +88,30 @@
       "kiss": "/assets/game/wedding/characters/kiss.png",
       "hug": "/assets/game/wedding/characters/hug.png",
       "celebrate": "/assets/game/wedding/characters/celebrate.png"
+    }
+  },
+  "architecture": {
+    "inicio": "/assets/game/architecture/inicio.png",
+    "carta": "/assets/game/architecture/carta.png",
+    "galeria": "/assets/game/architecture/galeria.png",
+    "razones": "/assets/game/architecture/razones.png",
+    "playlist": "/assets/game/architecture/playlist.png",
+    "recuerdos": "/assets/game/architecture/recuerdos.png",
+    "contador": "/assets/game/architecture/contador.png",
+    "lugares": "/assets/game/architecture/lugares.png",
+    "final": "/assets/game/architecture/final.png",
+    "armario": "/assets/game/architecture/armario.png"
+  },
+  "seated": {
+    "leo": {
+      "principal": "/assets/game/moments/seated/leo-principal.png",
+      "alternativo": "/assets/game/moments/seated/leo-alternativo.png",
+      "boda": "/assets/game/moments/seated/leo-boda.png"
+    },
+    "itza": {
+      "principal": "/assets/game/moments/seated/itza-principal.png",
+      "alternativo": "/assets/game/moments/seated/itza-alternativo.png",
+      "boda": "/assets/game/moments/seated/itza-boda.png"
     }
   }
 }

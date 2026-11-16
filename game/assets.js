@@ -36,6 +36,8 @@ export const hasAsset=url=>Boolean(assetImage(url));
 export async function prepareWorldAssets(){
   const tasks=[load(manifest.world.ground,{ground:true}),loadWeddingImages()];
   for(const url of Object.values(manifest.objects))tasks.push(load(url));
+  for(const url of Object.values(manifest.architecture??{}))tasks.push(load(url));
+  for(const looks of Object.values(manifest.seated??{}))for(const url of Object.values(looks))tasks.push(load(url));
   for(const url of Object.values(manifest.moments??{}))tasks.push(load(url));
   for(const who of CHARACTERS){
     for(const look of getLookOptions(who))tasks.push(load(look.sheet,{sheet:true}));
@@ -45,6 +47,8 @@ export async function prepareWorldAssets(){
 export function groundImage(){return assetImage(manifest.world.ground);}
 export function objectImage(kind){return assetImage(manifest.objects[kind]);}
 export function momentImage(kind){return assetImage(manifest.moments?.[kind]);}
+export function seatedImage(who,look){return assetImage(manifest.seated?.[who]?.[look]);}
+export function placeImage(id){return assetImage(manifest.architecture?.[id]);}
 export async function prepareOutfit(outfits){
   // Always keep a real original sheet ready when a saved optional look is absent.
   const urls=new Set([...equipmentUrls(outfits),...CHARACTERS.map(who=>getLookOptions(who)[0]?.sheet)]);

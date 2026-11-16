@@ -100,3 +100,41 @@ test('castle approach frames the illustrated crown and both characters together'
   assert.equal(castleApproachLift({x:30,y:25},castle),0,'Ordinary exploration keeps its camera');
   assert.equal(castleApproachLift(pair,null),0);
 });
+
+test('complete architecture keeps painted corners separate from interactive ground',async()=>{
+  const {nearestPlace}=await import('../game/places.js');
+  const {placeWorldBounds}=await import('../game/place-layout.js');
+  const place=places.find(item=>item.id==='inicio'),bounds=placeWorldBounds(place);
+  const image={width:160,height:128,data:new Uint8Array(160*128*4)};
+  for(let y=30;y<120;y++)for(let x=10;x<150;x++)image.data[(y*160+x)*4+3]=255;
+  const getImage=id=>id===place.id?image:null;
+  assert.equal(nearestPlace([place],bounds.x+80,bounds.y+80,getImage),place);
+  assert.equal(nearestPlace([place],bounds.x+3,bounds.y+3,getImage),undefined,'Empty corner remains ground');
+});
+
+test('complete buildings and their nameplates fit the approach camera without hiding shoes',async()=>{
+  const {PLACE_LAYOUT,placeWorldBounds,placeApproachLift}=await import('../game/place-layout.js');
+  for(const place of places.filter(item=>item.kind!=='wedding')){
+    const pair={x:place.arrival[0],y:place.arrival[1]},bounds=placeWorldBounds(place);
+    const cameraY=pair.y*16-135-placeApproachLift(pair,places);
+    assert.ok(bounds.y-16-cameraY>=4,place.id+' nameplate stays in frame');
+    assert.ok(pair.y*16+2-cameraY<=264,place.id+' shoes stay in frame');
+    assert.equal(PLACE_LAYOUT.width,160);assert.equal(PLACE_LAYOUT.height,128);
+  }
+});
+
+test('wider navigation clearance and village paths preserve access to every destination',async()=>{
+  const {PLACE_LAYOUT}=await import('../game/place-layout.js');
+  const {villagePathTiles,onMainRoad}=await import('../game/village-paths.js');
+  const moments=read('game/data/moments.json');initWorld(places,decor,moments);
+  assert.equal(PLACE_LAYOUT.collisionHalfWidth,6,'Facade width includes both companions');
+  for(const place of places){
+    assert.ok(walkable(...place.arrival),place.id);
+    assert.ok(findPath({x:30,y:25},{x:place.arrival[0],y:place.arrival[1]}).length,place.id+' reachable');
+  }
+  const tiles=villagePathTiles(places);assert.ok(tiles.length>60,'Branch paths connect the village');
+  assert.equal(new Set(tiles.map(tile=>tile.x+','+tile.y)).size,tiles.length);
+  for(const tile of tiles){assert.ok(walkable(tile.x,tile.y));assert.equal(onMainRoad(tile.x,tile.y),false);}
+  for(const place of places.filter(item=>item.kind!=='wedding'&&!onMainRoad(...item.arrival)))
+    assert.ok(tiles.some(tile=>tile.x===place.arrival[0]&&tile.y===place.arrival[1]),place.id+' has a doorstep path');
+});

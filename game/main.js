@@ -1,12 +1,13 @@
 import places from './data/places.json';
 import {castleApproachLift} from './castle-layout.js';
+import {placeApproachLift} from './place-layout.js';
 import decor from './data/decor.json';
 import momentSpots from './data/moments.json';
 import {TILE,WIDTH,HEIGHT,initWorld,walkable,closestWalkable,findPath,groundTile} from './world.js';
 import {createPair,drawPair,advancePairAnimation} from './pair.js';
 import {nearestPlace,sceneObjects} from './places.js';
 import {loadSave,writeSave} from './save.js';
-import {assetImage,prepareWorldAssets,prepareOutfit,groundImage,objectImage,momentImage} from './assets.js';
+import {assetImage,prepareWorldAssets,prepareOutfit,groundImage,objectImage,momentImage,seatedImage,placeImage} from './assets.js';
 import {createHost} from './experiences/host.js';
 import {createMap} from './map.js';
 import {createMusicPlayer} from './music.js';
@@ -18,7 +19,8 @@ const canvas=$('world'),ctx=canvas.getContext('2d',{alpha:false});
 ctx.imageSmoothingEnabled=false;
 const save=loadSave();save.outfits??={leo:{},itza:{}};
 const pair=createPair(save);
-const moments=createMoments({spots:momentSpots,pair,getImage:momentImage,bubble:$('leo-bubble')});
+const moments=createMoments({spots:momentSpots,pair,getImage:momentImage,bubble:$('leo-bubble'),
+  getOutfits:()=>save.outfits,getSeatedImage:seatedImage});
 initWorld(places,decor,momentSpots);
 if(!walkable(Math.round(pair.x),Math.round(pair.y))){pair.x=30;pair.y=25;}
 let path=[],targetPlace=null,lastTime=0,saveClock=0,active=false;
@@ -44,7 +46,7 @@ function goTo(x,y,place=null){
     path=[];targetPlace=null;
     if(place&&moments.isMoment(place)){
       moments.arrive(place);
-      status(place.kind==='cats'?'Acariciando a los gatitos':'Descansando juntos en la banca');
+      status(place.kind==='cats'?'Acariciando a los gatitos':moments.isSitting()?'Descansando juntos en la banca':'Seguimos explorando');
     }else status(place?'Toca otra vez '+place.name:'Ya estamos aquí');
   }else status('No se puede llegar a ese lugar');
 }
@@ -56,7 +58,7 @@ function openPlace(place){
 function cameraAt(){
   const castle=places.find(place=>place.id==='boda');
   // Lift the final approach without changing the world's 1:1 pointer geometry.
-  const lift=castleApproachLift(pair,castle);
+  const lift=Math.max(castleApproachLift(pair,castle),placeApproachLift(pair,places));
   return {x:Math.max(0,Math.min(WIDTH*TILE-canvas.width,Math.round(pair.x*TILE-canvas.width/2))),
     y:Math.max(0,Math.min(HEIGHT*TILE-canvas.height,Math.round(pair.y*TILE-canvas.height/2)-lift))};
 }
@@ -75,7 +77,7 @@ function pointClick(event){
     }else goTo(...spot.arrival,spot);
     return;
   }
-  const place=nearestPlace(places,wx,wy);
+  const place=nearestPlace(places,wx,wy,placeImage);
   if(place){
     if(!path.length&&Math.hypot(pair.x-place.arrival[0],pair.y-place.arrival[1])<0.51)openPlace(place);
     else goTo(place.arrival[0],place.arrival[1],place);
@@ -109,15 +111,14 @@ function step(dt){
         pair.moving=false;
         if(targetPlace&&moments.isMoment(targetPlace)){
           const spot=targetPlace;targetPlace=null;moments.arrive(spot);
-          status(spot.kind==='cats'?'Acariciando a los gatitos':'Descansando juntos en la banca');
+          status(spot.kind==='cats'?'Acariciando a los gatitos':moments.isSitting()?'Descansando juntos en la banca':'Seguimos explorando');
         }else status(targetPlace?'Llegamos a '+targetPlace.name+'. Toca otra vez para entrar.':'Explora nuestro mundo');
         persist();
       }
     }else{pair.x+=dx/dist*speed;pair.y+=dy/dist*speed;}
   }
 }
-const objects=sceneObjects(places,decor,objectImage,momentImage,weddingImage,
-  tile=>moments.shouldHidePair()&&momentSpots.some(spot=>spot.id===moments.seatId()&&spot.tile[0]===tile[0]&&spot.tile[1]===tile[1]));
+const objects=sceneObjects(places,decor,objectImage,momentImage,weddingImage,()=>false,placeImage);
 function draw(){
   if(!active)return;
   const camera=cameraAt();

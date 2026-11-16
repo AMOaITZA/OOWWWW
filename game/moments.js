@@ -1,6 +1,7 @@
 import {TILE} from './world.js';
 import {placeDialogue} from './dialogue-position.js';
-import {seatedGeometry,drawSeatedPair,benchGeometry,BENCH_WIDTH,BENCH_HEIGHT} from './seating.js';
+import {seatedPairGeometry,drawSeatedCharacters,benchGeometry,BENCH_WIDTH,BENCH_HEIGHT} from './seating.js';
+import {CHARACTERS,getChoice} from './wardrobe.js';
 
 // Tamaños de dibujo (no alteran el tamaño original de los archivos PNG).
 const CAT_DRAW_W=40;
@@ -40,15 +41,22 @@ export function closestMoment(spots,x,y,maxDistance=4){
   },null)?.spot??null;
 }
 
-export function createMoments({spots,pair,getImage,bubble}){
+export function createMoments({spots,pair,getImage,bubble,getOutfits=()=>({}),getSeatedImage=()=>null}){
   const cats=spots.find(spot=>spot.kind==='cats');
   let sitting=null,seatTransition=null,petRemaining=0,phraseRemaining=0;
+  function seatedPose(spot){
+    const outfits=getOutfits();
+    const characters=CHARACTERS.map(who=>{
+      const look=getChoice(outfits,who);
+      return {who,look,image:getSeatedImage(who,look)};
+    });
+    return seatedPairGeometry(characters,Math.floor(pair.clock/1.25)%2,spot.tile[0]*TILE,spot.tile[1]*TILE+1);
+  }
   const seatPoint=spot=>{
-    const pose=seatedGeometry(getImage('pairBenchSit'),Math.floor(pair.clock/1.25)%2,
-      spot.tile[0]*TILE,spot.tile[1]*TILE+1);
+    const pose=seatedPose(spot);
     // Match the head center at the last approach frame; switching poses must
     // not make the faces jump upward because the seated sheet has less padding.
-    return {x:spot.tile[0],y:(pose.anchor.y+39)/TILE};
+    return {x:spot.tile[0],y:pose?(pose.anchor.y+39)/TILE:spot.tile[1]+.5};
   };
   const smooth=t=>t*t*(3-2*t);
   function renderPair(){
@@ -101,7 +109,7 @@ export function createMoments({spots,pair,getImage,bubble}){
   }
   function isSitting(){return sitting!==null;}
   function seatId(){return sitting?.id??null;}
-  function shouldHidePair(){return sitting!==null&&!seatTransition&&Boolean(getImage('pairBenchSit'));}
+  function shouldHidePair(){return sitting!==null&&!seatTransition&&Boolean(seatedPose(sitting));}
   function tick(dt,{active=true,dialogsOpen=false}={}){
     if(!active || dialogsOpen){
       bubble.hidden=true;
@@ -132,8 +140,7 @@ export function createMoments({spots,pair,getImage,bubble}){
     };
     const displayed=renderPair();
     const seated=sitting&&!seatTransition;
-    const pose=seated?seatedGeometry(getImage('pairBenchSit'),Math.floor(pair.clock/1.25)%2,
-      sitting.tile[0]*TILE,sitting.tile[1]*TILE+1):null;
+    const pose=seated?seatedPose(sitting):null;
     const hero=pose?box('pair',pose.x,pose.y,pose.width,pose.height)
       :box('pair',displayed.x*TILE-32,displayed.y*TILE-47,64,50);
     const leoX=pose?pose.anchor.x:displayed.x*TILE+(displayed.direction==='right'?13:-16);
@@ -144,7 +151,7 @@ export function createMoments({spots,pair,getImage,bubble}){
       cats.tile[1]*TILE-CAT_DRAW_H,CAT_DRAW_W,CAT_DRAW_H));
     for(const spot of spots){
       if(spot.kind==='bench'){
-        const b=benchGeometry(spot.tile[0]*TILE,spot.tile[1]*TILE+1);
+        const b=benchGeometry(spot.tile[0]*TILE,spot.tile[1]*TILE+1,getImage('benchSeat'));
         obstacles.push(box(spot.id,b.x,b.y,b.width,b.height));
       }
     }
@@ -190,14 +197,8 @@ export function createMoments({spots,pair,getImage,bubble}){
       }});
     }
     if(sitting&&!seatTransition){
-      const sprite=getImage('pairBenchSit');
-      if(sprite){
-        result.push({z:sitting.tile[1]*TILE+12,draw(ctx){
-          const x=sitting.tile[0]*TILE,y=sitting.tile[1]*TILE;
-          const frame=Math.floor(pair.clock/1.25)%2;
-          drawSeatedPair(ctx,sprite,frame,x,y+1);
-        }});
-      }
+      const pose=seatedPose(sitting);
+      if(pose)result.push({z:sitting.tile[1]*TILE+12,draw:ctx=>drawSeatedCharacters(ctx,pose)});
     }
     return result;
   }

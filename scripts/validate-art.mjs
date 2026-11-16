@@ -18,10 +18,21 @@ for(const who of ['leo','itza']){
   if(looks.length>3)errors.push(who+': solo se permiten tres conjuntos completos');
   for(const look of looks)add(look.sheet,{size:[192,144],frame:[32,48],character:true,generated:true,maxColors:128});
 }
-const newSeatedSheet=manifest.moments?.pairBenchSit?.endsWith('/pair-bench-sit-v2.png');
-const momentSizes={catIdle:[80,64],catHappy:[80,64],petSparkles:[96,16],pairBenchSit:newSeatedSheet?[160,64]:[128,48],benchSeat:[56,40]};
+if(manifest.moments?.pairBenchSit)errors.push('La banca del mundo no debe usar una pareja con vestuario fijo');
+const momentSizes={catIdle:[80,64],catHappy:[80,64],petSparkles:[96,16],benchSeat:manifest.moments?.benchSeat?.endsWith('/bench-seat-v4.png')?[56,32]:[56,40]};
 for(const [kind,url] of Object.entries(manifest.moments??{}))
-  add(url,{size:momentSizes[kind],blankFrames:kind==='petSparkles'?[4,5]:[],frame:{catIdle:[80,64],catHappy:[80,64],petSparkles:[16,16],pairBenchSit:newSeatedSheet?[80,64]:[64,48]}[kind]});
+  add(url,{size:momentSizes[kind],blankFrames:kind==='petSparkles'?[4,5]:[],frame:{catIdle:[80,64],catHappy:[80,64],petSparkles:[16,16]}[kind]});
+for(const who of ['leo','itza'])for(const look of ['principal','alternativo','boda']){
+  const url=manifest.seated?.[who]?.[look];
+  if(!url)errors.push('Falta la pose sentada de '+who+'/'+look);
+  else add(url,{size:[64,48],frame:[32,48],character:true,generated:true,maxColors:128});
+}
+const architectureIds=['inicio','carta','galeria','razones','playlist','recuerdos','contador','lugares','final','armario'];
+for(const id of architectureIds){
+  const url=manifest.architecture?.[id];
+  if(!url)errors.push('Falta la arquitectura de '+id);
+  else add(url,{size:[160,128],generated:true,maxColors:128});
+}
 add(manifest.wedding?.atlas,{size:manifest.wedding.logicalSize,normalizedAlpha:true});
 add(manifest.wedding?.background,{size:[480,270],opaque:true,generated:true});
 add(manifest.wedding?.castle,{size:[336,224],generated:true});
@@ -84,7 +95,7 @@ for(const [url,options] of images){
   }
   if(partial&&!options.normalizedAlpha)errors.push(url+': '+partial+' píxeles con alfa intermedio');
   if(partial&&options.normalizedAlpha)warnings.push(url+': '+partial+' píxeles con alfa intermedio; el render aplica umbral 128');
-  if(options.maxColors&&assetPalette.size>options.maxColors)errors.push(url+': '+assetPalette.size+' colores; máximo del personaje: '+options.maxColors);
+  if(options.maxColors&&assetPalette.size>options.maxColors)errors.push(url+': '+assetPalette.size+' colores; máximo del recurso: '+options.maxColors);
   if(options.generated&&assetPalette.size>512)warnings.push(url+': '+assetPalette.size+' colores; revisar economía de paleta en la captura real');
   if(options.frame){
     const [fw,fh]=options.frame;

@@ -9,8 +9,27 @@ import spots from '../game/data/moments.json' with {type:'json'};
 import assets from '../game/data/assets.json' with {type:'json'};
 import {momentAt,closestMoment,LEO_LINES,createMoments} from '../game/moments.js';
 import {initWorld,walkable,findPath} from '../game/world.js';
-import {opaqueFrameBounds,seatedGeometry,benchGeometry,BENCH_WIDTH,BENCH_HEIGHT} from '../game/seating.js';
+import {opaqueFrameBounds,seatedCharacterGeometry,seatedPairGeometry,benchGeometry,BENCH_WIDTH,BENCH_HEIGHT} from '../game/seating.js';
 import {sceneObjects} from '../game/places.js';
+const readPng=url=>pngjs.PNG.sync.read(readFileSync(fileURLToPath(new URL('..'+url,import.meta.url))));
+const looks=['principal','alternativo','boda'];
+const benchSpot=spots.find(spot=>spot.kind==='bench');
+function fixtures(){
+  return Object.fromEntries(['leo','itza'].map(who=>[who,Object.fromEntries(looks.map((look,index)=>{
+    const width=64,height=48,data=new Uint8Array(width*height*4);
+    for(let frame=0;frame<2;frame++)for(let y=3;y<46;y++)for(let x=4;x<28;x++){
+      const i=(y*width+frame*32+x)*4;data[i]=40+index*60;data[i+1]=90;data[i+2]=who==='leo'?100:150;data[i+3]=255;
+    }
+    return [look,{width,height,data,label:who+'-'+look}];
+  }))]));
+}
+function controllerAtBench(outfits={leo:{look:'principal'},itza:{look:'principal'}},images=fixtures()){
+  const pair={x:benchSpot.arrival[0],y:benchSpot.arrival[1],clock:0,direction:'down'};
+  const controller=createMoments({spots,pair,bubble:{hidden:true,style:{}},getImage:name=>({name}),
+    getOutfits:()=>outfits,getSeatedImage:(who,look)=>images[who]?.[look]});
+  return {pair,controller,images,outfits};
+}
+const ctxFor=drawings=>({drawImage(...args){drawings.push(args);},fillRect(){},set fillStyle(_) {}});
 
 test('one cats point and two original bench points are registered',()=>{
   assert.equal(spots.length,3);
@@ -19,231 +38,133 @@ test('one cats point and two original bench points are registered',()=>{
   for(const bench of spots.filter(x=>x.kind==='bench'))
     assert.ok(decor.some(item=>item.kind==='bench'&&item.tile.join()===bench.tile.join()));
   assert.equal(new Set(spots.map(x=>x.id)).size,spots.length);
-  assert.equal(LEO_LINES.length>=10,true);
+  assert.ok(LEO_LINES.length>=10);
 });
 test('cats and benches have valid access points without blocking the game',()=>{
   initWorld(places,decor,spots);
   for(const spot of spots){
     assert.ok(walkable(...spot.arrival),spot.id+' debe tener acceso');
     assert.deepEqual(closestMoment(spots,...spot.arrival,1),spot);
-    const x=spot.tile[0]*16,y=spot.tile[1]*16;
-    assert.equal(momentAt(spots,x,y-18)?.id,spot.id);
+    assert.equal(momentAt(spots,spot.tile[0]*16,spot.tile[1]*16-18)?.id,spot.id);
   }
-  assert.equal(walkable(68,47),false,'gatos deben tener colisión');
+  assert.equal(walkable(68,47),false);
   assert.ok(findPath({x:30,y:25},{x:68,y:51}).length>0);
 });
-test('all five resources are real transparent PNGs at native pixel-art resolution',()=>{
-  const expected={
-    catIdle:[80,64],catHappy:[80,64],petSparkles:[96,16],
-    pairBenchSit:assets.moments.pairBenchSit.includes('-v2')?[160,64]:[128,48],benchSeat:[56,40]
-  };
+test('cats, sparkles and compact bench are real transparent PNG resources',()=>{
+  const expected={catIdle:[80,64],catHappy:[80,64],petSparkles:[96,16],benchSeat:[56,32]};
   for(const [name,size] of Object.entries(expected)){
-    const url=assets.moments[name];
-    assert.match(url,/^\/assets\/game\/moments\/[-a-z0-9]+\.png$/);
-    const file=fileURLToPath(new URL('..'+url,import.meta.url));
-    assert.ok(existsSync(file),url+' no existe');
-    const image=pngjs.PNG.sync.read(readFileSync(file));
-    assert.deepEqual([image.width,image.height],size,url+' tamaño');
-    let fullyTransparent=false,fullyOpaque=false;
-    for(let i=3;i<image.data.length;i+=4){
-      const a=image.data[i];assert.ok(a===0||a===255,url+' alfa no válido');
-      if(a===0)fullyTransparent=true;
-      if(a===255)fullyOpaque=true;
-    }
-    assert.ok(fullyTransparent&&fullyOpaque,url+' sin recorte transparente válido');
+    const url=assets.moments[name];assert.match(url,/^\/assets\/game\/moments\/[-a-z0-9]+\.png$/);
+    const file=fileURLToPath(new URL('..'+url,import.meta.url));assert.ok(existsSync(file),url+' no existe');
+    const image=readPng(url);assert.deepEqual([image.width,image.height],size);
+    const alphas=new Set();for(let i=3;i<image.data.length;i+=4)alphas.add(image.data[i]);
+    assert.deepEqual([...alphas].sort((a,b)=>a-b),[0,255],url+' debe tener alfa binaria real');
   }
+  assert.equal(assets.moments.pairBenchSit,undefined,'A fixed-outfit couple must not be an active world fallback');
 });
-
-test('cats keep their readable scale and sitting crops transparent margins before uniform scaling',()=>{
-  const pair={x:68,y:51,clock:0};
-  const bubble={textContent:'',hidden:true,style:{}};
-  const controller=createMoments({spots,pair,bubble,getImage:name=>({name})});
+test('cats keep readable scale while sitting uses two separate native outfit sprites',()=>{
+  const {pair,controller}=controllerAtBench(),drawings=[],ctx=ctxFor(drawings);
+  controller.scenery().forEach(item=>item.draw(ctx));
   const cats=spots.find(spot=>spot.kind==='cats');
-  const bench=spots.find(spot=>spot.kind==='bench');
-  const drawings=[];
-  const ctx={
-    drawImage(...args){drawings.push(args);},
-    fillRect(){},
-    set fillStyle(_) {}
-  };
-  controller.scenery().forEach(item=>item.draw(ctx));
-  const catDraw=drawings.find(args=>args[0].name==='catIdle');
-  assert.ok(catDraw,'Gatos visibles');
-  assert.deepEqual(catDraw.slice(1),[cats.tile[0]*16-20,cats.tile[1]*16-32,40,32]);
-  assert.equal(momentAt(spots,cats.tile[0]*16+22,cats.tile[1]*16-20)?.id,cats.id);
-  assert.equal(momentAt(spots,cats.tile[0]*16+28,cats.tile[1]*16-20)?.id,undefined);
-  pair.x=bench.arrival[0];pair.y=bench.arrival[1];
-  controller.arrive(bench);
-  assert.equal(controller.shouldHidePair(),false,'Walk to the bench before switching to the sitting pose');
-  assert.equal(controller.isTransitioning(),true);
-  controller.tick(.4);
-  assert.equal(controller.shouldHidePair(),true);
-  drawings.length=0;
-  controller.scenery().forEach(item=>item.draw(ctx));
-  const sitDraw=drawings.find(args=>args[0].name==='pairBenchSit');
-  assert.ok(sitDraw,'Itza y Leo sentados visibles');
-  const [,sx,sy,sw,sh,dx,dy,dw,dh]=sitDraw;
-  assert.ok(sx>=0&&sy>=0&&sx+sw<=80&&sy+sh<=64,'Crop stays in the current 80×64 cell');
-  assert.equal(dw/sw,dh/sh,'Uniform seated proportions');
-  assert.ok(dw<=BENCH_WIDTH);
-  assert.equal(dy+dh,bench.tile[1]*16+1,'Pair and bench share the ground');
+  assert.deepEqual(drawings.find(args=>args[0].name==='catIdle').slice(1),[cats.tile[0]*16-20,cats.tile[1]*16-32,40,32]);
+  controller.arrive(benchSpot);assert.equal(controller.shouldHidePair(),false);
+  controller.tick(.4);assert.equal(controller.shouldHidePair(),true);
+  drawings.length=0;controller.scenery().forEach(item=>item.draw(ctx));
+  const seated=drawings.filter(args=>args[0].label);
+  assert.deepEqual(seated.map(args=>args[0].label),['leo-principal','itza-principal']);
+  for(const [,sx,sy,sw,sh,dx,dy,dw,dh] of seated){
+    assert.ok(sx>=0&&sy>=0&&sx+sw<=32&&sy+sh<=48);
+    assert.equal(dw,sw);assert.equal(dh,sh);assert.equal(dy+dh,benchSpot.tile[1]*16+1);
+  }
+  assert.deepEqual([pair.x,pair.y],benchSpot.arrival,'Sitting does not rewrite saved arrival position');
 });
-
-
-test('Leo dialogue is a floating sprite-aware bubble, including after modal close',()=>{
-  const pair={x:68,y:51,clock:0,direction:'down'};
-  const changed={};
-  const bubble={textContent:'',hidden:true,style:{
-    setProperty(name,value){changed[name]=value;},
-  },dataset:{},offsetWidth:208,offsetHeight:60};
-  const controller=createMoments({spots,pair,bubble,getImage:()=>({})});
-  controller.arrive(spots.find(s=>s.kind==='cats'));
-  assert.equal(bubble.hidden,false);
-  const canvas={width:480,height:270,getBoundingClientRect:()=>({
-    left:90,top:60,width:960,height:540
-  })};
-  const originalDocument=globalThis.document,originalWidth=globalThis.innerWidth,originalHeight=globalThis.innerHeight;
+for(const leo of looks)for(const itza of looks){
+  test('seated outfits remain independent: '+leo+' / '+itza,()=>{
+    const {controller}=controllerAtBench({leo:{look:leo},itza:{look:itza}}),drawings=[];
+    controller.arrive(benchSpot);controller.tick(.4);
+    controller.scenery().forEach(item=>item.draw(ctxFor(drawings)));
+    assert.deepEqual(drawings.filter(args=>args[0].label).map(args=>args[0].label),['leo-'+leo,'itza-'+itza]);
+  });
+}
+test('changing one outfit while already seated updates only that character without remounting',()=>{
+  const {controller,outfits}=controllerAtBench(),drawings=[];
+  controller.arrive(benchSpot);controller.tick(.4);
+  controller.scenery().forEach(item=>item.draw(ctxFor(drawings)));
+  assert.deepEqual(drawings.filter(args=>args[0].label).map(args=>args[0].label),['leo-principal','itza-principal']);
+  outfits.leo.look='alternativo';outfits.itza.look='boda';drawings.length=0;
+  controller.scenery().forEach(item=>item.draw(ctxFor(drawings)));
+  assert.deepEqual(drawings.filter(args=>args[0].label).map(args=>args[0].label),['leo-alternativo','itza-boda']);
+  assert.equal(controller.isSitting(),true);assert.equal(controller.isTransitioning(),false);
+});
+test('a missing seated asset never substitutes an unrelated fixed outfit',()=>{
+  const images=fixtures();delete images.leo.alternativo;
+  const {controller}=controllerAtBench({leo:{look:'alternativo'},itza:{look:'boda'}},images);
+  controller.arrive(benchSpot);controller.tick(.4);
+  assert.equal(controller.shouldHidePair(),false,'Keep correctly dressed standing figures if a seated asset failed');
+  const drawings=[];controller.scenery().forEach(item=>item.draw(ctxFor(drawings)));
+  assert.equal(drawings.some(args=>args[0].label),false,'Do not draw a partly mismatched couple');
+});
+test('every real seated outfit has two complete native frames and stable feet',()=>{
+  for(const who of ['leo','itza'])for(const look of looks){
+    const image=readPng(assets.seated[who][look]);assert.deepEqual([image.width,image.height],[64,48]);
+    const frames=opaqueFrameBounds(image);assert.equal(frames.length,2);
+    const poses=[0,1].map(frame=>seatedCharacterGeometry(image,frame,100,200));
+    for(const pose of poses){
+      assert.equal(pose.scale,1);assert.equal(pose.width,pose.source.width);assert.equal(pose.height,pose.source.height);
+      assert.equal(pose.y+pose.height,200);assert.ok(pose.height>=35&&pose.height<=46);
+    }
+    assert.ok(Math.abs(poses[0].height-poses[1].height)<=1,'Head/foot alignment must be stable');
+    assert.ok(poses[1].source.x>=32&&poses[1].source.x<64,'Second frame must come from its own cell');
+  }
+});
+test('the compact bench stays smaller than standing people and fits independent seated bodies',()=>{
+  const bench=readPng(assets.moments.benchSeat),b=benchGeometry(100,200,bench);
+  assert.ok(b.width>=45&&b.width<=56);assert.ok(b.height<=32&&b.height<44,'No giant backrest');
+  assert.equal(b.y+b.height,200);
+  for(const who of ['leo','itza']){
+    const image=readPng(assets.seated[who].principal),pose=seatedCharacterGeometry(image,0,100,200);
+    assert.ok(pose.height>b.height,'Faces should project above the bench back');
+  }
+  assert.ok(BENCH_WIDTH<=56&&BENCH_HEIGHT<=32);
+});
+test('Leo dialogue floats near characters and returns after a modal closes',()=>{
+  const pair={x:68,y:51,clock:0,direction:'down'},changed={};
+  const bubble={textContent:'',hidden:true,style:{setProperty(name,value){changed[name]=value;}},dataset:{},offsetWidth:208,offsetHeight:60};
+  const controller=createMoments({spots,pair,bubble,getImage:()=>({})});controller.arrive(spots.find(s=>s.kind==='cats'));
+  const saved={document:globalThis.document,width:globalThis.innerWidth,height:globalThis.innerHeight};
   try{
-    globalThis.document={getElementById:()=>null};
-    globalThis.innerWidth=1200;
-    globalThis.innerHeight=720;
-    controller.positionBubble({x:68*16-240,y:51*16-135},canvas);
-    assert.match(bubble.style.left,/px$/);
-    assert.match(bubble.style.top,/px$/);
-    assert.ok(['bottom','top','left','right'].includes(bubble.dataset.tail));
+    globalThis.document={getElementById:()=>null};globalThis.innerWidth=1200;globalThis.innerHeight=720;
+    controller.positionBubble({x:68*16-240,y:51*16-135},{width:480,height:270,getBoundingClientRect:()=>({left:90,top:60,width:960,height:540})});
+    assert.match(bubble.style.left,/px$/);assert.match(bubble.style.top,/px$/);assert.ok(['bottom','top','left','right'].includes(bubble.dataset.tail));
     assert.match(changed['--tail-x'],/px$/);
-  }finally{
-    globalThis.document=originalDocument;globalThis.innerWidth=originalWidth;globalThis.innerHeight=originalHeight;
-  }
-  controller.tick(.1,{active:true,dialogsOpen:true});
-  assert.equal(bubble.hidden,true);
-  controller.tick(.1,{active:true,dialogsOpen:false});
-  assert.equal(bubble.hidden,false);
+  }finally{globalThis.document=saved.document;globalThis.innerWidth=saved.width;globalThis.innerHeight=saved.height;}
+  controller.tick(.1,{dialogsOpen:true});assert.equal(bubble.hidden,true);controller.tick(.1);assert.equal(bubble.hidden,false);
 });
-
-
-test('standing moves smoothly back to the saved arrival instead of teleporting',()=>{
-  const bench=spots.find(s=>s.kind==='bench');
-  const pair={x:bench.arrival[0],y:bench.arrival[1],clock:0,direction:'down'};
-  const controller=createMoments({spots,pair,bubble:{hidden:true,style:{}},getImage:()=>({})});
-  controller.arrive(bench);
-  controller.tick(.19);
-  const halfway=controller.renderPair();
-  assert.ok(halfway.y<pair.y&&halfway.y>bench.tile[1]);
-  controller.tick(.2);
-  const seated=controller.renderPair();
-  controller.stand();
-  assert.equal(controller.isSitting(),false);
-  assert.equal(controller.renderPair().y,seated.y,'Standing starts at the visible seat');
-  controller.tick(.19);
-  assert.ok(controller.renderPair().y>seated.y&&controller.renderPair().y<pair.y);
-  controller.tick(.2);
-  assert.equal(controller.renderPair(),pair);
-  assert.deepEqual([pair.x,pair.y],bench.arrival,'Save position stays compatible');
+test('the approach and rise preserve saved position and keep the seated head anchored',()=>{
+  const {controller,pair,images}=controllerAtBench();controller.arrive(benchSpot);controller.tick(.19);
+  const halfway=controller.renderPair();assert.ok(halfway.y<pair.y&&halfway.y>benchSpot.tile[1]);controller.tick(.2);
+  const pose=seatedPairGeometry(['leo','itza'].map(who=>({who,image:images[who].principal})),0,benchSpot.tile[0]*16,benchSpot.tile[1]*16+1);
+  assert.equal(controller.renderPair().y*16-39,pose.anchor.y);
+  controller.stand();assert.equal(controller.renderPair().y*16-39,pose.anchor.y);controller.tick(.19);
+  assert.ok(controller.renderPair().y<pair.y);controller.tick(.2);assert.equal(controller.renderPair(),pair);
+  assert.deepEqual([pair.x,pair.y],benchSpot.arrival);
 });
-
 test('cat reaction turns toward cats and pauses behind an experience',()=>{
-  const pair={x:68,y:51,clock:0,direction:'down'};
-  const bubble={textContent:'',hidden:true,style:{}};
-  const controller=createMoments({spots,pair,bubble,getImage:name=>({name})});
-  controller.arrive(spots.find(s=>s.kind==='cats'));
-  assert.equal(pair.direction,'up');
-  let names=[];
-  const ctx={drawImage(sprite){names.push(sprite.name);},fillRect(){}};
-  controller.scenery().forEach(item=>item.draw(ctx));
-  assert.ok(names.includes('catIdle'),'A short anticipation precedes the happy reaction');
-  controller.tick(.4);
-  controller.tick(10,{dialogsOpen:true});
-  names=[];
-  controller.scenery().forEach(item=>item.draw(ctx));
-  assert.ok(names.includes('catHappy'),'Reaction time does not expire behind a modal');
-  controller.tick(3);
-  names=[];
-  controller.scenery().forEach(item=>item.draw(ctx));
-  assert.ok(names.includes('catIdle'));
+  const pair={x:68,y:51,clock:0,direction:'down'},controller=createMoments({spots,pair,bubble:{hidden:true,style:{}},getImage:name=>({name})});
+  controller.arrive(spots.find(s=>s.kind==='cats'));assert.equal(pair.direction,'up');
+  const drawings=[];controller.scenery().forEach(item=>item.draw(ctxFor(drawings)));assert.ok(drawings.some(args=>args[0].name==='catIdle'));
+  controller.tick(.4);controller.tick(10,{dialogsOpen:true});drawings.length=0;controller.scenery().forEach(item=>item.draw(ctxFor(drawings)));
+  assert.ok(drawings.some(args=>args[0].name==='catHappy'));controller.tick(3);drawings.length=0;controller.scenery().forEach(item=>item.draw(ctxFor(drawings)));
+  assert.ok(drawings.some(args=>args[0].name==='catIdle'));
 });
-
-
-test('current seated characters keep native proportions and a stable ground anchor',()=>{
-  const sprite=pngjs.PNG.sync.read(readFileSync(new URL('../assets/game/moments/pair-bench-sit-v2.png',import.meta.url)));
-  const frames=opaqueFrameBounds(sprite);
-  const first=seatedGeometry(sprite,0,100,200),second=seatedGeometry(sprite,1,100,200);
-  for(const pose of [first,second]){
-    assert.equal(pose.scale,1,'Current full-size faces retain native pixels');
-    assert.equal(pose.width/pose.source.width,pose.height/pose.source.height,'Uniform pixels');
-    assert.equal(pose.y+pose.height,200,'Actual alpha bottom stays grounded');
-    assert.ok(pose.width<=BENCH_WIDTH,'Both characters fit on the bench');
-  }
-  assert.equal(first.x,second.x);assert.equal(first.y,second.y);
-  assert.equal(frames.length,2);
-  assert.deepEqual(benchGeometry(100,200),{x:61,y:144,width:78,height:56});
-  assert.equal(BENCH_HEIGHT,56);
-});
-
-test('a new sheet with full-size heads is not enlarged a second time',()=>{
-  const width=160,height=64,data=new Uint8Array(width*height*4);
-  for(let frame=0;frame<2;frame++){
-    for(let y=4;y<40;y++)for(let x=12;x<62;x++)data[(y*width+frame*80+x)*4+3]=255;
-    for(let y=31;y<47;y++)for(let x=6;x<72;x++)data[(y*width+frame*80+x)*4+3]=255;
-  }
-  const pose=seatedGeometry({width,height,data},0,100,200);
-  assert.equal(pose.scale,1,'An already proportional generated pose keeps native pixels');
-  assert.equal(pose.width,66);
-  const second=seatedGeometry({width,height,data},1,100,200);
-  assert.equal(second.source.x,86,'Second frame starts at80px, not legacy64px');
-  assert.equal(second.x,pose.x);
-  assert.equal(second.y,pose.y);
-});
-
-test('bench collision follows its larger visible seat while all arrivals remain accessible',()=>{
+test('compact bench collision matches its footprint and all entrances stay accessible',()=>{
   initWorld(places,decor,spots);
   for(const spot of spots.filter(s=>s.kind==='bench')){
-    const [x,y]=spot.tile;
-    for(let offset=-2;offset<=2;offset++)assert.equal(walkable(x+offset,y),false);
-    assert.equal(walkable(...spot.arrival),true);
+    const [x,y]=spot.tile;for(let offset=-1;offset<=1;offset++)assert.equal(walkable(x+offset,y),false);
+    assert.equal(walkable(x-2,y),true);assert.equal(walkable(x+2,y),true);assert.equal(walkable(...spot.arrival),true);
     assert.ok(findPath({x:30,y:25},{x:spot.arrival[0],y:spot.arrival[1]}).length>0);
   }
 });
-
-
-test('generated seated sheet uses two native80x64 frames with a stable visible baseline',()=>{
-  const sprite=pngjs.PNG.sync.read(readFileSync(new URL('../assets/game/moments/pair-bench-sit-v2.png',import.meta.url)));
-  assert.deepEqual([sprite.width,sprite.height],[160,64]);
-  const frames=opaqueFrameBounds(sprite);
-  assert.deepEqual(frames.map(({x,y,width,height})=>({x,y,width,height})),[
-    {x:2,y:4,width:75,height:59},{x:2,y:4,width:75,height:59}
-  ]);
-  const first=seatedGeometry(sprite,0,100,200),second=seatedGeometry(sprite,1,100,200);
-  assert.equal(first.scale,1);
-  assert.equal(first.width,75);
-  assert.equal(first.height,59);
-  assert.equal(second.source.x-first.source.x,80);
-  assert.equal(second.x,first.x);
-  assert.equal(second.y,first.y);
-  assert.ok(first.width<=BENCH_WIDTH);
-  assert.equal(first.y+first.height,200);
-});
-
-test('the approach and rise keep Leo head anchored across the seated pose change',()=>{
-  const sprite=pngjs.PNG.sync.read(readFileSync(new URL('../assets/game/moments/pair-bench-sit-v2.png',import.meta.url)));
-  const bench=spots.find(s=>s.kind==='bench');
-  const pair={x:bench.arrival[0],y:bench.arrival[1],clock:0,direction:'down'};
-  const controller=createMoments({spots,pair,bubble:{hidden:true,style:{}},getImage:()=>sprite});
-  controller.arrive(bench);controller.tick(.39);
-  const pose=seatedGeometry(sprite,0,bench.tile[0]*16,bench.tile[1]*16+1);
-  assert.equal(controller.renderPair().y*16-39,pose.anchor.y);
-  controller.stand();
-  assert.equal(controller.renderPair().y*16-39,pose.anchor.y);
-});
-
-
-test('a seated composite replaces its exact decorative bench without drawing two backrests',()=>{
-  const bench=spots.find(s=>s.kind==='bench');
-  let occupied=false,draws=0;
-  const objects=sceneObjects([],[{kind:'bench',tile:bench.tile}],()=>null,
-    key=>key==='benchSeat'?{}:null,()=>null,tile=>occupied&&tile===bench.tile);
-  const ctx={drawImage(){draws++;}};
-  objects.forEach(item=>item.draw(ctx));assert.equal(draws,1);
-  occupied=true;objects.forEach(item=>item.draw(ctx));assert.equal(draws,1);
-  occupied=false;objects.forEach(item=>item.draw(ctx));assert.equal(draws,2,'Empty bench returns when standing');
+test('independent seated figures retain their separate decorative bench',()=>{
+  let draws=0;const objects=sceneObjects([],[{kind:'bench',tile:benchSpot.tile}],()=>null,key=>key==='benchSeat'?{}:null,()=>null,()=>false);
+  objects.forEach(item=>item.draw({drawImage(){draws++;}}));assert.equal(draws,1);
 });

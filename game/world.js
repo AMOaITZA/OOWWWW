@@ -1,4 +1,5 @@
 import {CASTLE_LAYOUT} from './castle-layout.js';
+import {PLACE_LAYOUT} from './place-layout.js';
 export const TILE=16,WIDTH=120,HEIGHT=80;
 const total=WIDTH*HEIGHT,solid=new Uint8Array(total);
 const key=(x,y)=>y*WIDTH+x;
@@ -8,14 +9,14 @@ export function initWorld(places,decor=[],moments=[]){
   solid.fill(0);
   for(let y=0;y<HEIGHT;y++)for(let x=0;x<WIDTH;x++)if(!inside(x,y))solid[key(x,y)]=1;
   for(const p of places){
-    for(let y=p.tile[1]-(p.kind==='wedding'?CASTLE_LAYOUT.collisionHeight:2);y<=p.tile[1]+1;y++)for(let x=p.tile[0]-(p.kind==='wedding'?CASTLE_LAYOUT.collisionHalfWidth:4);x<=p.tile[0]+(p.kind==='wedding'?CASTLE_LAYOUT.collisionHalfWidth:4);x++){
+    for(let y=p.tile[1]-(p.kind==='wedding'?CASTLE_LAYOUT.collisionHeight:PLACE_LAYOUT.collisionHeight);y<=p.tile[1]+1;y++)for(let x=p.tile[0]-(p.kind==='wedding'?CASTLE_LAYOUT.collisionHalfWidth:PLACE_LAYOUT.collisionHalfWidth);x<=p.tile[0]+(p.kind==='wedding'?CASTLE_LAYOUT.collisionHalfWidth:PLACE_LAYOUT.collisionHalfWidth);x++){
       if(inside(x,y))solid[key(x,y)]=1;
     }
   }
   for(const obj of decor){
     const [x,y]=obj.tile;
     if(obj.kind==='tree'||obj.kind==='rock')for(let oy=0;oy<=1;oy++)if(inside(x,y+oy))solid[key(x,y+oy)]=1;
-    if(obj.kind==='bench')for(let ox=-2;ox<=2;ox++)if(inside(x+ox,y))solid[key(x+ox,y)]=1;
+    if(obj.kind==='bench')for(let ox=-1;ox<=1;ox++)if(inside(x+ox,y))solid[key(x+ox,y)]=1;
     if(obj.kind==='lamp'&&inside(x,y))solid[key(x,y)]=1;
   }
   for(const spot of moments){

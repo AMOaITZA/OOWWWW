@@ -5,6 +5,7 @@ import {createHash} from 'node:crypto';
 import pngjs from 'pngjs';
 
 const png=path=>pngjs.PNG.sync.read(readFileSync(new URL('../'+path,import.meta.url)));
+const hash=data=>createHash('sha256').update(data).digest('hex');
 const frame=(image,col,row,fw=32,fh=48)=>{
   let x0=fw,y0=fh,x1=-1,y1=-1,count=0;
   const pixels=[];
@@ -65,16 +66,68 @@ test('cinematic garden is a real opaque 480×270 image and the castle has actual
   assert.ok(transparent>5000,'La transparencia debe rodear las torres y la silueta');
 });
 
-test('new seated illustration contains two complete transparent 80×64 poses',()=>{
-  const image=png('assets/game/moments/pair-bench-sit-v2.png');
-  assert.equal(image.width,160);assert.equal(image.height,64);
-  const poses=[frame(image,0,0,80,64),frame(image,1,0,80,64)];
-  for(const box of poses){
-    assert.ok(box.count>800,'Debe mostrar a los dos personajes y el asiento');
-    assert.ok(box.x0>0&&box.x1<79&&box.y0>0,'La pose no debe cortar cabezas ni brazos');
-    assert.ok(box.y1-box.y0>40,'La pareja no debe ocupar una miniatura dentro de la celda');
+for(const who of ['leo','itza'])for(const look of ['principal','alternativo','boda']){
+  test(who+' '+look+' has its own complete seated animation without a shared outfit',()=>{
+    const manifest=JSON.parse(readFileSync(new URL('../game/data/assets.json',import.meta.url),'utf8'));
+    const path=manifest.seated?.[who]?.[look];
+    assert.equal(path,'/assets/game/moments/seated/'+who+'-'+look+'.png');
+    const image=png(path.slice(1));
+    assert.equal(image.width,64);assert.equal(image.height,48);
+    const poses=[frame(image,0,0),frame(image,1,0)];
+    for(const box of poses){
+      assert.ok(box.count>160,'El personaje sentado debe tener cara, cuerpo y piernas');
+      assert.ok(box.x0>0&&box.x1<31&&box.y0>0,'La pose debe caber en su celda');
+      assert.ok(box.y1-box.y0>=32,'La figura debe conservar escala frente al personaje de pie');
+    }
+    assert.ok(Math.abs(poses[0].y1-poses[1].y1)<=1,'Los pies deben conservar la base entre poses');
+    assert.notDeepEqual(poses[0].pixels,poses[1].pixels,'El reposo sentado tiene dos gestos reales');
+  });
+}
+
+test('outfit-specific seated resources are visually distinct and the fixed look-1 pair is retired',()=>{
+  const manifest=JSON.parse(readFileSync(new URL('../game/data/assets.json',import.meta.url),'utf8'));
+  assert.equal(manifest.moments.pairBenchSit,undefined,'La banca del mundo no debe elegir una pareja con ropa fija');
+  for(const who of ['leo','itza']){
+    const styles=['principal','alternativo','boda'].map(look=>hash(png(manifest.seated[who][look].slice(1)).data));
+    assert.equal(new Set(styles).size,3,who+' debe tener tres atuendos sentados distintos');
   }
-  assert.ok(Math.abs(poses[0].y1-poses[1].y1)<=1,'La base debe mantenerse entre poses');
+  assert.equal(existsSync(new URL('../assets/game/moments/pair-bench-sit-v2.png',import.meta.url)),false);
+});
+
+test('the compact bench has real transparency and is shorter than a standing character',()=>{
+  const manifest=JSON.parse(readFileSync(new URL('../game/data/assets.json',import.meta.url),'utf8'));
+  assert.match(manifest.moments.benchSeat,/bench-seat-v4\.png$/);
+  const image=png(manifest.moments.benchSeat.slice(1));
+  assert.equal(image.width,56);assert.equal(image.height,32);
+  const visible=frame(image,0,0,56,32);
+  assert.ok(visible.count>300,'Debe existir una banca completa');
+  assert.ok(visible.x0>0&&visible.x1<55&&visible.y0>0,'La banca necesita margen real');
+  assert.ok(visible.y1-visible.y0<32,'La altura no debe competir con los personajes de 44 px');
+});
+
+test('every destination has a distinct complete architectural image',()=>{
+  const manifest=JSON.parse(readFileSync(new URL('../game/data/assets.json',import.meta.url),'utf8'));
+  const places=JSON.parse(readFileSync(new URL('../game/data/places.json',import.meta.url),'utf8'));
+  const hashes=[];
+  for(const place of places.filter(place=>place.kind!=='wedding')){
+    assert.equal(manifest.architecture?.[place.id],'/assets/game/architecture/'+place.id+'.png');
+    const image=png(manifest.architecture[place.id].slice(1));
+    assert.equal(image.width,160);assert.equal(image.height,128);
+    const box=frame(image,0,0,160,128);
+    assert.ok(box.count>1000,place.id+' debe contener arquitectura completa');
+    assert.ok(box.x0>0&&box.x1<159&&box.y0>0&&box.y1<127,place.id+' no debe recortar tejados o escalones');
+    hashes.push(hash(image.data));
+  }
+  assert.equal(hashes.length,10);
+  assert.equal(new Set(hashes).size,10,'Los diez destinos no deben compartir la misma fachada');
+});
+
+test('the new village terrain is a full opaque world layer',()=>{
+  const manifest=JSON.parse(readFileSync(new URL('../game/data/assets.json',import.meta.url),'utf8'));
+  assert.match(manifest.world.ground,/ground-v4\.png$/);
+  const ground=png(manifest.world.ground.slice(1));
+  assert.deepEqual([ground.width,ground.height],[1920,1280]);
+  for(let i=3;i<ground.data.length;i+=4)assert.equal(ground.data[i],255,'No deben aparecer huecos negros al desplazarse');
 });
 
 
@@ -92,7 +145,6 @@ const retiredPixels={
   hug:'3ef9e0ae82a72d02ef6b6a9485ffff6615adf06458b614a07fe13aa1116a9029',
   celebrate:'0aefd6826b6a518e82d8339508ace8ceca5519a0142f562677c60ef1482ef67e'
 };
-const hash=data=>createHash('sha256').update(data).digest('hex');
 function regionPixels(image,[x,y,width,height]){
   const result=Buffer.alloc(width*height*4);
   for(let row=0;row<height;row++)image.data.copy(result,row*width*4,

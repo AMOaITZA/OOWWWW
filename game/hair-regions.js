@@ -22,13 +22,24 @@ export const HAIR_REGIONS={
     [...bands([15,18,12,25],[19,29,6,27]),...sides(30,34,9,25)]
   ],
   'walk-boda':[
-    [...bands([0,9,0,25]),...sides(10,13,8,23),...sides(14,17,6,25),
-      ...sides(18,24,5,24),...sides(25,33,8,21),...sides(34,37,7,21)],
+    // Trace the fringe above the forehead and the locks below the glasses
+    // separately. The previous left/right bands skipped the entire inside
+    // edge of the right lock; it is hair, not the cheek or the gown.
+    [...bands([0,10,0,25],[11,11,16,20],[12,12,17,20],[13,13,18,21],
+      [14,14,19,21],[15,15,19,24],[16,16,21,24]),
+      ...sides(11,13,8,23),...sides(14,17,6,25),...sides(18,21,5,24),
+      ...sides(22,23,5,21),...sides(24,24,5,20),...sides(25,27,10,19),
+      ...bands([26,26,16,18],[27,27,17,18]),
+      ...sides(28,31,8,19),...sides(32,33,8,20),...sides(34,37,7,21)],
     // The front lock continues beside the cheek through x18, not x13.
     // Narrow it again at the shoulder so the exposed arm/gown stay intact.
-    [...bands([0,9,0,26],[10,14,12,21],[15,18,10,18],
-      [19,25,9,18],[26,27,6,18],[28,38,6,16])],
-    [...bands([0,10,0,31],[11,13,12,27],[14,33,9,28],[34,37,10,25])]
+    [...bands([0,9,0,26],[10,13,9,21],[14,14,12,21],[15,18,10,18],
+      [19,25,9,18],[26,27,5,18],[28,30,5,16],[31,34,2,16],[35,38,4,16],[39,39,8,12])],
+    // The veil stops at y25. Its former gutter x6–8 becomes a rear lock
+    // below it, so keeping that gutter transparent in the mask left a black
+    // stripe. Flower/veil RGB and the two exposed arms remain untouched.
+    [...bands([0,10,0,31],[11,13,10,27],[14,25,8,28],[26,33,5,28],
+      [34,35,6,26],[36,37,7,25],[38,38,9,23])]
   ],
   'seat-principal':[
     ...bands([0,9,0,31]),...sides(10,14,10,24),...sides(15,21,8,26),

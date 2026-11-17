@@ -85,6 +85,43 @@ test('the side locks beside the cheek and shoulder recolor in every walking fram
     }
   }
 });
+test('the reported bridal fringe, front neck lock and rear lock below the veil all recolor',()=>{
+  const original=png(walking[2][1]);
+  // Traced directly on the unchanged 32×48 bridal cells. These are hair
+  // interiors (not the glasses, flower outline or the two exposed arms).
+  const reportedLocks=[
+    [0,[[18,11],[20,14],[21,16],[22,23],[17,26],[20,27],[19,28],[20,31]]],
+    [1,[[5,34]]],
+    [2,[[7,27],[6,31],[7,34]]]
+  ];
+  for(const color of colors){
+    const output=recolorHairPixels(original,'walk-boda',color);
+    for(const [row,points] of reportedLocks)for(let frame=0;frame<6;frame++)for(const [x,y] of points){
+      const index=((row*48+y)*original.width+frame*32+x)*4;
+      assert.equal(original.data[index+3],255,'The regression coordinate must contain hair');
+      assert.notDeepEqual([...output.subarray(index,index+3)],[...original.data.subarray(index,index+3)],
+        `Bridal ${color}, view ${row}, frame ${frame}: hair at ${x},${y} must not stay black`);
+    }
+  }
+});
+test('bridal veil, flower, face and the actual gown remain intact beside the repaired locks',()=>{
+  const original=png(walking[2][1]);
+  for(const color of colors){
+    const output=recolorHairPixels(original,'walk-boda',color);
+    for(let frame=0;frame<6;frame++){
+      // The white/cream veil and flower have many generated highlight
+      // shades. Preserve all of them, rather than only three skin entries.
+      for(let row=0;row<3;row++)for(let y=0;y<48;y++)for(let x=0;x<32;x++){
+        const index=((row*48+y)*original.width+frame*32+x)*4;
+        if(original.data[index+3]&&Math.max(...original.data.subarray(index,index+3))>112)
+          samePixel(original.data,output,index,'Bridal veil/flower/skin/gown');
+      }
+      unchangedRect(original,output,32,frame,0,10,28,17,39,'front gown');
+      unchangedRect(original,output,32,frame,1,18,28,27,39,'side gown/arm');
+      unchangedRect(original,output,32,frame,2,10,40,26,46,'rear gown');
+    }
+  }
+});
 test('hair color preserves alpha, skin reference and all lower boots/trousers pixels',()=>{
   const skin=new Set(['199,135,104','146,103,89','211,178,160']);
   for(const [profile,path] of [...walking,...sitting,...ceremony]){
@@ -108,7 +145,10 @@ test('front glasses and central leather/hoodie clothing remain byte-identical',(
       for(let frame=0;frame<columns;frame++){
         const left=profile==='walk-boda'?6:profile.startsWith('seat-')?9:8,right=profile==='walk-boda'?23:25;
         unchangedRect(original,result,32,frame,0,left,17,right,21,profile+' glasses');
-        unchangedRect(original,result,32,frame,0,12,28,profile==='walk-boda'?19:22,33,profile+' central outfit');
+        // In the bride's front view x19,y28 is the inner edge of a long
+        // hair lock, not the gown. Keep the protected gown/neck rectangle
+        // through x18; its formerly black lock is tested separately below.
+        unchangedRect(original,result,32,frame,0,12,28,profile==='walk-boda'?18:22,33,profile+' central outfit');
         if(profile==='walk-principal'){
           unchangedRect(original,result,32,frame,1,18,27,22,37,profile+' side jacket');
           unchangedRect(original,result,32,frame,1,17,34,22,37,profile+' lower side jacket');

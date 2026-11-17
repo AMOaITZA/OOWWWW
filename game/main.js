@@ -29,6 +29,7 @@ initWorld(places,decor,momentSpots);
 if(!walkable(Math.round(pair.x),Math.round(pair.y))){pair.x=30;pair.y=25;}
 let path=[],targetPlace=null,lastTime=0,saveClock=0,active=false;
 let viewportScale=2,bottomInset=64;
+let pendingLayout=0;
 const status=text=>{$('world-status').textContent=text;};
 function persist(){
   save.position={x:Math.round(pair.x),y:Math.round(pair.y)};
@@ -176,8 +177,10 @@ function stars(){
 function layout(){
   const frame=$('game-frame'),screen=$('game-screen');
   if(screen.hidden)return;
-  // visualViewport follows mobile browser bars and the software keyboard.
-  screen.style.height=(window.visualViewport?.height??innerHeight)+'px';
+  // Read layout viewport dimensions together. visualViewport can still report
+  // the previous orientation during a resize, producing a permanently tall map.
+  // 100dvh handles browser bars; resize/visualViewport events resample the screen.
+  screen.style.height=innerHeight+'px';
   const bounds=frame.getBoundingClientRect();
   const viewport=worldViewport(bounds.width,bounds.height);
   viewportScale=viewport.scale;
@@ -191,6 +194,14 @@ function layout(){
   bottomInset=Math.max(64,bounds.bottom-footer.top+8);
   draw();overview.repaint();
 }
+function requestLayout(){
+  if(pendingLayout)return;
+  pendingLayout=requestAnimationFrame(()=>{pendingLayout=0;layout();});
+}
+// Mobile rotation can dispatch viewport events before the frame's final layout.
+// Observing the frame catches its settled size even if no further resize fires.
+const frameObserver=new ResizeObserver(requestLayout);
+frameObserver.observe($('game-frame'));
 $('start-game').addEventListener('click',()=>{
   void voice.unlock();
   $('title-screen').hidden=true;$('game-screen').hidden=false;active=true;layout();canvas.focus();persist();status('Toca para caminar');
@@ -229,10 +240,10 @@ window.addEventListener('blur',()=>{pressed.clear();persist();});
 document.addEventListener('visibilitychange',()=>{
   pressed.clear();lastTime=0;
   if(document.hidden)persist();
-  else layout();
+  else requestLayout();
 });
 document.addEventListener('oowwww-dialog-open',()=>{pressed.clear();voice.stop();});
-window.addEventListener('resize',layout);
+window.addEventListener('resize',requestLayout);
 window.addEventListener('pagehide',persist);
 updatePlaceCounter();
 const startButton=$('start-game');
@@ -244,6 +255,6 @@ Promise.allSettled([prepareWorldAssets(),prepareOutfit(save.outfits)]).then(resu
     ?'Puedes entrar. Algunos detalles tardan en estar disponibles.'
     :'Nuestro mundo está listo';
 });
-document.fonts?.ready.then(layout);
-window.visualViewport?.addEventListener('resize',layout);
+document.fonts?.ready.then(requestLayout);
+window.visualViewport?.addEventListener('resize',requestLayout);
 stars();requestAnimationFrame(tick);

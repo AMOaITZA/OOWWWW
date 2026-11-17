@@ -27,7 +27,21 @@ function profileRuns(profile,frame,row){
 export function hairMaskPixel(profile,frame,row,x,y){
   return profileRuns(profile,frame,row).some(([line,left,right])=>y===line&&x>=left&&x<=right);
 }
-// Selective palette rendering preserves the face, clothes and dark ink.
+// Preserve the silhouette ink beside the face/background, but tint dark
+// interior strands as well. Keeping every near-black pixel unchanged left
+// whole black locks inside otherwise blonde or pastel hair.
+const skinPixel=(r,g,b)=>(r===199&&g===135&&b===104)||(r===146&&g===103&&b===89)||(r===211&&g===178&&b===160);
+function contourInk(data,width,height,x,y){
+  for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){
+    if(!dx&&!dy)continue;
+    const nx=x+dx,ny=y+dy;
+    if(nx<0||ny<0||nx>=width||ny>=height)return true;
+    const index=(ny*width+nx)*4;
+    if(!data[index+3]||skinPixel(...data.subarray(index,index+3)))return true;
+  }
+  return false;
+}
+// Selective palette rendering preserves the face, clothes and outline.
 export function recolorHairPixels({data,width,height},profile,color){
   const output=new Uint8ClampedArray(data),palette=palettes[color];
   if(!palette)return output;
@@ -36,9 +50,11 @@ export function recolorHairPixels({data,width,height},profile,color){
     const index=(y*width+x)*4;
     if(!data[index+3]||!hairMaskPixel(profile,Math.floor(x/cellWidth),Math.floor(y/48),x%cellWidth,y%48))continue;
     const r=data[index],g=data[index+1],b=data[index+2],light=Math.max(r,g,b);
-    if(light<=20||light>112||light-Math.min(r,g,b)>48)continue;
-    // Warm face contours belong to skin, even when nearly black.
-    if(r>g&&g>b&&r-b>20)continue;
+    if(light>112||light-Math.min(r,g,b)>48)continue;
+    if(light<=20&&contourInk(data,width,height,x,y))continue;
+    // Warm contours touching skin remain ink; warm interior hair shadows
+    // must follow the selected color, too.
+    if(r>g&&g>b&&r-b>20&&contourInk(data,width,height,x,y))continue;
     const shade=Math.min(4,Math.max(0,Math.floor((light-20)/18)));
     output.set(palette[shade],index);
   }

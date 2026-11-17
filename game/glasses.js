@@ -6,13 +6,14 @@ export function chooseGlasses(outfits,who,enabled){
   if(!outfits[who]||typeof outfits[who]!=='object')outfits[who]={};
   outfits[who].glasses=enabled;return true;
 }
-const skin=(r,g,b)=>(r===199&&g===135&&b===104)||(r===146&&g===103&&b===89);
+const skin=(r,g,b)=>(r===199&&g===135&&b===104)||(r===146&&g===103&&b===89)||(r===211&&g===178&&b===160);
+const faceTone=[199,135,104];
 const isWalk=profile=>profile.startsWith('walk-');
 const isSeated=profile=>profile.startsWith('seat-');
 // Traced eye bands on the native sheets. In particular bridal veil shadows
 // are not skin: they must never expand a face box or stretch an eye patch.
 const walkingBands={
-  itza:{principal:[[8,16,17,6],[19,16,7,6]],alternativo:[[8,16,17,7],[20,17,7,6]],boda:[[7,16,16,6],[20,15,7,6]]},
+  itza:{principal:[[8,16,17,6],[19,16,7,5]],alternativo:[[8,16,17,7],[20,17,7,6]],boda:[[7,16,16,6],[20,15,7,6]]},
   leo:{principal:[[8,17,18,5],[18,16,7,4]],alternativo:[[6,16,21,7],[18,17,8,6]],boda:[[8,16,18,6],[19,16,7,5]]}
 };
 const pairedBands={
@@ -52,26 +53,57 @@ export function eyeRegion(pixels,profile,who,frame,row=0){
     side,mirror:cellWidth===64&&side&&who==='itza',closed:frame===1||['kiss','hug'].includes(profile),cellWidth};
 }
 
-// Each optional eye patch is artwork with natural eyes, not an opaque cover
-// over the head. Only the measured glasses/eye band is restored; alpha, hair,
-// face silhouette and every pixel below the face remain the original pixels.
+// Restore the two lens bands independently. A full face-sized rectangle used
+// to flatten the eyebrows, nose and cheek shading. Eye artwork is now sampled
+// at its native 3×3 pixel size; no head or eye is stretched to fit a face box.
+function lensBands(region){
+  if(region.side)return [{x:region.x,width:region.width}];
+  const width=Math.floor((region.width-3)/2);
+  return [{x:region.x,width},{x:region.x+region.width-width,width}];
+}
+function patchPixel(patches,x,y){
+  const index=(y*patches.width+x)*4;
+  return patches.data.subarray(index,index+3);
+}
 export function removeGlassesPixels(pixels,profile,people,patches){
   const data=new Uint8ClampedArray(pixels.data),cellWidth=isWalk(profile)||isSeated(profile)?32:64;
   const rows=pixels.height/48,columns=pixels.width/cellWidth;
   for(let row=0;row<rows;row++)for(let frame=0;frame<columns;frame++)for(const who of people){
     const region=eyeRegion(pixels,profile,who,frame,row);if(!region)continue;
-    const patchRow=who==='itza'?0:1,patchCol=(region.side?2:0)+(region.closed?1:0);
-    const patchWidth=region.side?8:18,patchX=patchCol*18+(region.side?5:0),patchY=patchRow*8+1;
-    for(let y=0;y<region.height;y++)for(let x=0;x<region.width;x++){
-      const fx=region.x+x,fy=region.y+y;
-      const index=((row*48+fy)*pixels.width+frame*cellWidth+fx)*4;
-      if(!pixels.data[index+3])continue;
-      if(who==='itza'&&hairMaskPixel(profile,frame,row,fx,fy)&&!skin(...pixels.data.subarray(index,index+3)))continue;
-      const sampleX=Math.min(patchWidth-1,Math.floor((x+.5)*patchWidth/region.width));
-      const sx=patchX+(region.mirror?patchWidth-1-sampleX:sampleX);
-      const sy=patchY+Math.min(5,Math.floor((y+.5)*6/region.height));
-      const source=(sy*patches.width+sx)*4;
-      data.set(patches.data.subarray(source,source+3),index);
+    const bands=lensBands(region);
+    const pixelIndex=(x,y)=>((row*48+y)*pixels.width+frame*cellWidth+x)*4;
+    const protectedHair=(x,y,index)=>who==='itza'&&hairMaskPixel(profile,frame,row,x,y)&&!skin(...pixels.data.subarray(index,index+3));
+    for(const band of bands)for(let y=region.y;y<region.y+region.height;y++)for(let x=band.x;x<band.x+band.width;x++){
+      const index=pixelIndex(x,y);
+      if(!pixels.data[index+3]||protectedHair(x,y,index))continue;
+      // Skin-tone quantization also occurs on the original tinted rims.
+      // Their top/bottom rails must be cleared even when a rail equals a
+      // cheek-shadow color; the real brows sit above these lens bands.
+      if(skin(...pixels.data.subarray(index,index+3))&&y!==region.y&&y!==region.y+region.height-1)continue;
+      data.set(faceTone,index);
+    }
+    // Only neutral frame ink can be the bridge. Keep the warm, original
+    // nose shading and every skin pixel between the lenses.
+    if(!region.side)for(let y=region.y;y<region.y+region.height;y++){
+      const [left,right]=bands;
+      for(let x=left.x+left.width;x<right.x;x++){
+        const index=pixelIndex(x,y),[r,g,b,a]=pixels.data.subarray(index,index+4);
+        if(a&&!skin(r,g,b)&&Math.max(r,g,b)<=112&&
+          (y===region.y+region.height-1||(Math.max(r,g,b)-Math.min(r,g,b)<=24&&!(r>g&&g>b&&r-b>20))))data.set(faceTone,index);
+      }
+    }
+    const patchCol=(region.side?2:0)+(region.closed?1:0),patchX=patchCol*18,patchY=(who==='itza'?0:8);
+    for(const [eye,band] of bands.entries()){
+      const eyeX=band.x+Math.floor((band.width-3)/2),eyeY=region.y+(region.side?1:2);
+      const sourceX=region.side?7:eye===0?3:11;
+      const height=region.closed?1:3;
+      for(let y=0;y<height;y++)for(let x=0;x<3;x++){
+        const index=pixelIndex(eyeX+x,eyeY+y);
+        if(!pixels.data[index+3]||protectedHair(eyeX+x,eyeY+y,index))continue;
+        const sx=patchX+sourceX+(region.mirror?2-x:x);
+        const sy=patchY+(region.closed?3:2)+y;
+        data.set(patchPixel(patches,sx,sy),index);
+      }
     }
   }
   return data;

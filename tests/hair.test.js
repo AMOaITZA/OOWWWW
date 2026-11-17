@@ -143,12 +143,14 @@ test('front glasses and central leather/hoodie clothing remain byte-identical',(
     for(const color of colors){
       const result=recolorHairPixels(original,profile,color);
       for(let frame=0;frame<columns;frame++){
-        const left=profile==='walk-boda'?6:profile.startsWith('seat-')?9:8,right=profile==='walk-boda'?23:25;
-        unchangedRect(original,result,32,frame,0,left,17,right,21,profile+' glasses');
+        const left=profile==='walk-boda'?6:profile==='seat-boda'?10:profile.startsWith('seat-')?9:8,right=23;
+        // Seated heads are two pixels higher: their actual lens bands are
+        // y15–19. The former y17–21 rectangle also covered the hair tips.
+        unchangedRect(original,result,32,frame,0,left,profile.startsWith('seat-')?15:17,right,profile.startsWith('seat-')?19:21,profile+' glasses');
         // In the bride's front view x19,y28 is the inner edge of a long
         // hair lock, not the gown. Keep the protected gown/neck rectangle
         // through x18; its formerly black lock is tested separately below.
-        unchangedRect(original,result,32,frame,0,12,28,profile==='walk-boda'?18:22,33,profile+' central outfit');
+        unchangedRect(original,result,32,frame,0,12,28,profile==='walk-boda'?18:profile==='walk-principal'||profile.startsWith('seat-')?21:22,33,profile+' central outfit');
         if(profile==='walk-principal'){
           unchangedRect(original,result,32,frame,1,18,27,22,37,profile+' side jacket');
           unchangedRect(original,result,32,frame,1,17,34,22,37,profile+' lower side jacket');

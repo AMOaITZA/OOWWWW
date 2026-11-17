@@ -41,7 +41,7 @@ export function closestMoment(spots,x,y,maxDistance=4){
   },null)?.spot??null;
 }
 
-export function createMoments({spots,pair,getImage,bubble,getOutfits=()=>({}),getSeatedImage=()=>null}){
+export function createMoments({spots,pair,getImage,bubble,getOutfits=()=>({}),getSeatedImage=()=>null,onSay=()=>{}}){
   const cats=spots.find(spot=>spot.kind==='cats');
   let sitting=null,seatTransition=null,petRemaining=0,phraseRemaining=0;
   function seatedPose(spot){
@@ -70,6 +70,7 @@ export function createMoments({spots,pair,getImage,bubble,getOutfits=()=>({}),ge
   let nextPhrase=12+Math.random()*12;
   let lastPhrase=-1;
   function say(line){
+    onSay(line);
     bubble.textContent='Leo: '+line;
     bubble.hidden=false;
     phraseRemaining=line.length>65?9:6;

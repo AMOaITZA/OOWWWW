@@ -15,7 +15,8 @@ export function mount(root,_data,api){
   const reply=node('p','secret-reply');reply.setAttribute('role','status');reply.setAttribute('aria-live','polite');
   const replyAgain=labeledButton('Otra vez, Leo',()=>{
     const question=SECRET_QUESTIONS[state.index];
-    if(question&&state.choices[state.index])api.onLeoSay?.(question.reply);
+    if(state.index===SECRET_QUESTIONS.length)api.onLeoSay?.(SECRET_ENDING);
+    else if(question&&state.choices[state.index])api.onLeoSay?.(question.reply);
   },'secret-button secret-repeat');
   const controls=node('div','secret-controls');
   const previous=labeledButton('Anterior',()=>navigate(-1),'secret-button');
@@ -59,7 +60,7 @@ export function mount(root,_data,api){
     const answered=!ended&&Boolean(state.choices[state.index]);
     reply.hidden=!ended&&!answered;
     reply.textContent=ended?'Leo: '+SECRET_ENDING:answered?'Leo: '+question.reply:'';
-    replyAgain.hidden=!answered;previous.disabled=state.index===0;previous.hidden=ended;
+    replyAgain.hidden=!answered&&!ended;previous.disabled=state.index===0;
     next.disabled=!answered;next.hidden=ended;next.textContent=state.index===SECRET_QUESTIONS.length-1?'Guardar este secreto':'Siguiente';
     restart.hidden=!ended;
   }

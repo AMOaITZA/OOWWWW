@@ -58,12 +58,18 @@ test('rerouting mid-step rejoins the grid before turning around an obstacle',()=
 });
 
 
-test('the castle entrance keeps both characters clear of the foreground tree',()=>{
+test('the castle entrance keeps both characters clear of the enlarged foreground tree',async()=>{
+  const {treeWorldBounds}=await import('../game/tree-layout.js');
+  const {PNG}=await import('pngjs');
+  const manifest=read('game/data/assets.json');
   const entrance=places.find(place=>place.id==='boda').arrival;
   const pairBox={left:entrance[0]*16-32,right:entrance[0]*16+32,
     top:entrance[1]*16-46,bottom:entrance[1]*16+2};
   for(const tree of decor.filter(item=>item.kind==='tree'&&item.tile[1]>=entrance[1])){
-    const left=tree.tile[0]*16-32,right=left+64,top=tree.tile[1]*16-110,bottom=top+112;
+    const url=manifest.objects[tree.species?'tree-'+tree.species:'tree'];
+    const image=PNG.sync.read(readFileSync(new URL('..'+url,import.meta.url)));
+    const bounds=treeWorldBounds(tree,image);
+    const left=bounds.x,right=left+bounds.width,top=bounds.y,bottom=top+bounds.height;
     const overlap=Math.max(0,Math.min(pairBox.right,right)-Math.max(pairBox.left,left))*
       Math.max(0,Math.min(pairBox.bottom,bottom)-Math.max(pairBox.top,top));
     assert.equal(overlap,0,'Foreground trees must not hide Itza or Leo at the entrance');

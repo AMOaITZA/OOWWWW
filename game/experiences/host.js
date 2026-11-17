@@ -10,8 +10,11 @@ import * as places from './lugares.js';
 import * as ending from './final.js';
 import * as wardrobe from './armario.js';
 import * as boda from './boda.js';
+import * as secreto from './secreto.js';
+import * as grabadora from './grabadora.js';
 import {activateDialog} from '../dialog.js';
-const modules={inicio:intro,carta:letter,galeria:gallery,razones:reasons,playlist,recuerdos:tv,contador:counter,lugares:places,final:ending,armario:wardrobe,boda};
+const modules={inicio:intro,carta:letter,galeria:gallery,razones:reasons,playlist,recuerdos:tv,contador:counter,lugares:places,final:ending,armario:wardrobe,boda,secreto,grabadora};
+const extraContent={secreto:{title:'Nuestro rinconcito secreto',eyebrow:'Solo tú y yo'},grabadora:{title:'La grabadora de Leo',eyebrow:'Mi voz para ti'}};
 export function createHost(api){
   const panel=document.getElementById('experience');
   const body=document.getElementById('experience-content');
@@ -27,7 +30,7 @@ export function createHost(api){
     if(!modules[id])return;
     if(!panel.hidden)close();
     body.replaceChildren();
-    const data=content[id]||{};
+    const data=content[id]||extraContent[id]||{};
     title.textContent=data.title||id;
     category.textContent=data.eyebrow||'Nuestro pequeño mundo';
     cleanup=modules[id].mount(body,data,api)||(()=>{});

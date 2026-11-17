@@ -32,7 +32,7 @@ for(const who of ['leo','itza'])for(const look of ['principal','alternativo','bo
   if(!url)errors.push('Falta la pose sentada de '+who+'/'+look);
   else add(url,{size:[64,48],frame:[32,48],character:true,generated:true,maxColors:128});
 }
-const architectureIds=['inicio','carta','galeria','razones','playlist','recuerdos','contador','lugares','final','armario'];
+const architectureIds=['inicio','carta','galeria','razones','playlist','recuerdos','contador','lugares','final','armario','secreto','grabadora'];
 for(const id of architectureIds){
   const url=manifest.architecture?.[id];
   if(!url)errors.push('Falta la arquitectura de '+id);

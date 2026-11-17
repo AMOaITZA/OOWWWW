@@ -118,8 +118,9 @@ test('every destination has a distinct complete architectural image',()=>{
     assert.ok(box.x0>0&&box.x1<159&&box.y0>0&&box.y1<127,place.id+' no debe recortar tejados o escalones');
     hashes.push(hash(image.data));
   }
-  assert.equal(hashes.length,10);
-  assert.equal(new Set(hashes).size,10,'Los diez destinos no deben compartir la misma fachada');
+  const count=places.filter(place=>place.kind!=='wedding').length;
+  assert.equal(hashes.length,count);
+  assert.equal(new Set(hashes).size,count,'Cada destino conserva una arquitectura distinta');
 });
 
 test('the new village terrain is a full opaque world layer',()=>{

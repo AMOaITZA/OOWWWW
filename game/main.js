@@ -14,6 +14,8 @@ import {createMusicPlayer} from './music.js';
 import {createMoments} from './moments.js';
 import {weddingImage} from './wedding-assets.js';
 import {createDayNight} from './day-night.js';
+import {createLeoVoice} from './leo-voice.js';
+import {placeProgress} from './place-discovery.js';
 
 const $=id=>document.getElementById(id);
 const canvas=$('world'),ctx=canvas.getContext('2d',{alpha:false});
@@ -21,7 +23,7 @@ ctx.imageSmoothingEnabled=false;
 const save=loadSave();save.outfits??={leo:{},itza:{}};
 const pair=createPair(save);
 const moments=createMoments({spots:momentSpots,pair,getImage:momentImage,bubble:$('leo-bubble'),
-  getOutfits:()=>save.outfits,getSeatedImage:(who,look)=>seatedImage(who,look,save.outfits)});
+  getOutfits:()=>save.outfits,getSeatedImage:(who,look)=>seatedImage(who,look,save.outfits),onSay:line=>voice.speak(line)});
 initWorld(places,decor,momentSpots);
 if(!walkable(Math.round(pair.x),Math.round(pair.y))){pair.x=30;pair.y=25;}
 let path=[],targetPlace=null,lastTime=0,saveClock=0,active=false;
@@ -30,6 +32,12 @@ function persist(){
   save.position={x:Math.round(pair.x),y:Math.round(pair.y)};
   save.direction=pair.direction;writeSave(save);
 }
+function updatePlaceCounter(){
+  const progress=placeProgress(places,save);
+  $('place-counter').textContent=progress.visited+' / '+progress.total+' lugares visitados';
+}
+const voice=createLeoVoice({saved:save.leoVoice,onChange:state=>{save.leoVoice=state;persist();}});
+save.leoVoice=voice.getState();voice.mount($('music-dock'));
 const lighting=createDayNight({saved:save.dayNight,onChange:state=>{save.dayNight=state;persist();}});
 save.dayNight=lighting.getState();
 lighting.mount(document.querySelector('.game-header'));
@@ -38,6 +46,8 @@ const host=createHost({
   save,assetImage,getWeddingImage:key=>weddingCharacterImage(key,save.outfits),
   onMusicSelect:videoId=>{if(music.select(videoId))host.close();},
   onOutfitChange:()=>{persist();return prepareOutfit(save.outfits);},
+  onProgressChange:persist,onLeoSay:line=>voice.speak(line),
+  onVoiceNotePlay:()=>{$('music-audio').pause();voice.stop();},
   onClose:()=>{status('Explora nuestro mundo');persist();}
 });
 function goTo(x,y,place=null){
@@ -56,7 +66,7 @@ function goTo(x,y,place=null){
 }
 function openPlace(place){
   path=[];targetPlace=place;pair.moving=false;host.open(place.id);
-  if(!save.visited.includes(place.id)){save.visited.push(place.id);$('place-counter').textContent=save.visited.length+' / '+places.length+' lugares visitados';}
+  if(!save.visited.includes(place.id)){save.visited.push(place.id);updatePlaceCounter();}
   persist();
 }
 function cameraAt(){
@@ -122,7 +132,8 @@ function step(dt){
     }else{pair.x+=dx/dist*speed;pair.y+=dy/dist*speed;}
   }
 }
-const objects=sceneObjects(places,decor,objectImage,momentImage,weddingImage,()=>false,placeImage);
+const objects=sceneObjects(places,decor,objectImage,momentImage,weddingImage,()=>false,placeImage,
+  place=>!place.hidden||save.visited.includes(place.id));
 function draw(){
   if(!active)return;
   const camera=cameraAt();
@@ -177,12 +188,15 @@ function layout(){
   frame.style.height=270*scale+borderY+'px';
 }
 $('start-game').addEventListener('click',()=>{
+  void voice.unlock();
   $('title-screen').hidden=true;$('game-screen').hidden=false;active=true;layout();canvas.focus();persist();status('Toca para caminar');
 });
 $('help-button').addEventListener('click',()=>{
   host.help();
 });
 canvas.addEventListener('pointerdown',pointClick);
+window.addEventListener('pointerdown',()=>{if(active)void voice.unlock();},{capture:true,passive:true});
+window.addEventListener('keydown',()=>{if(active)void voice.unlock();},{capture:true});
 window.addEventListener('keydown',event=>{
   if(event.defaultPrevented)return;
   const interactive=event.target?.closest?.('input,textarea,select,button,a,[contenteditable="true"]');
@@ -208,10 +222,10 @@ window.addEventListener('keydown',event=>{
 });
 window.addEventListener('keyup',event=>pressed.delete(event.key.toLowerCase()));
 window.addEventListener('blur',()=>{pressed.clear();persist();});
-document.addEventListener('oowwww-dialog-open',()=>pressed.clear());
+document.addEventListener('oowwww-dialog-open',()=>{pressed.clear();voice.stop();});
 window.addEventListener('resize',layout);
 window.addEventListener('pagehide',persist);
-$('place-counter').textContent=save.visited.length+' / '+places.length+' lugares visitados';
+updatePlaceCounter();
 const startButton=$('start-game');
 startButton.disabled=true;startButton.textContent='Cargando…';
 Promise.allSettled([prepareWorldAssets(),prepareOutfit(save.outfits)]).then(results=>{

@@ -1,5 +1,5 @@
 {
-  "version": 8,
+  "version": 9,
   "description": "Cabello de Itza en negro, café, rosa pastel y rubio claro; árboles variados y mundo con día/noche.",
   "world": {
     "ground": "/assets/game/world/ground-v4.png"
@@ -104,7 +104,9 @@
     "contador": "/assets/game/architecture/contador.png",
     "lugares": "/assets/game/architecture/lugares.png",
     "final": "/assets/game/architecture/final.png",
-    "armario": "/assets/game/architecture/armario.png"
+    "armario": "/assets/game/architecture/armario.png",
+    "secreto": "/assets/game/architecture/secreto.png",
+    "grabadora": "/assets/game/architecture/grabadora.png"
   },
   "seated": {
     "leo": {

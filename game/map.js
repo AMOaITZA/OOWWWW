@@ -1,5 +1,6 @@
 import {WIDTH,HEIGHT,walkable} from './world.js';
 import {activateDialog} from './dialog.js';
+import {visiblePlaces} from './place-discovery.js';
 const STEP=3;
 const palette={grass:'#94B77B',grassShade:'#8BAE74',road:'#D8C69A',water:'#6D9BAC',accent:'#B5656F',ink:'#1B120E',cream:'#FFF1DC',visited:'#F2C46D'};
 export function createMap({places,decor,moments=[],pair,save,onNavigate}){
@@ -25,7 +26,7 @@ export function createMap({places,decor,moments=[],pair,save,onNavigate}){
   function repaint(){
     if(panel.hidden)return;
     ctx.drawImage(background,0,0);
-    for(const place of places){
+    for(const place of visiblePlaces(places,save)){
       const x=place.tile[0]*STEP,y=place.tile[1]*STEP;
       ctx.fillStyle=save.visited.includes(place.id)?palette.visited:palette.accent;
       ctx.fillRect(x-4,y-4,9,9);
@@ -59,7 +60,7 @@ export function createMap({places,decor,moments=[],pair,save,onNavigate}){
   function open(){
     if(!panel.hidden)return;
     destinations.replaceChildren();
-    for(const place of places){
+    for(const place of visiblePlaces(places,save)){
       const button=document.createElement('button');
       button.type='button';button.className='map-destination';button.textContent=place.name;
       if(save.visited.includes(place.id))button.classList.add('visited');
@@ -86,7 +87,7 @@ export function createMap({places,decor,moments=[],pair,save,onNavigate}){
       return dist<3.8&&(!best||dist<best.dist)?{p,dist}:best;
     },null)?.p;
     if(spot){navigate(...spot.arrival,spot);return;}
-    const place=places.reduce((best,p)=>{
+    const place=visiblePlaces(places,save).reduce((best,p)=>{
       const dist=Math.hypot(p.tile[0]-x,p.tile[1]-y);
       return dist<7&&(!best||dist<best.dist)?{p,dist}:best;
     },null)?.p;

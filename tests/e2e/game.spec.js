@@ -136,7 +136,7 @@ test('overview navigates without teleporting and can be closed',async({page})=>{
   await page.locator('#start-game').click();
   await page.locator('#map-button').click();
   await expect(page.locator('#map-panel')).toBeVisible();
-  await expect(page.locator('#map-destinations button')).toHaveCount(14);
+  await expect(page.locator('#map-destinations button')).toHaveCount(places.filter(place=>!place.hidden).length+3);
   const original=await page.evaluate(()=>JSON.parse(localStorage.getItem('oowwww-game-v1')).position);
   await page.getByRole('button',{name:'Carta',exact:true}).click();
   await expect(page.locator('#map-panel')).toBeHidden();
@@ -160,7 +160,7 @@ test('touchscreen portrait navigates and shows responsive game',async({browser})
     expect(overflow).toBeLessThanOrEqual(3);
     await page.locator('#map-button').tap();
     await expect(page.locator('#map-panel')).toBeVisible();
-    await expect(page.locator('#map-destinations button')).toHaveCount(14);
+    await expect(page.locator('#map-destinations button')).toHaveCount(places.filter(place=>!place.hidden).length+3);
     await page.locator('#close-map').tap();
     await expect(page.locator('#map-panel')).toBeHidden();
     await page.locator('#help-button').tap();
@@ -236,7 +236,7 @@ test('cats can be petted and show sparkles state, bench can be used and exited',
   await expect(page.locator('#world-status')).toContainText('Acariciando a los gatitos');
   await expect(page.locator('#leo-bubble')).toBeVisible();
   await page.locator('#map-button').click();
-  await expect(page.locator('#map-destinations button')).toHaveCount(14);
+  await expect(page.locator('#map-destinations button')).toHaveCount(places.filter(place=>!place.hidden).length+3);
   await expect(page.getByRole('button',{name:'Gatitos · Acariciar'})).toBeVisible();
   await expect(page.getByRole('button',{name:/Banca · Banca del jardín/})).toBeVisible();
   await page.locator('#close-map').click();

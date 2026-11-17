@@ -61,11 +61,11 @@ for(const leo of looks)for(const itza of looks){
   });
 }
 
-test('all ten complete destination buildings load and render without the repeated roof overlay',async({page})=>{
+test('all complete destination buildings load and render without the repeated roof overlay',async({page})=>{
   const responses=[];page.on('response',response=>{if(response.url().includes('/assets/game/architecture/'))responses.push({path:new URL(response.url()).pathname,status:response.status()});});
   await enter(page,{position:{x:30,y:22}});
-  await expect.poll(()=>page.evaluate(()=>new Set(window.__worldArtDraws.filter(draw=>draw.src.includes('/architecture/')).map(draw=>draw.src)).size)).toBe(10);
-  expect(new Set(responses.filter(response=>response.status===200).map(response=>response.path)).size).toBe(10);
+  await expect.poll(()=>page.evaluate(()=>new Set(window.__worldArtDraws.filter(draw=>draw.src.includes('/architecture/')).map(draw=>draw.src)).size)).toBe(12);
+  expect(new Set(responses.filter(response=>response.status===200).map(response=>response.path)).size).toBe(12);
   expect(responses.filter(response=>response.status>=400)).toEqual([]);
   expect(await page.evaluate(()=>window.__worldArtDraws.filter(draw=>draw.src.includes('/objects/roof.png')))).toEqual([]);
   await page.keyboard.press('e');

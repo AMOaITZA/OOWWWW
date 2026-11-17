@@ -4,6 +4,7 @@ import {drawWeddingCastle,weddingImage as loadedWeddingImage} from './wedding-as
 import {castleWorldBounds} from './castle-layout.js';
 import {placeWorldBounds} from './place-layout.js';
 import {createVillagePathLayer} from './village-paths.js';
+import {treeDrawGeometry} from './tree-layout.js';
 const imageMasks=new WeakMap();
 function opaqueImageHit(image,bounds,x,y){
   const width=image.naturalWidth||image.width,height=image.naturalHeight||image.height;
@@ -77,7 +78,8 @@ function drawWorldObject(ctx, obj, image) {
 
   if (image) {
     if (obj.kind === 'tree') {
-      ctx.drawImage(image, x - 32, y - 110, 64, 112);
+      const b=treeDrawGeometry(obj,image);
+      ctx.drawImage(image,b.x,b.y,b.width,b.height);
     } else if (obj.kind === 'bench') {
       drawBench(ctx,image,x,y+1);
     } else if (obj.kind === 'lamp') {
@@ -158,9 +160,10 @@ function architectureGarden(ctx,obj){
     }
   }
 }
-function completeArchitecture(ctx,obj,image){
+function completeArchitecture(ctx,obj,image,showLabel=true){
   const b=placeWorldBounds(obj);
   ctx.drawImage(image,b.x,b.y,b.width,b.height);
+  if(!showLabel)return;
   // Small cream nameplates remain above the complete roof; the approach
   // camera creates room without adding an opaque bar across the artwork.
   const title=obj.name.length>24?obj.name.slice(0,23)+'…':obj.name;
@@ -186,7 +189,7 @@ function placeOverlays(ctx,obj,roofImage,awningImage){
   ctx.fillStyle='#2E1F18';ctx.fillRect(ax*TILE-5,ay*TILE-5,10,10);
   ctx.fillStyle='#F2C46D';ctx.fillRect(ax*TILE-3,ay*TILE-3,6,6);
 }
-export function sceneObjects(places,decor,objectImage,momentImage=()=>null,weddingImage=()=>null,hideBench=()=>false,placeImage=()=>null){
+export function sceneObjects(places,decor,objectImage,momentImage=()=>null,weddingImage=()=>null,hideBench=()=>false,placeImage=()=>null,showPlaceLabel=place=>!place.hidden){
   const paths=createVillagePathLayer(places);
   return [
     ...(paths?[{z:-1,draw:ctx=>paths.draw(ctx)}]:[]),
@@ -207,7 +210,7 @@ export function sceneObjects(places,decor,objectImage,momentImage=()=>null,weddi
         {z:0,draw(ctx){if(placeImage(obj.id))architectureGarden(ctx,obj);}},
         {z:obj.tile[1]*TILE+24,draw(ctx){
           const image=placeImage(obj.id);
-          if(image)completeArchitecture(ctx,obj,image);
+          if(image)completeArchitecture(ctx,obj,image,showPlaceLabel(obj));
           else{placeBase(ctx,obj,objectImage(obj.kind));placeOverlays(ctx,obj,objectImage('roof'),objectImage('awning'));}
         }}
       ]),

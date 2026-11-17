@@ -152,5 +152,34 @@
       54
     ],
     "classic": null
+  },
+  {
+    "id": "secreto",
+    "name": "Nuestro rinconcito secreto",
+    "kind": "secret",
+    "tile": [
+      12,
+      16
+    ],
+    "arrival": [
+      12,
+      20
+    ],
+    "classic": null,
+    "hidden": true
+  },
+  {
+    "id": "grabadora",
+    "name": "La grabadora de Leo",
+    "kind": "recorder",
+    "tile": [
+      98,
+      19
+    ],
+    "arrival": [
+      98,
+      23
+    ],
+    "classic": null
   }
 ]

@@ -1,0 +1,13 @@
+{
+  "generator": "image_gen.imagegen",
+  "source": "exec-81404f0e-dfce-449a-ad6c-61ff5a6a0f24.png",
+  "sourceSha256": "7bf478fbaf55e6693622a40caba677ec32ccd0ff044a15c58548e6b5f18c6b7a",
+  "packer": "scripts/prepare-eyes-v6.mjs",
+  "path": "assets/game/appearance/eyes-without-glasses.png",
+  "size": [
+    72,
+    16
+  ],
+  "sha256": "43620d10e2be4e797939d4b2dc447b99a687a9ea0901abbfe0c90441897b603e",
+  "note": "Eight eye patches from generated heads: Itza and Leo, front/profile, open/blink. Original character sheets remain intact."
+}

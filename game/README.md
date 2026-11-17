@@ -8,9 +8,10 @@ n.º 1. No se fusiona con `main` sin aprobación explícita.
 
 - Mundo de 120 × 80 casillas (16 píxeles por casilla), cámara de 480 × 270,
   paseo por teclado, ratón y pantalla táctil, con búsqueda de rutas A*.
-- Once lugares: las nueve experiencias clásicas, armario y **Castillo de nuestra boda**.
+- Trece lugares: las nueve experiencias clásicas, armario, **Castillo de nuestra boda**,
+  **Nuestro rinconcito secreto** y **La grabadora de Leo**.
   Además, tres puntos interactivos: una pareja de gatitos y dos bancas.
-  El mapa muestra **14 destinos**.
+  El rincón secreto aparece en el mapa después de visitarlo por primera vez.
 - Itza y Leo conservan sus atuendos seleccionados y la posición guardada.
   El armario conserva tres identificadores: original, alternativa y boda.
   Los tres conjuntos ya tienen recursos reales y están disponibles para ambos
@@ -186,3 +187,20 @@ inicia un nuevo día. El estado se conserva al recargar.
 
 Consulta [personalización V5](../docs/CUSTOMIZATION-V5.md) y
 [pruebas y capturas](../docs/QA-CUSTOMIZATION-V5.md).
+
+## Ampliación V6
+
+Los mechones de perfil de Itza conservan ahora el color elegido en los tres
+conjuntos. En Armario puedes elegir **Con lentes / Sin lentes** para Itza y Leo
+por separado. Los árboles se dibujan al doble del tamaño nativo de sus PNG.
+
+Leo tiene una vocecita sintética «mimimimi» que acompaña sus frases. El botón
+**Voz: sí/no** está dentro de Música y conserva la preferencia. El rincón
+escondido tiene ocho preguntas cariñosas, con progreso guardado.
+
+La grabadora está preparada para tus mensajes personales. Coloca MP3 en
+`assets/game/voice-notes/`, con nombres `mensaje-01.mp3`, `mensaje-02.mp3`, etc.
+No hay que editar código ni JSON. Reinicia Vite después de añadirlos.
+Consulta las [instrucciones de audios](../docs/VOICE-NOTES.md),
+la [ampliación V6](../docs/EXPANSION-V6.md) y sus
+[pruebas y capturas](../docs/QA-EXPANSION-V6.md).

@@ -49,8 +49,10 @@ export function createHost(api){
     const p=document.createElement('p');
     p.textContent='Toca o haz clic en el suelo para caminar. Toca una casa para acercarte y vuelve a tocarla para abrir su experiencia. En computadora también puedes usar las flechas o WASD, y E cerca de una entrada para abrirla. El armario permite cambiar los conjuntos, incluidos el traje y el vestido de boda. En el mapa general encontrarás el Castillo de nuestra boda: camina hasta su puerta y toca de nuevo el edificio para entrar a la ceremonia. Allí puedes decir «Sí, quiero», avanzar por seis escenas o reproducir la historia seguida. También encontrarás Los gatitos y dos bancas: tócalos o pulsa E cerca para acariciar o sentarte. Pulsa E otra vez o camina para levantarte.';
     const customization=document.createElement('p');
-    customization.textContent='En el armario, selecciona a Itza para elegir su cabello negro, café, rosa pastel o rubio claro. El color se guarda y se conserva con sus conjuntos y al sentarse. Arriba del mundo puedes elegir Día, Noche o Automático. Las opciones manuales se mantienen; Automático comienza de día y alterna cinco minutos de día y cinco de noche.';
-    body.append(p,customization);show();
+    customization.textContent='En el armario puedes poner o quitar los lentes de cada personaje y elegir el cabello negro, café, rosa pastel o rubio claro de Itza. Se conserva con sus conjuntos y al sentarse. Arriba del mundo puedes elegir Día, Noche o Automático. Las opciones manuales se mantienen; Automático alterna cinco minutos de día y cinco de noche.';
+    const discoveries=document.createElement('p');
+    discoveries.textContent='Explora el bosque: hay un rinconcito que solo aparece en el mapa después de descubrirlo. Allí Leo tiene unas preguntas para ti. La grabadora de Leo guarda mensajes de voz para escuchar cuando quieras. En Música puedes activar o silenciar la vocecita que acompaña sus frases.';
+    body.append(p,customization,discoveries);show();
   }
   closeButton.addEventListener('click',close);
   panel.addEventListener('click',event=>{if(event.target===panel)close();});

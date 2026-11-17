@@ -204,3 +204,15 @@ No hay que editar código ni JSON. Reinicia Vite después de añadirlos.
 Consulta las [instrucciones de audios](../docs/VOICE-NOTES.md),
 la [ampliación V6](../docs/EXPANSION-V6.md) y sus
 [pruebas y capturas](../docs/QA-EXPANSION-V6.md).
+
+## Ventanas ilustradas V7
+
+Las trece experiencias tienen ahora una cabecera ilustrada y un interior
+propio: carta en papel cálido, álbum de polaroids, tarjetas de razones,
+tocadiscos, televisión CRT, reloj, postales y probador, entre otros. El cierre
+permanece visible y al reabrir se vuelve al inicio del contenido.
+
+También se corrigen los mechones de novia de frente y bajo el velo por detrás,
+con y sin lentes. Textos, fotos, canciones, recuerdos y partidas se conservan.
+Consulta [ventanas V7](../docs/EXPERIENCES-V7.md) y
+[pruebas y las trece vistas](../docs/QA-EXPERIENCES-V7.md).

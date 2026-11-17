@@ -64,6 +64,27 @@ test('pastel pink and light blonde use bright midtones while retaining ink shado
     assert.ok(brightness.at(-1)>=210,color+' has pale highlights');
   }
 });
+test('the side locks beside the cheek and shoulder recolor in every walking frame',()=>{
+  // These coordinates are traced on the source sprites, including the exact
+  // formerly black strips in the user's alternate and wedding side views.
+  const locks=[
+    ['walk-principal',walking[0][1],[[17,18],[17,24],[17,29]]],
+    ['walk-alternativo',walking[1][1],[[18,14],[17,19],[17,22],[18,27]]],
+    ['walk-boda',walking[2][1],[[17,20],[18,23],[18,25]]]
+  ];
+  for(const [profile,path,points] of locks){
+    const original=png(path);
+    for(const color of colors){
+      const result=recolorHairPixels(original,profile,color);
+      for(let frame=0;frame<6;frame++)for(const [x,y] of points){
+        const index=((48+y)*original.width+frame*32+x)*4;
+        assert.equal(original.data[index+3],255,'The regression point must be visible hair');
+        assert.notDeepEqual([...result.subarray(index,index+3)],
+          [...original.data.subarray(index,index+3)],`${profile} ${frame}/${x},${y} ${color}`);
+      }
+    }
+  }
+});
 test('hair color preserves alpha, skin reference and all lower boots/trousers pixels',()=>{
   const skin=new Set(['199,135,104','146,103,89','211,178,160']);
   for(const [profile,path] of [...walking,...sitting,...ceremony]){
@@ -88,7 +109,15 @@ test('front glasses and central leather/hoodie clothing remain byte-identical',(
         const left=profile==='walk-boda'?6:profile.startsWith('seat-')?9:8,right=profile==='walk-boda'?23:25;
         unchangedRect(original,result,32,frame,0,left,17,right,21,profile+' glasses');
         unchangedRect(original,result,32,frame,0,12,28,profile==='walk-boda'?19:22,33,profile+' central outfit');
-        if(profile==='walk-principal'||profile==='walk-alternativo')unchangedRect(original,result,32,frame,1,17,27,22,37,profile+' side jacket');
+        if(profile==='walk-principal'){
+          unchangedRect(original,result,32,frame,1,18,27,22,37,profile+' side jacket');
+          unchangedRect(original,result,32,frame,1,17,34,22,37,profile+' lower side jacket');
+        }
+        if(profile==='walk-alternativo'){
+          unchangedRect(original,result,32,frame,1,20,27,22,37,profile+' side jacket');
+          unchangedRect(original,result,32,frame,1,17,30,22,37,profile+' lower side jacket');
+          unchangedRect(original,result,32,frame,1,13,27,16,34,profile+' rear hoodie');
+        }
       }
     }
   }
@@ -98,7 +127,10 @@ test('alternate cap fabric remains original black',()=>{
     const original=png(path),columns=original.width/32;
     for(const color of colors){
       const result=recolorHairPixels(original,profile,color);
-      for(let frame=0;frame<columns;frame++)unchangedRect(original,result,32,frame,0,10,0,23,10,'cap crown');
+      for(let frame=0;frame<columns;frame++){
+        unchangedRect(original,result,32,frame,0,10,0,23,10,'cap crown');
+        if(profile==='walk-alternativo')unchangedRect(original,result,32,frame,1,3,15,9,19,'projecting cap bill');
+      }
     }
   }
 });

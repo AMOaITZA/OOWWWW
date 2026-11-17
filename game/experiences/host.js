@@ -45,7 +45,9 @@ export function createHost(api){
     title.textContent='Cómo jugar';category.textContent='Controles';
     const p=document.createElement('p');
     p.textContent='Toca o haz clic en el suelo para caminar. Toca una casa para acercarte y vuelve a tocarla para abrir su experiencia. En computadora también puedes usar las flechas o WASD, y E cerca de una entrada para abrirla. El armario permite cambiar los conjuntos, incluidos el traje y el vestido de boda. En el mapa general encontrarás el Castillo de nuestra boda: camina hasta su puerta y toca de nuevo el edificio para entrar a la ceremonia. Allí puedes decir «Sí, quiero», avanzar por seis escenas o reproducir la historia seguida. También encontrarás Los gatitos y dos bancas: tócalos o pulsa E cerca para acariciar o sentarte. Pulsa E otra vez o camina para levantarte.';
-    body.append(p);show();
+    const customization=document.createElement('p');
+    customization.textContent='En el armario, selecciona a Itza para elegir su cabello negro, café, rosa pastel o rubio claro. El color se guarda y se conserva con sus conjuntos y al sentarse. Arriba del mundo puedes elegir Día, Noche o Automático. Las opciones manuales se mantienen; Automático comienza de día y alterna cinco minutos de día y cinco de noche.';
+    body.append(p,customization);show();
   }
   closeButton.addEventListener('click',close);
   panel.addEventListener('click',event=>{if(event.target===panel)close();});

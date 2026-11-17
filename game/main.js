@@ -7,12 +7,13 @@ import {TILE,WIDTH,HEIGHT,initWorld,walkable,closestWalkable,findPath,groundTile
 import {createPair,drawPair,advancePairAnimation} from './pair.js';
 import {nearestPlace,sceneObjects} from './places.js';
 import {loadSave,writeSave} from './save.js';
-import {assetImage,prepareWorldAssets,prepareOutfit,groundImage,objectImage,momentImage,seatedImage,placeImage} from './assets.js';
+import {assetImage,outfitImage,weddingCharacterImage,prepareWorldAssets,prepareOutfit,groundImage,objectImage,momentImage,seatedImage,placeImage} from './assets.js';
 import {createHost} from './experiences/host.js';
 import {createMap} from './map.js';
 import {createMusicPlayer} from './music.js';
 import {createMoments} from './moments.js';
 import {weddingImage} from './wedding-assets.js';
+import {createDayNight} from './day-night.js';
 
 const $=id=>document.getElementById(id);
 const canvas=$('world'),ctx=canvas.getContext('2d',{alpha:false});
@@ -20,7 +21,7 @@ ctx.imageSmoothingEnabled=false;
 const save=loadSave();save.outfits??={leo:{},itza:{}};
 const pair=createPair(save);
 const moments=createMoments({spots:momentSpots,pair,getImage:momentImage,bubble:$('leo-bubble'),
-  getOutfits:()=>save.outfits,getSeatedImage:seatedImage});
+  getOutfits:()=>save.outfits,getSeatedImage:(who,look)=>seatedImage(who,look,save.outfits)});
 initWorld(places,decor,momentSpots);
 if(!walkable(Math.round(pair.x),Math.round(pair.y))){pair.x=30;pair.y=25;}
 let path=[],targetPlace=null,lastTime=0,saveClock=0,active=false;
@@ -29,9 +30,12 @@ function persist(){
   save.position={x:Math.round(pair.x),y:Math.round(pair.y)};
   save.direction=pair.direction;writeSave(save);
 }
+const lighting=createDayNight({saved:save.dayNight,onChange:state=>{save.dayNight=state;persist();}});
+save.dayNight=lighting.getState();
+lighting.mount(document.querySelector('.game-header'));
 const music=createMusicPlayer({openPlaylist:()=>host.open('playlist')});
 const host=createHost({
-  save,assetImage,getWeddingImage:weddingImage,
+  save,assetImage,getWeddingImage:key=>weddingCharacterImage(key,save.outfits),
   onMusicSelect:videoId=>{if(music.select(videoId))host.close();},
   onOutfitChange:()=>{persist();return prepareOutfit(save.outfits);},
   onClose:()=>{status('Explora nuestro mundo');persist();}
@@ -132,10 +136,11 @@ function draw(){
     for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++)groundTile(ctx,x,y);
   }
   const scenery=objects.concat(moments.scenery());
-  if(!moments.shouldHidePair())scenery.push({z:pair.y*TILE,draw:ctx=>drawPair(ctx,moments.renderPair(),assetImage,save.outfits)});
+  if(!moments.shouldHidePair())scenery.push({z:pair.y*TILE,draw:ctx=>drawPair(ctx,moments.renderPair(),url=>outfitImage(url,save.outfits),save.outfits)});
   scenery.sort((a,b)=>a.z-b.z);
   for(const item of scenery)item.draw(ctx); // objetos independientes, clasificados por profundidad
   ctx.restore();
+  lighting.draw(ctx,{camera,decor,places});
   moments.positionBubble(camera,canvas);
 }
 function tick(time){

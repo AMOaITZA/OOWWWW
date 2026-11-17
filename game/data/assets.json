@@ -1,6 +1,6 @@
 {
-  "version": 7,
-  "description": "Ropa principal corregida, tres atuendos sentados independientes por personaje y diez arquitecturas completas sobre terreno florido.",
+  "version": 8,
+  "description": "Cabello de Itza en negro, café, rosa pastel y rubio claro; árboles variados y mundo con día/noche.",
   "world": {
     "ground": "/assets/game/world/ground-v4.png"
   },
@@ -20,7 +20,11 @@
     "bench": "/assets/game/objects/bench.png",
     "lamp": "/assets/game/objects/lamp.png",
     "roof": "/assets/game/objects/roof.png",
-    "awning": "/assets/game/objects/awning.png"
+    "awning": "/assets/game/objects/awning.png",
+    "tree-cerezo": "/assets/game/trees/cerezo.png",
+    "tree-jacaranda": "/assets/game/trees/jacaranda.png",
+    "tree-roble": "/assets/game/trees/roble.png",
+    "tree-abedul": "/assets/game/trees/abedul.png"
   },
   "characters": {
     "leo": {

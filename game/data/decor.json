@@ -4,28 +4,32 @@
     "tile": [
       20,
       14
-    ]
+    ],
+    "species": "cerezo"
   },
   {
     "kind": "tree",
     "tile": [
       37,
       13
-    ]
+    ],
+    "species": "jacaranda"
   },
   {
     "kind": "tree",
     "tile": [
       53,
       12
-    ]
+    ],
+    "species": "abedul"
   },
   {
     "kind": "tree",
     "tile": [
       73,
       11
-    ]
+    ],
+    "species": "roble"
   },
   {
     "kind": "tree",
@@ -39,21 +43,24 @@
     "tile": [
       108,
       18
-    ]
+    ],
+    "species": "cerezo"
   },
   {
     "kind": "tree",
     "tile": [
       113,
       58
-    ]
+    ],
+    "species": "abedul"
   },
   {
     "kind": "tree",
     "tile": [
       106,
       69
-    ]
+    ],
+    "species": "jacaranda"
   },
   {
     "kind": "tree",
@@ -67,21 +74,24 @@
     "tile": [
       74,
       73
-    ]
+    ],
+    "species": "cerezo"
   },
   {
     "kind": "tree",
     "tile": [
       53,
       72
-    ]
+    ],
+    "species": "abedul"
   },
   {
     "kind": "tree",
     "tile": [
       37,
       72
-    ]
+    ],
+    "species": "roble"
   },
   {
     "kind": "tree",
@@ -95,7 +105,8 @@
     "tile": [
       12,
       52
-    ]
+    ],
+    "species": "jacaranda"
   },
   {
     "kind": "tree",
@@ -109,14 +120,16 @@
     "tile": [
       40,
       33
-    ]
+    ],
+    "species": "cerezo"
   },
   {
     "kind": "tree",
     "tile": [
       71,
       35
-    ]
+    ],
+    "species": "roble"
   },
   {
     "kind": "rock",

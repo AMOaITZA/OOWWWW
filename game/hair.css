@@ -1,0 +1,7 @@
+.hair-picker{margin:16px 0 0;padding:12px;border:2px solid #b59a7d;min-width:0}
+.hair-picker[hidden]{display:none}
+.hair-picker legend{padding:0 6px;font:18px 'VT323',monospace;color:#684c40}
+.hair-color-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.hair-color-options button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px}
+.hair-color-options button::before{content:'';display:block;width:14px;height:14px;flex:0 0 14px;background:var(--hair-swatch);border:2px solid #46312b;box-shadow:inset 2px 2px #ffffff28}
+.hair-color-options button[aria-pressed=true]{outline:2px solid #805947;outline-offset:1px}

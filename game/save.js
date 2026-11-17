@@ -8,7 +8,8 @@ export function loadSave() {
     return {position:{x:Number.isFinite(x)?x:30,y:Number.isFinite(y)?y:25},
       direction:['up','down','left','right'].includes(data.direction)?data.direction:'down',
       outfits:data.outfits&&typeof data.outfits==='object'?data.outfits:{leo:{},itza:{}},
-      visited:Array.isArray(data.visited)?data.visited:[]};
+      visited:Array.isArray(data.visited)?data.visited:[],
+      dayNight:data.dayNight&&typeof data.dayNight==='object'?data.dayNight:undefined};
   } catch {return structuredClone(DEFAULT);}
 }
 export function writeSave(save) {

@@ -1,0 +1,66 @@
+{
+  "generator": "image_gen.imagegen",
+  "source": "exec-7aa4ccc8-0b5f-4552-a401-6db06cbf5aeb.png",
+  "sourceSha256": "970f07856336c9c4b8ca869093c31377c7c79d0bb1b1fd07c342ccdeb89a797a",
+  "packer": "scripts/prepare-trees-v5.mjs",
+  "paletteLimit": 48,
+  "alphaThreshold": 200,
+  "assets": [
+    {
+      "path": "assets/game/trees/cerezo.png",
+      "size": [
+        64,
+        112
+      ],
+      "sourceBounds": [
+        29,
+        106,
+        474,
+        511
+      ],
+      "sha256": "d47f7f968b69caf9524951d4b8bbe7a2820cec61e64d90ced79e6d731b4cfcc9"
+    },
+    {
+      "path": "assets/game/trees/jacaranda.png",
+      "size": [
+        64,
+        112
+      ],
+      "sourceBounds": [
+        546,
+        104,
+        514,
+        513
+      ],
+      "sha256": "f96456bd500c153b784569abb0354e516d9c8ed282f57aa92908d3d833b02b5a"
+    },
+    {
+      "path": "assets/game/trees/roble.png",
+      "size": [
+        64,
+        112
+      ],
+      "sourceBounds": [
+        1112,
+        104,
+        511,
+        510
+      ],
+      "sha256": "65e25d1e774dae798c3986cb440ec1d5baee6f2c13e7f8207ea2441803691e9c"
+    },
+    {
+      "path": "assets/game/trees/abedul.png",
+      "size": [
+        64,
+        112
+      ],
+      "sourceBounds": [
+        1687,
+        53,
+        443,
+        564
+      ],
+      "sha256": "06561bf5cbcd4cb3090a322b77eb567b2be1c9403c8e13dd7c111cfc86bd08c0"
+    }
+  ]
+}

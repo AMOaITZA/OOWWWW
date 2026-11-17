@@ -194,7 +194,9 @@ export function sceneObjects(places,decor,objectImage,momentImage=()=>null,weddi
       // Seating uses independent outfit sprites; the bench remains a scenery
       // layer. The optional callback is retained for existing callers.
       if(obj.kind==='bench'&&hideBench(obj.tile))return;
-      drawWorldObject(ctx,obj,obj.kind==='bench'?(momentImage('benchSeat')||objectImage('bench')):objectImage(obj.kind));
+      const treeKind=obj.kind==='tree'&&obj.species?'tree-'+obj.species:obj.kind;
+      drawWorldObject(ctx,obj,obj.kind==='bench'?(momentImage('benchSeat')||objectImage('bench')):
+        objectImage(treeKind)||objectImage(obj.kind));
     }})),
     ...places.flatMap(obj=>obj.kind==='wedding'
       ? [

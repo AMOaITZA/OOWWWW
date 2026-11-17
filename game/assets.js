@@ -1,6 +1,7 @@
 import manifest from './data/assets.json';
 import {CHARACTERS,equipmentUrls,getLookOptions} from './wardrobe.js';
 import {loadWeddingImages,weddingImage} from './wedding-assets.js';
+import {getHairColor,hairVariant} from './hair.js';
 
 // Vite resolves this inventory at build time. Missing optional outfits never
 // produce HTTP requests, including when recovering an older saved selection.
@@ -32,6 +33,10 @@ function load(url,{sheet=false,ground=false}={}){
   return task;
 }
 export const assetImage=url=>url?.startsWith('wedding:')?weddingImage(url.slice(8)):ready.get(url)||null;
+export function outfitImage(url,outfits){
+  const image=assetImage(url),look=manifest.characters.itza.looks.find(option=>option.sheet===url);
+  return look?hairVariant(image,'walk-'+look.id,getHairColor(outfits)):image;
+}
 export const hasAsset=url=>Boolean(assetImage(url));
 export async function prepareWorldAssets(){
   const tasks=[load(manifest.world.ground,{ground:true}),loadWeddingImages()];
@@ -47,7 +52,16 @@ export async function prepareWorldAssets(){
 export function groundImage(){return assetImage(manifest.world.ground);}
 export function objectImage(kind){return assetImage(manifest.objects[kind]);}
 export function momentImage(kind){return assetImage(manifest.moments?.[kind]);}
-export function seatedImage(who,look){return assetImage(manifest.seated?.[who]?.[look]);}
+export function seatedImage(who,look,outfits){
+  const image=assetImage(manifest.seated?.[who]?.[look]);
+  return who==='itza'?hairVariant(image,'seat-'+look,getHairColor(outfits)):image;
+}
+export function weddingCharacterImage(key,outfits){
+  const image=weddingImage(key);
+  const profile=key==='itza-walk'?'walk-boda':key==='wedding-bench'?'wedding-bench-v2':key;
+  return ['itza-walk','idle','vows','kiss','hug','celebrate','wedding-bench','wedding-bench-v2'].includes(key)
+    ?hairVariant(image,profile,getHairColor(outfits)):image;
+}
 export function placeImage(id){return assetImage(manifest.architecture?.[id]);}
 export async function prepareOutfit(outfits){
   // Always keep a real original sheet ready when a saved optional look is absent.

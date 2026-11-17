@@ -5,14 +5,19 @@ import pngjs from 'pngjs';
 const {PNG}=pngjs;
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const manifest=JSON.parse(readFileSync(resolve(root,'game/data/assets.json'),'utf8'));
-const images=new Map(),errors=[],warnings=[],palette=new Set();
+const images=new Map(),errors=[],warnings=[],palette=new Set(),treePalette=new Set();
 const add=(url,options)=>{
   if(url?.startsWith('/assets/game/')&&url.toLowerCase().endsWith('.png'))images.set(url,options);
 };
 add(manifest.world.ground,{size:[1920,1280],opaque:true,palette:true});
 const special={roof:[152,34],awning:[40,24],tree:[48,84],rock:[48,47],bench:[48,47],lamp:[48,47]};
-for(const [kind,url] of Object.entries(manifest.objects))
-  add(url,{size:special[kind]??[144,85],palette:true,emptyAllowed:kind==='awning'});
+for(const [kind,url] of Object.entries(manifest.objects)){
+  const tree=kind.startsWith('tree-');
+  add(url,{size:tree?[64,112]:special[kind]??[144,85],palette:!tree,treePalette:tree,
+    generated:tree,maxColors:tree?48:undefined,emptyAllowed:kind==='awning'});
+}
+for(const species of ['cerezo','jacaranda','roble','abedul'])
+  if(!manifest.objects['tree-'+species])errors.push('Falta el árbol '+species);
 for(const who of ['leo','itza']){
   const looks=manifest.characters[who]?.looks??[];
   if(looks.length>3)errors.push(who+': solo se permiten tres conjuntos completos');
@@ -86,6 +91,7 @@ for(const [url,options] of images){
     else if(a!==255)partial++;
     if(a>=128){visible++;assetPalette.add([png.data[i],png.data[i+1],png.data[i+2]].join(','));}
     if(a===255&&options.palette)palette.add([png.data[i],png.data[i+1],png.data[i+2]].join(','));
+    if(a===255&&options.treePalette)treePalette.add([png.data[i],png.data[i+1],png.data[i+2]].join(','));
   }
   if(!options.opaque&&transparent===0)errors.push(url+': el fondo debe ser transparente');
   if(options.opaque&&(transparent||partial))errors.push(url+': este fondo debe ser opaco');
@@ -132,7 +138,8 @@ for(const [url,options] of images){
 }
 const MAX_APPROVED_COLORS=192;
 if(palette.size>MAX_APPROVED_COLORS)errors.push('Paleta combinada del escenario: '+palette.size+' colores; máximo aprobado: '+MAX_APPROVED_COLORS);
-console.log('PNG presentes:',present,'| opcionales ausentes:',optionalMissing,'| colores del escenario:',palette.size);
+if(treePalette.size>48)errors.push('Paleta compartida de árboles: '+treePalette.size+' colores; máximo: 48');
+console.log('PNG presentes:',present,'| opcionales ausentes:',optionalMissing,'| colores del escenario:',palette.size,'| colores de árboles:',treePalette.size);
 for(const message of warnings)console.log('OBSERVACIÓN',message);
 if(errors.length){for(const message of errors)console.error('ERROR',message);process.exitCode=1;}
 else console.log('Dimensiones, recursos obligatorios, frames, anclajes, regiones, alfa y paleta: comprobación aprobada');

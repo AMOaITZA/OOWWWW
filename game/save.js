@@ -9,7 +9,10 @@ export function loadSave() {
       direction:['up','down','left','right'].includes(data.direction)?data.direction:'down',
       outfits:data.outfits&&typeof data.outfits==='object'?data.outfits:{leo:{},itza:{}},
       visited:Array.isArray(data.visited)?data.visited:[],
-      dayNight:data.dayNight&&typeof data.dayNight==='object'?data.dayNight:undefined};
+      dayNight:data.dayNight&&typeof data.dayNight==='object'?data.dayNight:undefined,
+      leoVoice:data.leoVoice&&typeof data.leoVoice==='object'?data.leoVoice:undefined,
+      secretQuiz:data.secretQuiz&&typeof data.secretQuiz==='object'?data.secretQuiz:undefined,
+      voiceNotes:data.voiceNotes&&typeof data.voiceNotes==='object'?data.voiceNotes:undefined};
   } catch {return structuredClone(DEFAULT);}
 }
 export function writeSave(save) {

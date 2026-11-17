@@ -11,7 +11,9 @@ function withStorage(value,run){
 test('hair and lighting survive a full save round trip with position and outfits',()=>{
   withStorage(null,()=>{
     const save={position:{x:24,y:33},direction:'left',visited:['inicio','armario'],
-      outfits:{leo:{look:'alternativo'},itza:{look:'boda',hair:'rubio'}},dayNight:{mode:'night',cycleStartedAt:1700000000000}};
+      outfits:{leo:{look:'alternativo',glasses:false},itza:{look:'boda',hair:'rubio',glasses:false}},
+      dayNight:{mode:'night',cycleStartedAt:1700000000000},leoVoice:{enabled:false},
+      secretQuiz:{index:2,choices:{0:1}},voiceNotes:{filename:'mensaje-02.mp3',position:8,volume:.7}};
     writeSave(save);assert.deepEqual(loadSave(),save);
   });
 });

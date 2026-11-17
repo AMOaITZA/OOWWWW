@@ -1,0 +1,126 @@
+{
+  "views": [
+    {
+      "name": "desktop",
+      "path": "docs/qa-v8/desktop-world.png",
+      "metrics": {
+        "source": [
+          480,
+          300
+        ],
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": [
+          1440,
+          900
+        ],
+        "overflow": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "phone",
+      "path": "docs/qa-v8/phone-world.png",
+      "metrics": {
+        "source": [
+          195,
+          422
+        ],
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        },
+        "viewport": [
+          390,
+          844
+        ],
+        "overflow": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "small-phone",
+      "path": "docs/qa-v8/small-phone-world.png",
+      "metrics": {
+        "source": [
+          160,
+          284
+        ],
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 320,
+          "height": 568
+        },
+        "viewport": [
+          320,
+          568
+        ],
+        "overflow": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "phone-landscape",
+      "path": "docs/qa-v8/phone-landscape-world.png",
+      "metrics": {
+        "source": [
+          422,
+          195
+        ],
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 844,
+          "height": 390
+        },
+        "viewport": [
+          844,
+          390
+        ],
+        "overflow": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "tablet",
+      "path": "docs/qa-v8/tablet-world.png",
+      "metrics": {
+        "source": [
+          342,
+          256
+        ],
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 1026,
+          "height": 768
+        },
+        "viewport": [
+          1024,
+          768
+        ],
+        "overflow": [
+          0,
+          0
+        ]
+      }
+    }
+  ],
+  "previewCount": 72,
+  "errors": []
+}

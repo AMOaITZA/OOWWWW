@@ -216,3 +216,14 @@ También se corrigen los mechones de novia de frente y bajo el velo por detrás,
 con y sin lentes. Textos, fotos, canciones, recuerdos y partidas se conservan.
 Consulta [ventanas V7](../docs/EXPERIENCES-V7.md) y
 [pruebas y las trece vistas](../docs/QA-EXPERIENCES-V7.md).
+
+## Apariencia y pantalla completa V8
+
+El mundo ocupa la pantalla completa, con cámara adaptable y controles flotantes
+para computadora y celular. Conserva la escala uniforme del pixel art y el
+control por toques al girar el teléfono. Los globos de Leo evitan los controles.
+
+Se corrigen los mechones que quedaban negros en los conjuntos cotidianos y
+se restaura el rostro sin lentes conservando sus rasgos originales, en lugar
+de escalar un parche sobre la cara. Consulta [los cambios V8](../docs/APPEARANCE-VIEWPORT-V8.md)
+y [sus pruebas y capturas](../docs/QA-V8.md).

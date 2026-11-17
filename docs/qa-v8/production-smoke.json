@@ -1,0 +1,60 @@
+{
+  "results": [
+    {
+      "name": "desktop",
+      "portrait": {
+        "width": 480,
+        "height": 300,
+        "cssWidth": 1440,
+        "cssHeight": 900,
+        "viewport": [
+          1440,
+          900
+        ],
+        "overflow": 0
+      },
+      "after": {
+        "width": 480,
+        "height": 300,
+        "cssWidth": 1440,
+        "cssHeight": 900,
+        "viewport": [
+          1440,
+          900
+        ],
+        "overflow": 0
+      },
+      "initialResourceBytes": 1339958,
+      "audioRequests": 0
+    },
+    {
+      "name": "phone",
+      "portrait": {
+        "width": 195,
+        "height": 422,
+        "cssWidth": 390,
+        "cssHeight": 844,
+        "viewport": [
+          390,
+          844
+        ],
+        "overflow": 0
+      },
+      "after": {
+        "width": 422,
+        "height": 195,
+        "cssWidth": 844,
+        "cssHeight": 390,
+        "viewport": [
+          844,
+          390
+        ],
+        "overflow": 0
+      },
+      "initialResourceBytes": 1339958,
+      "audioRequests": 0
+    }
+  ],
+  "errors": [],
+  "failed": []
+}

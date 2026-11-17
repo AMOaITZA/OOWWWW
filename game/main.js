@@ -74,11 +74,14 @@ function openPlace(place){
 }
 function cameraAt(){
   const castle=places.find(place=>place.id==='boda');
+  const displayed=moments.renderPair();
   // Lift the final approach without changing the world's 1:1 pointer geometry.
   const lift=approachLift(Math.max(castleApproachLift(pair,castle),placeApproachLift(pair,places)),
     canvas.height,bottomInset,viewportScale);
-  return {x:Math.max(0,Math.min(WIDTH*TILE-canvas.width,Math.round(pair.x*TILE-canvas.width/2))),
-    y:Math.max(0,Math.min(HEIGHT*TILE-canvas.height,Math.round(pair.y*TILE-canvas.height/2)-lift))};
+  // Sitting and standing animate the visible couple away from the walking
+  // arrival tile. Follow that pose so seated heads stay clear of the top HUD.
+  return {x:Math.max(0,Math.min(WIDTH*TILE-canvas.width,Math.round(displayed.x*TILE-canvas.width/2))),
+    y:Math.max(0,Math.min(HEIGHT*TILE-canvas.height,Math.round(displayed.y*TILE-canvas.height/2)-lift))};
 }
 function pointClick(event){
   if(!active||host.isOpen()||overview.isOpen())return;

@@ -84,12 +84,13 @@ export function removeGlassesPixels(pixels,profile,people,patches){
     }
     // Only neutral frame ink can be the bridge. Keep the warm, original
     // nose shading and every skin pixel between the lenses.
-    if(!region.side)for(let y=region.y;y<region.y+region.height;y++){
+    if(!region.side){
+      const y=region.y+Math.floor(region.height/2);
       const [left,right]=bands;
       for(let x=left.x+left.width;x<right.x;x++){
         const index=pixelIndex(x,y),[r,g,b,a]=pixels.data.subarray(index,index+4);
         if(a&&!skin(r,g,b)&&Math.max(r,g,b)<=112&&
-          (y===region.y+region.height-1||(Math.max(r,g,b)-Math.min(r,g,b)<=24&&!(r>g&&g>b&&r-b>20))))data.set(faceTone,index);
+          Math.max(r,g,b)-Math.min(r,g,b)<=24&&!(r>g&&g>b&&r-b>20))data.set(faceTone,index);
       }
     }
     const patchCol=(region.side?2:0)+(region.closed?1:0),patchX=patchCol*18,patchY=(who==='itza'?0:8);

@@ -156,15 +156,20 @@ export function createMoments({spots,pair,getImage,bubble,getOutfits=()=>({}),ge
         obstacles.push(box(spot.id,b.x,b.y,b.width,b.height));
       }
     }
-    const status=document.getElementById('world-status');
-    if(status&&!status.hidden){
-      const r=status.getBoundingClientRect();
-      obstacles.push({id:'status',x:r.left,y:r.top,width:r.width,height:r.height});
+    // The world fills the screen; its controls now float above the canvas.
+    // Treat the visible HUD as scenery so Leo's words stay readable beside it.
+    for(const element of document.querySelectorAll('.game-header,.game-footer,#world-status,#game-controls')){
+      if(element.hidden)continue;
+      const r=element.getBoundingClientRect();
+      if(r.width&&r.height)obstacles.push({id:element.id||element.className,
+        x:r.left,y:r.top,width:r.width,height:r.height});
     }
+    const left=Math.max(0,rect.left),top=Math.max(0,rect.top);
     const placement=placeDialogue({
       anchor,
       bubble:{width:bubble.offsetWidth,height:bubble.offsetHeight},
-      viewport:{x:rect.left,y:rect.top,width:rect.width,height:rect.height},
+      viewport:{x:left,y:top,width:Math.min(innerWidth,rect.right)-left,
+        height:Math.min(innerHeight,rect.bottom)-top},
       obstacles
     });
     bubble.style.left=placement.x+'px';

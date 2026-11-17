@@ -81,8 +81,8 @@ test('mixed seated clothing and the compact bench work on a touch screen',async(
     await enter(page,{outfits:{leo:{look:'alternativo'},itza:{look:'boda'}}});
     const point=await page.locator('#world').evaluate(canvas=>{
       const r=canvas.getBoundingClientRect();
-      return {x:(24*16-Number(canvas.dataset.cameraX))*r.width/480,
-        y:(31*16-10-Number(canvas.dataset.cameraY))*r.height/270};
+      return {x:(24*16-Number(canvas.dataset.cameraX))*r.width/canvas.width,
+        y:(31*16-10-Number(canvas.dataset.cameraY))*r.height/canvas.height};
     });
     await page.locator('#world').tap({position:point});
     await expect.poll(()=>drawnSeated(page)).toEqual(['itza-boda.png','leo-alternativo.png']);

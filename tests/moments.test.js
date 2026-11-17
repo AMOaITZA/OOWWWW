@@ -132,9 +132,15 @@ test('Leo dialogue floats near characters and returns after a modal closes',()=>
   const controller=createMoments({spots,pair,bubble,getImage:()=>({})});controller.arrive(spots.find(s=>s.kind==='cats'));
   const saved={document:globalThis.document,width:globalThis.innerWidth,height:globalThis.innerHeight};
   try{
-    globalThis.document={getElementById:()=>null};globalThis.innerWidth=1200;globalThis.innerHeight=720;
-    controller.positionBubble({x:68*16-240,y:51*16-135},{width:480,height:270,getBoundingClientRect:()=>({left:90,top:60,width:960,height:540})});
+    const hud=[{left:90,top:60,width:960,height:90},{left:90,top:520,width:960,height:80}];
+    globalThis.document={querySelectorAll:()=>hud.map((rect,index)=>({
+      id:'hud-'+index,getBoundingClientRect:()=>rect
+    }))};globalThis.innerWidth=1200;globalThis.innerHeight=720;
+    controller.positionBubble({x:68*16-240,y:51*16-135},{width:480,height:270,
+      getBoundingClientRect:()=>({left:90,top:60,right:1050,bottom:600,width:960,height:540})});
     assert.match(bubble.style.left,/px$/);assert.match(bubble.style.top,/px$/);assert.ok(['bottom','top','left','right'].includes(bubble.dataset.tail));
+    const bubbleTop=parseFloat(bubble.style.top);
+    assert.ok(bubbleTop>=150&&bubbleTop+bubble.offsetHeight<=520,'Speech avoids the floating HUD');
     assert.match(changed['--tail-x'],/px$/);
   }finally{globalThis.document=saved.document;globalThis.innerWidth=saved.width;globalThis.innerHeight=saved.height;}
   controller.tick(.1,{dialogsOpen:true});assert.equal(bubble.hidden,true);controller.tick(.1);assert.equal(bubble.hidden,false);

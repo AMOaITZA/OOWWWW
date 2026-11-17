@@ -22,10 +22,10 @@ async function tapPlace(page,place){
   await page.evaluate(p=>{
     const canvas=document.getElementById('world'),rect=canvas.getBoundingClientRect();
     const save=JSON.parse(localStorage.getItem('oowwww-game-v1'));
-    const cameraX=Number(canvas.dataset.cameraX??Math.max(0,Math.min(1920-480,Math.round(save.position.x*16-240))));
-    const cameraY=Number(canvas.dataset.cameraY??Math.max(0,Math.min(1280-270,Math.round(save.position.y*16-135))));
+    const cameraX=Number(canvas.dataset.cameraX??Math.max(0,Math.min(1920-canvas.width,Math.round(save.position.x*16-canvas.width/2))));
+    const cameraY=Number(canvas.dataset.cameraY??Math.max(0,Math.min(1280-canvas.height,Math.round(save.position.y*16-canvas.height/2))));
     const wx=p.tile[0]*16,wy=p.tile[1]*16;
-    const clientX=rect.left+(wx-cameraX)*rect.width/480,clientY=rect.top+(wy-cameraY)*rect.height/270;
+    const clientX=rect.left+(wx-cameraX)*rect.width/canvas.width,clientY=rect.top+(wy-cameraY)*rect.height/canvas.height;
     canvas.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,clientX,clientY,pointerType:'mouse'}));
   },place);
 }
@@ -276,10 +276,10 @@ test('Leo speech bubble floats near the characters without hiding the cats',asyn
   const metrics=await page.evaluate(()=>{
     const element=document.querySelector('#leo-bubble');
     const b=element.getBoundingClientRect();
-    const canvas=document.querySelector('#world').getBoundingClientRect();
-    const k=canvas.width/480;
-    const catX=canvas.left+(68*16-20-(68*16-240))*k;
-    const catY=canvas.top+(47*16-32-(51*16-135))*k;
+    const world=document.querySelector('#world'),canvas=world.getBoundingClientRect();
+    const k=canvas.width/world.width;
+    const catX=canvas.left+(68*16-20-Number(world.dataset.cameraX))*k;
+    const catY=canvas.top+(47*16-32-Number(world.dataset.cameraY))*k;
     const overlap=Math.max(0,Math.min(b.right,catX+40*k)-Math.max(b.left,catX))*
       Math.max(0,Math.min(b.bottom,catY+32*k)-Math.max(b.top,catY));
     return {overlap,x:b.x,y:b.y,right:b.right,bottom:b.bottom,

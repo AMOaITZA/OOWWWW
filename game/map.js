@@ -39,12 +39,13 @@ export function createMap({places,decor,moments=[],pair,save,onNavigate}){
       ctx.fillRect(x-3,y-3,7,7);
       ctx.fillStyle=palette.ink;ctx.fillRect(x-1,y-1,3,3);
     }
-    // Vista exacta de 480×270 sobre el mapa de 1920×1280.
+    // The world viewport follows the screen's aspect ratio, including rotation.
     const world=document.getElementById('world');
-    const cameraX=Number(world?.dataset.cameraX??Math.max(0,Math.min(WIDTH*16-480,Math.round(pair.x*16-240))));
-    const cameraY=Number(world?.dataset.cameraY??Math.max(0,Math.min(HEIGHT*16-270,Math.round(pair.y*16-135))));
+    const width=world?.width??480,height=world?.height??270;
+    const cameraX=Number(world?.dataset.cameraX??Math.max(0,Math.min(WIDTH*16-width,Math.round(pair.x*16-width/2))));
+    const cameraY=Number(world?.dataset.cameraY??Math.max(0,Math.min(HEIGHT*16-height,Math.round(pair.y*16-height/2))));
     ctx.strokeStyle=palette.ink;ctx.lineWidth=2;
-    ctx.strokeRect(Math.round(cameraX*STEP/16),Math.round(cameraY*STEP/16),90,51);
+    ctx.strokeRect(Math.round(cameraX*STEP/16),Math.round(cameraY*STEP/16),width*STEP/16,height*STEP/16);
     ctx.fillStyle=palette.ink;ctx.fillRect(Math.round(pair.x*STEP)-3,Math.round(pair.y*STEP)-3,7,7);
     ctx.fillStyle=palette.visited;ctx.fillRect(Math.round(pair.x*STEP)-2,Math.round(pair.y*STEP)-2,5,5);
   }

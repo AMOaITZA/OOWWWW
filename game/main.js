@@ -16,6 +16,7 @@ import {weddingImage} from './wedding-assets.js';
 import {createDayNight} from './day-night.js';
 import {createLeoVoice} from './leo-voice.js';
 import {placeProgress} from './place-discovery.js';
+import {worldViewport,approachLift} from './viewport.js';
 
 const $=id=>document.getElementById(id);
 const canvas=$('world'),ctx=canvas.getContext('2d',{alpha:false});
@@ -27,6 +28,7 @@ const moments=createMoments({spots:momentSpots,pair,getImage:momentImage,bubble:
 initWorld(places,decor,momentSpots);
 if(!walkable(Math.round(pair.x),Math.round(pair.y))){pair.x=30;pair.y=25;}
 let path=[],targetPlace=null,lastTime=0,saveClock=0,active=false;
+let viewportScale=2,bottomInset=64;
 const status=text=>{$('world-status').textContent=text;};
 function persist(){
   save.position={x:Math.round(pair.x),y:Math.round(pair.y)};
@@ -72,7 +74,8 @@ function openPlace(place){
 function cameraAt(){
   const castle=places.find(place=>place.id==='boda');
   // Lift the final approach without changing the world's 1:1 pointer geometry.
-  const lift=Math.max(castleApproachLift(pair,castle),placeApproachLift(pair,places));
+  const lift=approachLift(Math.max(castleApproachLift(pair,castle),placeApproachLift(pair,places)),
+    canvas.height,bottomInset,viewportScale);
   return {x:Math.max(0,Math.min(WIDTH*TILE-canvas.width,Math.round(pair.x*TILE-canvas.width/2))),
     y:Math.max(0,Math.min(HEIGHT*TILE-canvas.height,Math.round(pair.y*TILE-canvas.height/2)-lift))};
 }
@@ -157,7 +160,11 @@ function draw(){
 function tick(time){
   const dt=Math.min(0.05,(time-lastTime)/1000||0);lastTime=time;
   moments.tick(dt,{active,dialogsOpen:host.isOpen()||overview.isOpen()});
-  step(dt);advancePairAnimation(pair,dt);draw();overview.repaint();saveClock+=dt;
+  step(dt);advancePairAnimation(pair,dt);
+  // Nothing moves behind a modal. Keep its last frame and repaint when it closes;
+  // the day/night clock still uses real time, including time spent in a dialog.
+  if(!host.isOpen()&&!overview.isOpen())draw();
+  saveClock+=dt;
   if(saveClock>10){persist();saveClock=0;}
   requestAnimationFrame(tick);
 }
@@ -169,23 +176,20 @@ function stars(){
 function layout(){
   const frame=$('game-frame'),screen=$('game-screen');
   if(screen.hidden)return;
-  const css=getComputedStyle(screen),border=getComputedStyle(frame);
-  const number=value=>parseFloat(value)||0;
-  const paddingX=number(css.paddingLeft)+number(css.paddingRight);
-  const paddingY=number(css.paddingTop)+number(css.paddingBottom);
-  const borderX=number(border.borderLeftWidth)+number(border.borderRightWidth);
-  const borderY=number(border.borderTopWidth)+number(border.borderBottomWidth);
-  const hint=$('game-controls'),hintStyle=getComputedStyle(hint);
-  const hintHeight=hint.offsetHeight+number(hintStyle.marginTop)+number(hintStyle.marginBottom);
-  const w=Math.max(80,screen.clientWidth-paddingX-borderX);
-  const h=Math.max(80,(window.visualViewport?.height??innerHeight)-paddingY-borderY-
-    screen.querySelector('.game-header').offsetHeight-
-    screen.querySelector('.game-footer').offsetHeight-hintHeight);
-  const integral=Math.min(Math.floor(w/480),Math.floor(h/270),4);
-  const scale=integral>=1?integral:Math.min(w/480,h/270);
-  // Border-box includes the frame: keep the actual canvas at an integer scale.
-  frame.style.width=480*scale+borderX+'px';
-  frame.style.height=270*scale+borderY+'px';
+  // visualViewport follows mobile browser bars and the software keyboard.
+  screen.style.height=(window.visualViewport?.height??innerHeight)+'px';
+  const bounds=frame.getBoundingClientRect();
+  const viewport=worldViewport(bounds.width,bounds.height);
+  viewportScale=viewport.scale;
+  if(canvas.width!==viewport.width||canvas.height!==viewport.height){
+    canvas.width=viewport.width;canvas.height=viewport.height;
+    ctx.imageSmoothingEnabled=false;
+  }
+  canvas.style.width=viewport.cssWidth+'px';canvas.style.height=viewport.cssHeight+'px';
+  canvas.dataset.pixelScale=String(viewport.scale);
+  const footer=screen.querySelector('.game-footer').getBoundingClientRect();
+  bottomInset=Math.max(64,bounds.bottom-footer.top+8);
+  draw();overview.repaint();
 }
 $('start-game').addEventListener('click',()=>{
   void voice.unlock();
@@ -222,6 +226,11 @@ window.addEventListener('keydown',event=>{
 });
 window.addEventListener('keyup',event=>pressed.delete(event.key.toLowerCase()));
 window.addEventListener('blur',()=>{pressed.clear();persist();});
+document.addEventListener('visibilitychange',()=>{
+  pressed.clear();lastTime=0;
+  if(document.hidden)persist();
+  else layout();
+});
 document.addEventListener('oowwww-dialog-open',()=>{pressed.clear();voice.stop();});
 window.addEventListener('resize',layout);
 window.addEventListener('pagehide',persist);

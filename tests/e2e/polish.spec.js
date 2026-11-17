@@ -19,8 +19,8 @@ async function openWedding(page){
 async function tapWedding(page){
   const position=await page.locator('#world').evaluate((canvas,place)=>{
     const r=canvas.getBoundingClientRect();
-    return {x:(place.tile[0]*16-Number(canvas.dataset.cameraX))*r.width/480,
-      y:(place.tile[1]*16-40-Number(canvas.dataset.cameraY))*r.height/270};
+    return {x:(place.tile[0]*16-Number(canvas.dataset.cameraX))*r.width/canvas.width,
+      y:(place.tile[1]*16-40-Number(canvas.dataset.cameraY))*r.height/canvas.height};
   },wedding);
   await page.locator('#world').click({position});
 }
@@ -138,7 +138,12 @@ test('long Leo dialogue stays in the scene on a touch screen',async({browser})=>
     await page.addInitScript(()=>{Math.random=()=>.46;});
     await enter(page,{x:24,y:33});
     const canvas=page.locator('#world'),rect=await canvas.boundingBox();
-    await canvas.tap({position:{x:rect.width/2,y:rect.height*103/270}});
+    const bench=await canvas.evaluate(world=>{
+      const bounds=world.getBoundingClientRect();
+      return {x:(24*16-Number(world.dataset.cameraX))*bounds.width/world.width,
+        y:(31*16-10-Number(world.dataset.cameraY))*bounds.height/world.height};
+    });
+    await canvas.tap({position:bench});
     await expect(page.locator('#leo-bubble')).toContainText('te amo como el mar');
     await expect(page.locator('#world-status')).toContainText('Descansando');
     const bounds=await page.locator('#leo-bubble').boundingBox();

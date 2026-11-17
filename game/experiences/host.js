@@ -39,6 +39,9 @@ export function createHost(api){
   function show(){
     releaseDialog=activateDialog(panel,{onClose:close,initialFocus:closeButton,
       fallbackFocus:document.getElementById('world')});
+    // Reset after the dialog is visible: browsers can restore a hidden scroll
+    // container's old offset when it is shown again.
+    body.scrollTop=0;body.scrollLeft=0;
   }
   function open(id){
     if(!modules[id])return;

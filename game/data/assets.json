@@ -1,6 +1,6 @@
 {
   "version": 9,
-  "description": "Cabello de Itza en negro, café, rosa pastel y rubio claro; árboles variados y mundo con día/noche.",
+  "description": "Pelo corregido, lentes opcionales, árboles grandes, voz de Leo, rincón secreto y grabadora personal.",
   "world": {
     "ground": "/assets/game/world/ground-v4.png"
   },
@@ -119,5 +119,8 @@
       "alternativo": "/assets/game/moments/seated/itza-alternativo.png",
       "boda": "/assets/game/moments/seated/itza-boda.png"
     }
+  },
+  "appearance": {
+    "eyes": "/assets/game/appearance/eyes-without-glasses.png"
   }
 }

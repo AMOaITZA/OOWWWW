@@ -5,3 +5,4 @@
 .hair-color-options button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px}
 .hair-color-options button::before{content:'';display:block;width:14px;height:14px;flex:0 0 14px;background:var(--hair-swatch);border:2px solid #46312b;box-shadow:inset 2px 2px #ffffff28}
 .hair-color-options button[aria-pressed=true]{outline:2px solid #805947;outline-offset:1px}
+.glasses-option::before{display:none!important}

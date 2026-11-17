@@ -3,11 +3,12 @@ import {getLookOptions,getChoice,chooseOutfit} from '../wardrobe.js';
 import {drawCharacter} from '../pair.js';
 import {prepareLooks,outfitImage} from '../assets.js';
 import {HAIR_OPTIONS,getHairColor,chooseHairColor} from '../hair.js';
+import {getGlasses,chooseGlasses} from '../glasses.js';
 import '../hair.css';
 
 export function mount(root,_data,api){
   let who='itza',facing='down',walking=false,clock=0,loading=true;
-  paragraph(root,'Elige el atuendo de Itza o Leo y mira cómo se ve al caminar. También puedes cambiar el color de cabello de Itza. Tu elección se guarda automáticamente.');
+  paragraph(root,'Elige el atuendo de Itza o Leo y mira cómo se ve al caminar. Puedes poner o quitar los lentes de cada uno y cambiar el cabello de Itza. Tu elección se guarda automáticamente.');
   const tabs=node('div','wardrobe-tabs');
   tabs.setAttribute('role','group');tabs.setAttribute('aria-label','Personaje');
   const directions=node('div','wardrobe-direction');
@@ -18,6 +19,8 @@ export function mount(root,_data,api){
   hairLegend.textContent='Color de cabello de Itza';
   hair.setAttribute('role','group');hair.setAttribute('aria-label','Color de cabello de Itza');
   hair.append(hairLegend,hairOptions);
+  const glasses=node('fieldset','hair-picker glasses-picker'),glassesLegend=node('legend'),glassesOptions=node('div','hair-color-options');
+  glasses.setAttribute('role','group');glasses.append(glassesLegend,glassesOptions);
   const preview=node('canvas','wardrobe-preview');
   preview.width=160;preview.height=125;
   preview.setAttribute('role','img');
@@ -30,7 +33,7 @@ export function mount(root,_data,api){
   walkButton.setAttribute('aria-pressed','false');
   const layout=node('div','wardrobe-layout'),left=node('div','wardrobe-left'),right=node('div','wardrobe-right');
   left.append(tabs,directions,preview,walkButton);
-  right.append(info,items,hair);layout.append(left,right);root.append(layout);
+  right.append(info,items,hair,glasses);layout.append(left,right);root.append(layout);
   let alive=true;
   const available=sheet=>Boolean(api.assetImage(sheet));
   function draw(){
@@ -56,11 +59,16 @@ export function mount(root,_data,api){
     const promise=api.onOutfitChange();render();
     Promise.resolve(promise).then(()=>{if(alive)draw();});
   }
+  function selectGlasses(enabled){
+    if(loading||!chooseGlasses(api.save.outfits,who,enabled))return;
+    const promise=api.onOutfitChange();render();
+    Promise.resolve(promise).then(()=>{if(alive)draw();});
+  }
   function render(){
     if(!alive)return;
     // Restore focus after rebuilding controls; keyboard selection remains usable.
     const focus=root.contains(document.activeElement)?document.activeElement.dataset.wardrobeFocus:null;
-    tabs.replaceChildren();directions.replaceChildren();items.replaceChildren();hairOptions.replaceChildren();
+    tabs.replaceChildren();directions.replaceChildren();items.replaceChildren();hairOptions.replaceChildren();glassesOptions.replaceChildren();
     hair.hidden=who!=='itza';
     for(const name of ['itza','leo']){
       const button=labeledButton(name==='itza'?'Itza':'Leo',()=>{who=name;clock=0;render();},'wardrobe-tab');
@@ -94,8 +102,15 @@ export function mount(root,_data,api){
       button.disabled=loading;hairOptions.append(button);
     }
     const person=who==='itza'?'Itza':'Leo',count=options.filter(look=>available(look.sheet)).length;
+    glassesLegend.textContent='Lentes de '+person;glasses.setAttribute('aria-label','Lentes de '+person);
+    for(const [enabled,label] of [[true,'Con lentes'],[false,'Sin lentes']]){
+      const button=labeledButton(label,()=>selectGlasses(enabled),'wardrobe-item glasses-option');
+      button.dataset.wardrobeFocus='glasses-'+enabled;button.disabled=loading;
+      const selected=getGlasses(api.save.outfits,who)===enabled;
+      button.setAttribute('aria-pressed',String(selected));button.classList.toggle('selected',selected);glassesOptions.append(button);
+    }
     info.textContent=loading?'Cargando conjuntos…':person+' · '+count+' '+(count===1?'conjunto disponible':'conjuntos disponibles');
-    preview.setAttribute('aria-label','Vista previa de '+person+', '+(options.find(look=>look.id===selected)?.name??'cargando conjunto')+(who==='itza'?', cabello '+HAIR_OPTIONS.find(color=>color.id===getHairColor(api.save.outfits)).name.toLowerCase():'')+', '+({down:'de frente',right:'de lado',up:'de espalda'}[facing]));
+    preview.setAttribute('aria-label','Vista previa de '+person+', '+(options.find(look=>look.id===selected)?.name??'cargando conjunto')+(who==='itza'?', cabello '+HAIR_OPTIONS.find(color=>color.id===getHairColor(api.save.outfits)).name.toLowerCase():'')+', '+(getGlasses(api.save.outfits,who)?'con lentes':'sin lentes')+', '+({down:'de frente',right:'de lado',up:'de espalda'}[facing]));
     walkButton.disabled=loading||count===0;
     if(focus)root.querySelector('[data-wardrobe-focus="'+focus+'"]')?.focus({preventScroll:true});
     draw();

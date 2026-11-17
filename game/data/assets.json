@@ -1,6 +1,6 @@
 {
-  "version": 9,
-  "description": "Pelo corregido, lentes opcionales, árboles grandes, voz de Leo, rincón secreto y grabadora personal.",
+  "version": 10,
+  "description": "Ventanas ilustradas para todas las experiencias y cabello de novia corregido.",
   "world": {
     "ground": "/assets/game/world/ground-v4.png"
   },
@@ -122,5 +122,19 @@
   },
   "appearance": {
     "eyes": "/assets/game/appearance/eyes-without-glasses.png"
+  },
+  "experienceHeaders": {
+    "inicio": "/assets/game/experiences/inicio.png",
+    "carta": "/assets/game/experiences/carta.png",
+    "galeria": "/assets/game/experiences/galeria.png",
+    "razones": "/assets/game/experiences/razones.png",
+    "playlist": "/assets/game/experiences/playlist.png",
+    "recuerdos": "/assets/game/experiences/recuerdos.png",
+    "contador": "/assets/game/experiences/contador.png",
+    "lugares": "/assets/game/experiences/lugares.png",
+    "final": "/assets/game/experiences/final.png",
+    "armario": "/assets/game/experiences/armario.png",
+    "secreto": "/assets/game/experiences/secreto.png",
+    "grabadora": "/assets/game/experiences/grabadora.png"
   }
 }

@@ -40,6 +40,14 @@ for(const id of architectureIds){
   if(!url)errors.push('Falta la arquitectura de '+id);
   else add(url,{size:[160,128],generated:true,maxColors:128});
 }
+// Illustrated dialogue headers have their own bounded palettes, like the
+// complete architecture and character resources; base world colours stay put.
+const experienceIds=['inicio','carta','galeria','razones','playlist','recuerdos','contador','lugares','final','armario','secreto','grabadora'];
+for(const id of experienceIds){
+  const url=manifest.experienceHeaders?.[id];
+  if(!url)errors.push('Falta la ilustración de la experiencia '+id);
+  else add(url,{size:[384,128],opaque:true,generated:true,maxColors:192});
+}
 add(manifest.wedding?.atlas,{size:manifest.wedding.logicalSize,normalizedAlpha:true});
 add(manifest.wedding?.background,{size:[480,270],opaque:true,generated:true});
 add(manifest.wedding?.castle,{size:[336,224],generated:true});

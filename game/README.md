@@ -172,3 +172,17 @@ sus puntos de llegada siguen conectados por caminos transitables.
 Consulta [recursos V4](../docs/WORLD-V4.md),
 [trazabilidad](../docs/WORLD-V4-GENERATION.json) y
 [comparativas y pruebas V4](../docs/QA-WORLD-V4.md).
+
+## Personalización V5
+
+En Armario → Itza puedes elegir cabello negro, café, rosa pastel o rubio claro.
+Se guarda y se conserva al caminar, sentarse y en la boda, con cualquiera de
+sus tres atuendos. El color del pelo de Leo se mantiene.
+
+El mundo mezcla cerezos, jacarandas, robles, abedules y árboles altos. Arriba
+aparecen Día, Noche y Automático: los modos manuales permanecen fijos y el
+automático alterna cinco minutos de día y cinco de noche. Volver al automático
+inicia un nuevo día. El estado se conserva al recargar.
+
+Consulta [personalización V5](../docs/CUSTOMIZATION-V5.md) y
+[pruebas y capturas](../docs/QA-CUSTOMIZATION-V5.md).

@@ -107,7 +107,7 @@ test('all three real outfits are available and alternate choices persist indepen
   }
   const place=await loadAt(page,'armario');
   await tapPlace(page,place);
-  await expect(page.locator('.wardrobe-item')).toHaveCount(3);
+  await expect(page.getByRole('group',{name:'Conjuntos completos',exact:true}).getByRole('button')).toHaveCount(3);
   await expect(page.getByRole('button',{name:'Segundo conjunto',exact:true})).toBeEnabled();
   await page.getByRole('button',{name:'Segundo conjunto',exact:true}).click();
   await expect(page.getByRole('button',{name:'Segundo conjunto',exact:true})).toHaveAttribute('aria-pressed','true');

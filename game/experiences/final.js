@@ -1,26 +1,32 @@
 import {node,paragraph,picture,labeledButton} from './dom.js';
+import './memories-v7.css';
 export function mount(root,data){
-  paragraph(root,data.title,'final-quote');
-  paragraph(root,data.text);
-  const frame=node('div','final-pair');
+  const finale=node('section','memory-finale');finale.dataset.state='looking';
+  paragraph(finale,data.text,'final-quote finale-introduction');
+  const chapter=node('div','finale-stage'),frame=node('div','final-pair');
   const looking=picture(data.photo,'Itza y Leo mirándose');
   const kiss=picture(data.kissPhoto,'Itza y Leo');
+  looking.loading=kiss.loading='eager';
   kiss.hidden=true;
-  frame.append(looking,kiss);root.append(frame);
-  paragraph(root,data.chapter,'final-chapter');
-  paragraph(root,data.question,'final-question');
-  paragraph(root,data.continuation);
+  frame.append(looking,kiss);
+  const ticket=node('div','finale-ticket');
+  paragraph(ticket,data.chapter,'final-chapter');
+  paragraph(ticket,data.question,'final-question');
+  paragraph(ticket,data.continuation,'final-continuation');
   let timer;
   const action=labeledButton(data.action,()=>{
     clearTimeout(timer);
     action.textContent=data.actionAfter;
     looking.hidden=true;kiss.hidden=false;
-    timer=setTimeout(()=>{kiss.hidden=true;looking.hidden=false;},1800);
+    finale.dataset.state='kiss';
+    timer=setTimeout(()=>{kiss.hidden=true;looking.hidden=false;finale.dataset.state='looking';},1800);
   },'pixel-action final-action-game');
-  root.append(action);
-  paragraph(root,data.footer,'final-footer-love');
-  paragraph(root,'De: '+data.from);
-  paragraph(root,'Para: '+data.to);
-  paragraph(root,data.ps,'final-ps');
+  ticket.append(action);chapter.append(frame,ticket);finale.append(chapter);
+  const dedication=node('div','finale-dedication');
+  paragraph(dedication,data.footer,'final-footer-love');
+  const address=node('div','final-correspondence');
+  paragraph(address,'De: '+data.from);paragraph(address,'Para: '+data.to);
+  dedication.append(address);finale.append(dedication);
+  paragraph(finale,data.ps,'final-ps');root.append(finale);
   return ()=>clearTimeout(timer);
 }

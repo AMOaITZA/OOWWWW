@@ -13,6 +13,8 @@ import * as boda from './boda.js';
 import * as secreto from './secreto.js';
 import * as grabadora from './grabadora.js';
 import {activateDialog} from '../dialog.js';
+import manifest from '../data/assets.json';
+import '../experience-theme.css';
 const modules={inicio:intro,carta:letter,galeria:gallery,razones:reasons,playlist,recuerdos:tv,contador:counter,lugares:places,final:ending,armario:wardrobe,boda,secreto,grabadora};
 const extraContent={secreto:{title:'Nuestro rinconcito secreto',eyebrow:'Solo tú y yo'},grabadora:{title:'La grabadora de Leo',eyebrow:'Mi voz para ti'}};
 export function createHost(api){
@@ -21,7 +23,19 @@ export function createHost(api){
   const title=document.getElementById('experience-title');
   const category=document.getElementById('experience-category');
   const closeButton=document.getElementById('close-experience');
+  const paper=panel.querySelector('.experience-panel');
+  const hero=document.createElement('header');hero.className='experience-hero';
+  const art=document.createElement('img');art.className='experience-hero-art';
+  art.alt='';art.setAttribute('aria-hidden','true');art.width=384;art.height=128;art.decoding='async';
+  const heading=document.createElement('div');heading.className='experience-heading';
+  heading.append(category,title);hero.append(art,heading);paper.insertBefore(hero,body);
   let cleanup=()=>{},releaseDialog=()=>{};
+  function theme(id){
+    paper.dataset.experience=id;
+    const image=id==='boda'?manifest.wedding.background:manifest.experienceHeaders?.[id==='help'?'inicio':id];
+    art.hidden=!image;if(image&&art.getAttribute('src')!==image)art.src=image;
+    body.scrollTop=0;
+  }
   function show(){
     releaseDialog=activateDialog(panel,{onClose:close,initialFocus:closeButton,
       fallbackFocus:document.getElementById('world')});
@@ -31,6 +45,7 @@ export function createHost(api){
     if(!panel.hidden)close();
     body.replaceChildren();
     const data=content[id]||extraContent[id]||{};
+    theme(id);
     title.textContent=data.title||id;
     category.textContent=data.eyebrow||'Nuestro pequeño mundo';
     cleanup=modules[id].mount(body,data,api)||(()=>{});
@@ -45,6 +60,7 @@ export function createHost(api){
   function help(){
     if(!panel.hidden)close();
     body.replaceChildren();
+    theme('help');
     title.textContent='Cómo jugar';category.textContent='Controles';
     const p=document.createElement('p');
     p.textContent='Toca o haz clic en el suelo para caminar. Toca una casa para acercarte y vuelve a tocarla para abrir su experiencia. En computadora también puedes usar las flechas o WASD, y E cerca de una entrada para abrirla. El armario permite cambiar los conjuntos, incluidos el traje y el vestido de boda. En el mapa general encontrarás el Castillo de nuestra boda: camina hasta su puerta y toca de nuevo el edificio para entrar a la ceremonia. Allí puedes decir «Sí, quiero», avanzar por seis escenas o reproducir la historia seguida. También encontrarás Los gatitos y dos bancas: tócalos o pulsa E cerca para acariciar o sentarte. Pulsa E otra vez o camina para levantarte.';

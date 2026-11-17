@@ -8,7 +8,7 @@ import '../hair.css';
 
 export function mount(root,_data,api){
   let who='itza',facing='down',walking=false,clock=0,loading=true;
-  paragraph(root,'Elige el atuendo de Itza o Leo y mira cómo se ve al caminar. Puedes poner o quitar los lentes de cada uno y cambiar el cabello de Itza. Tu elección se guarda automáticamente.');
+  paragraph(root,'Elige a Itza o Leo y prueba sus conjuntos. Tu elección se guarda automáticamente.','wardrobe-intro');
   const tabs=node('div','wardrobe-tabs');
   tabs.setAttribute('role','group');tabs.setAttribute('aria-label','Personaje');
   const directions=node('div','wardrobe-direction');
@@ -32,8 +32,11 @@ export function mount(root,_data,api){
   },'wardrobe-category');
   walkButton.setAttribute('aria-pressed','false');
   const layout=node('div','wardrobe-layout'),left=node('div','wardrobe-left'),right=node('div','wardrobe-right');
-  left.append(tabs,directions,preview,walkButton);
-  right.append(info,items,hair,glasses);layout.append(left,right);root.append(layout);
+  const mirror=node('div','wardrobe-mirror'),mirrorLabel=node('span','wardrobe-mirror-label','El probador');
+  mirrorLabel.setAttribute('aria-hidden','true');mirror.append(mirrorLabel,preview);
+  const collection=node('section','wardrobe-collection');collection.append(info,items);
+  left.append(tabs,mirror,directions,walkButton);
+  right.append(collection,hair,glasses);layout.append(left,right);root.append(layout);
   let alive=true;
   const available=sheet=>Boolean(api.assetImage(sheet));
   function draw(){

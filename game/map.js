@@ -4,7 +4,7 @@ import {visiblePlaces} from './place-discovery.js';
 import {POND_LAYOUT,pondTileBlocked} from './pond-geometry.js';
 const STEP=3;
 const palette={grass:'#94B77B',grassShade:'#8BAE74',road:'#D8C69A',water:'#6D9BAC',accent:'#B5656F',ink:'#1B120E',cream:'#FFF1DC',visited:'#F2C46D'};
-export function createMap({places,decor,moments=[],pair,save,onNavigate}){
+export function createMap({places,decor,moments=[],pair,save,onNavigate,getActivities=()=>[]}){
   const panel=document.getElementById('map-panel');
   const canvas=document.getElementById('overview');
   const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;
@@ -43,6 +43,11 @@ export function createMap({places,decor,moments=[],pair,save,onNavigate}){
       ctx.fillRect(x-3,y-3,7,7);
       ctx.fillStyle=palette.ink;ctx.fillRect(x-1,y-1,3,3);
     }
+    for(const spot of getActivities()){
+      const x=spot.tile[0]*STEP,y=spot.tile[1]*STEP;
+      ctx.fillStyle=spot.kind==='ponyo'?'#E6B7C8':'#FFF1DC';ctx.fillRect(x-3,y-3,7,7);
+      ctx.fillStyle=spot.kind==='ponyo'?'#756D77':'#547F83';ctx.fillRect(x-1,y-1,3,3);
+    }
     // The world viewport follows the screen's aspect ratio, including rotation.
     const world=document.getElementById('world');
     const width=world?.width??480,height=world?.height??270;
@@ -72,6 +77,12 @@ export function createMap({places,decor,moments=[],pair,save,onNavigate}){
       button.addEventListener('click',()=>navigate(...place.arrival,place));
       destinations.append(button);
     }
+    for(const spot of getActivities()){
+      const button=document.createElement('button');button.type='button';
+      button.className='map-destination activity-destination';
+      button.textContent=spot.kind==='ponyo'?'Ponyo · Acariciar':'Pesca · '+spot.name;
+      button.addEventListener('click',()=>navigate(...spot.arrival,spot));destinations.append(button);
+    }
     for(const spot of moments){
       const button=document.createElement('button');
       button.type='button';button.className='map-destination moment-destination';
@@ -87,7 +98,7 @@ export function createMap({places,decor,moments=[],pair,save,onNavigate}){
     const rect=canvas.getBoundingClientRect();
     const x=(event.clientX-rect.left)*canvas.width/rect.width/STEP;
     const y=(event.clientY-rect.top)*canvas.height/rect.height/STEP;
-    const spot=moments.reduce((best,p)=>{
+    const spot=[...moments,...getActivities()].reduce((best,p)=>{
       const dist=Math.hypot(p.tile[0]-x,p.tile[1]-y);
       return dist<3.8&&(!best||dist<best.dist)?{p,dist}:best;
     },null)?.p;

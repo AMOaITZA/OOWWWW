@@ -181,5 +181,13 @@
       23
     ],
     "classic": null
+  },
+  {
+    "id": "casita",
+    "name": "Nuestra casita",
+    "kind": "home",
+    "tile": [37,49],
+    "arrival": [37,53],
+    "classic": null
   }
 ]

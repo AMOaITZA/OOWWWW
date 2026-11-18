@@ -110,7 +110,8 @@ test('every destination has a distinct complete architectural image',()=>{
   const places=JSON.parse(readFileSync(new URL('../game/data/places.json',import.meta.url),'utf8'));
   const hashes=[];
   for(const place of places.filter(place=>place.kind!=='wedding')){
-    assert.equal(manifest.architecture?.[place.id],'/assets/game/architecture/'+place.id+'.png');
+    const expected=place.id==='casita'?manifest.home.exterior:'/assets/game/architecture/'+place.id+'.png';
+    assert.equal(manifest.architecture?.[place.id],expected);
     const image=png(manifest.architecture[place.id].slice(1));
     assert.equal(image.width,160);assert.equal(image.height,128);
     const box=frame(image,0,0,160,128);

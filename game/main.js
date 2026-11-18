@@ -18,17 +18,24 @@ import {createLeoVoice} from './leo-voice.js';
 import {placeProgress} from './place-discovery.js';
 import {worldViewport,approachLift} from './viewport.js';
 import {createAmbient} from './ambient.js';
+import {normalizeFishing,hasAllPlushies} from './fishing.js';
+import {FISHING_SPOT,PONYO_SPOT,fishingAt,drawFishingSign} from './finale-spots.js';
+import {createPonyo} from './ponyo.js';
 
 const $=id=>document.getElementById(id);
 const canvas=$('world'),ctx=canvas.getContext('2d',{alpha:false});
 ctx.imageSmoothingEnabled=false;
 const save=loadSave();save.outfits??={leo:{},itza:{}};
+save.fishing=normalizeFishing(save.fishing);
 const pair=createPair(save);
 const motionPreference=window.matchMedia('(prefers-reduced-motion: reduce)');
 const ambient=createAmbient({decor,getPondImage:()=>ambientImage('pond')});
 const moments=createMoments({spots:momentSpots,pair,getImage:momentImage,bubble:$('leo-bubble'),
-  getOutfits:()=>save.outfits,getSeatedImage:(who,look)=>seatedImage(who,look,save.outfits),onSay:line=>voice.speak(line)});
-initWorld(places,decor,momentSpots);
+  getOutfits:()=>save.outfits,getSeatedImage:(who,look)=>seatedImage(who,look,save.outfits),
+  getExtraObstacles:()=>ponyo.bounds(),onSay:line=>voice.speak(line)});
+const ponyo=createPonyo({getImage:()=>momentImage('ponyo'),getUnlocked:()=>hasAllPlushies(save.fishing),
+  onPet:line=>{pair.direction='up';moments.say(line);}});
+initWorld(places,decor,momentSpots,{ponyoUnlocked:hasAllPlushies(save.fishing)});
 if(!walkable(Math.round(pair.x),Math.round(pair.y))){
   const shore=closestWalkable(pair.x,pair.y);pair.x=shore?.x??30;pair.y=shore?.y??25;
 }
@@ -36,6 +43,7 @@ let path=[],targetPlace=null,lastTime=0,saveClock=0,active=false;
 let viewportScale=2,bottomInset=64;
 let pendingLayout=0;
 let ambientTime=0;
+let pendingPonyoWelcome=false;
 const status=text=>{$('world-status').textContent=text;};
 function persist(){
   save.position={x:Math.round(pair.x),y:Math.round(pair.y)};
@@ -54,11 +62,21 @@ lighting.mount(document.querySelector('.game-header'));
 const music=createMusicPlayer({openPlaylist:()=>host.open('playlist')});
 const host=createHost({
   save,assetImage,getWeddingImage:key=>weddingCharacterImage(key,save.outfits),
+  getOutfits:()=>save.outfits,getCharacterImage:url=>outfitImage(url,save.outfits),
+  getSeatedImage:(who,look)=>seatedImage(who,look,save.outfits),
+  getPonyoImage:()=>momentImage('ponyo'),getPonyoUnlocked:()=>hasAllPlushies(save.fishing),
+  onFishingChange:({newlyCompleted})=>{
+    if(newlyCompleted){pendingPonyoWelcome=true;initWorld(places,decor,momentSpots,{ponyoUnlocked:true});}
+    persist();
+  },
   onMusicSelect:videoId=>{if(music.select(videoId))host.close();},
   onOutfitChange:()=>{persist();return prepareOutfit(save.outfits);},
   onProgressChange:persist,onLeoSay:line=>voice.speak(line),
   onVoiceNotePlay:()=>{$('music-audio').pause();voice.stop();},
-  onClose:()=>{status('Explora nuestro mundo');persist();}
+  onClose:()=>{
+    status(pendingPonyoWelcome?'¡Ponyo te espera junto a los gatitos!':'Explora nuestro mundo');
+    pendingPonyoWelcome=false;persist();
+  }
 });
 function goTo(x,y,place=null){
   if(moments.isSitting()&&moments.seatId()!==place?.id)moments.stand();
@@ -68,7 +86,10 @@ function goTo(x,y,place=null){
   if(route.length){path=route;targetPlace=place;status(place?'Caminando hacia '+place.name:'Caminando…');}
   else if(pair.x===point.x&&pair.y===point.y){
     path=[];targetPlace=null;
-    if(place&&moments.isMoment(place)){
+    if(ponyo.isSpot(place)){
+      ponyo.arrive();status('Acariciando a Ponyo');
+    }else if(place?.id==='pesca')openPlace(place);
+    else if(place&&moments.isMoment(place)){
       moments.arrive(place);
       status(place.kind==='cats'?'Acariciando a los gatitos':moments.isSitting()?'Descansando juntos en la banca':'Seguimos explorando');
     }else status(place?'Toca otra vez '+place.name:'Ya estamos aquí');
@@ -76,7 +97,9 @@ function goTo(x,y,place=null){
 }
 function openPlace(place){
   path=[];targetPlace=place;pair.moving=false;host.open(place.id);
-  if(!save.visited.includes(place.id)){save.visited.push(place.id);updatePlaceCounter();}
+  if(places.some(item=>item.id===place.id)&&!save.visited.includes(place.id)){
+    save.visited.push(place.id);updatePlaceCounter();
+  }
   persist();
 }
 function cameraAt(){
@@ -97,6 +120,12 @@ function pointClick(event){
   const px=(event.clientX-bounds.left)*canvas.width/bounds.width;
   const py=(event.clientY-bounds.top)*canvas.height/bounds.height;
   const camera=cameraAt(),wx=px+camera.x,wy=py+camera.y;
+  if(ponyo.hit(wx,wy)){goTo(...PONYO_SPOT.arrival,PONYO_SPOT);return;}
+  if(fishingAt(wx,wy)){
+    if(!path.length&&Math.hypot(pair.x-FISHING_SPOT.arrival[0],pair.y-FISHING_SPOT.arrival[1])<.51)openPlace(FISHING_SPOT);
+    else goTo(...FISHING_SPOT.arrival,FISHING_SPOT);
+    return;
+  }
   const spot=moments.momentAt(wx,wy);
   if(spot){
     if(moments.isSitting()&&Math.hypot(pair.x-spot.arrival[0],pair.y-spot.arrival[1])<.51){
@@ -113,6 +142,7 @@ function pointClick(event){
 }
 const overview=createMap({
   places,decor,moments:momentSpots,pair,save,
+  getActivities:()=>[FISHING_SPOT,...(hasAllPlushies(save.fishing)?[PONYO_SPOT]:[])],
   onNavigate:(x,y,place)=>{canvas.focus({preventScroll:true});goTo(x,y,place);}
 });
 const pressed=new Set();
@@ -137,7 +167,9 @@ function step(dt){
     if(dist<=0.035||speed>=dist){pair.x=next.x;pair.y=next.y;path.shift();
       if(!path.length){
         pair.moving=false;
-        if(targetPlace&&moments.isMoment(targetPlace)){
+        if(ponyo.isSpot(targetPlace)){
+          targetPlace=null;ponyo.arrive();status('Acariciando a Ponyo');
+        }else if(targetPlace&&moments.isMoment(targetPlace)){
           const spot=targetPlace;targetPlace=null;moments.arrive(spot);
           status(spot.kind==='cats'?'Acariciando a los gatitos':moments.isSitting()?'Descansando juntos en la banca':'Seguimos explorando');
         }else status(targetPlace?'Llegamos a '+targetPlace.name+'. Toca otra vez para entrar.':'Explora nuestro mundo');
@@ -162,7 +194,8 @@ function draw(){
   }
   const ambientFrame={camera,time:ambientTime,reducedMotion:motionPreference.matches};
   ambient.drawGround(ctx,ambientFrame);
-  const scenery=objects.concat(moments.scenery());
+  const scenery=objects.concat(moments.scenery(),ponyo.scenery(),{
+    z:FISHING_SPOT.arrival[1]*TILE-2,draw:drawFishingSign});
   if(!moments.shouldHidePair())scenery.push({z:pair.y*TILE,draw:ctx=>drawPair(ctx,moments.renderPair(),url=>outfitImage(url,save.outfits),save.outfits)});
   scenery.sort((a,b)=>a.z-b.z);
   for(const item of scenery)item.draw(ctx); // objetos independientes, clasificados por profundidad
@@ -175,11 +208,14 @@ function draw(){
   canvas.dataset.visiblePetals=String(effects.visiblePetals);
   canvas.dataset.visibleRipples=String(effects.visibleRipples);
   canvas.dataset.waterReady=String(effects.waterReady);
+  canvas.dataset.ponyoUnlocked=String(hasAllPlushies(save.fishing));
   moments.positionBubble(camera,canvas);
 }
 function tick(time){
   const dt=Math.min(0.05,(time-lastTime)/1000||0);lastTime=time;
   moments.tick(dt,{active,dialogsOpen:host.isOpen()||overview.isOpen()});
+  ponyo.tick(dt,{active:active&&!document.hidden,dialogsOpen:host.isOpen()||overview.isOpen(),
+    reducedMotion:motionPreference.matches});
   step(dt);advancePairAnimation(pair,dt);
   // Nothing moves behind a modal. Keep its last frame and repaint when it closes;
   // the day/night clock still uses real time, including time spent in a dialog.
@@ -242,7 +278,9 @@ window.addEventListener('keydown',event=>{
   if(interactive)return;
   const key=event.key.toLowerCase();
   if(active&&key==='e'&&!event.repeat&&!host.isOpen()&&!overview.isOpen()){
-    const spot=moments.closest(pair.x,pair.y,4);
+    const spot=[...momentSpots,FISHING_SPOT,...(hasAllPlushies(save.fishing)?[PONYO_SPOT]:[])]
+      .map(item=>({item,distance:Math.hypot(pair.x-item.arrival[0],pair.y-item.arrival[1])}))
+      .filter(item=>item.distance<=4).sort((a,b)=>a.distance-b.distance)[0]?.item;
     if(spot){event.preventDefault();goTo(...spot.arrival,spot);return;}
     const place=places.find(item=>Math.hypot(pair.x-item.arrival[0],pair.y-item.arrival[1])<1.5);
     if(place){

@@ -14,6 +14,13 @@ if(!manifest.appearance?.eyes)errors.push('Falta el recurso de ojos sin lentes')
 add(manifest.appearance?.eyes,{size:[72,16],frame:[18,8],generated:true,maxColors:16});
 if(!manifest.ambient?.pond)errors.push('Falta el estanque del jardín');
 add(manifest.ambient?.pond,{size:[144,96],generated:true,maxColors:64});
+for(const id of ['freddy','bonnie','chica','foxy','golden-freddy']){
+  if(!manifest.fishing?.[id])errors.push('Falta el peluche '+id);
+  add(manifest.fishing?.[id],{size:[64,64],generated:true,maxColors:64});
+}
+if(!manifest.home?.interior||!manifest.home?.exterior)errors.push('Faltan los recursos de nuestra casita');
+add(manifest.home?.interior,{size:[480,270],opaque:true,generated:true,maxColors:192});
+add(manifest.home?.exterior,{size:[160,128],generated:true,maxColors:128});
 const special={roof:[152,34],awning:[40,24],tree:[48,84],rock:[48,47],bench:[48,47],lamp:[48,47]};
 for(const [kind,url] of Object.entries(manifest.objects)){
   const tree=kind.startsWith('tree-');
@@ -28,9 +35,10 @@ for(const who of ['leo','itza']){
   for(const look of looks)add(look.sheet,{size:[192,144],frame:[32,48],character:true,generated:true,maxColors:128});
 }
 if(manifest.moments?.pairBenchSit)errors.push('La banca del mundo no debe usar una pareja con vestuario fijo');
-const momentSizes={catIdle:[80,64],catHappy:[80,64],petSparkles:[96,16],benchSeat:manifest.moments?.benchSeat?.endsWith('/bench-seat-v4.png')?[56,32]:[56,40]};
+const momentSizes={catIdle:[80,64],catHappy:[80,64],petSparkles:[96,16],ponyo:[64,32],benchSeat:manifest.moments?.benchSeat?.endsWith('/bench-seat-v4.png')?[56,32]:[56,40]};
 for(const [kind,url] of Object.entries(manifest.moments??{}))
-  add(url,{size:momentSizes[kind],blankFrames:kind==='petSparkles'?[4,5]:[],frame:{catIdle:[80,64],catHappy:[80,64],petSparkles:[16,16]}[kind]});
+  add(url,{size:momentSizes[kind],blankFrames:kind==='petSparkles'?[4,5]:[],frame:{catIdle:[80,64],catHappy:[80,64],petSparkles:[16,16],ponyo:[32,32]}[kind],
+    generated:kind==='ponyo',maxColors:kind==='ponyo'?64:undefined});
 for(const who of ['leo','itza'])for(const look of ['principal','alternativo','boda']){
   const url=manifest.seated?.[who]?.[look];
   if(!url)errors.push('Falta la pose sentada de '+who+'/'+look);

@@ -1,0 +1,69 @@
+{
+  "generator": "authored SVG pixel game icon",
+  "source": "Original SVG geometry in scripts/prepare-plushes-v10.mjs",
+  "note": "New, friendly pixel UI interpretations of the five named FNAF plush collectibles. No downloaded art and no edited existing image. Image-generation attempts were rejected by automatic output moderation, so the final icons are honestly attributed to authored SVG game graphics.",
+  "renderer": "Chromium screenshot of authored SVG at native64×64, transparent background, crispEdges",
+  "packer": "scripts/prepare-plushes-v10.mjs",
+  "assets": [
+    {
+      "id": "freddy",
+      "path": "assets/game/fishing/freddy.png",
+      "svg": "assets/game/fishing/freddy.svg",
+      "size": [
+        64,
+        64
+      ],
+      "paletteColors": 9,
+      "opaquePixels": 2216,
+      "sha256": "907f0eefeb804101e500768e63ccd1c2eaa7d8f047efc2f1fa54aabc8eaa78da"
+    },
+    {
+      "id": "bonnie",
+      "path": "assets/game/fishing/bonnie.png",
+      "svg": "assets/game/fishing/bonnie.svg",
+      "size": [
+        64,
+        64
+      ],
+      "paletteColors": 10,
+      "opaquePixels": 2112,
+      "sha256": "3574cbdd4fc8d6622bb183c046c2528eb1594a265e3116084a495fb0a9b35767"
+    },
+    {
+      "id": "chica",
+      "path": "assets/game/fishing/chica.png",
+      "svg": "assets/game/fishing/chica.svg",
+      "size": [
+        64,
+        64
+      ],
+      "paletteColors": 11,
+      "opaquePixels": 1932,
+      "sha256": "b125373513e18ca68a36d8cf9322e81f5647c69b629270ba4cb9979a9a190f92"
+    },
+    {
+      "id": "foxy",
+      "path": "assets/game/fishing/foxy.png",
+      "svg": "assets/game/fishing/foxy.svg",
+      "size": [
+        64,
+        64
+      ],
+      "paletteColors": 9,
+      "opaquePixels": 2142,
+      "sha256": "17d73cd2c8bf2bfc30423034f7b97c3bff4eda222f8a7207b6804626680851d9"
+    },
+    {
+      "id": "golden-freddy",
+      "path": "assets/game/fishing/golden-freddy.png",
+      "svg": "assets/game/fishing/golden-freddy.svg",
+      "size": [
+        64,
+        64
+      ],
+      "paletteColors": 8,
+      "opaquePixels": 2216,
+      "sha256": "46c22a7e63dc9fe9dbfdd7be7acdb6e20c275d9b22ae9be0b3e9d7d0bcb00ba1"
+    }
+  ]
+}

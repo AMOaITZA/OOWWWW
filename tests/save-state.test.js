@@ -24,3 +24,13 @@ test('older saves keep progress while lighting initializes separately',()=>{
     assert.deepEqual(loaded.position,old.position);assert.deepEqual(loaded.outfits,old.outfits);assert.deepEqual(loaded.visited,old.visited);
   });
 });
+
+test('plush collection and household actions survive a save round trip',()=>{
+  withStorage(null,()=>{
+    const save={position:{x:71,y:50},direction:'up',outfits:{leo:{},itza:{}},visited:['casita'],
+      dayNight:undefined,leoVoice:undefined,secretQuiz:undefined,voiceNotes:undefined,
+      fishing:{collection:{freddy:1,bonnie:1,chica:1,foxy:1,'golden-freddy':1},casts:5,catches:5},
+      home:{activity:'tv',visits:2,counts:{eat:1,sleep:1,tv:1}}};
+    writeSave(save);assert.deepEqual(loadSave(),save);
+  });
+});

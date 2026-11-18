@@ -1,6 +1,17 @@
 {
-  "version": 11,
-  "description": "Mundo con estanque, pétalos, luces suaves y transiciones ilustradas.",
+  "version": 12,
+  "description": "Pesca de peluches, misión de Ponyo y nuestra casita interactiva.",
+  "fishing": {
+    "freddy": "/assets/game/fishing/freddy.png",
+    "bonnie": "/assets/game/fishing/bonnie.png",
+    "chica": "/assets/game/fishing/chica.png",
+    "foxy": "/assets/game/fishing/foxy.png",
+    "golden-freddy": "/assets/game/fishing/golden-freddy.png"
+  },
+  "home": {
+    "exterior": "/assets/game/home/exterior.png",
+    "interior": "/assets/game/home/interior.png"
+  },
   "ambient": {
     "pond": "/assets/game/ambient/pond.png"
   },
@@ -73,7 +84,8 @@
     "catIdle": "/assets/game/moments/cat-duo-idle.png",
     "catHappy": "/assets/game/moments/cat-duo-happy.png",
     "petSparkles": "/assets/game/moments/pet-sparkles-sheet.png",
-    "benchSeat": "/assets/game/moments/bench-seat-v4.png"
+    "benchSeat": "/assets/game/moments/bench-seat-v4.png",
+    "ponyo": "/assets/game/moments/ponyo.png"
   },
   "wedding": {
     "atlas": "/assets/game/wedding/atlas.png",
@@ -109,7 +121,8 @@
     "final": "/assets/game/architecture/final.png",
     "armario": "/assets/game/architecture/armario.png",
     "secreto": "/assets/game/architecture/secreto.png",
-    "grabadora": "/assets/game/architecture/grabadora.png"
+    "grabadora": "/assets/game/architecture/grabadora.png",
+    "casita": "/assets/game/home/exterior.png"
   },
   "seated": {
     "leo": {
@@ -138,6 +151,8 @@
     "final": "/assets/game/experiences/final.png",
     "armario": "/assets/game/experiences/armario.png",
     "secreto": "/assets/game/experiences/secreto.png",
-    "grabadora": "/assets/game/experiences/grabadora.png"
+    "grabadora": "/assets/game/experiences/grabadora.png",
+    "pesca": "/assets/game/ambient/pond.png",
+    "casita": "/assets/game/home/interior.png"
   }
 }

@@ -1,0 +1,152 @@
+{
+  "generator": "image_gen.imagegen",
+  "packer": "scripts/prepare-home-v10.mjs",
+  "resources": [
+    {
+      "path": "assets/game/home/exterior.png",
+      "size": [
+        160,
+        128
+      ],
+      "source": "exec-3c7d908a-f35a-42ed-9f48-9ffa40c10833.png",
+      "sourceSha256": "ada1d4cdb435216e4354e57a5a1ed411a5f64b75ec54b97c21bc015de1ca8a49",
+      "sha256": "fb594d50fb6432abd456a9bf4b4ee692b76645f72a519ce474cc5004fcf98156",
+      "sourceBounds": [
+        107,
+        60,
+        1183,
+        1024
+      ],
+      "nativeDraw": [
+        8,
+        2,
+        143,
+        124
+      ],
+      "paletteColors": 128,
+      "alpha": "binary 0/255, generated alpha threshold 128"
+    },
+    {
+      "path": "assets/game/home/interior.png",
+      "size": [
+        480,
+        270
+      ],
+      "source": "exec-bfeae312-c4a4-4622-9d65-4e7888a53e9c.png",
+      "sourceSha256": "c65760413c41a5362016b54d6bb5fc6b1c273934af74f8f1342f04f5b0c8eb7b",
+      "sha256": "e8cddf875b1ef55f1fc2f40c7b0e3393a94cc860830e328d99a9b8af5d4c0ca9",
+      "sourceBounds": [
+        0,
+        0,
+        1672,
+        941
+      ],
+      "nativeDraw": [
+        0,
+        0,
+        480,
+        270
+      ],
+      "paletteColors": 192,
+      "alpha": "opaque 255"
+    }
+  ],
+  "note": "Two generated cozy cottage resources. No people or text baked into the room. Original generated sources preserved; technical nearest-neighbour grid packing, alpha normalization and median-cut palette reduction only.",
+  "interiorAnchors": {
+    "bed": {
+      "bounds": [
+        44,
+        67,
+        92,
+        132
+      ],
+      "pillows": [
+        50,
+        88,
+        78,
+        24
+      ],
+      "heads": [
+        [
+          55,
+          91
+        ],
+        [
+          95,
+          91
+        ]
+      ],
+      "blanketTop": 119
+    },
+    "dining": {
+      "tableTop": [
+        191,
+        175,
+        79,
+        42
+      ],
+      "chairs": [
+        [
+          163,
+          175,
+          31,
+          62
+        ],
+        [
+          270,
+          175,
+          32,
+          62
+        ]
+      ],
+      "characters": [
+        [
+          165,
+          169
+        ],
+        [
+          272,
+          169
+        ]
+      ],
+      "tableForeground": [
+        191,
+        183,
+        79,
+        36
+      ]
+    },
+    "sofa": {
+      "bounds": [
+        322,
+        157,
+        116,
+        74
+      ],
+      "characters": [
+        [
+          350,
+          157
+        ],
+        [
+          389,
+          157
+        ]
+      ],
+      "front": [
+        325,
+        207,
+        114,
+        25
+      ]
+    },
+    "tv": {
+      "screen": [
+        351,
+        79,
+        44,
+        31
+      ]
+    }
+  }
+}

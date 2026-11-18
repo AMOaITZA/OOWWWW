@@ -26,6 +26,8 @@
 .experience .experience-panel[data-experience='boda']{--experience-accent:#a56d81;--experience-tint:#fae1de;width:min(1060px,100%)}
 .experience .experience-panel[data-experience='secreto']{--experience-accent:#688475;--experience-tint:#e7eedc;width:min(820px,100%)}
 .experience .experience-panel[data-experience='grabadora']{--experience-accent:#9c7369;--experience-tint:#f1dfd1;width:min(840px,100%)}
+.experience .experience-panel[data-experience='pesca']{--experience-accent:#547f83;--experience-tint:#deede4}
+.experience .experience-panel[data-experience='casita']{--experience-accent:#9b755d;--experience-tint:#f4e6cf;width:min(1020px,100%)}
 .experience .experience-panel .experience-hero{
   flex:none;position:relative;isolation:isolate;min-height:178px;display:flex;align-items:flex-end;
   overflow:hidden;background:var(--experience-tint);border-bottom:2px solid #d8bfa4;

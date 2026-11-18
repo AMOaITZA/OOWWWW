@@ -1,0 +1,21 @@
+.home-intro{text-align:center;color:#84604f;margin:0 0 20px!important}
+.home-room{margin:0 auto;max-width:760px;padding:9px;background:#E8CFAD;border:2px solid #A57D65;box-shadow:inset 0 0 0 3px #FFF3DB,4px 4px #80594C22}
+.home-scene-frame{overflow:hidden;border:2px solid #8F6C55;background:#CFAE8E}
+.home-scene{display:block;width:100%;height:auto;aspect-ratio:16/9;image-rendering:pixelated}
+.home-caption{margin:0!important;padding:10px 7px 2px;color:#80594C;text-align:center;font:10px/1.7 'Silkscreen',monospace;letter-spacing:1px}
+.home-activities{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;max-width:760px;margin:20px auto 0!important}
+.home-activity{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:109px;padding:12px 8px;border:2px solid #B28970;background:#F5E6CD;color:#785443;box-shadow:3px 3px #B28B6D33;cursor:pointer}
+.home-activity-number{color:#A47B68;font:10px/1.2 'Silkscreen',monospace;letter-spacing:2px}
+.home-activity strong{font:11px/1.8 'Silkscreen',monospace;letter-spacing:.4px}
+.home-activity-hint{font:20px/1.2 'VT323',monospace}
+.home-activity:hover{background:#F9E6CF}
+.home-activity[aria-pressed='true']{background:#E7BDC0;border-color:#A76F7B;box-shadow:inset 0 0 0 2px #F7DBD8,3px 3px #AC7D7C33;color:#744550}
+.home-reply{max-width:710px!important;margin:20px auto 0!important;padding:15px 18px;border:1px solid #D6B298;background:#FFF0D9;text-align:center;line-height:1.5;color:#85604D}
+.home-keepsake{text-align:center;padding:14px 8px 0;color:#9B7D68;font:20px/1.3 'VT323',monospace}
+.experience-panel[data-experience='casita']{--experience-accent:#A27367;--experience-tint:#EFDDC5;--experience-paper:#FFF5E4}
+@media(max-width:560px){
+ .home-room{padding:6px}.home-caption{font-size:8px;padding:8px 3px 2px;letter-spacing:.5px}
+ .home-activities{gap:6px;margin-top:15px!important}.home-activity{min-height:93px;padding:10px 4px;gap:5px}
+ .home-activity strong{font-size:9px;line-height:1.7}.home-activity-hint{display:none}
+ .home-reply{padding:12px 10px;margin-top:15px!important}.home-keepsake{font-size:18px}
+}

@@ -75,16 +75,16 @@ test('ambient time pauses behind dialogs and simulated hidden visibility without
   expect((await clock(page))-hiddenAt).toBeLessThan(.35);
 });
 
-test('phone taps stop at the pond shore and rotation preserves the effect and controls',async({browser})=>{
+test('phone taps reach the fishing shore and rotation preserves the effect and controls',async({browser})=>{
   const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
   try{
-    const page=await context.newPage();await enter(page);
+    const page=await context.newPage();await enter(page,{position:{x:45,y:34}});
     const point=await page.locator('#world').evaluate(canvas=>{const r=canvas.getBoundingClientRect();
       return {x:r.left+(800-Number(canvas.dataset.cameraX))*r.width/canvas.width,
         y:r.top+(479-Number(canvas.dataset.cameraY))*r.height/canvas.height};});
     await page.touchscreen.tap(point.x,point.y);
     await expect.poll(()=>page.locator('#world-status').textContent()).not.toContain('Caminando…');
-    await expect.poll(()=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)).position,saveKey)).not.toEqual({x:50,y:34});
+    await expect.poll(()=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)).position,saveKey)).toEqual({x:50,y:34});
     const saved=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),saveKey);
     expect(pondTileBlocked(saved.position.x,saved.position.y)).toBe(false);
     expect(Math.hypot(saved.position.x-50,saved.position.y-30)).toBeLessThanOrEqual(6);

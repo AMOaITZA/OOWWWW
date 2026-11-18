@@ -41,7 +41,8 @@ export function closestMoment(spots,x,y,maxDistance=4){
   },null)?.spot??null;
 }
 
-export function createMoments({spots,pair,getImage,bubble,getOutfits=()=>({}),getSeatedImage=()=>null,onSay=()=>{}}){
+export function createMoments({spots,pair,getImage,bubble,getOutfits=()=>({}),getSeatedImage=()=>null,
+  getExtraObstacles=()=>[],onSay=()=>{}}){
   const cats=spots.find(spot=>spot.kind==='cats');
   let sitting=null,seatTransition=null,petRemaining=0,phraseRemaining=0;
   function seatedPose(spot){
@@ -148,6 +149,7 @@ export function createMoments({spots,pair,getImage,bubble,getOutfits=()=>({}),ge
     const leoY=pose?pose.anchor.y:displayed.y*TILE-39;
     const anchor=toScreen(leoX,leoY);
     const obstacles=[hero];
+    for(const item of getExtraObstacles())obstacles.push(box(item.id,item.x,item.y,item.width,item.height));
     if(cats)obstacles.push(box('cats',cats.tile[0]*TILE-CAT_DRAW_W/2,
       cats.tile[1]*TILE-CAT_DRAW_H,CAT_DRAW_W,CAT_DRAW_H));
     for(const spot of spots){
@@ -209,6 +211,6 @@ export function createMoments({spots,pair,getImage,bubble,getOutfits=()=>({}),ge
     return result;
   }
   return {spots,momentAt:(x,y)=>momentAt(spots,x,y),isMoment,closest:(x,y)=>closestMoment(spots,x,y),
-    arrive,stand,isSitting,seatId,shouldHidePair,tick,scenery,positionBubble,renderPair,
+    arrive,stand,say,isSitting,seatId,shouldHidePair,tick,scenery,positionBubble,renderPair,
     isTransitioning:()=>Boolean(seatTransition)};
 }

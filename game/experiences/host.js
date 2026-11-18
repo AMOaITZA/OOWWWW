@@ -12,12 +12,16 @@ import * as wardrobe from './armario.js';
 import * as boda from './boda.js';
 import * as secreto from './secreto.js';
 import * as grabadora from './grabadora.js';
+import * as pesca from './pesca.js';
+import * as casita from './casita.js';
 import {activateDialog} from '../dialog.js';
 import {createExperienceTransitions} from '../experience-transitions.js';
 import manifest from '../data/assets.json';
 import '../experience-theme.css';
-const modules={inicio:intro,carta:letter,galeria:gallery,razones:reasons,playlist,recuerdos:tv,contador:counter,lugares:places,final:ending,armario:wardrobe,boda,secreto,grabadora};
-const extraContent={secreto:{title:'Nuestro rinconcito secreto',eyebrow:'Solo tú y yo'},grabadora:{title:'La grabadora de Leo',eyebrow:'Mi voz para ti'}};
+const modules={inicio:intro,carta:letter,galeria:gallery,razones:reasons,playlist,recuerdos:tv,contador:counter,lugares:places,final:ending,armario:wardrobe,boda,secreto,grabadora,pesca,casita};
+const extraContent={secreto:{title:'Nuestro rinconcito secreto',eyebrow:'Solo tú y yo'},grabadora:{title:'La grabadora de Leo',eyebrow:'Mi voz para ti'},
+  pesca:{title:'Lago de los peluches',eyebrow:'Una misión para conocer a Ponyo'},
+  casita:{title:'Nuestra casita',eyebrow:'Aquí estamos en casa'}};
 export function createHost(api){
   const panel=document.getElementById('experience');
   const body=document.getElementById('experience-content');
@@ -77,7 +81,7 @@ export function createHost(api){
     const customization=document.createElement('p');
     customization.textContent='En el armario puedes poner o quitar los lentes de cada personaje y elegir el cabello negro, café, rosa pastel o rubio claro de Itza. Se conserva con sus conjuntos y al sentarse. Arriba del mundo puedes elegir Día, Noche o Automático. Las opciones manuales se mantienen; Automático alterna cinco minutos de día y cinco de noche.';
     const discoveries=document.createElement('p');
-    discoveries.textContent='Explora el bosque: hay un rinconcito que solo aparece en el mapa después de descubrirlo. Allí Leo tiene unas preguntas para ti. La grabadora de Leo guarda mensajes de voz para escuchar cuando quieras. En Música puedes activar o silenciar la vocecita que acompaña sus frases.';
+    discoveries.textContent='Explora el bosque: hay un rinconcito que solo aparece en el mapa después de descubrirlo. Allí Leo tiene unas preguntas para ti. En el estanque puedes pescar cinco peluches de FNAF: completa la colección para que Ponyo llegue junto a los gatitos. En Nuestra casita pueden comer, dormir y ver la tele. La grabadora de Leo guarda mensajes de voz para escuchar cuando quieras. En Música puedes activar o silenciar la vocecita que acompaña sus frases.';
     body.append(p,customization,discoveries);show();
   }
   closeButton.addEventListener('click',close);

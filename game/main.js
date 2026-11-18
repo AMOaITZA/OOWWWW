@@ -7,7 +7,7 @@ import {TILE,WIDTH,HEIGHT,initWorld,walkable,closestWalkable,findPath,groundTile
 import {createPair,drawPair,advancePairAnimation} from './pair.js';
 import {nearestPlace,sceneObjects} from './places.js';
 import {loadSave,writeSave} from './save.js';
-import {assetImage,outfitImage,weddingCharacterImage,prepareWorldAssets,prepareOutfit,groundImage,objectImage,momentImage,seatedImage,placeImage} from './assets.js';
+import {assetImage,outfitImage,weddingCharacterImage,prepareWorldAssets,prepareOutfit,groundImage,ambientImage,objectImage,momentImage,seatedImage,placeImage} from './assets.js';
 import {createHost} from './experiences/host.js';
 import {createMap} from './map.js';
 import {createMusicPlayer} from './music.js';
@@ -17,19 +17,25 @@ import {createDayNight} from './day-night.js';
 import {createLeoVoice} from './leo-voice.js';
 import {placeProgress} from './place-discovery.js';
 import {worldViewport,approachLift} from './viewport.js';
+import {createAmbient} from './ambient.js';
 
 const $=id=>document.getElementById(id);
 const canvas=$('world'),ctx=canvas.getContext('2d',{alpha:false});
 ctx.imageSmoothingEnabled=false;
 const save=loadSave();save.outfits??={leo:{},itza:{}};
 const pair=createPair(save);
+const motionPreference=window.matchMedia('(prefers-reduced-motion: reduce)');
+const ambient=createAmbient({decor,getPondImage:()=>ambientImage('pond')});
 const moments=createMoments({spots:momentSpots,pair,getImage:momentImage,bubble:$('leo-bubble'),
   getOutfits:()=>save.outfits,getSeatedImage:(who,look)=>seatedImage(who,look,save.outfits),onSay:line=>voice.speak(line)});
 initWorld(places,decor,momentSpots);
-if(!walkable(Math.round(pair.x),Math.round(pair.y))){pair.x=30;pair.y=25;}
+if(!walkable(Math.round(pair.x),Math.round(pair.y))){
+  const shore=closestWalkable(pair.x,pair.y);pair.x=shore?.x??30;pair.y=shore?.y??25;
+}
 let path=[],targetPlace=null,lastTime=0,saveClock=0,active=false;
 let viewportScale=2,bottomInset=64;
 let pendingLayout=0;
+let ambientTime=0;
 const status=text=>{$('world-status').textContent=text;};
 function persist(){
   save.position={x:Math.round(pair.x),y:Math.round(pair.y)};
@@ -41,7 +47,8 @@ function updatePlaceCounter(){
 }
 const voice=createLeoVoice({saved:save.leoVoice,onChange:state=>{save.leoVoice=state;persist();}});
 save.leoVoice=voice.getState();voice.mount($('music-dock'));
-const lighting=createDayNight({saved:save.dayNight,onChange:state=>{save.dayNight=state;persist();}});
+const lighting=createDayNight({saved:save.dayNight,reducedMotion:()=>motionPreference.matches,
+  onChange:state=>{save.dayNight=state;persist();}});
 save.dayNight=lighting.getState();
 lighting.mount(document.querySelector('.game-header'));
 const music=createMusicPlayer({openPlaylist:()=>host.open('playlist')});
@@ -153,12 +160,21 @@ function draw(){
     const y0=Math.max(0,Math.floor(camera.y/TILE)-1),y1=Math.min(HEIGHT,Math.ceil((camera.y+canvas.height)/TILE)+1);
     for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++)groundTile(ctx,x,y);
   }
+  const ambientFrame={camera,time:ambientTime,reducedMotion:motionPreference.matches};
+  ambient.drawGround(ctx,ambientFrame);
   const scenery=objects.concat(moments.scenery());
   if(!moments.shouldHidePair())scenery.push({z:pair.y*TILE,draw:ctx=>drawPair(ctx,moments.renderPair(),url=>outfitImage(url,save.outfits),save.outfits)});
   scenery.sort((a,b)=>a.z-b.z);
   for(const item of scenery)item.draw(ctx); // objetos independientes, clasificados por profundidad
+  ambient.drawAir(ctx,ambientFrame);
   ctx.restore();
-  lighting.draw(ctx,{camera,decor,places});
+  lighting.draw(ctx,{camera,decor,places,motionTime:ambientTime});
+  const effects=ambient.getStats();
+  canvas.dataset.ambientTime=ambientTime.toFixed(3);
+  canvas.dataset.ambientMotion=effects.motion;
+  canvas.dataset.visiblePetals=String(effects.visiblePetals);
+  canvas.dataset.visibleRipples=String(effects.visibleRipples);
+  canvas.dataset.waterReady=String(effects.waterReady);
   moments.positionBubble(camera,canvas);
 }
 function tick(time){
@@ -167,7 +183,10 @@ function tick(time){
   step(dt);advancePairAnimation(pair,dt);
   // Nothing moves behind a modal. Keep its last frame and repaint when it closes;
   // the day/night clock still uses real time, including time spent in a dialog.
-  if(!host.isOpen()&&!overview.isOpen())draw();
+  if(active&&!document.hidden&&!host.isOpen()&&!overview.isOpen()){
+    if(!motionPreference.matches)ambientTime+=dt;
+    draw();
+  }
   saveClock+=dt;
   if(saveClock>10){persist();saveClock=0;}
   requestAnimationFrame(tick);

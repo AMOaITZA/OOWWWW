@@ -9,7 +9,6 @@
   max-height:calc(100dvh - 40px);height:auto;overflow:hidden;scrollbar-gutter:auto;
   padding:0;background:var(--experience-paper);border:3px solid #684b42;
   box-shadow:0 0 0 3px #ecd4b6,8px 8px 0 #39283280,0 22px 70px #160e2260;
-  animation:experience-arrive .2s ease-out;
 }
 .experience .experience-panel::after{
   content:'';height:7px;flex:none;border-top:1px solid #d4bda0;
@@ -75,7 +74,19 @@
 .experience .wedding-vow{box-shadow:3px 3px #ead6c6;border-color:#d3a2ad}
 .experience .wedding-stage-title{color:#815268}
 .experience .wedding-controls .wedding-nav{border-color:#76515d;box-shadow:2px 3px #dbbcc4}
+/* A brief journal opening; every control is usable from the first frame. */
+.experience[data-transition='entering']{animation:experience-backdrop-in 180ms ease-out both}
+.experience[data-transition='entering'] .experience-panel{animation:experience-arrive 220ms cubic-bezier(.2,.7,.3,1) both}
+.experience[data-transition='entering'] .experience-heading{animation:experience-detail-in 200ms 35ms ease-out both}
+.experience[data-transition='entering'] #experience-content{animation:experience-detail-in 200ms 55ms ease-out both}
+.experience-departure{pointer-events:none!important;z-index:29;animation:experience-backdrop-out 160ms ease-in both}
+.experience-departure *{pointer-events:none!important}
+.experience-departure .experience-panel{animation:experience-leave 160ms ease-in both}
 @keyframes experience-arrive{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes experience-detail-in{from{opacity:.35;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@keyframes experience-leave{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(6px)}}
+@keyframes experience-backdrop-in{from{background-color:rgba(33,23,27,0)}to{background-color:rgba(33,23,27,.76)}}
+@keyframes experience-backdrop-out{from{opacity:1}to{opacity:0}}
 @media(max-width:560px){
   .experience{padding:10px 8px}
   .experience .experience-panel{max-height:calc(100dvh - 24px);border-width:2px;box-shadow:0 0 0 2px #ecd4b6,4px 5px #39283280}
@@ -99,4 +110,7 @@
   .experience .experience-panel[data-experience='boda'] .experience-hero{min-height:90px}
   .experience .experience-panel #experience-content{padding-block:14px}
 }
-@media(prefers-reduced-motion:reduce){.experience .experience-panel{animation:none}}
+@media(prefers-reduced-motion:reduce){
+  .experience,.experience .experience-panel,.experience .experience-heading,.experience #experience-content{animation:none!important}
+  .experience-departure{display:none}
+}

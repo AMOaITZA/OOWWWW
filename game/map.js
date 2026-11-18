@@ -1,6 +1,7 @@
 import {WIDTH,HEIGHT,walkable} from './world.js';
 import {activateDialog} from './dialog.js';
 import {visiblePlaces} from './place-discovery.js';
+import {POND_LAYOUT,pondTileBlocked} from './pond-geometry.js';
 const STEP=3;
 const palette={grass:'#94B77B',grassShade:'#8BAE74',road:'#D8C69A',water:'#6D9BAC',accent:'#B5656F',ink:'#1B120E',cream:'#FFF1DC',visited:'#F2C46D'};
 export function createMap({places,decor,moments=[],pair,save,onNavigate}){
@@ -21,6 +22,9 @@ export function createMap({places,decor,moments=[],pair,save,onNavigate}){
       land.fillStyle=palette.road;land.fillRect(x*STEP,y*STEP,STEP,STEP);
     }
   }
+  for(let y=Math.floor(POND_LAYOUT.y/16);y<=Math.ceil((POND_LAYOUT.y+POND_LAYOUT.height)/16);y++)
+    for(let x=Math.floor(POND_LAYOUT.x/16);x<=Math.ceil((POND_LAYOUT.x+POND_LAYOUT.width)/16);x++)
+      if(pondTileBlocked(x,y)){land.fillStyle=palette.water;land.fillRect(x*STEP,y*STEP,STEP,STEP);}
   land.fillStyle='#426B4C';
   for(const item of decor)if(item.kind==='tree')land.fillRect(item.tile[0]*STEP-2,item.tile[1]*STEP-2,7,7);
   function repaint(){

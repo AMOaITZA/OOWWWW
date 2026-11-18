@@ -1,0 +1,37 @@
+{
+  "generator": "image_gen.imagegen",
+  "source": "exec-ec705479-b68d-41a8-b977-6cec22e57e42.png",
+  "sourceSha256": "a54b556df51fb4ce797963aa1c82d1554485345e0dde311b0b28d15c2c25c7e9",
+  "packer": "scripts/prepare-pond-v9.mjs",
+  "path": "assets/game/ambient/pond.png",
+  "size": [
+    144,
+    96
+  ],
+  "sha256": "4316125dad9d2bab3aadddff5bdcb210d8706d0835c2cc5cd63ec865b77fd4dd",
+  "sourceBounds": [
+    20,
+    31,
+    1500,
+    930
+  ],
+  "nativeDraw": [
+    2,
+    4,
+    140,
+    87
+  ],
+  "paletteColors": 48,
+  "alpha": "binary 0/255; generated source alpha threshold 128",
+  "water": {
+    "criterion": "b > r + 8 && g > r + 2",
+    "pixels": 4437,
+    "bounds": [
+      12,
+      29,
+      131,
+      84
+    ]
+  },
+  "note": "One generated cutout garden pond. Source unchanged. Stones, reeds, flowers and lily pads surround unobstructed cool teal water; palette is separate from the legacy ground palette."
+}

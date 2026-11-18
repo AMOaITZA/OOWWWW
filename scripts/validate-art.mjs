@@ -12,6 +12,8 @@ const add=(url,options)=>{
 add(manifest.world.ground,{size:[1920,1280],opaque:true,palette:true});
 if(!manifest.appearance?.eyes)errors.push('Falta el recurso de ojos sin lentes');
 add(manifest.appearance?.eyes,{size:[72,16],frame:[18,8],generated:true,maxColors:16});
+if(!manifest.ambient?.pond)errors.push('Falta el estanque del jardín');
+add(manifest.ambient?.pond,{size:[144,96],generated:true,maxColors:64});
 const special={roof:[152,34],awning:[40,24],tree:[48,84],rock:[48,47],bench:[48,47],lamp:[48,47]};
 for(const [kind,url] of Object.entries(manifest.objects)){
   const tree=kind.startsWith('tree-');

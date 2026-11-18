@@ -1,5 +1,6 @@
 import {CASTLE_LAYOUT} from './castle-layout.js';
 import {PLACE_LAYOUT} from './place-layout.js';
+import {pondTileBlocked} from './pond-geometry.js';
 export const TILE=16,WIDTH=120,HEIGHT=80;
 const total=WIDTH*HEIGHT,solid=new Uint8Array(total);
 const key=(x,y)=>y*WIDTH+x;
@@ -7,7 +8,7 @@ export const inside=(x,y)=>x>=2&&y>=2&&x<WIDTH-2&&y<HEIGHT-2;
 const seed=(x,y)=>{let n=Math.imul(x,374761393)+Math.imul(y,668265263);n=Math.imul(n^(n>>>13),1274126177);return ((n^(n>>>16))>>>0)%100;};
 export function initWorld(places,decor=[],moments=[]){
   solid.fill(0);
-  for(let y=0;y<HEIGHT;y++)for(let x=0;x<WIDTH;x++)if(!inside(x,y))solid[key(x,y)]=1;
+  for(let y=0;y<HEIGHT;y++)for(let x=0;x<WIDTH;x++)if(!inside(x,y)||pondTileBlocked(x,y))solid[key(x,y)]=1;
   for(const p of places){
     for(let y=p.tile[1]-(p.kind==='wedding'?CASTLE_LAYOUT.collisionHeight:PLACE_LAYOUT.collisionHeight);y<=p.tile[1]+1;y++)for(let x=p.tile[0]-(p.kind==='wedding'?CASTLE_LAYOUT.collisionHalfWidth:PLACE_LAYOUT.collisionHalfWidth);x<=p.tile[0]+(p.kind==='wedding'?CASTLE_LAYOUT.collisionHalfWidth:PLACE_LAYOUT.collisionHalfWidth);x++){
       if(inside(x,y))solid[key(x,y)]=1;

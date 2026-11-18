@@ -13,6 +13,7 @@ import * as boda from './boda.js';
 import * as secreto from './secreto.js';
 import * as grabadora from './grabadora.js';
 import {activateDialog} from '../dialog.js';
+import {createExperienceTransitions} from '../experience-transitions.js';
 import manifest from '../data/assets.json';
 import '../experience-theme.css';
 const modules={inicio:intro,carta:letter,galeria:gallery,razones:reasons,playlist,recuerdos:tv,contador:counter,lugares:places,final:ending,armario:wardrobe,boda,secreto,grabadora};
@@ -24,6 +25,7 @@ export function createHost(api){
   const category=document.getElementById('experience-category');
   const closeButton=document.getElementById('close-experience');
   const paper=panel.querySelector('.experience-panel');
+  const transition=createExperienceTransitions(panel,paper);
   const hero=document.createElement('header');hero.className='experience-hero';
   const art=document.createElement('img');art.className='experience-hero-art';
   art.alt='';art.setAttribute('aria-hidden','true');art.width=384;art.height=128;art.decoding='async';
@@ -42,10 +44,12 @@ export function createHost(api){
     // Reset after the dialog is visible: browsers can restore a hidden scroll
     // container's old offset when it is shown again.
     body.scrollTop=0;body.scrollLeft=0;
+    transition.arrive();
   }
   function open(id){
     if(!modules[id])return;
     if(!panel.hidden)close();
+    transition.reset();
     body.replaceChildren();
     const data=content[id]||extraContent[id]||{};
     theme(id);
@@ -56,12 +60,15 @@ export function createHost(api){
   }
   function close(){
     if(panel.hidden)return;
+    const bounds=paper.getBoundingClientRect();
     cleanup();cleanup=()=>{};
-    releaseDialog();releaseDialog=()=>{};body.replaceChildren();
+    releaseDialog();releaseDialog=()=>{};
+    transition.depart(bounds,()=>body.replaceChildren());
     api.onClose?.();
   }
   function help(){
     if(!panel.hidden)close();
+    transition.reset();
     body.replaceChildren();
     theme('help');
     title.textContent='Cómo jugar';category.textContent='Controles';

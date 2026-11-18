@@ -1,6 +1,9 @@
 {
-  "version": 10,
-  "description": "Ventanas ilustradas para todas las experiencias y cabello de novia corregido.",
+  "version": 11,
+  "description": "Mundo con estanque, pétalos, luces suaves y transiciones ilustradas.",
+  "ambient": {
+    "pond": "/assets/game/ambient/pond.png"
+  },
   "world": {
     "ground": "/assets/game/world/ground-v4.png"
   },

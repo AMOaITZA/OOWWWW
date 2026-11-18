@@ -1,3 +1,5 @@
+import {FIREFLY_COUNT,fireflyAt,lampGlowAt} from './night-effects.js';
+
 export const PHASE_DURATION=5*60*1000;
 export const LIGHTING_MODES=Object.freeze(['day','night','auto']);
 
@@ -33,6 +35,17 @@ export function createDayNight({saved,now=Date.now,onChange=()=>{},
   let controls=null,status=null,buttons=[],lastPhase=null,lastRenderAt=now();
   const clock=createDayNightClock({saved,now,onChange:state=>{refresh();onChange(state);}});
   let nightAmount=clock.sample().phase==='night'?1:0;
+  let halo=null,dusk=null,duskHeight=0;
+  function lampHalo(){
+    if(halo)return halo;
+    halo=document.createElement('canvas');halo.width=64;halo.height=64;
+    const context=halo.getContext('2d');
+    const glow=context.createRadialGradient(32,32,1,32,32,31);
+    glow.addColorStop(0,'rgba(255,224,157,.46)');
+    glow.addColorStop(.35,'rgba(240,194,124,.19)');
+    glow.addColorStop(1,'rgba(231,170,104,0)');
+    context.fillStyle=glow;context.fillRect(0,0,64,64);return halo;
+  }
   function refresh(){
     const current=clock.sample();
     if(controls){
@@ -61,7 +74,7 @@ export function createDayNight({saved,now=Date.now,onChange=()=>{},
     });
     controls.append(label,group);header.append(controls);refresh();return controls;
   }
-  function draw(ctx,{camera={x:0,y:0},decor=[]}={}){
+  function draw(ctx,{camera={x:0,y:0},decor=[],motionTime=now()/1000}={}){
     const at=now(),current=clock.sample(),reduced=reducedMotion();
     if(current.phase!==lastPhase)refresh();
     const target=current.phase==='night'?1:0;
@@ -71,32 +84,39 @@ export function createDayNight({saved,now=Date.now,onChange=()=>{},
     if(ctx.canvas?.dataset){
       ctx.canvas.dataset.dayPhase=current.phase;ctx.canvas.dataset.lightingMode=current.mode;
       ctx.canvas.dataset.nightAmount=nightAmount.toFixed(3);
+      ctx.canvas.dataset.visibleFireflies='0';ctx.canvas.dataset.visibleLanterns='0';
     }
     if(nightAmount<=0)return;
     const width=ctx.canvas.width,height=ctx.canvas.height;
     ctx.save();
-    const dusk=ctx.createLinearGradient(0,0,0,height);
-    dusk.addColorStop(0,`rgba(15,24,65,${.48*nightAmount})`);
-    dusk.addColorStop(1,`rgba(21,34,84,${.42*nightAmount})`);
+    if(!dusk||duskHeight!==height){
+      dusk=ctx.createLinearGradient(0,0,0,height);duskHeight=height;
+      dusk.addColorStop(0,'rgba(15,24,65,.48)');
+      dusk.addColorStop(1,'rgba(21,34,84,.42)');
+    }
+    ctx.globalAlpha=nightAmount;
     ctx.fillStyle=dusk;ctx.fillRect(0,0,width,height);
     ctx.globalCompositeOperation='screen';
-    for(const lamp of decor.filter(item=>item.kind==='lamp')){
+    let lanterns=0,fireflies=0,lampIndex=0;
+    for(const lamp of decor){
+      if(lamp.kind!=='lamp')continue;
+      const glow=lampGlowAt(motionTime,lampIndex++,reduced);
       const x=lamp.tile[0]*16-1-camera.x,y=lamp.tile[1]*16-54-camera.y;
       if(x<-36||x>width+36||y<-36||y>height+36)continue;
-      const halo=ctx.createRadialGradient(x,y,1,x,y,31);
-      halo.addColorStop(0,`rgba(255,224,157,${.46*nightAmount})`);
-      halo.addColorStop(.35,`rgba(240,194,124,${.19*nightAmount})`);
-      halo.addColorStop(1,'rgba(231,170,104,0)');
-      ctx.fillStyle=halo;ctx.fillRect(x-31,y-31,62,62);
-      ctx.fillStyle=`rgba(255,239,186,${.82*nightAmount})`;ctx.fillRect(Math.round(x)-1,Math.round(y)-1,3,3);
+      lanterns++;ctx.globalAlpha=nightAmount*glow;
+      ctx.drawImage(lampHalo(),Math.round(x)-32,Math.round(y)-32);
+      ctx.globalAlpha=nightAmount;
+      ctx.fillStyle='rgba(255,239,186,.82)';ctx.fillRect(Math.round(x)-1,Math.round(y)-1,3,3);
     }
-    // Quiet fireflies are anchored to the meadow instead of the camera.
-    for(let i=0;i<36;i++){
-      const x=40+(i*487)%1830-camera.x,y=90+(i*229)%1090-camera.y;
+    // Quiet fireflies drift around the pond and meadow, never with the camera.
+    for(let i=0;i<FIREFLY_COUNT;i++){
+      const particle=fireflyAt(i,motionTime,reduced);
+      const x=particle.x-camera.x,y=particle.y-camera.y;
       if(x<0||x>width||y<0||y>height)continue;
-      const glow=reduced ? .52 : .34+.23*Math.sin(at/1400+i*2.1);
-      ctx.fillStyle=`rgba(245,237,171,${glow*nightAmount})`;ctx.fillRect(Math.round(x),Math.round(y),2,1);
+      fireflies++;ctx.globalAlpha=nightAmount*particle.alpha;
+      ctx.fillStyle='#F5EDAB';ctx.fillRect(Math.round(x),Math.round(y),2,1);
     }
+    if(ctx.canvas?.dataset){ctx.canvas.dataset.visibleFireflies=String(fireflies);ctx.canvas.dataset.visibleLanterns=String(lanterns);}
     ctx.restore();
   }
   return {getState:clock.getState,sample:clock.sample,setMode:clock.setMode,mount,draw};

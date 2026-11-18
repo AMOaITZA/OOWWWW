@@ -75,6 +75,8 @@ export function createMoments({spots,pair,getImage,bubble,getOutfits=()=>({}),ge
     bubble.textContent='Leo: '+line;
     bubble.hidden=false;
     phraseRemaining=line.length>65?9:6;
+    // An interaction line needs time to finish before the next idle remark.
+    nextPhrase=Math.max(nextPhrase,phraseRemaining+10);
   }
   function randomLine(){
     const choices=LEO_LINES.map((line,i)=>({line,i})).filter(({i})=>i!==lastPhrase);

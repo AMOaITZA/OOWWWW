@@ -31,6 +31,17 @@ function controllerAtBench(outfits={leo:{look:'principal'},itza:{look:'principal
 }
 const ctxFor=drawings=>({drawImage(...args){drawings.push(args);},fillRect(){},set fillStyle(_) {}});
 
+test('an interaction phrase finishes before a pending random line replaces it',()=>{
+  const previousRandom=Math.random;Math.random=()=>0;
+  try{
+    const bubble={hidden:true,style:{}},spoken=[];
+    const controller=createMoments({spots,pair:{x:71,y:50,clock:0},bubble,getImage:()=>null,onSay:line=>spoken.push(line)});
+    controller.tick(11.9);controller.say('ponyo ponyo que divertida es');controller.tick(.2);controller.tick(5);
+    assert.equal(bubble.textContent,'Leo: ponyo ponyo que divertida es');
+    assert.deepEqual(spoken,['ponyo ponyo que divertida es']);
+  }finally{Math.random=previousRandom;}
+});
+
 test('one cats point and two original bench points are registered',()=>{
   assert.equal(spots.length,3);
   assert.equal(spots.filter(x=>x.kind==='cats').length,1);

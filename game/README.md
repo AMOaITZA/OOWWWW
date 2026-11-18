@@ -227,3 +227,14 @@ Se corrigen los mechones que quedaban negros en los conjuntos cotidianos y
 se restaura el rostro sin lentes conservando sus rasgos originales, en lugar
 de escalar un parche sobre la cara. Consulta [los cambios V8](../docs/APPEARANCE-VIEWPORT-V8.md)
 y [sus pruebas y capturas](../docs/QA-V8.md).
+
+## Jardín animado V9
+
+Los lugares tienen transiciones breves al abrir y cerrar. Caen pétalos cerca
+de cerezos y jacarandas, hay un estanque con ondas junto al jardín de la carta,
+y las farolas y luciérnagas dan vida a la noche. Los efectos se pausan con las
+ventanas abiertas y respetan la preferencia de reducir movimiento.
+
+Consulta [los detalles V9](../docs/AMBIENCE-V9.md),
+[las pruebas y capturas](../docs/QA-AMBIENCE-V9.md) y
+[la procedencia del estanque](../docs/POND-V9-GENERATION.json).

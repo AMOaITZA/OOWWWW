@@ -238,3 +238,14 @@ ventanas abiertas y respetan la preferencia de reducir movimiento.
 Consulta [los detalles V9](../docs/AMBIENCE-V9.md),
 [las pruebas y capturas](../docs/QA-AMBIENCE-V9.md) y
 [la procedencia del estanque](../docs/POND-V9-GENERATION.json).
+
+## Pesca, Ponyo y casita V10
+
+En el mapa aparece **Pesca · Lago de los peluches**. Consigue a Freddy, Bonnie,
+Chica, Foxy y Golden Freddy para desbloquear a Ponyo junto a Los gatitos.
+Al acariciarlo, Leo dice «ponyo ponyo que divertida es».
+
+**Nuestra casita** permite comer juntos, dormir bajo la manta y ver la tele,
+con los atuendos actuales. La colección, Ponyo y la última actividad de la
+casa se conservan en la partida. Consulta [la guía V10](../docs/FINALE-V10.md)
+y [las pruebas y capturas](../docs/QA-FINALE-V10.md).

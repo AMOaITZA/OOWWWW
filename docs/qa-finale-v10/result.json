@@ -1,0 +1,43 @@
+{
+  "evidence": [
+    "fishing-desktop-start",
+    "fishing-desktop-bite",
+    "fishing-desktop-first-plush",
+    "fishing-desktop-complete",
+    "fishing-desktop-collection",
+    "ponyo-desktop",
+    "home-eat-desktop",
+    "home-sleep-desktop",
+    "home-tv-desktop",
+    "home-eat-phone",
+    "home-sleep-phone",
+    "home-tv-phone",
+    "home-tv-landscape",
+    "fishing-phone-complete",
+    "fishing-phone-collection"
+  ],
+  "fishing": {
+    "collection": {
+      "freddy": 1,
+      "bonnie": 1,
+      "chica": 1,
+      "foxy": 1,
+      "golden-freddy": 1
+    },
+    "catches": 5,
+    "casts": 5
+  },
+  "outfits": {
+    "leo": {
+      "look": "principal",
+      "glasses": true
+    },
+    "itza": {
+      "look": "principal",
+      "hair": "rosa",
+      "glasses": false
+    }
+  },
+  "errors": [],
+  "failed": []
+}

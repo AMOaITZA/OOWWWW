@@ -1,6 +1,13 @@
 import {test,expect} from '@playwright/test';
 import {readFileSync} from 'node:fs';
 const places=JSON.parse(readFileSync(new URL('../../game/data/places.json',import.meta.url),'utf8'));
+const momentSpots=JSON.parse(readFileSync(new URL('../../game/data/moments.json',import.meta.url),'utf8'));
+async function expectInitialDestinations(page){
+  await expect(page.locator('#map-destinations button')).toHaveCount(
+    places.filter(place=>!place.hidden).length+momentSpots.length+1);
+  await expect(page.getByRole('button',{name:'Pesca · Lago de los peluches',exact:true})).toBeVisible();
+  await expect(page.getByRole('button',{name:'Ponyo · Acariciar',exact:true})).toHaveCount(0);
+}
 const find=id=>places.find(p=>p.id===id);
 async function loadAt(page,id){
   const place=find(id);if(!place)throw Error('No existe el lugar '+id);
@@ -136,7 +143,7 @@ test('overview navigates without teleporting and can be closed',async({page})=>{
   await page.locator('#start-game').click();
   await page.locator('#map-button').click();
   await expect(page.locator('#map-panel')).toBeVisible();
-  await expect(page.locator('#map-destinations button')).toHaveCount(places.filter(place=>!place.hidden).length+3);
+  await expectInitialDestinations(page);
   const original=await page.evaluate(()=>JSON.parse(localStorage.getItem('oowwww-game-v1')).position);
   await page.getByRole('button',{name:'Carta',exact:true}).click();
   await expect(page.locator('#map-panel')).toBeHidden();
@@ -160,7 +167,7 @@ test('touchscreen portrait navigates and shows responsive game',async({browser})
     expect(overflow).toBeLessThanOrEqual(3);
     await page.locator('#map-button').tap();
     await expect(page.locator('#map-panel')).toBeVisible();
-    await expect(page.locator('#map-destinations button')).toHaveCount(places.filter(place=>!place.hidden).length+3);
+    await expectInitialDestinations(page);
     await page.locator('#close-map').tap();
     await expect(page.locator('#map-panel')).toBeHidden();
     await page.locator('#help-button').tap();
@@ -236,7 +243,7 @@ test('cats can be petted and show sparkles state, bench can be used and exited',
   await expect(page.locator('#world-status')).toContainText('Acariciando a los gatitos');
   await expect(page.locator('#leo-bubble')).toBeVisible();
   await page.locator('#map-button').click();
-  await expect(page.locator('#map-destinations button')).toHaveCount(places.filter(place=>!place.hidden).length+3);
+  await expectInitialDestinations(page);
   await expect(page.getByRole('button',{name:'Gatitos · Acariciar'})).toBeVisible();
   await expect(page.getByRole('button',{name:/Banca · Banca del jardín/})).toBeVisible();
   await page.locator('#close-map').click();

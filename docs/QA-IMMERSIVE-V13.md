@@ -3,6 +3,11 @@
 ## Validación final
 
 - **235/235 pruebas unitarias** aprobadas.
+- **111 casos de navegador verificados**: 108 aprobaron en la ejecución
+  completa. Los tres casos de la boda aprobaron al repetirlos con la
+  comprobación actualizada: ahora exigen una superficie que cubra la pantalla
+  y conserve la proporción nativa del dibujo. La expectativa anterior exigía
+  que el elemento visible conservara el rectángulo 16:9 de la antigua ventana.
 - **7/7 recorridos aprobados en la compilación de producción**, servida con
   Vite preview: tres de presentación a pantalla completa, tres de costa/puerto/
   baile y uno con el video personal instalado.

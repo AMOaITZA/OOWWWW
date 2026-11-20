@@ -27,6 +27,9 @@ import {POND_LAYOUT} from './pond-geometry.js';
 import {structureShadowObjects} from './structure-shadows.js';
 import {SECRETS,createHiddenSecrets,drawShootingStars} from './hidden-secrets.js';
 import {TRAVEL_SPOTS,isTravelSpot,travelAt,travelScenery} from './travel-spots.js';
+import {COAST_LAYOUT} from './coast-layout.js';
+import {createCoast} from './coast.js';
+import {createHarbor} from './harbor.js';
 
 const $=id=>document.getElementById(id);
 const canvas=$('world'),ctx=canvas.getContext('2d',{alpha:false});
@@ -48,7 +51,7 @@ const discoveries=createHiddenSecrets({save,getImage:kind=>assetImage('/assets/g
   }});
 function initializeWorld(){
   initWorld(places,decor,momentSpots,{ponyoUnlocked:hasAllPlushies(save.fishing),
-    extraObstacles:[...SECRETS,...TRAVEL_SPOTS].map(spot=>spot.tile)});
+    extraObstacles:SECRETS.map(spot=>spot.tile)});
 }
 initializeWorld();
 if(!walkable(Math.round(pair.x),Math.round(pair.y))){
@@ -101,12 +104,19 @@ const host=createHost({
     pendingPonyoWelcome=false;persist();
   }
 });
+const coast=createCoast({pair,save,getOutfits:()=>save.outfits,
+  getCharacterImage:url=>outfitImage(url,save.outfits),getRawImage:assetImage,assetImage,
+  onChange:()=>{if(coast.isSitting()){path=[];targetPlace=null;pressed.clear();pair.moving=false;}persist();},
+  onSay:line=>voice.speak(line),onNight:()=>lighting.setMode('night')});
+const harbor=createHarbor({pair,onTravel:()=>host.open('hawai'),onSay:line=>voice.speak(line),
+  onBoard:()=>{path=[];targetPlace=null;pressed.clear();pair.moving=false;persist();}});
 function interactMoment(spot){
   const result=moments.arrive(spot);
   if(result&&spot.kind==='cats')effects.meow();
   return result;
 }
 function goTo(x,y,place=null){
+  if(coast.isSitting())coast.stand();
   if(moments.isSitting()&&moments.seatId()!==place?.id)moments.stand();
   const point=closestWalkable(x,y);
   if(!point){status('No se puede llegar a ese lugar');return;}
@@ -126,6 +136,13 @@ function goTo(x,y,place=null){
   }else status('No se puede llegar a ese lugar');
 }
 function openPlace(place){
+  if(place.id==='mirador'){
+    path=[];targetPlace=null;pair.moving=false;
+    coast.sync({active:active&&!document.hidden,near:true});coast.arrive();persist();return;
+  }
+  if(place.id==='hawai'){
+    path=[];targetPlace=null;pair.moving=false;harbor.arrive();persist();return;
+  }
   path=[];targetPlace=place;pair.moving=false;host.open(place.id);
   if(places.some(item=>item.id===place.id)&&!save.visited.includes(place.id)){
     save.visited.push(place.id);updatePlaceCounter();
@@ -144,7 +161,7 @@ function cameraAt(){
     y:Math.max(0,Math.min(HEIGHT*TILE-canvas.height,Math.round(displayed.y*TILE-canvas.height/2)-lift))};
 }
 function pointClick(event){
-  if(!active||host.isOpen()||overview.isOpen())return;
+  if(!active||host.isOpen()||overview.isOpen()||coast.isSitting()||harbor.isBoarding())return;
   canvas.focus({preventScroll:true});
   const bounds=canvas.getBoundingClientRect();
   const px=(event.clientX-bounds.left)*canvas.width/bounds.width;
@@ -183,7 +200,7 @@ const pressed=new Set();
 const keyDirections={arrowup:[0,-1,'up'],w:[0,-1,'up'],arrowdown:[0,1,'down'],s:[0,1,'down'],arrowleft:[-1,0,'left'],a:[-1,0,'left'],arrowright:[1,0,'right'],d:[1,0,'right']};
 function step(dt){
   pair.clock+=dt;
-  if(!active||host.isOpen()||overview.isOpen()||moments.isTransitioning()){pair.moving=false;return;}
+  if(!active||host.isOpen()||overview.isOpen()||coast.isSitting()||harbor.isBoarding()||moments.isTransitioning()){pair.moving=false;return;}
   const direction=Object.keys(keyDirections).find(key=>pressed.has(key));
   if(direction&&!path.length){
     if(moments.isSitting())moments.stand();
@@ -219,6 +236,7 @@ const objects=[...sceneObjects(places,decor,objectImage,momentImage,weddingImage
   ...structureShadowObjects(places,placeImage,weddingImage,()=>lighting.sample().phase==='night')];
 function draw(){
   if(!active)return;
+  if(coast.drawView(ctx,{time:ambientTime,reducedMotion:motionPreference.matches}))return;
   const camera=cameraAt();
   canvas.dataset.cameraX=String(camera.x);canvas.dataset.cameraY=String(camera.y);
   ctx.save();ctx.translate(-camera.x,-camera.y);
@@ -229,9 +247,13 @@ function draw(){
     const y0=Math.max(0,Math.floor(camera.y/TILE)-1),y1=Math.min(HEIGHT,Math.ceil((camera.y+canvas.height)/TILE)+1);
     for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++)groundTile(ctx,x,y);
   }
+  const coastGround=assetImage('/assets/game/coast/ground.png');
+  if(coastGround)ctx.drawImage(coastGround,COAST_LAYOUT.strip.x,COAST_LAYOUT.strip.y,
+    COAST_LAYOUT.strip.width,COAST_LAYOUT.strip.height);
   const ambientFrame={camera,time:ambientTime,reducedMotion:motionPreference.matches};
   ambient.drawGround(ctx,ambientFrame);
-  const scenery=objects.concat(moments.scenery(),ponyo.scenery(),discoveries.scenery(),travelScenery(),{
+  coast.drawScenery(ctx,ambientFrame);
+  const scenery=objects.concat(moments.scenery(),ponyo.scenery(),discoveries.scenery(),travelScenery(assetImage),{
     z:FISHING_SPOT.arrival[1]*TILE-2,draw:drawFishingSign});
   if(!moments.shouldHidePair())scenery.push({z:pair.y*TILE,draw:ctx=>drawPair(ctx,moments.renderPair(),url=>outfitImage(url,save.outfits),save.outfits)});
   scenery.sort((a,b)=>a.z-b.z);
@@ -258,8 +280,11 @@ function tick(time){
     reducedMotion:motionPreference.matches});
   step(dt);advancePairAnimation(pair,dt);
   const worldActive=active&&!document.hidden&&!host.isOpen()&&!overview.isOpen();
+  coast.tick(dt,{active:worldActive,night:lighting.sample().phase==='night'});
+  coast.sync({active:worldActive,near:Math.hypot(pair.x-COAST_LAYOUT.shoreArrival[0],pair.y-COAST_LAYOUT.shoreArrival[1])<.6});
+  harbor.tick(dt,{visible:worldActive&&!coast.isSitting()});
   effects.setEnvironment({active:worldActive,night:lighting.sample().phase==='night',
-    nearWater:Math.hypot(pair.x*TILE-POND_LAYOUT.centerX,pair.y*TILE-POND_LAYOUT.centerY)<180});
+    nearWater:pair.y>=85||Math.hypot(pair.x*TILE-POND_LAYOUT.centerX,pair.y*TILE-POND_LAYOUT.centerY)<180});
   // Nothing moves behind a modal. Keep its last frame and repaint when it closes;
   // the day/night clock still uses real time, including time spent in a dialog.
   if(active&&!document.hidden&&!host.isOpen()&&!overview.isOpen()){
@@ -283,7 +308,7 @@ function layout(){
   // 100dvh handles browser bars; resize/visualViewport events resample the screen.
   screen.style.height=innerHeight+'px';
   const bounds=frame.getBoundingClientRect();
-  const viewport=worldViewport(bounds.width,bounds.height);
+  const viewport=worldViewport(bounds.width,bounds.height,{worldWidth:WIDTH*TILE,worldHeight:HEIGHT*TILE});
   viewportScale=viewport.scale;
   if(canvas.width!==viewport.width||canvas.height!==viewport.height){
     canvas.width=viewport.width;canvas.height=viewport.height;
@@ -318,9 +343,12 @@ window.addEventListener('keydown',event=>{
   const interactive=event.target?.closest?.('input,textarea,select,button,a,[contenteditable="true"]');
   if(event.key==='Escape'&&host.isOpen()){host.close();return;}
   if(event.key==='Escape'&&overview.isOpen()){overview.close();return;}
+  if(event.key==='Escape'&&coast.isSitting()){event.preventDefault();coast.stand();canvas.focus({preventScroll:true});return;}
+  if(event.key==='Escape'&&harbor.isOpen()){event.preventDefault();harbor.close();return;}
   if(interactive)return;
   const key=event.key.toLowerCase();
   if(active&&key==='e'&&!event.repeat&&!host.isOpen()&&!overview.isOpen()){
+    if(coast.isSitting()){event.preventDefault();coast.stand();return;}
     const spot=[...momentSpots,FISHING_SPOT,...TRAVEL_SPOTS,...SECRETS,...(hasAllPlushies(save.fishing)?[PONYO_SPOT]:[])]
       .map(item=>({item,distance:Math.hypot(pair.x-item.arrival[0],pair.y-item.arrival[1])}))
       .filter(item=>item.distance<=4).sort((a,b)=>a.distance-b.distance)[0]?.item;
@@ -334,6 +362,7 @@ window.addEventListener('keydown',event=>{
     }
   }
   if(active&&!host.isOpen()&&!overview.isOpen()&&keyDirections[key]){
+    if(coast.isSitting()||harbor.isBoarding())return;
     event.preventDefault();
     if(!pressed.has(key)){pressed.add(key);path=[];targetPlace=null;}
   }

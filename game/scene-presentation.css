@@ -1,0 +1,226 @@
+/* Experiences occupy the game surface. Only their controls float over the art. */
+#experience[data-presentation='scene']{
+  position:fixed;inset:0;display:block;width:100%;height:100dvh;padding:0;
+  overflow:hidden;background:#FFF3DE;backdrop-filter:none;
+}
+#experience[data-presentation='scene'][hidden]{display:none}
+#experience[data-presentation='scene'] .experience-panel{
+  position:absolute;inset:0;display:flex;flex-direction:column;max-width:none;
+  width:100%;height:100%;max-height:none;min-height:0;padding:0;margin:0;
+  border:0;box-shadow:none;background:var(--experience-paper);overflow:hidden;
+}
+#experience[data-presentation='scene'] .experience-panel::after{display:none}
+#experience[data-presentation='scene'] .experience-hero{
+  position:relative;flex:none;min-height:116px;padding:0;border:0;
+  background:var(--experience-tint);
+}
+#experience[data-presentation='scene'] .experience-hero::after{
+  background:linear-gradient(90deg,var(--experience-paper) 0%,#FFF4E4DC 46%,#FFF4E422);
+}
+#experience[data-presentation='scene'] .experience-heading{
+  padding:calc(19px + env(safe-area-inset-top)) max(24px,env(safe-area-inset-right)) 20px calc(150px + env(safe-area-inset-left));
+}
+#experience[data-presentation='scene'] .experience-heading .eyebrow{font-size:10px;line-height:1.5;margin-bottom:6px}
+#experience[data-presentation='scene'] .experience-heading h2{font-size:clamp(14px,1.6vw,22px);line-height:1.6;max-width:52ch}
+#experience[data-presentation='scene'] #experience-content{
+  position:relative;flex:1;min-height:0;margin:0;padding:32px max(24px,calc((100vw - 1120px)/2)) calc(32px + env(safe-area-inset-bottom));
+  overflow:auto;scrollbar-gutter:stable;background:var(--experience-paper);
+}
+#experience[data-presentation='scene'] #experience-content>*+*{margin-top:20px}
+#experience[data-presentation='scene'] .close-experience{
+  position:absolute;left:calc(16px + env(safe-area-inset-left));right:auto;
+  top:calc(17px + env(safe-area-inset-top));z-index:20;display:grid;
+  place-items:center;width:auto;min-width:112px;height:44px;min-height:44px;
+  margin:0;padding:9px 12px;border:1px solid #684D3FCC;box-shadow:2px 2px #382C2426;
+  background:#FFF1DCEB;color:#694F42;font:11px/1.5 'Silkscreen',monospace;
+}
+#experience[data-presentation='scene'] .close-experience[hidden]{display:none}
+#experience[data-presentation='scene'] .close-experience:hover{background:#FFF8EB}
+#experience[data-presentation='scene'] .experience-panel[data-scene-kind='immersive'] .experience-hero{display:none}
+#experience[data-presentation='scene'] .experience-panel[data-scene-kind='immersive'] #experience-content{
+  position:absolute;inset:0;padding:0;overflow:hidden;scrollbar-gutter:auto;
+}
+#experience[data-presentation='scene'][data-transition='entering'],
+#experience[data-presentation='scene'][data-transition='entering'] .experience-panel,
+#experience[data-presentation='scene'][data-transition='entering'] .experience-heading,
+#experience[data-presentation='scene'][data-transition='entering'] #experience-content{animation:none}
+#experience[data-presentation='scene'][data-transition='entering'] .experience-panel{animation:game-scene-arrive 180ms ease-out both}
+@keyframes game-scene-arrive{from{opacity:.12}to{opacity:1}}
+
+/* The house fills the screen; the camera frames the chosen activity on phones. */
+#experience[data-presentation='scene'] .experience-panel[data-experience='casita'] #experience-content{background:#C49162}
+#experience[data-presentation='scene'] .home-room{
+  position:absolute;inset:0;width:100%;height:100%;max-width:none;margin:0!important;padding:0;
+  border:0;box-shadow:none;background:#C49162;
+}
+#experience[data-presentation='scene'] .home-scene-frame{position:absolute;inset:0;border:0;max-width:none;overflow:hidden}
+#experience[data-presentation='scene'] .home-scene{
+  display:block;width:100%;height:100%;max-width:none;aspect-ratio:auto;object-fit:cover;object-position:50% 50%;
+}
+#experience[data-presentation='scene'] .home-scene[data-activity='sleep']{object-position:18% 50%}
+#experience[data-presentation='scene'] .home-scene[data-activity='tv']{object-position:85% 50%}
+#experience[data-presentation='scene'] .home-intro,
+#experience[data-presentation='scene'] .home-caption,
+#experience[data-presentation='scene'] .home-keepsake{display:none}
+#experience[data-presentation='scene'] .home-activities{
+  position:absolute;z-index:4;bottom:calc(16px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
+  width:min(700px,calc(100% - 32px));max-width:none;margin:0!important;gap:9px;
+}
+#experience[data-presentation='scene'] .home-activity{
+  min-height:52px;padding:10px 12px;gap:3px;background:#FFF1DCEB;box-shadow:2px 2px #382C2433;
+  border:1px solid #805D49;backdrop-filter:none;
+}
+#experience[data-presentation='scene'] .home-activity-number,
+#experience[data-presentation='scene'] .home-activity-hint{display:none}
+#experience[data-presentation='scene'] .home-activity strong{font-size:11px;line-height:1.6}
+#experience[data-presentation='scene'] .home-activity[aria-pressed='true']{background:#E7BDC0F2}
+#experience[data-presentation='scene'] .home-reply{
+  position:absolute;z-index:3;left:50%;bottom:calc(82px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  width:min(740px,calc(100% - 32px));max-width:none!important;margin:0!important;padding:9px 15px;
+  border:0;background:#FFF1DCEB;font-size:22px;line-height:1.25;box-shadow:0 2px #382C2426;
+}
+#experience[data-presentation='scene'] .scene-options{
+  position:absolute;z-index:8;right:calc(16px + env(safe-area-inset-right));top:calc(17px + env(safe-area-inset-top));
+  width:min(420px,calc(100% - 156px));margin:0!important;color:#6C5342;
+}
+#experience[data-presentation='scene'] .scene-options>summary{
+  display:flex;align-items:center;justify-content:center;min-height:44px;padding:9px 13px;
+  border:1px solid #684D3FCC;background:#FFF1DCEB;box-shadow:2px 2px #382C2426;
+  font:10px/1.5 'Silkscreen',monospace;cursor:pointer;list-style:none;
+}
+#experience[data-presentation='scene'] .scene-options>summary::after{content:'+';margin-left:12px;font-size:17px}
+#experience[data-presentation='scene'] .scene-options[open]>summary::after{content:'−'}
+#experience[data-presentation='scene'] .scene-options>summary::-webkit-details-marker{display:none}
+#experience[data-presentation='scene'] .scene-options:has(>.home-video-controls[hidden]){display:none}
+#experience[data-presentation='scene'] .scene-options[open]>.home-video-controls{
+  margin:8px 0 0;padding:15px;max-height:calc(100dvh - 170px);overflow:auto;background:#FFF1DCF5;
+  border:1px solid #A48166;box-shadow:none;
+}
+#experience[data-presentation='scene'] .home-video-actions button{font-size:9px;padding:9px 8px}
+
+/* The ceremony is a playable stage with chapter controls over the garden. */
+#experience[data-presentation='scene'] .wedding-ceremony{
+  position:absolute;inset:0;display:block;width:100%;height:100%;padding:0;margin:0;border:0;box-shadow:none;background:#97AC87;
+}
+#experience[data-presentation='scene'] .wedding-cinema{
+  position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;aspect-ratio:auto;
+  border:0;box-shadow:none;object-fit:cover;object-position:center bottom;
+}
+#experience[data-presentation='scene'] .wedding-stage-number,
+#experience[data-presentation='scene'] .wedding-stage-title,
+#experience[data-presentation='scene'] .wedding-stage-caption,
+#experience[data-presentation='scene'] .wedding-vow,
+#experience[data-presentation='scene'] .wedding-progress,
+#experience[data-presentation='scene'] .wedding-controls{position:absolute;z-index:2;margin:0}
+#experience[data-presentation='scene'] .wedding-stage-number{top:calc(22px + env(safe-area-inset-top));right:24px;padding:7px 9px;background:#FFF1DCEB}
+#experience[data-presentation='scene'] .wedding-stage-title{left:24px;top:calc(78px + env(safe-area-inset-top));padding:9px 12px;background:#FFF1DCEB;font-size:18px}
+#experience[data-presentation='scene'] .wedding-stage-caption{display:none}
+#experience[data-presentation='scene'] .wedding-vow{
+  top:calc(132px + env(safe-area-inset-top));left:24px;max-width:min(540px,calc(100% - 48px));
+  padding:12px 15px;border:0;box-shadow:none;background:#FFF1DCEB;font:23px/1.3 'VT323',monospace;
+}
+#experience[data-presentation='scene'] .wedding-progress{right:24px;bottom:calc(80px + env(safe-area-inset-bottom));background:#FFF1DCEB;padding:7px 9px}
+#experience[data-presentation='scene'] .wedding-controls{
+  bottom:calc(18px + env(safe-area-inset-bottom));left:16px;right:16px;width:auto;display:flex;flex-wrap:nowrap;
+  gap:8px;justify-content:center;overflow-x:auto;padding:2px 0 4px;
+}
+#experience[data-presentation='scene'] .wedding-controls .wedding-nav{flex:0 0 auto;min-width:110px;min-height:44px;font-size:10px;padding:9px 12px;box-shadow:2px 2px #382C2433}
+
+/* Fishing keeps its collection in an optional HUD drawer. */
+#experience[data-presentation='scene'] .fishing-game{position:absolute;inset:0;max-width:none;margin:0;background:#9BBC83}
+#experience[data-presentation='scene'] .fishing-stage{
+  position:absolute;inset:0;height:auto;margin:0;border:0;background:#9BBC83 url('/assets/game/world/ground-v4.png') center/cover;
+}
+#experience[data-presentation='scene'] .fishing-pond{width:min(82vw,1000px);height:auto;left:50%;top:50%;transform:translate(-50%,-50%)}
+#experience[data-presentation='scene'] .fishing-rod{left:calc(50% - 150px);bottom:25%;height:180px}
+#experience[data-presentation='scene'] .fishing-line{left:calc(50% - 190px);top:38%;width:190px;height:80px}
+#experience[data-presentation='scene'] .fishing-bobber{left:50%;top:52%;width:9px;height:12px}
+#experience[data-presentation='scene'] .fishing-reward{left:calc(50% - 48px);top:calc(48% - 60px)}
+#experience[data-presentation='scene'] .fishing-mission{
+  position:absolute;z-index:2;left:calc(16px + env(safe-area-inset-left));top:calc(80px + env(safe-area-inset-top));
+  padding:11px 14px;width:min(360px,calc(100% - 32px));border:0;background:#FFF1DCEB;box-shadow:none;
+}
+#experience[data-presentation='scene'] .fishing-mission h3{font-size:10px}
+#experience[data-presentation='scene'] .fishing-mission p{font-size:19px;line-height:1.3}
+#experience[data-presentation='scene'] .fishing-status{
+  position:absolute;z-index:3;left:50%;bottom:calc(95px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  width:min(650px,calc(100% - 32px));max-width:none;min-height:0;margin:0;padding:10px 14px;background:#FFF1DCEB;font-size:23px;line-height:1.3;
+}
+#experience[data-presentation='scene'] .fishing-action{position:absolute;z-index:3;bottom:calc(22px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);margin:0;min-height:48px}
+#experience[data-presentation='scene'] .fishing-meter{position:absolute;z-index:4;bottom:calc(77px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);margin:0}
+#experience[data-presentation='scene'] .fishing-guidance{display:none}
+#experience[data-presentation='scene'] .fishing-collection{margin:8px 0 0;padding:14px;background:#FFF1DCF5;max-height:calc(100dvh - 120px);overflow:auto}
+#experience[data-presentation='scene'] .fishing-plushies{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+/* The map is a complete game screen, with no floating paper or darkened rim. */
+#map-panel{padding:0;background:#F6E8CF;backdrop-filter:none;overflow:hidden}
+#map-panel .map-paper{
+  position:absolute;inset:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,420px);
+  grid-template-rows:auto auto minmax(0,1fr);gap:12px 28px;width:100%;height:100%;max-height:none;
+  margin:0;padding:calc(20px + env(safe-area-inset-top)) max(24px,env(safe-area-inset-right)) calc(20px + env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left));
+  background:#F6E8CF;border:0;box-shadow:none;overflow:auto;
+}
+#map-panel .map-title-row,#map-panel .map-paper>p{grid-column:1/-1;margin:0}
+#map-panel .map-title-row{position:sticky;top:0;z-index:2;background:#F6E8CF}
+#map-panel #overview{width:min(100%,650px);height:auto;aspect-ratio:auto;align-self:start;justify-self:center;margin:0;border:0;box-shadow:0 0 0 2px #B6A181}
+#map-panel .map-destinations{align-content:start;overflow:auto;min-height:0;padding:2px 5px 8px 2px;grid-template-columns:1fr}
+
+@media(max-width:600px){
+  #experience[data-presentation='scene'] .experience-hero{min-height:150px}
+  #experience[data-presentation='scene'] .experience-heading{padding:calc(77px + env(safe-area-inset-top)) 18px 17px}
+  #experience[data-presentation='scene'] .experience-heading h2{font-size:13px;line-height:1.55}
+  #experience[data-presentation='scene'] #experience-content{padding:24px 17px calc(24px + env(safe-area-inset-bottom))}
+  #experience[data-presentation='scene'] .close-experience{left:calc(12px + env(safe-area-inset-left));top:calc(12px + env(safe-area-inset-top));font-size:10px;min-width:104px}
+  #experience[data-presentation='scene'] .home-activities{width:calc(100% - 24px);gap:6px;bottom:calc(12px + env(safe-area-inset-bottom))}
+  #experience[data-presentation='scene'] .home-activity{padding:9px 6px;min-height:50px}
+  #experience[data-presentation='scene'] .home-activity strong{font-size:9px}
+  #experience[data-presentation='scene'] .home-reply{font-size:21px;bottom:calc(76px + env(safe-area-inset-bottom));padding:8px 11px;width:calc(100% - 24px)}
+  #experience[data-presentation='scene'] .scene-options{right:calc(12px + env(safe-area-inset-right));top:calc(12px + env(safe-area-inset-top));width:calc(100% - 140px)}
+  #experience[data-presentation='scene'] .scene-options>summary{font-size:8px;padding:9px 8px}
+  #experience[data-presentation='scene'] .scene-options[open]{width:calc(100% - 24px)}
+  #experience[data-presentation='scene'] .scene-options[open]>summary{margin-left:116px}
+  #experience[data-presentation='scene'] .wedding-stage-number{right:12px;top:calc(15px + env(safe-area-inset-top));font-size:9px!important}
+  #experience[data-presentation='scene'] .wedding-stage-title{left:12px;top:calc(76px + env(safe-area-inset-top));font-size:13px}
+  #experience[data-presentation='scene'] .wedding-vow{left:12px;top:calc(124px + env(safe-area-inset-top));max-width:calc(100% - 24px);font-size:21px}
+  #experience[data-presentation='scene'] .wedding-controls{left:12px;right:12px;justify-content:flex-start;bottom:calc(12px + env(safe-area-inset-bottom))}
+  #experience[data-presentation='scene'] .wedding-controls .wedding-nav{min-width:108px}
+  #experience[data-presentation='scene'] .wedding-progress{right:12px;font-size:8px!important;bottom:calc(75px + env(safe-area-inset-bottom))}
+  #experience[data-presentation='scene'] .fishing-mission{left:12px;top:calc(76px + env(safe-area-inset-top));width:calc(100% - 24px)}
+  #experience[data-presentation='scene'] .fishing-action{width:calc(100% - 24px);max-width:360px;bottom:calc(15px + env(safe-area-inset-bottom))}
+  #experience[data-presentation='scene'] .fishing-status{font-size:21px;bottom:calc(85px + env(safe-area-inset-bottom))}
+  #map-panel .map-paper{display:block;padding:calc(15px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom))}
+  #map-panel .map-paper>p{margin:12px 0}
+  #map-panel #overview{width:100%;margin:15px auto 20px}
+  #map-panel .map-destinations{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}
+  #map-panel .map-destination{font-size:9px;padding:10px 8px;min-height:48px}
+}
+@media(max-width:600px) and (min-height:550px){
+  /* Continue the wooden floor under the HUD so both actors fit the camera. */
+  #experience[data-presentation='scene'] .home-room{
+    background:repeating-linear-gradient(0deg,#B98052 0 22px,#97623F 22px 24px,#C28B5B 24px 46px,#A26B44 46px 48px);
+  }
+  #experience[data-presentation='scene'] .home-scene-frame{bottom:130px}
+  #experience[data-presentation='scene'] .home-scene[data-activity='eat']{object-position:49% 50%}
+  #experience[data-presentation='scene'] .home-scene[data-activity='sleep']{object-position:4% 50%}
+  #experience[data-presentation='scene'] .home-scene[data-activity='tv']{object-position:90% 50%}
+}
+@media(max-height:480px){
+  #experience[data-presentation='scene'] .experience-hero{min-height:86px}
+  #experience[data-presentation='scene'] .experience-heading{padding-top:calc(14px + env(safe-area-inset-top));padding-bottom:12px;padding-left:150px}
+  #experience[data-presentation='scene'] .experience-heading h2{font-size:13px}
+  #experience[data-presentation='scene'] .experience-heading .eyebrow{font-size:9px;margin-bottom:4px}
+  #experience[data-presentation='scene'] .home-reply{display:none}
+  #experience[data-presentation='scene'] .home-activities{width:min(560px,calc(100% - 32px));bottom:calc(12px + env(safe-area-inset-bottom))}
+  #experience[data-presentation='scene'] .home-activity{min-height:44px;padding:8px}
+  #experience[data-presentation='scene'] .wedding-vow{top:calc(116px + env(safe-area-inset-top));max-width:300px;font-size:19px;left:16px;padding:9px 12px}
+  #experience[data-presentation='scene'] .wedding-stage-title{top:calc(72px + env(safe-area-inset-top));left:16px;font-size:13px}
+  #experience[data-presentation='scene'] .wedding-progress{bottom:calc(72px + env(safe-area-inset-bottom))}
+  #experience[data-presentation='scene'] .fishing-mission{max-width:300px;top:calc(76px + env(safe-area-inset-top))}
+  #experience[data-presentation='scene'] .fishing-mission p{font-size:17px}
+  #experience[data-presentation='scene'] .fishing-mission h3{font-size:8px}
+  #experience[data-presentation='scene'] .fishing-status{left:auto;right:16px;bottom:90px;width:min(360px,45%);transform:none;font-size:20px}
+  #experience[data-presentation='scene'] .fishing-action{left:auto;right:16px;bottom:20px;transform:none;width:min(360px,45%)}
+}
+@media(prefers-reduced-motion:reduce){
+  #experience[data-presentation='scene'] .experience-panel{animation:none!important}
+}

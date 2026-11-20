@@ -6,7 +6,7 @@ n.º 1. No se fusiona con `main` sin aprobación explícita.
 
 ## Características actuales
 
-- Mundo de 120 × 80 casillas (16 píxeles por casilla), cámara adaptable a la pantalla,
+- Mundo de 120 × 112 casillas (16 píxeles por casilla), con costa y mar al sur, cámara adaptable a la pantalla,
   paseo por teclado, ratón y pantalla táctil, con búsqueda de rutas A*.
 - Catorce lugares: las nueve experiencias clásicas, armario, **Castillo de nuestra boda**,
   **Nuestro rinconcito secreto**, **La grabadora de Leo** y **Nuestra casita**.
@@ -276,3 +276,21 @@ reproduce desde **Nuestra casita → Ver la tele → Reproducir video**.
 
 Consulta [la guía V12](../docs/TRAVEL-V12.md) y
 [las pruebas y capturas](../docs/QA-TRAVEL-V12.md).
+
+## Mundo continuo V13
+
+Todas las experiencias ocupan la pantalla completa. La casita, la boda, la
+pesca y Hawái se presentan como escenarios con controles sobre el juego.
+La cámara de la casa encuadra cada actividad según el tamaño de pantalla.
+
+El mapa se extiende al sur con playa y mar. En **Mapa → Orilla de los deseos**
+podemos sentarnos, ver fuegos artificiales y pedir deseos en el mismo lienzo
+del mundo. En **Mapa → Viaje a Hawái** llegamos a una terminal con muelle y
+barco: pulsa **E** y después **Subir al barco · Hawái**.
+
+El baile usa ocho poses propias por conjunto, con pasos cruzados, brazos
+levantados y giros. El video sigue en su carpeta y se inicia desde **Ver la
+tele → Controles de la tele → Reproducir video**.
+
+Consulta [la guía V13](../docs/IMMERSIVE-V13.md) y
+[las pruebas y capturas](../docs/QA-IMMERSIVE-V13.md).

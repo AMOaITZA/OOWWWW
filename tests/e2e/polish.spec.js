@@ -66,9 +66,13 @@ for(const size of [{width:375,height:812},{width:812,height:375},{width:1440,hei
       const r=canvas.getBoundingClientRect(),style=getComputedStyle(canvas);
       return {width:r.width-parseFloat(style.borderLeftWidth)-parseFloat(style.borderRightWidth),
         height:r.height-parseFloat(style.borderTopWidth)-parseFloat(style.borderBottomWidth),
+        nativeRatio:canvas.width/canvas.height,fit:style.objectFit,
         overflow:document.documentElement.scrollWidth-innerWidth};
     });
-    expect(Math.abs(metrics.width/metrics.height-16/9)).toBeLessThan(.02);
+    expect(metrics.nativeRatio).toBeCloseTo(16/9,2);
+    expect(metrics.fit).toBe('cover');
+    expect(metrics.width).toBeCloseTo(size.width,0);
+    expect(metrics.height).toBeCloseTo(size.height,0);
     expect(metrics.overflow).toBeLessThanOrEqual(1);
     await page.getByRole('button',{name:'Repetir escena',exact:true}).click();
     if(i===1)await page.getByRole('button',{name:'Sí, quiero',exact:true}).click();

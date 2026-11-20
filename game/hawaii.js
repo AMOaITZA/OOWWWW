@@ -42,3 +42,13 @@ export function nearestHawaiiPoint(x,y){
   if(px>390&&py<218)py=218;
   return {x:px,y:py};
 }
+
+// The island fills the viewport at a uniform integer pixel scale. Portrait
+// screens see a camera crop rather than a squeezed copy of the whole island.
+export function hawaiiViewport(cssWidth,cssHeight){
+  const w=Math.max(1,Math.ceil(Number(cssWidth)||1)),h=Math.max(1,Math.ceil(Number(cssHeight)||1));
+  const preferred=Math.min(w,h)<700?2:3;
+  const scale=Math.max(preferred,Math.ceil(w/640),Math.ceil(h/400));
+  const width=Math.min(640,Math.ceil(w/scale)),height=Math.min(400,Math.ceil(h/scale));
+  return {width,height,scale,cssWidth:width*scale,cssHeight:height*scale};
+}

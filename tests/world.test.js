@@ -5,7 +5,7 @@ import {initWorld,walkable,closestWalkable,findPath,WIDTH,HEIGHT,TILE} from '../
 const read=p=>JSON.parse(readFileSync(new URL('../'+p,import.meta.url),'utf8'));
 const places=read('game/data/places.json'),decor=read('game/data/decor.json');
 initWorld(places,decor);
-test('world dimensions and spawn',()=>{assert.equal(WIDTH*TILE,1920);assert.equal(HEIGHT*TILE,1280);assert.ok(walkable(30,25));});
+test('world dimensions include the coast and preserve the original spawn',()=>{assert.equal(WIDTH*TILE,1920);assert.equal(HEIGHT*TILE,1792);assert.ok(walkable(30,25));});
 test('landmarks and scenery block traversal but arrival tiles remain free',()=>{
   for(const p of places){assert.ok(!walkable(p.tile[0],p.tile[1]),p.id);assert.ok(walkable(...p.arrival),p.id);}
   assert.ok(!walkable(20,14));assert.ok(walkable(30,25));

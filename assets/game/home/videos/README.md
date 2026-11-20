@@ -13,7 +13,7 @@ se elige el MP4.
 Después de copiar el archivo, reinicia `npm run dev`. Para publicar una nueva
 compilación, vuelve a ejecutar `npm run build`. No hay que editar código ni JSON.
 
-Entra en **Nuestra casita → Ver la tele → Reproducir video**. El video no se
+Entra en **Nuestra casita → Ver la tele → Controles de la tele → Reproducir video**. El video no se
 reproduce automáticamente al abrir la casa. Se puede pausar, silenciar y ver
 en grande. Al cambiar de actividad o cerrar se detiene y conserva su posición.
 

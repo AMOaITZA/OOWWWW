@@ -141,6 +141,7 @@ test('the TV stays manual with or without an installed video and preserves custo
       scenes.push(await page.locator('.home-scene').evaluate(canvas=>canvas.toDataURL()));
     }
     expect(new Set(scenes).size).toBe(2);
+    await page.getByText('Controles de la tele',{exact:true}).tap();
     if(installedHomeVideo){
       await expect(page.locator('.home-video-status')).toContainText('Tu video está listo');
       await expect(page.locator('.home-video-play')).toBeEnabled();
@@ -150,10 +151,24 @@ test('the TV stays manual with or without an installed video and preserves custo
     }
     await expect(page.locator('.home-video-source')).not.toHaveAttribute('src',/.+/);
     expect(await page.evaluate(()=>window.__magicPlayCalls)).toBe(0);expect(requests).toEqual([]);
-    await page.setViewportSize({width:844,height:390});await page.locator('#experience-content').evaluate(body=>{body.scrollTop=0;});
-    const geometry=await page.locator('.home-scene').evaluate(canvas=>{const r=canvas.getBoundingClientRect(),body=document.getElementById('experience-content').getBoundingClientRect();return {top:r.top,bottom:r.bottom,height:r.height,bodyTop:body.top,bodyBottom:body.bottom};});
-    expect(geometry.height).toBeLessThanOrEqual(200);expect(geometry.top).toBeGreaterThanOrEqual(geometry.bodyTop);
-    expect(geometry.bottom).toBeLessThanOrEqual(geometry.bodyBottom+1);
+    await page.getByText('Controles de la tele',{exact:true}).tap();
+    await page.setViewportSize({width:844,height:390});
+    await expect.poll(()=>page.locator('.home-scene-frame').evaluate(frame=>{
+      const r=frame.getBoundingClientRect(),c=frame.querySelector('canvas').getBoundingClientRect();
+      return Math.abs(r.width-844)<1&&Math.abs(r.height-390)<1&&
+        c.left<=r.left+1&&c.right>=r.right-1&&c.top<=r.top+1&&c.bottom>=r.bottom-1;
+    })).toBe(true);
+    const geometry=await page.locator('.home-scene-frame').evaluate(frame=>{
+      const r=frame.getBoundingClientRect(),canvas=frame.querySelector('canvas').getBoundingClientRect();
+      return {left:r.left,top:r.top,width:r.width,height:r.height,
+        canvasLeft:canvas.left,canvasRight:canvas.right,canvasTop:canvas.top,canvasBottom:canvas.bottom,
+        ratio:canvas.width/canvas.height};
+    });
+    expect(geometry.left).toBeCloseTo(0,0);expect(geometry.top).toBeCloseTo(0,0);
+    expect(geometry.width).toBeCloseTo(844,0);expect(geometry.height).toBeCloseTo(390,0);
+    expect(geometry.canvasLeft).toBeLessThanOrEqual(1);expect(geometry.canvasRight).toBeGreaterThanOrEqual(843);
+    expect(geometry.canvasTop).toBeLessThanOrEqual(1);expect(geometry.canvasBottom).toBeGreaterThanOrEqual(389);
+    expect(geometry.ratio).toBeCloseTo(16/9,2);
     await page.locator('#close-experience').tap();await expect(page.locator('#experience')).toBeHidden();
     expect((await saved(page)).outfits).toEqual(outfits);expect(errors).toEqual([]);
   }finally{await context.close();}

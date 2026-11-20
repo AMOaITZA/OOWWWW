@@ -168,5 +168,13 @@
     "hawaii": "/assets/game/travel/hawaii.png",
     "lakeside": "/assets/game/travel/lakeside.png",
     "giraffe": "/assets/game/travel/giraffe.png"
+  },
+  "coast": {
+    "ground": "/assets/game/coast/ground.png",
+    "harbor": "/assets/game/coast/harbor.png",
+    "view": "/assets/game/coast/view.png"
+  },
+  "dance": {
+    "bodies": "/assets/game/dance/bodies.png"
   }
 }

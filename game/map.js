@@ -2,11 +2,17 @@ import {WIDTH,HEIGHT,walkable} from './world.js';
 import {activateDialog} from './dialog.js';
 import {visiblePlaces} from './place-discovery.js';
 import {POND_LAYOUT,pondTileBlocked} from './pond-geometry.js';
+import {COAST_LAYOUT,coastTileType} from './coast-layout.js';
 const STEP=3;
 const palette={grass:'#94B77B',grassShade:'#8BAE74',road:'#D8C69A',water:'#6D9BAC',accent:'#B5656F',ink:'#1B120E',cream:'#FFF1DC',visited:'#F2C46D'};
 export function createMap({places,decor,moments=[],pair,save,onNavigate,getActivities=()=>[]}){
   const panel=document.getElementById('map-panel');
   const canvas=document.getElementById('overview');
+  canvas.width=WIDTH*STEP;canvas.height=HEIGHT*STEP;
+  canvas.style.aspectRatio=WIDTH+' / '+HEIGHT;
+  // Keep the taller overview inside a phone while its backing grid and tap
+  // coordinates retain the same three pixels per world tile.
+  canvas.style.width='min(100%, 600px, '+(52*WIDTH/HEIGHT).toFixed(3)+'dvh)';
   const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;
   const closeButton=document.getElementById('close-map');
   const destinations=document.getElementById('map-destinations');
@@ -21,7 +27,17 @@ export function createMap({places,decor,moments=[],pair,save,onNavigate,getActiv
     if((y>=36&&y<=42&&x>10&&x<101)||(x>=59&&x<=65&&y>19&&y<65)){
       land.fillStyle=palette.road;land.fillRect(x*STEP,y*STEP,STEP,STEP);
     }
+    const coast=coastTileType(x,y);
+    if(coast){
+      land.fillStyle=coast==='water'?'#639FA0':coast==='pier'?'#A77D58':coast==='sand'?'#EAD4AB':palette.grass;
+      land.fillRect(x*STEP,y*STEP,STEP,STEP);
+    }
   }
+  // The terminal is a destination building, not an anonymous map marker.
+  const terminal=COAST_LAYOUT.terminal;
+  land.fillStyle='#9F7965';
+  land.fillRect(Math.floor(terminal.x/16*STEP),Math.floor(terminal.y/16*STEP),
+    Math.ceil(terminal.width/16*STEP),Math.ceil(terminal.height/16*STEP));
   for(let y=Math.floor(POND_LAYOUT.y/16);y<=Math.ceil((POND_LAYOUT.y+POND_LAYOUT.height)/16);y++)
     for(let x=Math.floor(POND_LAYOUT.x/16);x<=Math.ceil((POND_LAYOUT.x+POND_LAYOUT.width)/16);x++)
       if(pondTileBlocked(x,y)){land.fillStyle=palette.water;land.fillRect(x*STEP,y*STEP,STEP,STEP);}

@@ -10,23 +10,22 @@ async function enter(page,reducedMotion='no-preference'){
   await expect(page.locator('#world')).toBeVisible();
 }
 
-test('entry is brief and exit returns focus immediately while only inert artwork fades',async({page})=>{
+test('entry fades on the full scene and exit releases focus and artwork immediately',async({page})=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   await enter(page);await page.locator('#world').focus();await page.keyboard.press('e');
   await expect(page.locator('#close-experience')).toBeFocused();
   const entry=await page.locator('#experience').evaluate(panel=>({state:panel.dataset.transition,
     names:panel.getAnimations({subtree:true}).map(animation=>animation.animationName)}));
-  expect(entry.state).toBe('entering');expect(entry.names).toContain('experience-arrive');
+  expect(entry.state).toBe('entering');expect(entry.names).toContain('game-scene-arrive');
   await expect(page.locator('#experience')).not.toHaveAttribute('data-transition','entering');
   const immediate=await page.evaluate(()=>{
     document.getElementById('close-experience').click();
-    const layer=document.querySelector('.experience-departure');
     return {closed:document.getElementById('experience').hidden,focus:document.activeElement.id,
-      inert:layer?.inert,hiddenFromAT:layer?.getAttribute('aria-hidden'),
-      clickThrough:layer&&getComputedStyle(layer).pointerEvents,
+      departureLayers:document.querySelectorAll('.experience-departure').length,
+      contentEmpty:document.getElementById('experience-content').childElementCount===0,
       count:document.querySelectorAll('#experience-content').length};
   });
-  expect(immediate).toEqual({closed:true,focus:'world',inert:true,hiddenFromAT:'true',clickThrough:'none',count:1});
+  expect(immediate).toEqual({closed:true,focus:'world',departureLayers:0,contentEmpty:true,count:1});
   await expect(page.locator('.experience-departure')).toHaveCount(0);
   await expect(page.locator('#experience-content')).toBeEmpty();
   expect(errors).toEqual([]);
@@ -68,7 +67,7 @@ test('reduced motion skips both transitions, including preference changes while 
   await page.keyboard.press('Escape');await expect(page.locator('.experience-departure')).toHaveCount(0);
 });
 
-test('closing stops the wardrobe animation before its visual exit has finished',async({page})=>{
+test('closing immediately stops the wardrobe animation and leaves no exit surface',async({page})=>{
   await enter(page);
   await page.evaluate(()=>{
     window.__wardrobeDraws=0;

@@ -3,7 +3,7 @@
 1. Copia tu archivo a **`assets/game/home/videos/nuestro-video.mp4`**.
 2. Reinicia `npm run dev`. Si usas una versión compilada, ejecuta de nuevo
    `npm run build` antes de publicarla.
-3. Abre **Nuestra casita → Ver la tele** y pulsa **Reproducir video**.
+3. Abre **Nuestra casita → Ver la tele → Controles de la tele** y pulsa **Reproducir video**.
 
 El formato recomendado es MP4 con video H.264 y audio AAC. Se admite también
 `nuestro-video.webm`, con preferencia por el MP4 cuando existen los dos.

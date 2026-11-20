@@ -18,6 +18,7 @@ test('the installed personal video plays in the TV and releases media on activit
   await page.goto('/game.html');await page.locator('#start-game').click();
   await page.locator('#world').focus();await page.keyboard.press('e');
   await page.getByRole('button',{name:'Ver la tele',exact:true}).click();
+  await page.getByText('Controles de la tele',{exact:true}).click();
   const video=page.locator('.home-video-source');
   await expect(video).not.toHaveAttribute('src',/.+/);
   await page.getByRole('button',{name:'Silenciar video',exact:true}).click();
@@ -26,10 +27,12 @@ test('the installed personal video plays in the TV and releases media on activit
   await expect.poll(()=>page.evaluate(()=>window.__personalVideoFrames)).toBeGreaterThan(5);
   expect(await video.evaluate(v=>v.muted)).toBe(true);
   await page.getByRole('button',{name:'Pausar video',exact:true}).click();
+  await page.getByText('Controles de la tele',{exact:true}).click();
   await page.getByRole('button',{name:'Comer juntos',exact:true}).click();
   await expect(video).not.toHaveAttribute('src',/.+/);
   await page.getByRole('button',{name:'Ver la tele',exact:true}).click();
   expect(await video.evaluate(v=>v.paused)).toBe(true);
+  await page.getByText('Controles de la tele',{exact:true}).click();
   await page.getByRole('button',{name:'Reproducir video',exact:true}).click();
   await expect.poll(()=>video.evaluate(v=>v.paused)).toBe(false);
   const handle=await video.elementHandle();

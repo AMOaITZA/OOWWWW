@@ -43,7 +43,10 @@ test('five actual catches persist the collection and unlock an interactive Ponyo
   await expect(page.getByRole('button',{name:fishingMapName,exact:true})).toBeVisible();
   await expect(page.getByRole('button',{name:ponyoMapName,exact:true})).toHaveCount(0);
   await page.locator('#close-map').click();await openFishing(page);
+  await page.getByText('Mis peluches',{exact:true}).click();
   await realImages(page,'.fishing-plush img');
+  await expect(page.locator('.fishing-collection')).toBeVisible();
+  await page.getByText('Mis peluches',{exact:true}).click();
   for(let count=1;count<=5;count++){
     await catchOne(page);
     await expect(page.locator('.fishing-game')).toHaveAttribute('data-collected',String(count));
@@ -125,14 +128,21 @@ test('fishing and the three home activities remain usable with real phone taps a
       await button.tap();const box=await button.boundingBox();expect(box.height).toBeGreaterThanOrEqual(44);
     }
     await page.setViewportSize({width:844,height:390});
-    await page.locator('#experience-content').evaluate(body=>{body.scrollTop=0;});
-    const room=await page.locator('.home-scene').evaluate(canvas=>{
-      const r=canvas.getBoundingClientRect(),body=document.getElementById('experience-content').getBoundingClientRect();
-      return {top:r.top,bottom:r.bottom,height:r.height,width:r.width,bodyTop:body.top,bodyBottom:body.bottom};
+    await expect.poll(()=>page.locator('.home-scene-frame').evaluate(frame=>{
+      const r=frame.getBoundingClientRect(),c=frame.querySelector('canvas').getBoundingClientRect();
+      return Math.abs(r.width-844)<1&&Math.abs(r.height-390)<1&&
+        c.left<=r.left+1&&c.right>=r.right-1&&c.top<=r.top+1&&c.bottom>=r.bottom-1;
+    })).toBe(true);
+    const room=await page.locator('.home-scene-frame').evaluate(frame=>{
+      const r=frame.getBoundingClientRect(),canvas=frame.querySelector('canvas').getBoundingClientRect();
+      return {top:r.top,left:r.left,height:r.height,width:r.width,canvasWidth:canvas.width,canvasHeight:canvas.height,
+        canvasLeft:canvas.left,canvasRight:canvas.right,canvasTop:canvas.top,canvasBottom:canvas.bottom};
     });
-    expect(room.height).toBeLessThanOrEqual(200);
-    expect(room.top).toBeGreaterThanOrEqual(room.bodyTop);expect(room.bottom).toBeLessThanOrEqual(room.bodyBottom+1);
-    expect(room.width/room.height).toBeCloseTo(16/9,2);
+    expect(room.top).toBeCloseTo(0,0);expect(room.left).toBeCloseTo(0,0);
+    expect(room.height).toBeCloseTo(390,0);expect(room.width).toBeCloseTo(844,0);
+    expect(room.canvasWidth/room.canvasHeight).toBeCloseTo(16/9,2);
+    expect(room.canvasLeft).toBeLessThanOrEqual(1);expect(room.canvasRight).toBeGreaterThanOrEqual(843);
+    expect(room.canvasTop).toBeLessThanOrEqual(1);expect(room.canvasBottom).toBeGreaterThanOrEqual(389);
     expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBe(0);
     await expect(page.locator('#close-experience')).toBeVisible();await page.locator('#close-experience').tap();
     await expect(page.locator('#experience')).toBeHidden();expect((await state(page)).outfits).toEqual(outfits);

@@ -1,0 +1,55 @@
+.experience .experience-panel[data-experience='hawai']{--experience-accent:#5E897C;--experience-tint:#DDEADE;--experience-paper:#FFF5DF;width:min(1150px,100%)}
+.experience .experience-panel[data-experience='hawai'] .experience-hero{min-height:94px}
+.experience .experience-panel[data-experience='hawai'] .experience-heading{padding-top:19px;padding-bottom:12px}
+.experience .experience-panel[data-experience='hawai'] #experience-content{padding:17px 22px 23px}
+.hawaii-trip{max-width:1040px;margin:auto;color:#625342}
+.hawaii-topline{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px}
+.hawaii-kicker{font:9px/1.8 'Silkscreen',monospace;color:#809077;letter-spacing:1px}
+.hawaii-island-name h3{margin:3px 0 0;font:27px/1.1 'VT323',monospace;color:#5E7966}
+.hawaii-wallet{margin:0!important;padding:10px 12px;border:1px solid #D8BA8F;background:#F4E5BE;font:21px/1 'VT323',monospace;white-space:nowrap}
+.hawaii-back{min-height:44px;padding:9px 12px;color:#5F7867;background:#EEF0DA;border:2px solid #91A187;cursor:pointer;font:9px/1.6 'Silkscreen',monospace}
+.hawaii-stage{position:relative;overflow:hidden;border:3px solid #847959;background:#78A89B;box-shadow:inset 0 0 0 2px #F8E8BF,4px 5px #7C765422}
+.hawaii-map{display:block;width:100%;height:auto;image-rendering:pixelated;touch-action:manipulation;cursor:crosshair;outline-offset:-5px}
+.hawaii-map:focus-visible{outline:3px solid #FFF0B0}
+.hawaii-location{position:absolute;left:12px;top:12px;padding:8px 11px;background:#FFEFCCEB;border:1px solid #9B956E;font:9px/1.6 'Silkscreen',monospace;color:#5E715C;pointer-events:none}
+.hawaii-destinations{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.hawaii-destination{min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:12px 7px;border:2px solid #B6AA83;background:#F6EDD2;color:#64705A;cursor:pointer;box-shadow:2px 3px #9D8E6630}
+.hawaii-destination strong{font:10px/1.6 'Silkscreen',monospace}
+.hawaii-destination span{font:20px/1 'VT323',monospace;color:#92765B}
+.hawaii-destination:hover,.hawaii-destination[aria-current='location']{background:#E5EBCF;border-color:#8EA47E}
+.hawaii-status{margin:16px 0!important;min-height:46px;padding:11px 16px;border-left:3px solid #B89C7B;background:#FFF0D2;font:23px/1.3 'VT323',monospace;color:#84654E}
+.hawaii-interaction{padding:17px;background:#ECEDD8;border:1px solid #B4B694;box-shadow:inset 0 0 0 3px #F9F3DC}
+.hawaii-activity-title{font:11px/1.8 'Silkscreen',monospace;color:#647659;margin:0}
+.hawaii-activity-hint{font:22px/1.3 'VT323',monospace;margin:8px 0 0!important;color:#7D7358}
+.hawaii-primary{display:block;margin:14px auto 0;min-height:48px;padding:12px 22px;border:2px solid #739079;background:#F9E8C5;color:#60715C;cursor:pointer;font:10px/1.7 'Silkscreen',monospace}
+.hawaii-drinks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:15px}
+.hawaii-drink{display:flex;align-items:center;gap:12px;text-align:left;padding:14px 10px;min-height:110px;border:2px solid #BAAA83;background:#FFF3D7;color:#765E47;cursor:pointer}
+.hawaii-drink:disabled{opacity:.55;cursor:default}
+.hawaii-drink-details{display:flex;flex-direction:column;gap:7px}
+.hawaii-drink-details strong{font:9px/1.6 'Silkscreen',monospace}
+.hawaii-drink-details span{font:19px/1 'VT323',monospace}
+.hawaii-drink-details b{font:18px/1 'VT323',monospace;color:#718260;font-weight:400}
+.hawaii-cup{flex:none;position:relative;display:block;width:21px;height:28px;background:var(--drink-color);border:3px solid #9B7858;box-shadow:inset 3px 0 #FFF0C788,3px 3px #B3A07833}
+.hawaii-cup::before{content:'';position:absolute;width:3px;height:18px;top:-14px;right:3px;background:#AB9471;box-shadow:1px 0 #FFF0C7}
+.hawaii-cup::after{content:'';position:absolute;width:17px;height:7px;top:-13px;right:-7px;background:#DFB2A0;border-top:2px solid #B88777}
+.hawaii-memories{text-align:center;margin:15px 0 0!important;font:20px/1.3 'VT323',monospace;color:#7F8868}
+.hawaii-help{text-align:center;margin:11px auto 0!important;max-width:65ch;font:19px/1.3 'VT323',monospace;color:#9B8D72}
+.hawaii-trip [hidden]{display:none!important}
+@media(max-width:560px){
+ .experience .experience-panel[data-experience='hawai'] #experience-content{padding:12px 9px 18px}
+ .experience .experience-panel[data-experience='hawai'] .experience-hero{min-height:82px}
+ .experience .experience-panel[data-experience='hawai'] .experience-heading{padding-top:14px;padding-bottom:10px}
+ .hawaii-topline{flex-wrap:wrap;gap:10px;margin-bottom:12px}.hawaii-island-name{flex:1}.hawaii-island-name h3{font-size:24px}.hawaii-kicker{font-size:7px}
+ .hawaii-wallet{padding:9px;font-size:19px}.hawaii-back{width:100%;font-size:8px;padding:9px}
+ .hawaii-stage{border-width:2px}.hawaii-location{left:7px;top:7px;padding:6px 8px;font-size:7px;max-width:90%}
+ .hawaii-destinations{gap:5px;margin-top:10px}.hawaii-destination{padding:10px 4px;min-height:66px}.hawaii-destination strong{font-size:8px}.hawaii-destination span{display:none}
+ .hawaii-status{font-size:21px;padding:10px 12px;margin:12px 0!important}.hawaii-interaction{padding:12px}.hawaii-activity-title{font-size:9px}.hawaii-activity-hint{font-size:21px}
+ .hawaii-drinks{grid-template-columns:1fr;gap:8px}.hawaii-drink{min-height:92px;padding:13px 16px;gap:20px}.hawaii-drink-details{gap:5px}
+ .hawaii-memories{font-size:18px}.hawaii-help{font-size:18px}
+}
+@media(max-height:480px){
+ .experience .experience-panel[data-experience='hawai'] .experience-hero{min-height:69px}
+ .experience .experience-panel[data-experience='hawai'] .experience-heading{padding-top:9px;padding-bottom:8px}
+ .hawaii-topline{gap:10px;margin-bottom:10px}.hawaii-back{max-width:210px}.hawaii-kicker{display:none}
+ .hawaii-stage{max-width:560px;margin-inline:auto}.hawaii-destinations{margin-top:10px}.hawaii-destination{min-height:59px;padding:8px}.hawaii-destination span{display:none}
+}

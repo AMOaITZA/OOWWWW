@@ -15,6 +15,8 @@ export function loadSave() {
       voiceNotes:data.voiceNotes&&typeof data.voiceNotes==='object'?data.voiceNotes:undefined,
       ...(data.fishing&&typeof data.fishing==='object'?{fishing:data.fishing}:{}),
       ...(data.home&&typeof data.home==='object'?{home:data.home}:{}),
+      ...(data.hawaii&&typeof data.hawaii==='object'?{hawaii:data.hawaii}:{}),
+      ...(data.lakeside&&typeof data.lakeside==='object'?{lakeside:data.lakeside}:{}),
       ...(data.soundEffects&&typeof data.soundEffects==='object'?{soundEffects:data.soundEffects}:{}),
       ...(data.hiddenSecrets&&typeof data.hiddenSecrets==='object'?{hiddenSecrets:data.hiddenSecrets}:{})};
   } catch {return structuredClone(DEFAULT);}

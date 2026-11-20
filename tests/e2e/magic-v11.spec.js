@@ -1,4 +1,8 @@
 import {test,expect} from '@playwright/test';
+import {existsSync} from 'node:fs';
+
+const installedHomeVideo=existsSync(new URL('../../assets/game/home/videos/nuestro-video.mp4',import.meta.url))||
+  existsSync(new URL('../../assets/game/home/videos/nuestro-video.webm',import.meta.url));
 
 const key='oowwww-game-v1';
 const outfits={leo:{look:'boda',glasses:false},itza:{look:'boda',hair:'rubio',glasses:false}};
@@ -51,7 +55,7 @@ async function navigateTile(page,point){
   await expect.poll(async()=>(await saved(page)).position,{timeout:40000}).toEqual(point);
 }
 
-test('real footsteps and cat interactions use sound effects, while mute and volume persist',async({page})=>{
+test('walking stays silent, cats still meow, and mute and volume persist',async({page})=>{
   await audioProbe(page);
   await page.addInitScript(()=>{window.__preGestureStarts=()=>window.__effectStarts.length;});
   await enter(page,{position:{x:68,y:51},effects:true});
@@ -59,8 +63,11 @@ test('real footsteps and cat interactions use sound effects, while mute and volu
   expect(await effectStarts(page)).toHaveLength(0);
   await interact(page);await expect(page.locator('#world-status')).toContainText('Acariciando');
   await expect.poll(async()=>(await effectStarts(page)).some(event=>Math.abs(event.duration-.66)<.01)).toBe(true);
+  const beforeWalking=(await effectStarts(page)).length;
   await page.locator('#world').focus();await page.keyboard.down('ArrowDown');await page.waitForTimeout(420);await page.keyboard.up('ArrowDown');
-  await expect.poll(async()=>(await effectStarts(page)).some(event=>!event.loop&&event.duration<.2)).toBe(true);
+  await expect.poll(async()=>(await saved(page)).position.y).toBeGreaterThan(51);
+  expect((await effectStarts(page)).length).toBe(beforeWalking,'Walking creates no audio sources');
+  expect((await effectStarts(page)).some(event=>event.duration<.2)).toBe(false);
   await page.locator('#music-button').click();
   const volume=page.locator('#sound-effects-volume');await volume.focus();await page.keyboard.press('Home');
   for(let i=0;i<25;i++)await page.keyboard.press('ArrowRight');
@@ -112,11 +119,13 @@ test('three hidden objects can be found through the world and their messages sur
   expect(errors).toEqual([]);
 });
 
-test('the TV has a clean empty state and seated scenes keep current customization on a phone',async({browser})=>{
+test('the TV stays manual with or without an installed video and preserves customization on a phone',async({browser})=>{
   const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
   try{
     const page=await context.newPage(),requests=[],errors=[];
-    page.on('request',request=>{if(/\/home\/videos\/.*\.(mp4|webm)(?:\?|$)/.test(request.url()))requests.push(request.url());});
+    // Vite's tiny ?url script discovers the installed filename; only media
+    // requests would mean that the personal video is loaded before a gesture.
+    page.on('request',request=>{if(request.resourceType()==='media'&&/\/home\/videos\/.*\.(mp4|webm)(?:\?|$)/.test(request.url()))requests.push(request.url());});
     page.on('pageerror',error=>errors.push(error.message));
     await page.addInitScript(()=>{
       window.__magicPlayCalls=0;const play=HTMLMediaElement.prototype.play;
@@ -132,8 +141,13 @@ test('the TV has a clean empty state and seated scenes keep current customizatio
       scenes.push(await page.locator('.home-scene').evaluate(canvas=>canvas.toDataURL()));
     }
     expect(new Set(scenes).size).toBe(2);
-    await expect(page.locator('.home-video-status')).toContainText('Pronto veremos nuestro video');
-    await expect(page.locator('.home-video-play')).toBeDisabled();
+    if(installedHomeVideo){
+      await expect(page.locator('.home-video-status')).toContainText('Tu video está listo');
+      await expect(page.locator('.home-video-play')).toBeEnabled();
+    }else{
+      await expect(page.locator('.home-video-status')).toContainText('Pronto veremos nuestro video');
+      await expect(page.locator('.home-video-play')).toBeDisabled();
+    }
     await expect(page.locator('.home-video-source')).not.toHaveAttribute('src',/.+/);
     expect(await page.evaluate(()=>window.__magicPlayCalls)).toBe(0);expect(requests).toEqual([]);
     await page.setViewportSize({width:844,height:390});await page.locator('#experience-content').evaluate(body=>{body.scrollTop=0;});

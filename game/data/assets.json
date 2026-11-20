@@ -15,7 +15,8 @@
   "home": {
     "exterior": "/assets/game/home/exterior.png",
     "interior": "/assets/game/home/interior.png",
-    "seatedBodies": "/assets/game/home/seated-bodies.png"
+    "seatedBodies": "/assets/game/home/seated-bodies.png",
+    "seatedCrossed": "/assets/game/home/seated-crossed.png"
   },
   "ambient": {
     "pond": "/assets/game/ambient/pond.png"
@@ -159,6 +160,13 @@
     "grabadora": "/assets/game/experiences/grabadora.png",
     "pesca": "/assets/game/ambient/pond.png",
     "casita": "/assets/game/home/interior.png",
-    "hallazgo": "/assets/game/experiences/secreto.png"
+    "hallazgo": "/assets/game/experiences/secreto.png",
+    "hawai": "/assets/game/travel/hawaii.png",
+    "mirador": "/assets/game/travel/lakeside.png"
+  },
+  "travel": {
+    "hawaii": "/assets/game/travel/hawaii.png",
+    "lakeside": "/assets/game/travel/lakeside.png",
+    "giraffe": "/assets/game/travel/giraffe.png"
   }
 }

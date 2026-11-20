@@ -1,0 +1,18 @@
+{
+  "screenshots": [
+    "hawai-map-desktop.png",
+    "hawai-dance-desktop.png",
+    "hawai-bar-desktop.png",
+    "hawai-drinks-menu.png",
+    "hawai-giraffe-desktop.png",
+    "hawai-giraffe-phone.png",
+    "hawai-landscape.png",
+    "lake-fireworks-desktop.png",
+    "lake-fireworks-scene.png",
+    "lake-fireworks-phone.png",
+    "lake-fireworks-landscape.png"
+  ],
+  "errors": [],
+  "failed": [],
+  "note": "Actual game flows, personalized looks, ordinary arrival seeds. Reduced motion freezes decorative effects for reproducible screenshots; active animations are exercised by browser tests."
+}

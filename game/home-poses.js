@@ -2,6 +2,7 @@ import {getChoice,getSelectedLook} from './wardrobe.js';
 import {hairMaskPixel} from './hair.js';
 
 export const HOME_POSE_URL='/assets/game/home/seated-bodies.png';
+export const HOME_TV_POSE_URL='/assets/game/home/seated-crossed.png';
 const looks=['principal','alternativo','boda'];
 const pixelsCache=new WeakMap(),posedCache=new WeakMap();
 function pixelsOf(image){
@@ -16,7 +17,7 @@ function rawHairPixel(r,g,b){
 }
 function posedActor({who,pose,frame,outfits,getCharacterImage,getRawImage,getPoseImage}){
   const look=getChoice(outfits,who),selected=getSelectedLook(outfits,who);
-  const source=getCharacterImage?.(selected?.sheet),body=getPoseImage?.(HOME_POSE_URL);
+  const source=getCharacterImage?.(selected?.sheet),body=getPoseImage?.(pose==='tv'?HOME_TV_POSE_URL:HOME_POSE_URL);
   if(!source||!body)return null;
   let byBody=posedCache.get(source);if(!byBody){byBody=new WeakMap();posedCache.set(source,byBody);}
   let variants=byBody.get(body);if(!variants){variants=new Map();byBody.set(body,variants);}
@@ -25,7 +26,7 @@ function posedActor({who,pose,frame,outfits,getCharacterImage,getRawImage,getPos
   const canvas=document.createElement('canvas');canvas.width=32;canvas.height=48;
   const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;
   const row=(who==='itza'?3:0)+Math.max(0,looks.indexOf(look));
-  const column=(pose==='tv'?2:0)+index;
+  const column=index;
   ctx.drawImage(body,column*32,row*48,32,48,0,0,32,48);
   const personalized=pixelsOf(source),raw=pixelsOf(getRawImage?.(selected?.sheet)||source);
   const output=ctx.getImageData(0,0,32,48),direction=pose==='tv'?2:1;

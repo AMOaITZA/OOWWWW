@@ -17,5 +17,5 @@ Entra en **Nuestra casita → Ver la tele → Reproducir video**. El video no se
 reproduce automáticamente al abrir la casa. Se puede pausar, silenciar y ver
 en grande. Al cambiar de actividad o cerrar se detiene y conserva su posición.
 
-Esta carpeta solo contiene instrucciones hasta que añadas tu video. Los videos
-temporales utilizados por las pruebas se eliminan y no forman parte del juego.
+El video personal instalado se conserva tal como fue subido. Las pruebas no lo
+sustituyen ni lo eliminan; sus clips temporales solo se crean si no hay uno.

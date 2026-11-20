@@ -1,6 +1,6 @@
 // Original mono game sounds. They are synthesized once, then reused as buffers.
 export const EFFECT_SAMPLE_RATE=22050;
-export const EFFECT_DURATIONS=Object.freeze({grass:.12,stone:.105,meow:.66,splash:.48,
+export const EFFECT_DURATIONS=Object.freeze({meow:.66,splash:.48,
   chime:.7,water:4,crickets:4});
 const TAU=Math.PI*2;
 export function makeSoundSamples(kind,sampleRate=EFFECT_SAMPLE_RATE){
@@ -13,11 +13,7 @@ export function makeSoundSamples(kind,sampleRate=EFFECT_SAMPLE_RATE){
     const t=i/sampleRate,p=t/duration,n=noise();low=low*.86+n*.14;
     const edge=Math.min(1,t/.007,(duration-t)/.016);
     let value=0;
-    if(kind==='grass'||kind==='stone'){
-      const envelope=Math.exp(-t*(kind==='stone'?40:31))*edge;
-      value=(low*(kind==='grass'?1.8:.65)+n*(kind==='grass' ? .12 : .28)+
-        Math.sin(TAU*(kind==='grass'?92:135)*t)*.22)*envelope;
-    }else if(kind==='meow'){
+    if(kind==='meow'){
       const frequency=330+240*Math.sin(Math.PI*Math.min(1,p*1.25))*(1-p*.5);
       phase+=TAU*frequency/sampleRate;
       const envelope=Math.pow(Math.sin(Math.PI*p),.8)*edge;

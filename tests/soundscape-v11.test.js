@@ -39,7 +39,7 @@ test('each original sound contains a bounded audible signal with quiet edges',()
 
 test('the soundscape stays silent and creates no audio context before a gesture unlock',async()=>{
   const a=fixture();a.sound.setEnvironment({active:true,night:true,nearWater:true});
-  assert.equal(a.sound.meow(),false);assert.equal(a.sound.step(),false);assert.equal(a.created(),0);
+  assert.equal(a.sound.meow(),false);assert.equal(a.created(),0);
   assert.equal(await a.sound.unlock(),true);assert.equal(a.created(),1);
   assert.equal(a.sources.length,2);assert.ok(a.sources.every(source=>source.loop));
   await a.sound.unlock();assert.equal(a.created(),1);assert.equal(a.sources.length,2);
@@ -57,15 +57,16 @@ test('ambient loops follow proximity, night and visible-world state without accu
   assert.equal(a.buffers.length,2,'Resuming reuses the generated PCM resources');
 });
 
-test('footsteps and meows are throttled and one-shot sources remain bounded',async()=>{
+test('footsteps are unavailable while meows stay throttled and one-shot sources bounded',async()=>{
   const a=fixture();await a.sound.unlock();
-  assert.equal(a.sound.step('grass'),true);assert.equal(a.sound.step('stone'),false);
-  a.advance(150);assert.equal(a.sound.step('stone'),true);
+  assert.equal(a.sound.step,undefined,'Walking has no public sound effect');
+  assert.throws(()=>makeSoundSamples('grass'),/Unknown world sound/);
+  assert.throws(()=>makeSoundSamples('stone'),/Unknown world sound/);
   assert.equal(a.sound.meow(),true);assert.equal(a.sound.meow(),false);
   for(let i=0;i<30;i++){a.advance(800);a.sound.meow();}
   assert.ok(a.sources.some(source=>source.stops.length>1),'The oldest one-shot is released at the voice budget');
   assert.ok(MAX_SOUND_SOURCES<=10);
-  assert.equal(a.buffers.length,3,'Repetition never regenerates the step and meow buffers');
+  assert.equal(a.buffers.length,1,'Repetition reuses the meow buffer');
 });
 
 test('mute, zero volume, hidden tabs and media priority stop all world sound',async()=>{
@@ -88,6 +89,6 @@ test('preferences are normalized and absent Web Audio support leaves the game us
   const changes=[],sound=createSoundscape({onChange:state=>changes.push(state),createAudioContext:()=>null});
   sound.setEnabled(false);sound.setEnabled(false);sound.setVolume(.5);
   assert.deepEqual(changes,[{enabled:false,volume:.35},{enabled:false,volume:.5}]);
-  sound.setEnabled(true);assert.equal(await sound.unlock(),false);assert.equal(sound.step(),false);
+  sound.setEnabled(true);assert.equal(await sound.unlock(),false);assert.equal(sound.meow(),false);
   sound.dispose();
 });

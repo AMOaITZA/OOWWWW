@@ -23,10 +23,10 @@ import {FISHING_SPOT,PONYO_SPOT,fishingAt,drawFishingSign} from './finale-spots.
 import {createPonyo} from './ponyo.js';
 import {createSoundscape} from './soundscape.js';
 import './soundscape.css';
-import {onMainRoad,villagePathTiles} from './village-paths.js';
 import {POND_LAYOUT} from './pond-geometry.js';
 import {structureShadowObjects} from './structure-shadows.js';
 import {SECRETS,createHiddenSecrets,drawShootingStars} from './hidden-secrets.js';
+import {TRAVEL_SPOTS,isTravelSpot,travelAt,travelScenery} from './travel-spots.js';
 
 const $=id=>document.getElementById(id);
 const canvas=$('world'),ctx=canvas.getContext('2d',{alpha:false});
@@ -48,7 +48,7 @@ const discoveries=createHiddenSecrets({save,getImage:kind=>assetImage('/assets/g
   }});
 function initializeWorld(){
   initWorld(places,decor,momentSpots,{ponyoUnlocked:hasAllPlushies(save.fishing),
-    extraObstacles:SECRETS.map(secret=>secret.tile)});
+    extraObstacles:[...SECRETS,...TRAVEL_SPOTS].map(spot=>spot.tile)});
 }
 initializeWorld();
 if(!walkable(Math.round(pair.x),Math.round(pair.y))){
@@ -59,8 +59,6 @@ let viewportScale=2,bottomInset=64;
 let pendingLayout=0;
 let ambientTime=0;
 let pendingPonyoWelcome=false;
-let footDistance=0;
-const stonePaths=new Set(villagePathTiles(places).map(tile=>tile.x+','+tile.y));
 const status=text=>{$('world-status').textContent=text;};
 function persist(){
   save.position={x:Math.round(pair.x),y:Math.round(pair.y)};
@@ -120,7 +118,7 @@ function goTo(x,y,place=null){
       ponyo.arrive();status('Acariciando a Ponyo');
     }else if(discoveries.isSpot(place)){
       discoveries.arrive(place);
-    }else if(place?.id==='pesca')openPlace(place);
+    }else if(place?.id==='pesca'||isTravelSpot(place))openPlace(place);
     else if(place&&moments.isMoment(place)){
       interactMoment(place);
       status(place.kind==='cats'?'Acariciando a los gatitos':moments.isSitting()?'Descansando juntos en la banca':'Seguimos explorando');
@@ -152,6 +150,8 @@ function pointClick(event){
   const px=(event.clientX-bounds.left)*canvas.width/bounds.width;
   const py=(event.clientY-bounds.top)*canvas.height/bounds.height;
   const camera=cameraAt(),wx=px+camera.x,wy=py+camera.y;
+  const travel=travelAt(wx,wy);
+  if(travel){goTo(...travel.arrival,travel);return;}
   const discovery=discoveries.hit(wx,wy);
   if(discovery){goTo(...discovery.arrival,discovery);return;}
   if(ponyo.hit(wx,wy)){goTo(...PONYO_SPOT.arrival,PONYO_SPOT);return;}
@@ -176,7 +176,7 @@ function pointClick(event){
 }
 const overview=createMap({
   places,decor,moments:momentSpots,pair,save,
-  getActivities:()=>[FISHING_SPOT,...discoveries.getVisibleSpots(),...(hasAllPlushies(save.fishing)?[PONYO_SPOT]:[])],
+  getActivities:()=>[FISHING_SPOT,...TRAVEL_SPOTS,...discoveries.getVisibleSpots(),...(hasAllPlushies(save.fishing)?[PONYO_SPOT]:[])],
   onNavigate:(x,y,place)=>{canvas.focus({preventScroll:true});goTo(x,y,place);}
 });
 const pressed=new Set();
@@ -231,7 +231,7 @@ function draw(){
   }
   const ambientFrame={camera,time:ambientTime,reducedMotion:motionPreference.matches};
   ambient.drawGround(ctx,ambientFrame);
-  const scenery=objects.concat(moments.scenery(),ponyo.scenery(),discoveries.scenery(),{
+  const scenery=objects.concat(moments.scenery(),ponyo.scenery(),discoveries.scenery(),travelScenery(),{
     z:FISHING_SPOT.arrival[1]*TILE-2,draw:drawFishingSign});
   if(!moments.shouldHidePair())scenery.push({z:pair.y*TILE,draw:ctx=>drawPair(ctx,moments.renderPair(),url=>outfitImage(url,save.outfits),save.outfits)});
   scenery.sort((a,b)=>a.z-b.z);
@@ -256,22 +256,10 @@ function tick(time){
   moments.tick(dt,{active,dialogsOpen:host.isOpen()||overview.isOpen()});
   ponyo.tick(dt,{active:active&&!document.hidden,dialogsOpen:host.isOpen()||overview.isOpen(),
     reducedMotion:motionPreference.matches});
-  const previousX=pair.x,previousY=pair.y;
   step(dt);advancePairAnimation(pair,dt);
   const worldActive=active&&!document.hidden&&!host.isOpen()&&!overview.isOpen();
   effects.setEnvironment({active:worldActive,night:lighting.sample().phase==='night',
     nearWater:Math.hypot(pair.x*TILE-POND_LAYOUT.centerX,pair.y*TILE-POND_LAYOUT.centerY)<180});
-  const movedDistance=Math.hypot(pair.x-previousX,pair.y-previousY);
-  // Keyboard movement joins one-tile routes. Keep the stride across their
-  // endpoints instead of resetting it every time pair.moving briefly clears.
-  if(worldActive&&movedDistance>0){
-    footDistance+=movedDistance;
-    if(footDistance>=1.7){
-      footDistance%=1.7;
-      const x=Math.round(pair.x),y=Math.round(pair.y);
-      effects.step(onMainRoad(x,y)||stonePaths.has(x+','+y)?'stone':'grass');
-    }
-  }else footDistance=0;
   // Nothing moves behind a modal. Keep its last frame and repaint when it closes;
   // the day/night clock still uses real time, including time spent in a dialog.
   if(active&&!document.hidden&&!host.isOpen()&&!overview.isOpen()){
@@ -333,7 +321,7 @@ window.addEventListener('keydown',event=>{
   if(interactive)return;
   const key=event.key.toLowerCase();
   if(active&&key==='e'&&!event.repeat&&!host.isOpen()&&!overview.isOpen()){
-    const spot=[...momentSpots,FISHING_SPOT,...SECRETS,...(hasAllPlushies(save.fishing)?[PONYO_SPOT]:[])]
+    const spot=[...momentSpots,FISHING_SPOT,...TRAVEL_SPOTS,...SECRETS,...(hasAllPlushies(save.fishing)?[PONYO_SPOT]:[])]
       .map(item=>({item,distance:Math.hypot(pair.x-item.arrival[0],pair.y-item.arrival[1])}))
       .filter(item=>item.distance<=4).sort((a,b)=>a.distance-b.distance)[0]?.item;
     if(spot){event.preventDefault();goTo(...spot.arrival,spot);return;}

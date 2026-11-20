@@ -1,11 +1,13 @@
 import {test,expect} from '@playwright/test';
 import {readFileSync} from 'node:fs';
+import {TRAVEL_SPOTS} from '../../game/travel-spots.js';
 const places=JSON.parse(readFileSync(new URL('../../game/data/places.json',import.meta.url),'utf8'));
 const momentSpots=JSON.parse(readFileSync(new URL('../../game/data/moments.json',import.meta.url),'utf8'));
 async function expectInitialDestinations(page){
   await expect(page.locator('#map-destinations button')).toHaveCount(
-    places.filter(place=>!place.hidden).length+momentSpots.length+1);
+    places.filter(place=>!place.hidden).length+momentSpots.length+1+TRAVEL_SPOTS.length);
   await expect(page.getByRole('button',{name:'Pesca · Lago de los peluches',exact:true})).toBeVisible();
+  for(const spot of TRAVEL_SPOTS)await expect(page.getByRole('button',{name:spot.name,exact:true})).toBeVisible();
   await expect(page.getByRole('button',{name:'Ponyo · Acariciar',exact:true})).toHaveCount(0);
 }
 const find=id=>places.find(p=>p.id===id);

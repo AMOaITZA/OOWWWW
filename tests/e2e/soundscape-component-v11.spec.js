@@ -30,7 +30,8 @@ test('sound effects require a gesture and music-dock controls persist their own 
   await page.locator('#sound-effects-toggle').click();
   await expect(page.locator('#sound-effects-toggle')).toHaveAttribute('aria-pressed','false');
   const stopped=await page.evaluate(()=>window.__sfxStarts);
-  await page.evaluate(()=>{window.__sfx.meow();window.__sfx.splash();window.__sfx.step();});
+  await page.evaluate(()=>{window.__sfx.meow();window.__sfx.splash();});
+  expect(await page.evaluate(()=>typeof window.__sfx.step)).toBe('undefined');
   expect(await page.evaluate(()=>window.__sfxStarts)).toBe(stopped);
   await page.locator('#sound-effects-volume').focus();await page.keyboard.press('Home');
   for(let i=0;i<20;i++)await page.keyboard.press('ArrowRight');

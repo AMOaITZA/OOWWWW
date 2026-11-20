@@ -10,7 +10,7 @@ const defaultContext=()=>{
   return Audio?new Audio({latencyHint:'interactive'}):null;
 };
 export const MAX_SOUND_SOURCES=10;
-const levels={grass:.52,stone:.42,meow:.6,splash:.48,chime:.36,water:.13,crickets:.1};
+const levels={meow:.6,splash:.48,chime:.36,water:.13,crickets:.1};
 
 export function createSoundscape({saved,onChange=()=>{},createAudioContext=defaultContext,
   now=()=>globalThis.performance?.now?.()??Date.now(),eventTarget=globalThis.document,
@@ -128,7 +128,7 @@ export function createSoundscape({saved,onChange=()=>{},createAudioContext=defau
     toggle.setAttribute('aria-label','Efectos de sonido');
     toggle.addEventListener('click',()=>{setEnabled(!state.enabled);if(state.enabled)void unlock();});
     const description=document.createElement('span');description.className='soundscape-description';
-    description.textContent='Pisadas, gatos, agua y grillos';
+    description.textContent='Gatos, agua y grillos';
     const label=document.createElement('label');label.className='soundscape-volume';label.htmlFor='sound-effects-volume';
     const caption=document.createElement('span');caption.textContent='Volumen de efectos';
     slider=document.createElement('input');slider.type='range';slider.id='sound-effects-volume';
@@ -145,7 +145,6 @@ export function createSoundscape({saved,onChange=()=>{},createAudioContext=defau
     buffers.clear();
   }
   return {unlock,mount,getState,setEnabled,setVolume,setEnvironment,suspend,resume,stop,dispose,
-    step:(surface='grass')=>oneShot(surface==='stone'?'stone':'grass','step',140),
     meow:()=>oneShot('meow','meow',700),splash:()=>oneShot('splash','splash',220),
     chime:()=>oneShot('chime','chime',180)};
 }

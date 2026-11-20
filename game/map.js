@@ -80,7 +80,7 @@ export function createMap({places,decor,moments=[],pair,save,onNavigate,getActiv
     for(const spot of getActivities()){
       const button=document.createElement('button');button.type='button';
       button.className='map-destination activity-destination';
-      button.textContent=spot.kind==='hidden-secret'?'Tesoro · '+spot.name:
+      button.textContent=spot.kind==='travel'||spot.kind==='lakeside'?spot.name:spot.kind==='hidden-secret'?'Tesoro · '+spot.name:
         spot.kind==='ponyo'?'Ponyo · Acariciar':'Pesca · '+spot.name;
       button.addEventListener('click',()=>navigate(...spot.arrival,spot));destinations.append(button);
     }

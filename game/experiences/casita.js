@@ -3,7 +3,7 @@ import {HOME_ACTIVITIES,HOME_LAYOUT,visitHome,chooseHomeActivity} from '../home.
 import {getChoice,getSelectedLook} from '../wardrobe.js';
 import {getHairColor} from '../hair.js';
 import {getGlasses} from '../glasses.js';
-import {drawHomeActor,HOME_POSE_URL} from '../home-poses.js';
+import {drawHomeActor} from '../home-poses.js';
 import {createHomeVideoPlayer,drawHomeVideoFrame,homeVideoTime} from '../home-video.js';
 import './casita.css';
 
@@ -60,7 +60,7 @@ export function mount(root,_data,api){
     const choices=outfits(),look=getChoice(choices,who);
     if(pose==='eat'||pose==='tv'){
       drawHomeActor(ctx,{who,pose,frame:blink,x,y,outfits:choices,getCharacterImage:image,
-        getRawImage:url=>api.assetImage?.(url),getPoseImage:()=>api.assetImage?.(HOME_POSE_URL)});
+        getRawImage:url=>api.assetImage?.(url),getPoseImage:url=>api.assetImage?.(url)});
       return;
     }
     const sheet=image(getSelectedLook(choices,who)?.sheet);if(!sheet)return;
@@ -113,7 +113,12 @@ export function mount(root,_data,api){
         heart(tv.x+7+sway,tv.y+7,'#F6CED1');heart(tv.x+27-sway,tv.y+11,'#F7E0B6');
         ctx.fillStyle='#FFF1DC';ctx.fillRect(tv.x+7,tv.y+5,1,1);ctx.fillRect(tv.x+tv.width-7,tv.y+6,1,1);
       }
-      HOME_LAYOUT.sofa.people.forEach(([x,y],index)=>actor(index?'itza':'leo',x,y,'tv',blink));
+      HOME_LAYOUT.sofa.people.forEach(([x,y],index)=>{
+        // The folded legs rest on the seat, below the pillows. Only the
+        // upholstered front lip belongs in front of the seated bodies.
+        ctx.globalAlpha=.18;ctx.fillStyle='#4D302E';ctx.fillRect(x+5,y+44,23,2);ctx.globalAlpha=1;
+        actor(index?'itza':'leo',x,y,'tv',blink);
+      });
       restoreFurniture(background,HOME_LAYOUT.sofa.foreground);
     }
     if(api.getPonyoUnlocked?.()){

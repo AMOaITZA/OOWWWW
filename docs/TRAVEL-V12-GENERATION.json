@@ -1,0 +1,55 @@
+{
+  "generator": "image_gen.imagegen",
+  "packer": "scripts/prepare-travel-v12.mjs",
+  "notes": "Original generated game scenery and transparent giraffe. Nearest-neighbor pixel sampling, alpha normalization and median-cut palette only. No characters are baked into either environment.",
+  "resources": [
+    {
+      "id": "hawaii",
+      "path": "assets/game/travel/hawaii.png",
+      "size": [
+        640,
+        400
+      ],
+      "paletteColors": 191,
+      "sha256": "8f70c7ac3460f56f063fa914b71c6a36cfe440e143a10ae01a7e4823d99b708a",
+      "source": "exec-45468f87-58b7-4079-b72e-268884615878.png",
+      "sourceSize": [
+        1586,
+        992
+      ],
+      "sourceSha256": "a2af4c0664a0c25399c4f8907ae1f067a2f8258b2069d611946fe71d1d82bd85"
+    },
+    {
+      "id": "lakeside",
+      "path": "assets/game/travel/lakeside.png",
+      "size": [
+        640,
+        400
+      ],
+      "paletteColors": 192,
+      "sha256": "0ff2f1c1da29a7f5ce2e547ce6a96cdcb7547c5da3293f053754c65c86931e4d",
+      "source": "exec-7fb91fcc-a40f-44fd-a706-c29308d30fce.png",
+      "sourceSize": [
+        1586,
+        992
+      ],
+      "sourceSha256": "98e5ebe172f7bc7a871f71dafca8f8d0a6f92dd579e0052fc81b36969099d7c1"
+    },
+    {
+      "id": "giraffe",
+      "path": "assets/game/travel/giraffe.png",
+      "size": [
+        64,
+        96
+      ],
+      "paletteColors": 64,
+      "sha256": "cbf1b3c57d87a30612834f59f10400f1366ea72cbbd5b0890328197d1e6abbd2",
+      "source": "exec-fa4973de-58bd-442b-ae94-6716ad5c152b.png",
+      "sourceSize": [
+        1024,
+        1536
+      ],
+      "sourceSha256": "cbb60581f0f695750f0a006494aa985f13415628258d316ba41b3bdbce27de55"
+    }
+  ]
+}

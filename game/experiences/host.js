@@ -15,15 +15,19 @@ import * as grabadora from './grabadora.js';
 import * as pesca from './pesca.js';
 import * as casita from './casita.js';
 import * as hallazgo from './hallazgo.js';
+import * as hawai from './hawai.js';
+import * as mirador from './mirador.js';
 import {activateDialog} from '../dialog.js';
 import {createExperienceTransitions} from '../experience-transitions.js';
 import manifest from '../data/assets.json';
 import '../experience-theme.css';
-const modules={inicio:intro,carta:letter,galeria:gallery,razones:reasons,playlist,recuerdos:tv,contador:counter,lugares:places,final:ending,armario:wardrobe,boda,secreto,grabadora,pesca,casita,hallazgo};
+const modules={inicio:intro,carta:letter,galeria:gallery,razones:reasons,playlist,recuerdos:tv,contador:counter,lugares:places,final:ending,armario:wardrobe,boda,secreto,grabadora,pesca,casita,hallazgo,hawai,mirador};
 const extraContent={secreto:{title:'Nuestro rinconcito secreto',eyebrow:'Solo tú y yo'},grabadora:{title:'La grabadora de Leo',eyebrow:'Mi voz para ti'},
   pesca:{title:'Lago de los peluches',eyebrow:'Una misión para conocer a Ponyo'},
   casita:{title:'Nuestra casita',eyebrow:'Aquí estamos en casa'},
-  hallazgo:{title:'Un secreto para ti',eyebrow:'Tesoros de nuestro mundo'}};
+  hallazgo:{title:'Un secreto para ti',eyebrow:'Tesoros de nuestro mundo'},
+  hawai:{title:'Nuestra escapada a Hawái',eyebrow:'Un viaje contigo'},
+  mirador:{title:'Orilla de los deseos',eyebrow:'Una noche para los dos'}};
 export function createHost(api){
   const panel=document.getElementById('experience');
   const body=document.getElementById('experience-content');
@@ -61,7 +65,7 @@ export function createHost(api){
     theme(id);
     title.textContent=data.title||id;
     category.textContent=data.eyebrow||'Nuestro pequeño mundo';
-    cleanup=modules[id].mount(body,data,api)||(()=>{});
+    cleanup=modules[id].mount(body,data,{...api,requestClose:close})||(()=>{});
     show();
   }
   function close(){
@@ -83,7 +87,7 @@ export function createHost(api){
     const customization=document.createElement('p');
     customization.textContent='En el armario puedes poner o quitar los lentes de cada personaje y elegir el cabello negro, café, rosa pastel o rubio claro de Itza. Se conserva con sus conjuntos y al sentarse. Arriba del mundo puedes elegir Día, Noche o Automático. Las opciones manuales se mantienen; Automático alterna cinco minutos de día y cinco de noche.';
     const discoveries=document.createElement('p');
-    discoveries.textContent='Explora el bosque: hay un rinconcito que solo aparece en el mapa después de descubrirlo. Allí Leo tiene unas preguntas para ti. También hay dos cofres y una cartita escondidos: sus tesoros aparecen en el mapa después de encontrarlos. De noche pasan estrellas fugaces. En el estanque puedes pescar cinco peluches de FNAF para conocer a Ponyo. Nuestra casita permite comer, dormir y ver la tele. La grabadora guarda tus mensajes de voz. En Música puedes ajustar la voz de Leo y los efectos de pisadas, gatos, agua y grillos.';
+    discoveries.textContent='Explora el bosque: hay un rinconcito con preguntas de Leo, dos cofres y una cartita escondidos. En el estanque puedes pescar peluches para conocer a Ponyo. Nuestra casita permite comer, dormir y ver tu video en la tele. En la Orilla de los deseos pueden sentarse a ver fuegos artificiales y estrellas fugaces. Viaje a Hawái abre otra isla para caminar, bailar, comprar bebidas y acariciar una jirafa. Ambos accesos están en el mapa. La grabadora guarda tus mensajes de voz. En Música puedes ajustar la voz de Leo y los efectos de gatos, agua y grillos.';
     body.append(p,customization,discoveries);show();
   }
   closeButton.addEventListener('click',close);

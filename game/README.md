@@ -6,11 +6,11 @@ n.º 1. No se fusiona con `main` sin aprobación explícita.
 
 ## Características actuales
 
-- Mundo de 120 × 80 casillas (16 píxeles por casilla), cámara de 480 × 270,
+- Mundo de 120 × 80 casillas (16 píxeles por casilla), cámara adaptable a la pantalla,
   paseo por teclado, ratón y pantalla táctil, con búsqueda de rutas A*.
-- Trece lugares: las nueve experiencias clásicas, armario, **Castillo de nuestra boda**,
-  **Nuestro rinconcito secreto** y **La grabadora de Leo**.
-  Además, tres puntos interactivos: una pareja de gatitos y dos bancas.
+- Catorce lugares: las nueve experiencias clásicas, armario, **Castillo de nuestra boda**,
+  **Nuestro rinconcito secreto**, **La grabadora de Leo** y **Nuestra casita**.
+  Además, gatitos, bancas, pesca, tesoros y los accesos al mirador y a Hawái.
   El rincón secreto aparece en el mapa después de visitarlo por primera vez.
 - Itza y Leo conservan sus atuendos seleccionados y la posición guardada.
   El armario conserva tres identificadores: original, alternativa y boda.
@@ -263,3 +263,16 @@ añade el archivo, reinicia Vite y pulsa Reproducir en Ver la tele.
 Consulta [los cambios V11](../docs/MAGIC-V11.md),
 [las pruebas y comparaciones](../docs/QA-MAGIC-V11.md) y
 [las instrucciones del video](../docs/HOME-VIDEO.md).
+## Hawái, mirador y sofá V12
+
+En **Mapa** están **Viaje a Hawái** y **Orilla de los deseos**. Camina hasta
+el letrero y pulsa **E** para entrar. Hawái es otra isla para caminar, bailar,
+comprar jugos con conchitas y acariciar una jirafa. En el mirador pueden
+sentarse juntos, ver fuegos artificiales silenciosos y pedir deseos.
+
+Las pisadas se eliminaron. El sofá usa cuerpos sentados con piernas cruzadas
+completas; conserva ropa, cabello y lentes. El video personal ya instalado se
+reproduce desde **Nuestra casita → Ver la tele → Reproducir video**.
+
+Consulta [la guía V12](../docs/TRAVEL-V12.md) y
+[las pruebas y capturas](../docs/QA-TRAVEL-V12.md).

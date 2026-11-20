@@ -34,3 +34,13 @@ test('plush collection and household actions survive a save round trip',()=>{
     writeSave(save);assert.deepEqual(loadSave(),save);
   });
 });
+
+test('travel progress survives reload without replacing the village position',()=>{
+  withStorage(null,()=>{
+    const save={position:{x:76,y:42},direction:'up',outfits:{leo:{},itza:{}},visited:[],
+      dayNight:undefined,leoVoice:undefined,secretQuiz:undefined,voiceNotes:undefined,
+      hawaii:{visits:1,dances:2,giraffePets:1,shells:12,drinks:{pina:1,mango:0,coco:2},lastDrink:'coco'},
+      lakeside:{visits:2,sits:1,shows:1,wishes:2}};
+    writeSave(save);assert.deepEqual(loadSave(),save);
+  });
+});

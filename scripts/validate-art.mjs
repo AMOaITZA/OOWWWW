@@ -21,6 +21,9 @@ for(const id of ['freddy','bonnie','chica','foxy','golden-freddy']){
 if(!manifest.home?.interior||!manifest.home?.exterior)errors.push('Faltan los recursos de nuestra casita');
 add(manifest.home?.interior,{size:[480,270],opaque:true,generated:true,maxColors:192});
 add(manifest.home?.exterior,{size:[160,128],generated:true,maxColors:128});
+add(manifest.home?.seatedBodies,{size:[128,288],frame:[32,48],generated:true,maxColors:128});
+add(manifest.secrets?.chest,{size:[64,32],frame:[32,32],generated:true,maxColors:64});
+add(manifest.secrets?.note,{size:[32,32],generated:true,maxColors:64});
 const special={roof:[152,34],awning:[40,24],tree:[48,84],rock:[48,47],bench:[48,47],lamp:[48,47]};
 for(const [kind,url] of Object.entries(manifest.objects)){
   const tree=kind.startsWith('tree-');

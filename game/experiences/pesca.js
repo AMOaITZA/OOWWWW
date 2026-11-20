@@ -67,6 +67,7 @@ export function mount(root,_data,api){
   function cast(){
     if(!alive||phase==='waiting'||phase==='bite')return;
     clearRound();reward.hidden=true;state=recordCast(state);save();phase='waiting';
+    api.onSfx?.('splash');
     status.textContent='La caña está en el agua… espera a que pique un peluche.';render();
     waitTimer=setTimeout(()=>{if(alive&&phase==='waiting')bite();},FISHING_WAIT_MS);
   }
@@ -94,6 +95,7 @@ export function mount(root,_data,api){
     if(!alive||phase!=='bite')return;
     if(!preference.matches&&performance.now()>deadline){miss();return;}
     clearRound();phase='caught';
+    api.onSfx?.('splash');api.onSfx?.('chime');
     const before=hasAllPlushies(state),plushie=selectPlushie(state);state=recordCatch(state,plushie.id);save();
     reward.src=plushie.image;reward.hidden=false;
     const complete=hasAllPlushies(state),newlyCompleted=!before&&complete;

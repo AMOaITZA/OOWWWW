@@ -71,10 +71,11 @@ test('the house changes real scenes for meals, sleep and television without chan
   await page.addInitScript(()=>{
     window.__homeSources=[];const original=CanvasRenderingContext2D.prototype.drawImage;
     CanvasRenderingContext2D.prototype.drawImage=function(...args){
-      if(this.canvas.classList?.contains('home-scene')){
+      if(this.canvas.classList?.contains('home-scene')||args[0]?.src?.includes('/home/seated-bodies.png')){
         const image=args[0],data=image.dataset||{};
         window.__homeSources.push({src:image.src||data.assetSource||'',profile:data.hairProfile,
-          color:data.hairColor,itzaGlasses:data.glassesItza,leoGlasses:data.glassesLeo});
+          color:data.hairColor,itzaGlasses:data.glassesItza,leoGlasses:data.glassesLeo,
+          pose:data.homePose,character:data.homeCharacter,look:data.homeLook});
       }
       return original.apply(this,args);
     };
@@ -94,9 +95,14 @@ test('the house changes real scenes for meals, sleep and television without chan
   }
   expect(new Set(fingerprints).size).toBe(3);
   const sources=await page.evaluate(()=>window.__homeSources);
-  for(const profile of ['seat-boda','walk-boda'])expect(sources.some(source=>
-    source.profile===profile&&source.color==='rubio'&&source.itzaGlasses==='off')).toBe(true);
-  expect(sources.some(source=>/leo-alternativo\.png|characters\/leo\/look-02\.png/.test(source.src)&&source.leoGlasses==='off')).toBe(true);
+  expect(sources.some(source=>source.src.includes('/home/seated-bodies.png'))).toBe(true);
+  for(const pose of ['eat','tv']){
+    expect(sources.some(source=>source.pose===pose&&source.character==='itza'&&source.look==='boda'&&
+      source.profile==='walk-boda'&&source.color==='rubio'&&source.itzaGlasses==='off')).toBe(true);
+    expect(sources.some(source=>source.pose===pose&&source.character==='leo'&&source.look==='alternativo'&&
+      source.leoGlasses==='off')).toBe(true);
+  }
+  expect(sources.some(source=>source.profile==='walk-boda'&&source.color==='rubio'&&source.itzaGlasses==='off')).toBe(true);
   expect((await state(page)).home.activity).toBe('tv');
   await page.locator('#close-experience').click();await interact(page);
   await expect(scene).toHaveAttribute('data-activity','tv');

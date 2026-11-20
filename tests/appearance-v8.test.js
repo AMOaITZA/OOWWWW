@@ -66,7 +66,7 @@ test('removing glasses never repaints a recolored hair pixel in any walk, seat o
   }
 });
 
-test('glasses restoration preserves the original brows, mouth and nose instead of scaling the face',()=>{
+test('glasses restoration preserves the original brows and lips around a native eye field',()=>{
   for(const [profile,path] of walking){
     const source=read(path);
     for(const color of colors){
@@ -84,35 +84,39 @@ test('glasses restoration preserves the original brows, mouth and nose instead o
     }
   }
   const source=read(walking[0][1]),rendered=removeGlassesPixels(source,'walk-principal',['itza'],eyes);
-  for(let frame=0;frame<6;frame++)for(const x of [15,16,17]){
-    const y=18+eyeRegion(source,'walk-principal','itza',frame,0).y-eyeRegion(source,'walk-principal','itza',0,0).y;
+  for(let frame=0;frame<6;frame++){
+    const band=eyeRegion(source,'walk-principal','itza',frame,0);
+    const x=band.x+Math.floor(band.width/2),y=band.y+band.height-1;
     assert.deepEqual([...pixel(rendered,source.width,frame,0,x,y)],
-      [...pixel(source.data,source.width,frame,0,x,y)],'Warm nose shading keeps its original shape');
+      [146,103,89,255],'The restored nose is a single centered shadow, not the glasses bridge');
   }
 });
 
 // The former full-width restoration erased the tiny seated mouth along with
 // the glasses bridge. Its position is below the actual bridge rail.
-test('seated mouths and nose pixels between the lenses retain their original shape',()=>{
+test('seated lips below the eyewear field retain their original shape',()=>{
   for(const [profile,path] of seated){
     const source=read(path);
     for(const color of colors){
       const hair=recolorHairPixels(source,profile,color),rendered=removeGlassesPixels({...source,data:hair},profile,['itza'],eyes);
-      for(let frame=0;frame<2;frame++)for(let y=18;y<=23;y++)for(let x=15;x<=17;x++){
+      for(let frame=0;frame<2;frame++){
+        const band=eyeRegion({...source,data:hair},profile,'itza',frame,0);
+        for(let y=band.y+band.height;y<=23;y++)for(let x=15;x<=17;x++){
         assert.deepEqual([...pixel(rendered,source.width,frame,0,x,y)],
           [...pixel(hair,source.width,frame,0,x,y)],`${profile} ${color} mouth/nose ${x},${y}`);
+        }
       }
     }
   }
 });
 
-test('shared ceremony faces keep the nose and mouth below the glasses bridge',()=>{
+test('shared ceremony faces keep the lips below the restored eyewear field',()=>{
   for(const [profile,path] of shared.filter(([profile])=>!['kiss','hug'].includes(profile))){
     const source=read(path),hair=recolorHairPixels(source,profile,'rubio');
     const rendered=removeGlassesPixels({...source,data:hair},profile,['itza','leo'],eyes);
     for(let frame=0;frame<source.width/64;frame++)for(const who of ['itza','leo']){
       const band=eyeRegion({...source,data:hair},profile,who,frame),lensWidth=Math.floor((band.width-3)/2);
-      for(let y=20;y<=24;y++)for(let x=band.x+lensWidth;x<band.x+band.width-lensWidth;x++){
+      for(let y=band.y+band.height;y<=24;y++)for(let x=band.x+lensWidth;x<band.x+band.width-lensWidth;x++){
         assert.deepEqual([...pixel(rendered,source.width,frame,0,x,y,64)],
           [...pixel(hair,source.width,frame,0,x,y,64)],`${profile} ${who} mouth/nose ${x},${y}`);
       }

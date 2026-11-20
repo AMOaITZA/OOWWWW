@@ -90,7 +90,7 @@ test('the reported bridal fringe, front neck lock and rear lock below the veil a
   // Traced directly on the unchanged 32×48 bridal cells. These are hair
   // interiors (not the glasses, flower outline or the two exposed arms).
   const reportedLocks=[
-    [0,[[18,11],[20,14],[21,16],[22,23],[17,26],[20,27],[19,28],[20,31]]],
+    [0,[[18,11],[20,14],[23,16],[22,23],[17,26],[20,27],[19,28],[20,31]]],
     [1,[[5,34]]],
     [2,[[7,27],[6,31],[7,34]]]
   ];

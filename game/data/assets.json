@@ -1,6 +1,10 @@
 {
-  "version": 12,
-  "description": "Pesca de peluches, misión de Ponyo y nuestra casita interactiva.",
+  "version": 13,
+  "description": "Sonidos, tesoros escondidos, caras naturales y poses completas en casa.",
+  "secrets": {
+    "chest": "/assets/game/secrets/chest.png",
+    "note": "/assets/game/secrets/note.png"
+  },
   "fishing": {
     "freddy": "/assets/game/fishing/freddy.png",
     "bonnie": "/assets/game/fishing/bonnie.png",
@@ -10,7 +14,8 @@
   },
   "home": {
     "exterior": "/assets/game/home/exterior.png",
-    "interior": "/assets/game/home/interior.png"
+    "interior": "/assets/game/home/interior.png",
+    "seatedBodies": "/assets/game/home/seated-bodies.png"
   },
   "ambient": {
     "pond": "/assets/game/ambient/pond.png"
@@ -153,6 +158,7 @@
     "secreto": "/assets/game/experiences/secreto.png",
     "grabadora": "/assets/game/experiences/grabadora.png",
     "pesca": "/assets/game/ambient/pond.png",
-    "casita": "/assets/game/home/interior.png"
+    "casita": "/assets/game/home/interior.png",
+    "hallazgo": "/assets/game/experiences/secreto.png"
   }
 }

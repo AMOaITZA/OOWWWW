@@ -45,7 +45,7 @@ export function createMap({places,decor,moments=[],pair,save,onNavigate,getActiv
     }
     for(const spot of getActivities()){
       const x=spot.tile[0]*STEP,y=spot.tile[1]*STEP;
-      ctx.fillStyle=spot.kind==='ponyo'?'#E6B7C8':'#FFF1DC';ctx.fillRect(x-3,y-3,7,7);
+      ctx.fillStyle=spot.kind==='hidden-secret'?'#F2C46D':spot.kind==='ponyo'?'#E6B7C8':'#FFF1DC';ctx.fillRect(x-3,y-3,7,7);
       ctx.fillStyle=spot.kind==='ponyo'?'#756D77':'#547F83';ctx.fillRect(x-1,y-1,3,3);
     }
     // The world viewport follows the screen's aspect ratio, including rotation.
@@ -80,7 +80,8 @@ export function createMap({places,decor,moments=[],pair,save,onNavigate,getActiv
     for(const spot of getActivities()){
       const button=document.createElement('button');button.type='button';
       button.className='map-destination activity-destination';
-      button.textContent=spot.kind==='ponyo'?'Ponyo · Acariciar':'Pesca · '+spot.name;
+      button.textContent=spot.kind==='hidden-secret'?'Tesoro · '+spot.name:
+        spot.kind==='ponyo'?'Ponyo · Acariciar':'Pesca · '+spot.name;
       button.addEventListener('click',()=>navigate(...spot.arrival,spot));destinations.append(button);
     }
     for(const spot of moments){

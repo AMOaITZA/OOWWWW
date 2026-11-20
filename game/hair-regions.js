@@ -40,7 +40,7 @@ export const HAIR_REGIONS={
     // separately. The previous left/right bands skipped the entire inside
     // edge of the right lock; it is hair, not the cheek or the gown.
     [...bands([0,10,0,25],[11,11,16,20],[12,12,17,20],[13,13,18,21],
-      [14,14,19,21],[15,15,19,24],[16,16,21,24]),
+      [14,14,19,21],[15,15,19,24],[16,16,23,24]),
       ...sides(11,13,8,23),...sides(14,17,6,25),...sides(18,21,5,24),
       ...sides(22,23,5,21),...sides(24,24,5,20),...sides(25,27,10,19),
       ...bands([26,26,16,18],[27,27,17,18]),

@@ -52,6 +52,7 @@ export async function prepareWorldAssets(){
   for(const url of Object.values(manifest.ambient??{}))tasks.push(load(url));
   for(const url of Object.values(manifest.fishing??{}))tasks.push(load(url));
   for(const url of Object.values(manifest.home??{}))tasks.push(load(url));
+  for(const url of Object.values(manifest.secrets??{}))tasks.push(load(url));
   for(const url of Object.values(manifest.architecture??{}))tasks.push(load(url));
   for(const looks of Object.values(manifest.seated??{}))for(const url of Object.values(looks))tasks.push(load(url));
   for(const url of Object.values(manifest.moments??{}))tasks.push(load(url));

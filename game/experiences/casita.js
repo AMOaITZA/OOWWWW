@@ -3,13 +3,15 @@ import {HOME_ACTIVITIES,HOME_LAYOUT,visitHome,chooseHomeActivity} from '../home.
 import {getChoice,getSelectedLook} from '../wardrobe.js';
 import {getHairColor} from '../hair.js';
 import {getGlasses} from '../glasses.js';
+import {drawHomeActor,HOME_POSE_URL} from '../home-poses.js';
+import {createHomeVideoPlayer,drawHomeVideoFrame,homeVideoTime} from '../home-video.js';
 import './casita.css';
 
 const INTERIOR='/assets/game/home/interior.png';
 const activityOf=id=>HOME_ACTIVITIES.find(activity=>activity.id===id)||HOME_ACTIVITIES[0];
 
 export function mount(root,_data,api){
-  let home=visitHome(api.save.home),alive=true,frame=0,last=0,clock=0;
+  let home=visitHome(api.save.home),alive=true,frame=0,last=0,clock=0,expanded=false,videoError='';
   api.save.home=home;api.onProgressChange?.();
   const preference=window.matchMedia('(prefers-reduced-motion: reduce)');
   const intro=paragraph(root,'Aquí siempre hay un lugar para los dos. ¿Qué hacemos hoy?','home-intro');
@@ -30,20 +32,39 @@ export function mount(root,_data,api){
   }
   const reply=paragraph(root,'','home-reply');reply.setAttribute('role','status');reply.setAttribute('aria-live','polite');
   const keepsake=node('div','home-keepsake');
-  root.append(room,activities,reply,keepsake);
+  const tvControls=node('section','home-video-controls');tvControls.setAttribute('aria-label','Video de nuestra tele');
+  const videoStatus=node('p','home-video-status');videoStatus.setAttribute('role','status');videoStatus.setAttribute('aria-live','polite');
+  const videoActions=node('div','home-video-actions');
+  const playVideo=node('button','home-video-play','Reproducir video');playVideo.type='button';
+  const muteVideo=node('button','home-video-mute','Silenciar video');muteVideo.type='button';
+  const expandVideo=node('button','home-video-expand','Ver en grande');expandVideo.type='button';expandVideo.setAttribute('aria-expanded','false');
+  videoActions.append(playVideo,muteVideo,expandVideo);
+  const videoProgress=node('input','home-video-progress');videoProgress.type='range';videoProgress.min='0';videoProgress.max='1000';videoProgress.value='0';videoProgress.setAttribute('aria-label','Progreso del video');
+  const videoClock=node('span','home-video-clock','0:00 / 0:00');
+  const videoTimeline=node('div','home-video-timeline');videoTimeline.append(videoProgress,videoClock);
+  const videoVolumeLabel=node('label','home-video-volume','Volumen del video '),videoVolume=node('input');
+  videoVolume.type='range';videoVolume.min='0';videoVolume.max='100';videoVolume.setAttribute('aria-label','Volumen del video');videoVolumeLabel.append(videoVolume);
+  const videoPreview=node('div','home-video-preview');videoPreview.hidden=true;
+  const video=node('video','home-video-source');video.controls=true;video.playsInline=true;video.preload='none';video.tabIndex=0;video.setAttribute('aria-label','Nuestro video');videoPreview.append(video);
+  tvControls.append(videoStatus,videoActions,videoTimeline,videoVolumeLabel,videoPreview);
+  root.append(room,tvControls,activities,reply,keepsake);
   const ctx=canvas.getContext('2d');
+  const player=createHomeVideoPlayer({video,saved:home.video,
+    onChange:state=>{home={...home,video:state};api.save.home=home;api.onProgressChange?.();},
+    onPlayback:playing=>{api.onHomeVideoPlayback?.(playing);syncVideo();scheduleFrame();},
+    onError:()=>{videoError='No pudimos abrir el video. Puedes intentarlo otra vez.';syncVideo();},
+    onUpdate:()=>{syncVideo();draw();scheduleFrame();}});
   const outfits=()=>api.getOutfits?.()??api.save.outfits??{};
   const image=url=>api.getCharacterImage?.(url)??api.assetImage?.(url);
   function actor(who,x,y,pose,blink=0){
     const choices=outfits(),look=getChoice(choices,who);
-    if(pose==='eat'){
-      const seated=api.getSeatedImage?.(who,look);
-      if(seated)ctx.drawImage(seated,blink*32,0,32,48,x,y,32,48);
+    if(pose==='eat'||pose==='tv'){
+      drawHomeActor(ctx,{who,pose,frame:blink,x,y,outfits:choices,getCharacterImage:image,
+        getRawImage:url=>api.assetImage?.(url),getPoseImage:()=>api.assetImage?.(HOME_POSE_URL)});
       return;
     }
     const sheet=image(getSelectedLook(choices,who)?.sheet);if(!sheet)return;
     if(pose==='sleep')ctx.drawImage(sheet,32,0,32,24,x,y,32,24);
-    else ctx.drawImage(sheet,blink*32,96,32,34,x,y,32,34);
   }
   function restoreFurniture(background,box){
     if(background)ctx.drawImage(background,box.x,box.y,box.width,box.height,box.x,box.y,box.width,box.height);
@@ -84,12 +105,14 @@ export function mount(root,_data,api){
     }else{
       ctx.fillStyle='rgba(40,43,65,.1)';ctx.fillRect(0,0,480,270);
       const tv=HOME_LAYOUT.tv;
-      ctx.fillStyle='#334454';ctx.fillRect(tv.x,tv.y,tv.width,tv.height);
-      ctx.fillStyle='#78939A';ctx.fillRect(tv.x+2,tv.y+2,tv.width-4,tv.height-4);
-      ctx.fillStyle='#B8B597';ctx.fillRect(tv.x+2,tv.y+tv.height-10,tv.width-4,8);
-      const sway=still?0:Math.floor(Math.sin(clock)*3);
-      heart(tv.x+7+sway,tv.y+7,'#F6CED1');heart(tv.x+27-sway,tv.y+11,'#F7E0B6');
-      ctx.fillStyle='#FFF1DC';ctx.fillRect(tv.x+7,tv.y+5,1,1);ctx.fillRect(tv.x+tv.width-7,tv.y+6,1,1);
+      if(!drawHomeVideoFrame(ctx,video,tv)){
+        ctx.fillStyle='#334454';ctx.fillRect(tv.x,tv.y,tv.width,tv.height);
+        ctx.fillStyle='#78939A';ctx.fillRect(tv.x+2,tv.y+2,tv.width-4,tv.height-4);
+        ctx.fillStyle='#B8B597';ctx.fillRect(tv.x+2,tv.y+tv.height-10,tv.width-4,8);
+        const sway=still?0:Math.floor(Math.sin(clock)*3);
+        heart(tv.x+7+sway,tv.y+7,'#F6CED1');heart(tv.x+27-sway,tv.y+11,'#F7E0B6');
+        ctx.fillStyle='#FFF1DC';ctx.fillRect(tv.x+7,tv.y+5,1,1);ctx.fillRect(tv.x+tv.width-7,tv.y+6,1,1);
+      }
       HOME_LAYOUT.sofa.people.forEach(([x,y],index)=>actor(index?'itza':'leo',x,y,'tv',blink));
       restoreFurniture(background,HOME_LAYOUT.sofa.foreground);
     }
@@ -108,21 +131,54 @@ export function mount(root,_data,api){
   }
   function select(id){
     if(!alive)return;
+    if(id!=='tv'){player.setActive(false);expanded=false;}
     home=chooseHomeActivity(home,id);api.save.home=home;clock=0;
-    api.onProgressChange?.();api.onLeoSay?.(activityOf(id).line);describe();draw();
+    player.setActive(id==='tv');
+    api.onProgressChange?.();api.onLeoSay?.(activityOf(id).line);describe();syncVideo();draw();scheduleFrame();
+  }
+  function syncVideo(){
+    if(!alive)return;
+    tvControls.hidden=home.activity!=='tv';
+    const available=player.available(),playing=player.isPlaying(),state=player.getState(),duration=player.duration();
+    playVideo.disabled=muteVideo.disabled=expandVideo.disabled=!available;
+    playVideo.textContent=playing?'Pausar video':'Reproducir video';playVideo.setAttribute('aria-label',playVideo.textContent);
+    muteVideo.textContent=state.muted?'Activar sonido del video':'Silenciar video';muteVideo.setAttribute('aria-label',muteVideo.textContent);
+    muteVideo.setAttribute('aria-pressed',String(state.muted));
+    const statusText=!available?'Pronto veremos nuestro video aquí.':videoError||
+      (playing?'Nuestra peli está en la tele.':'Tu video está listo. Pulsa Reproducir.');
+    if(videoStatus.textContent!==statusText)videoStatus.textContent=statusText;
+    videoProgress.disabled=!duration;videoProgress.value=duration?String(Math.round(state.position/duration*1000)):'0';
+    videoVolume.disabled=!available;videoVolume.value=String(Math.round(state.volume*100));
+    videoClock.textContent=homeVideoTime(state.position)+' / '+homeVideoTime(duration);
+    videoPreview.hidden=!expanded;expandVideo.setAttribute('aria-expanded',String(expanded));
+    expandVideo.textContent=expanded?'Ver solo en la tele':'Ver en grande';
+    canvas.dataset.videoState=!available?'empty':videoError?'error':playing?'playing':'paused';
+  }
+  playVideo.addEventListener('click',async()=>{videoError='';if(player.isPlaying())player.pause();else await player.play();syncVideo();});
+  muteVideo.addEventListener('click',()=>player.setMuted(!player.getState().muted));
+  expandVideo.addEventListener('click',()=>{expanded=!expanded;syncVideo();});
+  videoProgress.addEventListener('input',()=>player.seek(Number(videoProgress.value)/1000*player.duration()));
+  videoVolume.addEventListener('input',()=>player.setVolume(Number(videoVolume.value)/100));
+  function scheduleFrame(){
+    if(!alive||frame||document.hidden||(preference.matches&&!player.isPlaying()))return;
+    frame=requestAnimationFrame(tick);
   }
   function tick(time){
-    if(!alive)return;
+    frame=0;if(!alive)return;
     const elapsed=last?Math.min(.05,(time-last)/1000):0;last=time;
-    if(!document.hidden&&!preference.matches){clock+=elapsed;draw();}
-    frame=requestAnimationFrame(tick);
+    if(!document.hidden){if(!preference.matches)clock+=elapsed;draw();}
+    scheduleFrame();
   }
   function preferenceChanged(){
     cancelAnimationFrame(frame);frame=0;last=0;draw();
-    if(!preference.matches)frame=requestAnimationFrame(tick);
+    scheduleFrame();
   }
-  function visibilityChanged(){last=0;}
+  function visibilityChanged(){
+    last=0;
+    if(document.hidden){cancelAnimationFrame(frame);frame=0;player.suspend();}
+    else{syncVideo();draw();scheduleFrame();}
+  }
   preference.addEventListener('change',preferenceChanged);document.addEventListener('visibilitychange',visibilityChanged);
-  describe();draw();if(!preference.matches)frame=requestAnimationFrame(tick);
-  return ()=>{alive=false;cancelAnimationFrame(frame);preference.removeEventListener('change',preferenceChanged);document.removeEventListener('visibilitychange',visibilityChanged);};
+  player.setActive(home.activity==='tv');describe();syncVideo();draw();scheduleFrame();
+  return ()=>{alive=false;cancelAnimationFrame(frame);player.dispose();preference.removeEventListener('change',preferenceChanged);document.removeEventListener('visibilitychange',visibilityChanged);};
 }

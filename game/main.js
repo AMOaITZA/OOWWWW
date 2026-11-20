@@ -21,6 +21,12 @@ import {createAmbient} from './ambient.js';
 import {normalizeFishing,hasAllPlushies} from './fishing.js';
 import {FISHING_SPOT,PONYO_SPOT,fishingAt,drawFishingSign} from './finale-spots.js';
 import {createPonyo} from './ponyo.js';
+import {createSoundscape} from './soundscape.js';
+import './soundscape.css';
+import {onMainRoad,villagePathTiles} from './village-paths.js';
+import {POND_LAYOUT} from './pond-geometry.js';
+import {structureShadowObjects} from './structure-shadows.js';
+import {SECRETS,createHiddenSecrets,drawShootingStars} from './hidden-secrets.js';
 
 const $=id=>document.getElementById(id);
 const canvas=$('world'),ctx=canvas.getContext('2d',{alpha:false});
@@ -34,8 +40,17 @@ const moments=createMoments({spots:momentSpots,pair,getImage:momentImage,bubble:
   getOutfits:()=>save.outfits,getSeatedImage:(who,look)=>seatedImage(who,look,save.outfits),
   getExtraObstacles:()=>ponyo.bounds(),onSay:line=>voice.speak(line)});
 const ponyo=createPonyo({getImage:()=>momentImage('ponyo'),getUnlocked:()=>hasAllPlushies(save.fishing),
-  onPet:line=>{pair.direction='up';moments.say(line);}});
-initWorld(places,decor,momentSpots,{ponyoUnlocked:hasAllPlushies(save.fishing)});
+  onPet:line=>{pair.direction='up';effects.meow();moments.say(line);}});
+const discoveries=createHiddenSecrets({save,getImage:kind=>assetImage('/assets/game/secrets/'+kind+'.png'),
+  onDiscover:({isNew})=>{
+    path=[];targetPlace=null;pair.moving=false;persist();host.open('hallazgo');
+    if(isNew)effects.chime();
+  }});
+function initializeWorld(){
+  initWorld(places,decor,momentSpots,{ponyoUnlocked:hasAllPlushies(save.fishing),
+    extraObstacles:SECRETS.map(secret=>secret.tile)});
+}
+initializeWorld();
 if(!walkable(Math.round(pair.x),Math.round(pair.y))){
   const shore=closestWalkable(pair.x,pair.y);pair.x=shore?.x??30;pair.y=shore?.y??25;
 }
@@ -44,6 +59,8 @@ let viewportScale=2,bottomInset=64;
 let pendingLayout=0;
 let ambientTime=0;
 let pendingPonyoWelcome=false;
+let footDistance=0;
+const stonePaths=new Set(villagePathTiles(places).map(tile=>tile.x+','+tile.y));
 const status=text=>{$('world-status').textContent=text;};
 function persist(){
   save.position={x:Math.round(pair.x),y:Math.round(pair.y)};
@@ -55,6 +72,8 @@ function updatePlaceCounter(){
 }
 const voice=createLeoVoice({saved:save.leoVoice,onChange:state=>{save.leoVoice=state;persist();}});
 save.leoVoice=voice.getState();voice.mount($('music-dock'));
+const effects=createSoundscape({saved:save.soundEffects,onChange:state=>{save.soundEffects=state;persist();}});
+save.soundEffects=effects.getState();effects.mount($('music-dock'));
 const lighting=createDayNight({saved:save.dayNight,reducedMotion:()=>motionPreference.matches,
   onChange:state=>{save.dayNight=state;persist();}});
 save.dayNight=lighting.getState();
@@ -65,19 +84,30 @@ const host=createHost({
   getOutfits:()=>save.outfits,getCharacterImage:url=>outfitImage(url,save.outfits),
   getSeatedImage:(who,look)=>seatedImage(who,look,save.outfits),
   getPonyoImage:()=>momentImage('ponyo'),getPonyoUnlocked:()=>hasAllPlushies(save.fishing),
+  getCurrentDiscovery:()=>discoveries.getCurrent(),
   onFishingChange:({newlyCompleted})=>{
-    if(newlyCompleted){pendingPonyoWelcome=true;initWorld(places,decor,momentSpots,{ponyoUnlocked:true});}
+    if(newlyCompleted){pendingPonyoWelcome=true;initializeWorld();}
     persist();
   },
   onMusicSelect:videoId=>{if(music.select(videoId))host.close();},
   onOutfitChange:()=>{persist();return prepareOutfit(save.outfits);},
   onProgressChange:persist,onLeoSay:line=>voice.speak(line),
-  onVoiceNotePlay:()=>{$('music-audio').pause();voice.stop();},
+  onSfx:kind=>{if(kind==='splash')effects.splash();else if(kind==='chime')effects.chime();},
+  onHomeVideoPlayback:playing=>{
+    if(playing){$('music-audio').pause();voice.stop();effects.suspend('media');}
+    else effects.resume('media');
+  },
+  onVoiceNotePlay:()=>{$('music-audio').pause();voice.stop();effects.stop();},
   onClose:()=>{
     status(pendingPonyoWelcome?'¡Ponyo te espera junto a los gatitos!':'Explora nuestro mundo');
     pendingPonyoWelcome=false;persist();
   }
 });
+function interactMoment(spot){
+  const result=moments.arrive(spot);
+  if(result&&spot.kind==='cats')effects.meow();
+  return result;
+}
 function goTo(x,y,place=null){
   if(moments.isSitting()&&moments.seatId()!==place?.id)moments.stand();
   const point=closestWalkable(x,y);
@@ -88,9 +118,11 @@ function goTo(x,y,place=null){
     path=[];targetPlace=null;
     if(ponyo.isSpot(place)){
       ponyo.arrive();status('Acariciando a Ponyo');
+    }else if(discoveries.isSpot(place)){
+      discoveries.arrive(place);
     }else if(place?.id==='pesca')openPlace(place);
     else if(place&&moments.isMoment(place)){
-      moments.arrive(place);
+      interactMoment(place);
       status(place.kind==='cats'?'Acariciando a los gatitos':moments.isSitting()?'Descansando juntos en la banca':'Seguimos explorando');
     }else status(place?'Toca otra vez '+place.name:'Ya estamos aquí');
   }else status('No se puede llegar a ese lugar');
@@ -120,6 +152,8 @@ function pointClick(event){
   const px=(event.clientX-bounds.left)*canvas.width/bounds.width;
   const py=(event.clientY-bounds.top)*canvas.height/bounds.height;
   const camera=cameraAt(),wx=px+camera.x,wy=py+camera.y;
+  const discovery=discoveries.hit(wx,wy);
+  if(discovery){goTo(...discovery.arrival,discovery);return;}
   if(ponyo.hit(wx,wy)){goTo(...PONYO_SPOT.arrival,PONYO_SPOT);return;}
   if(fishingAt(wx,wy)){
     if(!path.length&&Math.hypot(pair.x-FISHING_SPOT.arrival[0],pair.y-FISHING_SPOT.arrival[1])<.51)openPlace(FISHING_SPOT);
@@ -129,7 +163,7 @@ function pointClick(event){
   const spot=moments.momentAt(wx,wy);
   if(spot){
     if(moments.isSitting()&&Math.hypot(pair.x-spot.arrival[0],pair.y-spot.arrival[1])<.51){
-      moments.arrive(spot);
+      interactMoment(spot);
       status('Seguimos explorando');
     }else goTo(...spot.arrival,spot);
     return;
@@ -142,7 +176,7 @@ function pointClick(event){
 }
 const overview=createMap({
   places,decor,moments:momentSpots,pair,save,
-  getActivities:()=>[FISHING_SPOT,...(hasAllPlushies(save.fishing)?[PONYO_SPOT]:[])],
+  getActivities:()=>[FISHING_SPOT,...discoveries.getVisibleSpots(),...(hasAllPlushies(save.fishing)?[PONYO_SPOT]:[])],
   onNavigate:(x,y,place)=>{canvas.focus({preventScroll:true});goTo(x,y,place);}
 });
 const pressed=new Set();
@@ -169,8 +203,10 @@ function step(dt){
         pair.moving=false;
         if(ponyo.isSpot(targetPlace)){
           targetPlace=null;ponyo.arrive();status('Acariciando a Ponyo');
+        }else if(discoveries.isSpot(targetPlace)){
+          const found=targetPlace;targetPlace=null;discoveries.arrive(found);
         }else if(targetPlace&&moments.isMoment(targetPlace)){
-          const spot=targetPlace;targetPlace=null;moments.arrive(spot);
+          const spot=targetPlace;targetPlace=null;interactMoment(spot);
           status(spot.kind==='cats'?'Acariciando a los gatitos':moments.isSitting()?'Descansando juntos en la banca':'Seguimos explorando');
         }else status(targetPlace?'Llegamos a '+targetPlace.name+'. Toca otra vez para entrar.':'Explora nuestro mundo');
         persist();
@@ -178,8 +214,9 @@ function step(dt){
     }else{pair.x+=dx/dist*speed;pair.y+=dy/dist*speed;}
   }
 }
-const objects=sceneObjects(places,decor,objectImage,momentImage,weddingImage,()=>false,placeImage,
-  place=>!place.hidden||save.visited.includes(place.id));
+const objects=[...sceneObjects(places,decor,objectImage,momentImage,weddingImage,()=>false,placeImage,
+  place=>!place.hidden||save.visited.includes(place.id)),
+  ...structureShadowObjects(places,placeImage,weddingImage,()=>lighting.sample().phase==='night')];
 function draw(){
   if(!active)return;
   const camera=cameraAt();
@@ -194,7 +231,7 @@ function draw(){
   }
   const ambientFrame={camera,time:ambientTime,reducedMotion:motionPreference.matches};
   ambient.drawGround(ctx,ambientFrame);
-  const scenery=objects.concat(moments.scenery(),ponyo.scenery(),{
+  const scenery=objects.concat(moments.scenery(),ponyo.scenery(),discoveries.scenery(),{
     z:FISHING_SPOT.arrival[1]*TILE-2,draw:drawFishingSign});
   if(!moments.shouldHidePair())scenery.push({z:pair.y*TILE,draw:ctx=>drawPair(ctx,moments.renderPair(),url=>outfitImage(url,save.outfits),save.outfits)});
   scenery.sort((a,b)=>a.z-b.z);
@@ -202,6 +239,8 @@ function draw(){
   ambient.drawAir(ctx,ambientFrame);
   ctx.restore();
   lighting.draw(ctx,{camera,decor,places,motionTime:ambientTime});
+  canvas.dataset.visibleShootingStars=String(drawShootingStars(ctx,{time:ambientTime,
+    night:lighting.sample().phase==='night',reducedMotion:motionPreference.matches}));
   const effects=ambient.getStats();
   canvas.dataset.ambientTime=ambientTime.toFixed(3);
   canvas.dataset.ambientMotion=effects.motion;
@@ -209,6 +248,7 @@ function draw(){
   canvas.dataset.visibleRipples=String(effects.visibleRipples);
   canvas.dataset.waterReady=String(effects.waterReady);
   canvas.dataset.ponyoUnlocked=String(hasAllPlushies(save.fishing));
+  canvas.dataset.hiddenSecretsFound=String(discoveries.getState().found.length);
   moments.positionBubble(camera,canvas);
 }
 function tick(time){
@@ -216,7 +256,19 @@ function tick(time){
   moments.tick(dt,{active,dialogsOpen:host.isOpen()||overview.isOpen()});
   ponyo.tick(dt,{active:active&&!document.hidden,dialogsOpen:host.isOpen()||overview.isOpen(),
     reducedMotion:motionPreference.matches});
+  const previousX=pair.x,previousY=pair.y;
   step(dt);advancePairAnimation(pair,dt);
+  const worldActive=active&&!document.hidden&&!host.isOpen()&&!overview.isOpen();
+  effects.setEnvironment({active:worldActive,night:lighting.sample().phase==='night',
+    nearWater:Math.hypot(pair.x*TILE-POND_LAYOUT.centerX,pair.y*TILE-POND_LAYOUT.centerY)<180});
+  if(worldActive&&pair.moving){
+    footDistance+=Math.hypot(pair.x-previousX,pair.y-previousY);
+    if(footDistance>=1.7){
+      footDistance%=1.7;
+      const x=Math.round(pair.x),y=Math.round(pair.y);
+      effects.step(onMainRoad(x,y)||stonePaths.has(x+','+y)?'stone':'grass');
+    }
+  }else footDistance=0;
   // Nothing moves behind a modal. Keep its last frame and repaint when it closes;
   // the day/night clock still uses real time, including time spent in a dialog.
   if(active&&!document.hidden&&!host.isOpen()&&!overview.isOpen()){
@@ -261,15 +313,15 @@ function requestLayout(){
 const frameObserver=new ResizeObserver(requestLayout);
 frameObserver.observe($('game-frame'));
 $('start-game').addEventListener('click',()=>{
-  void voice.unlock();
+  void voice.unlock();void effects.unlock();
   $('title-screen').hidden=true;$('game-screen').hidden=false;active=true;layout();canvas.focus();persist();status('Toca para caminar');
 });
 $('help-button').addEventListener('click',()=>{
   host.help();
 });
 canvas.addEventListener('pointerdown',pointClick);
-window.addEventListener('pointerdown',()=>{if(active)void voice.unlock();},{capture:true,passive:true});
-window.addEventListener('keydown',()=>{if(active)void voice.unlock();},{capture:true});
+window.addEventListener('pointerdown',()=>{if(active){void voice.unlock();void effects.unlock();}},{capture:true,passive:true});
+window.addEventListener('keydown',()=>{if(active){void voice.unlock();void effects.unlock();}},{capture:true});
 window.addEventListener('keydown',event=>{
   if(event.defaultPrevented)return;
   const interactive=event.target?.closest?.('input,textarea,select,button,a,[contenteditable="true"]');
@@ -278,7 +330,7 @@ window.addEventListener('keydown',event=>{
   if(interactive)return;
   const key=event.key.toLowerCase();
   if(active&&key==='e'&&!event.repeat&&!host.isOpen()&&!overview.isOpen()){
-    const spot=[...momentSpots,FISHING_SPOT,...(hasAllPlushies(save.fishing)?[PONYO_SPOT]:[])]
+    const spot=[...momentSpots,FISHING_SPOT,...SECRETS,...(hasAllPlushies(save.fishing)?[PONYO_SPOT]:[])]
       .map(item=>({item,distance:Math.hypot(pair.x-item.arrival[0],pair.y-item.arrival[1])}))
       .filter(item=>item.distance<=4).sort((a,b)=>a.distance-b.distance)[0]?.item;
     if(spot){event.preventDefault();goTo(...spot.arrival,spot);return;}
@@ -302,7 +354,7 @@ document.addEventListener('visibilitychange',()=>{
   if(document.hidden)persist();
   else requestLayout();
 });
-document.addEventListener('oowwww-dialog-open',()=>{pressed.clear();voice.stop();});
+document.addEventListener('oowwww-dialog-open',()=>{pressed.clear();voice.stop();effects.stop();});
 window.addEventListener('resize',requestLayout);
 window.addEventListener('pagehide',persist);
 updatePlaceCounter();

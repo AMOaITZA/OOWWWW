@@ -249,3 +249,17 @@ Al acariciarlo, Leo dice «ponyo ponyo que divertida es».
 con los atuendos actuales. La colección, Ponyo y la última actividad de la
 casa se conservan en la partida. Consulta [la guía V10](../docs/FINALE-V10.md)
 y [las pruebas y capturas](../docs/QA-FINALE-V10.md).
+
+## Sonidos y secretos V11
+
+En Música puedes ajustar los efectos de pisadas, maullidos, agua y grillos.
+Hay dos cofres y una carta escondidos, y estrellas fugaces por la noche.
+Las estructuras tienen sombras de contacto y proyección sobre el suelo.
+
+Se corrigen las caras sin lentes y los cuerpos sentados del comedor y el sofá.
+La tele está preparada para `assets/game/home/videos/nuestro-video.mp4`:
+añade el archivo, reinicia Vite y pulsa Reproducir en Ver la tele.
+
+Consulta [los cambios V11](../docs/MAGIC-V11.md),
+[las pruebas y comparaciones](../docs/QA-MAGIC-V11.md) y
+[las instrucciones del video](../docs/HOME-VIDEO.md).

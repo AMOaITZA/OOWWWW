@@ -261,8 +261,11 @@ function tick(time){
   const worldActive=active&&!document.hidden&&!host.isOpen()&&!overview.isOpen();
   effects.setEnvironment({active:worldActive,night:lighting.sample().phase==='night',
     nearWater:Math.hypot(pair.x*TILE-POND_LAYOUT.centerX,pair.y*TILE-POND_LAYOUT.centerY)<180});
-  if(worldActive&&pair.moving){
-    footDistance+=Math.hypot(pair.x-previousX,pair.y-previousY);
+  const movedDistance=Math.hypot(pair.x-previousX,pair.y-previousY);
+  // Keyboard movement joins one-tile routes. Keep the stride across their
+  // endpoints instead of resetting it every time pair.moving briefly clears.
+  if(worldActive&&movedDistance>0){
+    footDistance+=movedDistance;
     if(footDistance>=1.7){
       footDistance%=1.7;
       const x=Math.round(pair.x),y=Math.round(pair.y);

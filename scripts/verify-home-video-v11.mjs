@@ -3,7 +3,7 @@
 import {chromium,expect} from '@playwright/test';
 import {access,mkdir,rm,writeFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
-import {execFileSync} from 'node:child_process';
+import {execFileSync,spawn} from 'node:child_process';
 
 const fixture=resolve('assets/game/home/videos/nuestro-video.mp4');
 const webm=resolve('assets/game/home/videos/nuestro-video.webm');
@@ -11,15 +11,31 @@ for(const path of [fixture,webm]){
   try{await access(path);throw new Error('Personal TV video already exists; fixture verification will not replace it: '+path);}
   catch(error){if(error.code!=='ENOENT')throw error;}
 }
-const base=process.env.ART_CAPTURE_URL||'http://127.0.0.1:5173';
+const compiled=process.env.HOME_VIDEO_BUILD==='1';
+const port=process.env.HOME_VIDEO_PREVIEW_PORT||'5185';
+const base=process.env.ART_CAPTURE_URL||(compiled?'http://127.0.0.1:'+port:'http://127.0.0.1:5173');
 const output=process.env.ART_CAPTURE_DIR||'docs/qa-home-video-v11';
-let created=false,browser,result;
+let created=false,browser,result,preview;
+const build=()=>execFileSync(process.execPath,[resolve('node_modules/vite/bin/vite.js'),'build'],{stdio:'pipe'});
 try{
   created=true;
   execFileSync(process.env.ART_FFMPEG_PATH||'/usr/bin/ffmpeg',['-y','-loglevel','error',
     '-f','lavfi','-i','testsrc2=size=160x90:rate=15','-f','lavfi','-i','sine=frequency=440:sample_rate=22050',
     '-t','8','-c:v','libx264','-threads','1','-pix_fmt','yuv420p','-c:a','aac','-b:a','32k','-movflags','+faststart',fixture]);
   console.log('Temporary TV fixture created.');
+  if(compiled){
+    build();
+    preview=spawn(process.execPath,[resolve('node_modules/vite/bin/vite.js'),'preview','--host','127.0.0.1',
+      '--port',port,'--strictPort'],{stdio:'pipe'});
+    preview.stdout.resume();preview.stderr.resume();
+    let ready=false;
+    for(let attempt=0;attempt<100;attempt++){
+      if(preview.exitCode!==null)throw new Error('Production TV preview stopped before becoming ready.');
+      try{if((await fetch(base+'/game.html')).ok){ready=true;break;}}catch{}
+      await new Promise(resolve=>setTimeout(resolve,100));
+    }
+    if(!ready)throw new Error('Production TV preview did not become ready.');
+  }
   browser=await chromium.launch({executablePath:process.env.ART_CHROMIUM_PATH||'/usr/bin/chromium',args:['--no-sandbox']});
   const page=await browser.newPage({viewport:{width:1280,height:900},reducedMotion:'reduce'}),errors=[],failed=[];
   page.on('pageerror',error=>errors.push(error.message));
@@ -73,7 +89,8 @@ try{
   result={noAutoplay:true,videoFramesPainted:await page.evaluate(()=>window.__homeVideoFrames),videoPixelsChanged:true,
     position:saved.position,volume:saved.volume,muted:saved.muted,stoppedOnSwitch:true,stoppedOnClose:true,errors,failed};
 }finally{
-  await browser?.close();if(created)await rm(fixture,{force:true});
+  await browser?.close();preview?.kill('SIGTERM');
+  if(created){await rm(fixture,{force:true});if(compiled)build();}
 }
-await writeFile(output+'/result.json',JSON.stringify({...result,fixtureRemoved:true},null,2)+'\n');
-console.log(JSON.stringify({...result,fixtureRemoved:true}));
+await writeFile(output+'/result.json',JSON.stringify({...result,compiled,fixtureRemoved:true},null,2)+'\n');
+console.log(JSON.stringify({...result,compiled,fixtureRemoved:true}));

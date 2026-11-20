@@ -97,8 +97,12 @@ export function createMap({places,decor,moments=[],pair,save,onNavigate,getActiv
   }
   canvas.addEventListener('pointerdown',event=>{
     const rect=canvas.getBoundingClientRect();
-    const x=(event.clientX-rect.left)*canvas.width/rect.width/STEP;
-    const y=(event.clientY-rect.top)*canvas.height/rect.height/STEP;
+    const style=getComputedStyle(canvas),number=value=>parseFloat(value)||0;
+    const left=number(style.borderLeftWidth),top=number(style.borderTopWidth);
+    const width=rect.width-left-number(style.borderRightWidth);
+    const height=rect.height-top-number(style.borderBottomWidth);
+    const x=(event.clientX-rect.left-left)*canvas.width/width/STEP;
+    const y=(event.clientY-rect.top-top)*canvas.height/height/STEP;
     const spot=[...moments,...getActivities()].reduce((best,p)=>{
       const dist=Math.hypot(p.tile[0]-x,p.tile[1]-y);
       return dist<3.8&&(!best||dist<best.dist)?{p,dist}:best;

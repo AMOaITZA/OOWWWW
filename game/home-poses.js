@@ -34,8 +34,12 @@ function posedActor({who,pose,frame,outfits,getCharacterImage,getRawImage,getPos
     if(!personalized.data[from+3])continue;
     if(y>=25){
       const original=((direction*48+y)*raw.width+index*32+x)*4;
-      if(who!=='itza'||!hairMaskPixel('walk-'+look,index,direction,x,y)||
-        !rawHairPixel(...raw.data.subarray(original,original+3)))continue;
+      const hair=who==='itza'&&hairMaskPixel('walk-'+look,index,direction,x,y)&&
+        rawHairPixel(...raw.data.subarray(original,original+3));
+      // The cap look has shorter hair. Its real upper back must fill the
+      // transparent hair-clearance region above the generated seated torso.
+      const upperBack=pose==='tv'&&y<36&&!output.data[(y*32+x)*4+3];
+      if(!hair&&!upperBack)continue;
     }
     output.data.set(personalized.data.subarray(from,from+4),(y*32+x)*4);
   }

@@ -129,7 +129,7 @@
 /* Fishing keeps its collection in an optional HUD drawer. */
 #experience[data-presentation='scene'] .fishing-game{position:absolute;inset:0;max-width:none;margin:0;background:#9BBC83}
 #experience[data-presentation='scene'] .fishing-stage{
-  position:absolute;inset:0;height:auto;margin:0;border:0;background:#9BBC83 url('/assets/game/world/ground-v4.png') center/cover;
+  position:absolute;inset:0;height:auto;margin:0;border:0;background:#79A997;
 }
 #experience[data-presentation='scene'] .fishing-pond{width:min(82vw,1000px);height:auto;left:50%;top:50%;transform:translate(-50%,-50%)}
 #experience[data-presentation='scene'] .fishing-rod{left:calc(50% - 150px);bottom:25%;height:180px}

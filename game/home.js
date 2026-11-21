@@ -28,6 +28,7 @@ export function chooseHomeActivity(saved,id){
 export const HOME_LAYOUT=Object.freeze({
   bed:{heads:[[55,91],[95,91]],blanket:{x:47,y:116,width:87,height:65}},
   table:{people:[[165,169],[272,169]],foreground:{x:191,y:183,width:79,height:36},food:[[211,195],[250,195]]},
-  sofa:{people:[[340,156],[376,156]],foreground:{x:325,y:211,width:114,height:21}},
+  sofa:{people:[[340,148],[376,148]],patch:{x:316,y:150,width:124,height:84},
+    foreground:{x:325,y:185,width:114,height:49}},
   tv:{x:352,y:80,width:42,height:29},ponyo:{x:443,y:225}
 });

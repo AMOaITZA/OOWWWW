@@ -1,11 +1,12 @@
 import {node,labeledButton} from './dom.js';
 import {PLUSHIES,normalizeFishing,collectedPlushies,hasAllPlushies,selectPlushie,
   recordCast,recordCatch,FISHING_WAIT_MS,FISHING_BITE_MS} from '../fishing.js';
+import {createFishingScene} from '../fishing-scene.js';
 import './pesca.css';
 
 export function mount(root,_data,api){
   api.save??={};
-  let state=normalizeFishing(api.save.fishing),alive=true,phase='idle';
+  let state=normalizeFishing(api.save.fishing),alive=true,phase='idle',caughtPlushie=null;
   let waitTimer=0,biteTimer=0,progressTimer=0,deadline=0;
   const preference=window.matchMedia('(prefers-reduced-motion: reduce)');
   const shell=node('section','fishing-game');shell.setAttribute('aria-label','Pesca de peluches de FNAF');
@@ -17,11 +18,7 @@ export function mount(root,_data,api){
   const completion=node('p','fishing-completion','¡Los cinco están contigo! Ponyo ya te espera junto a los gatitos. Sal al mundo para conocer a Ponyo.');
   mission.append(missionTitle,missionText,progress,counter,completion);
 
-  const stage=node('div','fishing-stage');stage.setAttribute('aria-hidden','true');
-  const pond=node('img','fishing-pond');pond.src='/assets/game/ambient/pond.png';pond.alt='';pond.width=288;pond.height=192;
-  const rod=node('span','fishing-rod'),line=node('span','fishing-line'),bobber=node('span','fishing-bobber');
-  const reward=node('img','fishing-reward');reward.alt='';reward.width=96;reward.height=96;reward.hidden=true;
-  stage.append(pond,rod,line,bobber,reward);
+  const stage=node('div','fishing-stage');
   const status=node('p','fishing-status','Lanza la caña. Cuando el flotador se hunda, pulsa «¡Sacar!».');
   status.setAttribute('role','status');status.setAttribute('aria-live','polite');status.setAttribute('aria-atomic','true');
   const meter=node('div','fishing-meter');meter.setAttribute('role','progressbar');
@@ -42,6 +39,7 @@ export function mount(root,_data,api){
     return {plushie,card,detail};
   });
   collection.append(collectionTitle,cards);shell.append(mission,stage,status,meter,button,guidance,collection);root.append(shell);
+  const scene=createFishingScene({stage,api,preference});
 
   function clearRound(){
     clearTimeout(waitTimer);clearTimeout(biteTimer);clearInterval(progressTimer);
@@ -63,10 +61,11 @@ export function mount(root,_data,api){
     button.setAttribute('aria-disabled',String(phase==='waiting'));
     button.textContent=phase==='waiting'?'Esperando el pique…':phase==='bite'?'¡Sacar!':phase==='idle'?'Lanzar la caña':'Lanzar otra vez';
     meter.hidden=phase!=='bite';
+    scene.setState({phase,plushie:caughtPlushie});
   }
   function cast(){
     if(!alive||phase==='waiting'||phase==='bite')return;
-    clearRound();reward.hidden=true;state=recordCast(state);save();phase='waiting';
+    clearRound();caughtPlushie=null;state=recordCast(state);save();phase='waiting';
     api.onSfx?.('splash');
     status.textContent='La caña está en el agua… espera a que pique un peluche.';render();
     waitTimer=setTimeout(()=>{if(alive&&phase==='waiting')bite();},FISHING_WAIT_MS);
@@ -97,7 +96,7 @@ export function mount(root,_data,api){
     clearRound();phase='caught';
     api.onSfx?.('splash');api.onSfx?.('chime');
     const before=hasAllPlushies(state),plushie=selectPlushie(state);state=recordCatch(state,plushie.id);save();
-    reward.src=plushie.image;reward.hidden=false;
+    caughtPlushie=plushie;
     const complete=hasAllPlushies(state),newlyCompleted=!before&&complete;
     status.textContent='¡Encontraste a '+plushie.name+'! '+(newlyCompleted?'¡Colección completa! Ponyo ya está junto a los gatitos.':plushie.rarity+' · Se ha guardado en tu colección.');
     render();api.onFishingChange?.({complete,newlyCompleted,plushie});
@@ -117,7 +116,7 @@ export function mount(root,_data,api){
   preference.addEventListener('change',preferenceChanged);document.addEventListener('visibilitychange',visibilityChanged);
   render();
   return ()=>{
-    alive=false;clearRound();preference.removeEventListener('change',preferenceChanged);
+    alive=false;clearRound();scene.dispose();preference.removeEventListener('change',preferenceChanged);
     document.removeEventListener('visibilitychange',visibilityChanged);
   };
 }

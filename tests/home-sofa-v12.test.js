@@ -21,10 +21,26 @@ test('the TV bodies have folded knees wider than a standing pair of feet',()=>{
   const provenance=JSON.parse(readFileSync(new URL('../docs/SOFA-V12-GENERATION.json',import.meta.url)));
   assert.equal(provenance.sha256,createHash('sha256').update(bytes).digest('hex'));
 });
-test('TV bodies sit on the cushions and the sofa front never chops their legs',()=>{
+test('the TV-facing sofa puts its rear backrest below complete seated heads',()=>{
   for(const[x,y]of HOME_LAYOUT.sofa.people){
     assert.ok(x>=335&&x+32<=422);
-    assert.ok(y+40>=194&&y+46<=207,'Folded legs rest on the seat rather than on the decorative pillows');
-    assert.ok(HOME_LAYOUT.sofa.foreground.y>=y+48,'Only the front lip belongs above the actors');
+    assert.ok(HOME_LAYOUT.tv.y+HOME_LAYOUT.tv.height<y,'Both people face the TV across the room');
+    assert.ok(y+32<HOME_LAYOUT.sofa.foreground.y,'Complete heads and upper backs stay above the rear backrest');
+    assert.ok(y+40>HOME_LAYOUT.sofa.foreground.y,'The rear backrest naturally hides the folded knees');
+  }
+});
+
+test('the local furniture patch preserves the original room and its native palette',()=>{
+  const provenance=JSON.parse(readFileSync(new URL('../docs/SOFA-TURN-V14-GENERATION.json',import.meta.url)));
+  const patchBytes=readFileSync(new URL('../assets/game/home/sofa-back-patch.png',import.meta.url));
+  const originalBytes=readFileSync(new URL('../assets/game/home/interior.png',import.meta.url));
+  assert.equal(provenance.baseSha256,createHash('sha256').update(originalBytes).digest('hex'));
+  assert.equal(provenance.sha256,createHash('sha256').update(patchBytes).digest('hex'));
+  assert.deepEqual(provenance.roomRegion,HOME_LAYOUT.sofa.patch);
+  const patch=PNG.sync.read(patchBytes),original=PNG.sync.read(originalBytes);
+  const palette=new Set(Array.from({length:original.width*original.height},(_,i)=>[...original.data.subarray(i*4,i*4+3)].join(',')));
+  assert.deepEqual([patch.width,patch.height],[124,84]);
+  for(let i=0;i<patch.data.length;i+=4){
+    assert.equal(patch.data[i+3],255);assert.ok(palette.has([...patch.data.subarray(i,i+3)].join(',')));
   }
 });

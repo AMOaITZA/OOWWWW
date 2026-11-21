@@ -81,7 +81,7 @@ save.dayNight=lighting.getState();
 lighting.mount(document.querySelector('.game-header'));
 const music=createMusicPlayer({openPlaylist:()=>host.open('playlist')});
 const host=createHost({
-  save,assetImage,getWeddingImage:key=>weddingCharacterImage(key,save.outfits),
+  save,assetImage,music,getWeddingImage:key=>weddingCharacterImage(key,save.outfits),
   getOutfits:()=>save.outfits,getCharacterImage:url=>outfitImage(url,save.outfits),
   getSeatedImage:(who,look)=>seatedImage(who,look,save.outfits),
   getPonyoImage:()=>momentImage('ponyo'),getPonyoUnlocked:()=>hasAllPlushies(save.fishing),
@@ -247,9 +247,6 @@ function draw(){
     const y0=Math.max(0,Math.floor(camera.y/TILE)-1),y1=Math.min(HEIGHT,Math.ceil((camera.y+canvas.height)/TILE)+1);
     for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++)groundTile(ctx,x,y);
   }
-  const coastGround=assetImage('/assets/game/coast/ground.png');
-  if(coastGround)ctx.drawImage(coastGround,COAST_LAYOUT.strip.x,COAST_LAYOUT.strip.y,
-    COAST_LAYOUT.strip.width,COAST_LAYOUT.strip.height);
   const ambientFrame={camera,time:ambientTime,reducedMotion:motionPreference.matches};
   ambient.drawGround(ctx,ambientFrame);
   coast.drawScenery(ctx,ambientFrame);

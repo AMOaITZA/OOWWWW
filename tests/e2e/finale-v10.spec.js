@@ -51,7 +51,7 @@ test('five actual catches persist the collection and unlock an interactive Ponyo
     await catchOne(page);
     await expect(page.locator('.fishing-game')).toHaveAttribute('data-collected',String(count));
     expect(await page.locator('.fishing-plush[data-found="true"]').count()).toBe(count);
-    await expect(page.locator('.fishing-reward')).toBeVisible();
+    await expect(page.locator('.fishing-scene')).toHaveAttribute('data-plushie',/^(freddy|bonnie|chica|foxy|golden-freddy)$/);
   }
   await expect(page.locator('.fishing-completion')).toBeVisible();
   const completed=await state(page);

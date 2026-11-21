@@ -3,6 +3,7 @@ import {CHARACTERS,equipmentUrls,getLookOptions} from './wardrobe.js';
 import {loadWeddingImages,weddingImage} from './wedding-assets.js';
 import {getHairColor,hairVariant} from './hair.js';
 import {glassesVariant,setEyePatches} from './glasses.js';
+import {WIDTH,HEIGHT,TILE} from './world.js';
 export const EYE_PATCH_URL='/assets/game/appearance/eyes-without-glasses.png';
 
 // Vite resolves this inventory at build time. Missing optional outfits never
@@ -21,8 +22,8 @@ function load(url,{sheet=false,ground=false}={}){
         console.warn('[OOWWWW] Hoja inválida:',url,'se requieren 192×144');
         resolve(null);return;
       }
-      if(ground&&(image.naturalWidth!==1920||image.naturalHeight!==1280)){
-        console.warn('[OOWWWW] Suelo inválido:',url,'se requieren 1920×1280');
+      if(ground&&(image.naturalWidth!==WIDTH*TILE||image.naturalHeight!==HEIGHT*TILE)){
+        console.warn('[OOWWWW] Suelo inválido:',url,'se requieren '+WIDTH*TILE+'×'+HEIGHT*TILE);
         resolve(null);return;
       }
       resolve(image);
@@ -51,6 +52,7 @@ export async function prepareWorldAssets(){
   for(const url of Object.values(manifest.objects))tasks.push(load(url));
   for(const url of Object.values(manifest.ambient??{}))tasks.push(load(url));
   for(const url of Object.values(manifest.fishing??{}))tasks.push(load(url));
+  for(const url of Object.values(manifest.fishingScene??{}))tasks.push(load(url));
   for(const url of Object.values(manifest.home??{}))tasks.push(load(url));
   for(const url of Object.values(manifest.secrets??{}))tasks.push(load(url));
   for(const url of Object.values(manifest.travel??{}))tasks.push(load(url));

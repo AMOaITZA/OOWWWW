@@ -1,6 +1,6 @@
 {
-  "version": 13,
-  "description": "Sonidos, tesoros escondidos, caras naturales y poses completas en casa.",
+  "version": 14,
+  "description": "Pesca con Itza, sofá hacia la tele, rostros completos y terreno continuo.",
   "secrets": {
     "chest": "/assets/game/secrets/chest.png",
     "note": "/assets/game/secrets/note.png"
@@ -16,13 +16,14 @@
     "exterior": "/assets/game/home/exterior.png",
     "interior": "/assets/game/home/interior.png",
     "seatedBodies": "/assets/game/home/seated-bodies.png",
-    "seatedCrossed": "/assets/game/home/seated-crossed.png"
+    "seatedCrossed": "/assets/game/home/seated-crossed.png",
+    "sofaBack": "/assets/game/home/sofa-back-patch.png"
   },
   "ambient": {
     "pond": "/assets/game/ambient/pond.png"
   },
   "world": {
-    "ground": "/assets/game/world/ground-v4.png"
+    "ground": "/assets/game/world/ground-unified.png"
   },
   "objects": {
     "house": "/assets/game/objects/house.png",
@@ -170,11 +171,14 @@
     "giraffe": "/assets/game/travel/giraffe.png"
   },
   "coast": {
-    "ground": "/assets/game/coast/ground.png",
     "harbor": "/assets/game/coast/harbor.png",
     "view": "/assets/game/coast/view.png"
   },
   "dance": {
     "bodies": "/assets/game/dance/bodies.png"
+  },
+  "fishingScene": {
+    "background": "/assets/game/fishing/scene.png",
+    "poses": "/assets/game/fishing/poses.png"
   }
 }

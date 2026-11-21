@@ -8,6 +8,7 @@ import {createHomeVideoPlayer,drawHomeVideoFrame,homeVideoTime} from '../home-vi
 import './casita.css';
 
 const INTERIOR='/assets/game/home/interior.png';
+const SOFA_BACK='/assets/game/home/sofa-back-patch.png';
 const activityOf=id=>HOME_ACTIVITIES.find(activity=>activity.id===id)||HOME_ACTIVITIES[0];
 
 export function mount(root,_data,api){
@@ -49,6 +50,18 @@ export function mount(root,_data,api){
   tvControls.append(videoStatus,videoActions,videoTimeline,videoVolumeLabel,videoPreview);
   root.append(room,tvControls,activities,reply,keepsake);
   const ctx=canvas.getContext('2d');
+  let roomCache=null,roomSource=null,sofaSource=null;
+  function roomImage(){
+    const background=api.assetImage?.(INTERIOR),sofa=api.assetImage?.(SOFA_BACK);
+    if(!background||!sofa)return background;
+    if(roomCache&&roomSource===background&&sofaSource===sofa)return roomCache;
+    roomSource=background;sofaSource=sofa;
+    roomCache=document.createElement('canvas');roomCache.width=480;roomCache.height=270;
+    const painter=roomCache.getContext('2d');painter.imageSmoothingEnabled=false;
+    painter.drawImage(background,0,0);
+    const box=HOME_LAYOUT.sofa.patch;painter.drawImage(sofa,box.x,box.y,box.width,box.height);
+    return roomCache;
+  }
   const player=createHomeVideoPlayer({video,saved:home.video,
     onChange:state=>{home={...home,video:state};api.save.home=home;api.onProgressChange?.();},
     onPlayback:playing=>{api.onHomeVideoPlayback?.(playing);syncVideo();scheduleFrame();},
@@ -76,7 +89,7 @@ export function mount(root,_data,api){
   function draw(){
     if(!alive)return;
     ctx.imageSmoothingEnabled=false;ctx.globalAlpha=1;
-    const background=api.assetImage?.(INTERIOR);
+    const background=roomImage();
     if(background)ctx.drawImage(background,0,0,480,270);
     else{ctx.fillStyle='#CFAE8E';ctx.fillRect(0,0,480,270);ctx.fillStyle='#F4DEBD';ctx.fillRect(12,12,456,246);}
     const still=preference.matches,blink=still?0:Math.floor(clock/1.8)%2;
@@ -114,12 +127,13 @@ export function mount(root,_data,api){
         ctx.fillStyle='#FFF1DC';ctx.fillRect(tv.x+7,tv.y+5,1,1);ctx.fillRect(tv.x+tv.width-7,tv.y+6,1,1);
       }
       HOME_LAYOUT.sofa.people.forEach(([x,y],index)=>{
-        // The folded legs rest on the seat, below the pillows. Only the
-        // upholstered front lip belongs in front of the seated bodies.
+        // The sofa opens toward the TV. Its rear backrest sits below the
+        // actors and naturally occludes the knees, leaving complete heads.
         ctx.globalAlpha=.18;ctx.fillStyle='#4D302E';ctx.fillRect(x+5,y+44,23,2);ctx.globalAlpha=1;
         actor(index?'itza':'leo',x,y,'tv',blink);
       });
       restoreFurniture(background,HOME_LAYOUT.sofa.foreground);
+      canvas.dataset.sofaFacing='tv';
     }
     if(api.getPonyoUnlocked?.()){
       const ponyo=api.getPonyoImage?.();

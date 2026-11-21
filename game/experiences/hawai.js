@@ -3,6 +3,7 @@ import {getSelectedLook,getChoice} from '../wardrobe.js';
 import {getHairColor} from '../hair.js';
 import {getGlasses} from '../glasses.js';
 import {drawDancingPair} from '../dance.js';
+import {mountSceneMusic} from '../scene-music.js';
 import {HAWAII_ZONES,HAWAII_DRINKS,visitHawaii,danceInHawaii,buyHawaiiDrink,petHawaiiGiraffe,
   hawaiiZoneAt,hawaiiWalkable,nearestHawaiiPoint,hawaiiViewport} from '../hawaii.js';
 import './hawai.css';
@@ -57,6 +58,7 @@ export function mount(root,_data,api){
   const memories=node('p','hawaii-memories');
   const help=node('p','hawaii-help','Toca la arena para caminar · E para interactuar');
   shell.append(stage,top,travel,status,interaction,drinks,memories,help);root.append(shell);
+  const releaseMusic=mountSceneMusic(shell,api.music);
   const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;
   function save(){api.save.hawaii=state;api.onProgressChange?.();}
   function speak(line){
@@ -237,6 +239,7 @@ export function mount(root,_data,api){
   const observer=new ResizeObserver(resize);observer.observe(stage);
   save();render();resize();speak('mi lugar favorito sigue siendo contigo.');schedule();
   return ()=>{
+    releaseMusic();
     alive=false;cancelAnimationFrame(raf);clearTimeout(speechTimer);keys.clear();route=[];observer.disconnect();
     canvas.removeEventListener('pointerup',pointer);canvas.removeEventListener('keydown',keydown);canvas.removeEventListener('blur',blur);
     window.removeEventListener('keyup',keyup);window.removeEventListener('blur',blur);

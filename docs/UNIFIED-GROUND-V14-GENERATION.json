@@ -1,0 +1,31 @@
+{
+  "generator": "image_gen.imagegen",
+  "packer": "scripts/prepare-unified-ground-v14.mjs",
+  "source": "exec-f588fc28-2ecb-4d4e-b13e-7125a1cbd3bf.png",
+  "sourceSha256": "a80770468c833400b3bf4207e942d84bbbdd91a36fa6442322cc1c241a9dc480",
+  "sourceSize": [
+    1298,
+    1212
+  ],
+  "reference": "Original ground-v4.png at y0 plus coast/ground.png at y1280, technically composed as1920x1792 before editing.",
+  "referenceSources": [
+    {
+      "path": "assets/game/world/ground-v4.png",
+      "sha256": "df01fb1a8edc17fbf18c04f6ba9a232ec1f9bdb1c385e94dc5ced40ad4456d1d"
+    },
+    {
+      "path": "assets/game/coast/ground.png",
+      "sha256": "4e9e899f73b09eeb632a971e8743a772c2863e99c7b4128b9bdf37f748cf58c8"
+    }
+  ],
+  "notes": "One generated art cleanup harmonizes grass color, texture scale and lighting across the full map. Roads and coastline retain their established positions. Native nearest-neighbor sampling, opaque alpha and bounded palette only; no algorithmic blur or color blending.",
+  "output": {
+    "path": "assets/game/world/ground-unified.png",
+    "size": [
+      1920,
+      1792
+    ],
+    "paletteColors": 192,
+    "sha256": "b5c2854912d5fb27987fef4abf45e4834aca6f801382b25d89d213932db1c878"
+  }
+}

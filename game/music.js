@@ -36,6 +36,11 @@ export function createMusicPlayer({openPlaylist=()=>{}}={}){
   const listButton=$('music-list'),seek=$('music-seek');
   const volume=$('music-volume'),clock=$('music-time');
   let index=0;
+  const subscribers=new Set();
+  function getState(){return {track:tracks[index],index,playing:!audio.paused&&!audio.ended,
+    volume:audio.volume,position:Number.isFinite(audio.currentTime)?audio.currentTime:0,
+    duration:Number.isFinite(audio.duration)?audio.duration:0,status:status.textContent};}
+  function notify(){for(const listener of subscribers)listener(getState());}
 
   try{
     const stored=localStorage.getItem(TRACK_KEY);
@@ -56,6 +61,7 @@ export function createMusicPlayer({openPlaylist=()=>{}}={}){
     title.textContent=track.title;
     artist.textContent=track.artist;
     number.textContent=(index+1)+' / '+tracks.length;
+    notify();
   }
   function syncPlayback(){
     const playing=!audio.paused&&!audio.ended;
@@ -66,6 +72,7 @@ export function createMusicPlayer({openPlaylist=()=>{}}={}){
     const duration=audio.duration;
     seek.disabled=!(Number.isFinite(duration)&&duration>0);
     seek.value=seek.disabled?'0':String(Math.round(audio.currentTime/duration*1000));
+    notify();
   }
   function show(){
     // A song can finish or be selected inside a modal. Keep its controls out
@@ -111,6 +118,17 @@ export function createMusicPlayer({openPlaylist=()=>{}}={}){
     setTrack(found);
     return true;
   }
+  function choose(filename){
+    const found=tracks.findIndex(track=>track.filename===filename);
+    if(found<0)return false;
+    setTrack(found,{reveal:false});return true;
+  }
+  function setVolume(value){
+    if(!Number.isFinite(value))return;
+    audio.volume=Math.min(1,Math.max(0,value));volume.value=String(Math.round(audio.volume*100));
+    try{localStorage.setItem(VOLUME_KEY,String(audio.volume));}catch{}
+    notify();
+  }
 
   musicButton.addEventListener('click',()=>dock.hidden?show():hide());
   dock.addEventListener('keydown',event=>{
@@ -132,8 +150,7 @@ export function createMusicPlayer({openPlaylist=()=>{}}={}){
       audio.currentTime=Number(seek.value)/1000*audio.duration;
   });
   volume.addEventListener('input',()=>{
-    audio.volume=Number(volume.value)/100;
-    try{localStorage.setItem(VOLUME_KEY,String(audio.volume));}catch{}
+    setVolume(Number(volume.value)/100);
   });
   audio.addEventListener('play',()=>{status.textContent='Reproduciendo';syncPlayback();});
   audio.addEventListener('playing',()=>{status.textContent='Reproduciendo';syncPlayback();});
@@ -141,11 +158,15 @@ export function createMusicPlayer({openPlaylist=()=>{}}={}){
   audio.addEventListener('timeupdate',syncPlayback);
   audio.addEventListener('durationchange',syncPlayback);
   audio.addEventListener('loadedmetadata',syncPlayback);
-  audio.addEventListener('waiting',()=>{status.textContent='Cargando audio…';});
+  audio.addEventListener('waiting',()=>{status.textContent='Cargando audio…';notify();});
+  audio.addEventListener('volumechange',notify);
   audio.addEventListener('error',()=>{status.textContent='No se pudo cargar este MP3.';syncPlayback();});
   audio.addEventListener('ended',()=>setTrack(index+1,{reveal:false}));
   syncTrack();
   syncPlayback();
   status.textContent='Elige una canción o pulsa Reproducir';
-  return {select,show,hide,isOpen:()=>!dock.hidden,selected:()=>tracks[index]};
+  return {select,show,hide,isOpen:()=>!dock.hidden,selected:()=>tracks[index],
+    getState,choose,play,pause:()=>audio.pause(),setVolume,
+    next:()=>setTrack(index+1,{reveal:false}),previous:()=>setTrack(index-1,{reveal:false}),
+    subscribe:listener=>{subscribers.add(listener);listener(getState());return ()=>subscribers.delete(listener);}};
 }

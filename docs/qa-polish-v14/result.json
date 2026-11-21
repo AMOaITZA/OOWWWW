@@ -1,0 +1,19 @@
+{
+  "screenshots": [
+    "fishing-waiting-desktop.png",
+    "fishing-caught-desktop.png",
+    "fishing-waiting-phone.png",
+    "fishing-caught-phone.png",
+    "fishing-waiting-landscape.png",
+    "fishing-caught-landscape.png",
+    "fishing-sequence-01-casting.png",
+    "fishing-sequence-02-waiting.png",
+    "fishing-sequence-03-reeling.png",
+    "fishing-sequence-04-caught.png",
+    "island-music-desktop.png",
+    "island-music-phone.png"
+  ],
+  "errors": [],
+  "failed": [],
+  "note": "Real cast/bite/reel controls, personalized outfits, and the existing native MP3 player. The four fishing sequence frames use the browser clock to freeze actual animation; no won progress is injected."
+}

@@ -5,7 +5,8 @@
 .fishing-quest-progress{width:calc(100% - 150px);height:14px;accent-color:#a77988;vertical-align:middle}
 .fishing-quest-counter{display:inline-block;padding-left:12px;font-size:20px}
 .fishing-completion{padding:10px 12px;background:#fff4d9;border:1px solid #d7bc7e;color:#786131}
-.fishing-stage{position:relative;isolation:isolate;height:215px;overflow:hidden;margin:18px 0 8px;background:linear-gradient(#c4d2ae,#e4e7c9);border:2px solid #bac4a0}
+.fishing-stage{position:relative;isolation:isolate;height:400px;overflow:hidden;margin:18px 0 8px;background:#79A997;border:2px solid #bac4a0}
+.fishing-scene{position:absolute;display:block;image-rendering:pixelated;max-width:none;pointer-events:none}
 .fishing-pond{position:absolute;left:50%;top:12px;transform:translateX(-50%);image-rendering:pixelated;max-width:none}
 .fishing-rod{position:absolute;width:5px;height:112px;left:calc(50% - 118px);bottom:9px;background:#87664e;border:1px solid #5f483d;transform:rotate(-31deg);transform-origin:bottom}
 .fishing-line{position:absolute;left:calc(50% - 128px);top:69px;width:132px;height:53px;border-top:1px solid #fff9dc;border-right:1px solid #fff9dc;transform:skewY(15deg);opacity:.9}

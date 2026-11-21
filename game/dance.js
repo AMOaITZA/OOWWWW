@@ -1,5 +1,5 @@
 import {getChoice,getSelectedLook} from './wardrobe.js';
-import {hairMaskPixel} from './hair.js';
+import {splitCharacterHeadPixels} from './character-head.js';
 
 export const DANCE_BODY_URL='/assets/game/dance/bodies.png';
 export const DANCE_FRAME_SIZE=Object.freeze({width:40,height:56});
@@ -27,9 +27,6 @@ function pixelsOf(image){
   const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(image,0,0);
   const pixels=ctx.getImageData(0,0,canvas.width,canvas.height);pixelsCache.set(image,pixels);return pixels;
 }
-function darkHair(r,g,b){
-  const light=Math.max(r,g,b);return light<=112&&light-Math.min(r,g,b)<=48&&!(r>g&&g>b&&r-b>20);
-}
 function actorPose({who,bodyFrame,outfits,getCharacterImage,getRawImage,getDanceImage}){
   const look=getChoice(outfits,who),selected=getSelectedLook(outfits,who);
   const source=getCharacterImage?.(selected?.sheet),body=getDanceImage?.(DANCE_BODY_URL);
@@ -40,18 +37,13 @@ function actorPose({who,bodyFrame,outfits,getCharacterImage,getRawImage,getDance
   const canvas=document.createElement('canvas');canvas.width=40;canvas.height=56;
   const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;
   const personalized=pixelsOf(source),raw=pixelsOf(getRawImage?.(selected?.sheet)||source);
-  const direction=headDirections[bodyFrame],profile='walk-'+look;
+  const direction=headDirections[bodyFrame];
   const head=document.createElement('canvas');head.width=40;head.height=56;
   const headCtx=head.getContext('2d'),headPixels=headCtx.createImageData(40,56);
   const hair=document.createElement('canvas');hair.width=40;hair.height=56;
   const hairCtx=hair.getContext('2d'),hairPixels=hairCtx.createImageData(40,56);
-  for(let y=0;y<41;y++)for(let x=0;x<32;x++){
-    const from=((direction*48+y)*personalized.width+x)*4,to=(y*40+x+4)*4;
-    if(!personalized.data[from+3])continue;
-    if(y<24)headPixels.data.set(personalized.data.subarray(from,from+4),to);
-    else if(who==='itza'&&hairMaskPixel(profile,0,direction,x,y)&&darkHair(...raw.data.subarray(from,from+3)))
-      hairPixels.data.set(personalized.data.subarray(from,from+4),to);
-  }
+  const split=splitCharacterHeadPixels(personalized,raw,{who,look,direction});
+  headPixels.data.set(split.head);hairPixels.data.set(split.hair);
   headCtx.putImageData(headPixels,0,0);hairCtx.putImageData(hairPixels,0,0);
   if(direction!==2)ctx.drawImage(hair,0,0);
   const row=(who==='itza'?3:0)+Math.max(0,looks.indexOf(look));

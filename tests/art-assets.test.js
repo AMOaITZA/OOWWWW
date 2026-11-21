@@ -124,11 +124,11 @@ test('every destination has a distinct complete architectural image',()=>{
   assert.equal(new Set(hashes).size,count,'Cada destino conserva una arquitectura distinta');
 });
 
-test('the new village terrain is a full opaque world layer',()=>{
+test('the unified terrain covers the village and coast as one opaque world layer',()=>{
   const manifest=JSON.parse(readFileSync(new URL('../game/data/assets.json',import.meta.url),'utf8'));
-  assert.match(manifest.world.ground,/ground-v4\.png$/);
+  assert.match(manifest.world.ground,/ground-unified\.png$/);
   const ground=png(manifest.world.ground.slice(1));
-  assert.deepEqual([ground.width,ground.height],[1920,1280]);
+  assert.deepEqual([ground.width,ground.height],[1920,1792]);
   for(let i=3;i<ground.data.length;i+=4)assert.equal(ground.data[i],255,'No deben aparecer huecos negros al desplazarse');
 });
 

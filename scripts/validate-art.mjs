@@ -9,8 +9,7 @@ const images=new Map(),errors=[],warnings=[],palette=new Set(),treePalette=new S
 const add=(url,options)=>{
   if(url?.startsWith('/assets/game/')&&url.toLowerCase().endsWith('.png'))images.set(url,options);
 };
-add(manifest.world.ground,{size:[1920,1280],opaque:true,palette:true});
-add(manifest.coast?.ground,{size:[1920,512],opaque:true,generated:true,maxColors:192});
+add(manifest.world.ground,{size:[1920,1792],opaque:true,generated:true,maxColors:192});
 add(manifest.coast?.harbor,{size:[256,256],generated:true,maxColors:128});
 add(manifest.coast?.view,{size:[640,400],opaque:true,generated:true,maxColors:192});
 add(manifest.dance?.bodies,{size:[320,336],frame:[40,56],generated:true,maxColors:128});
@@ -27,6 +26,9 @@ add(manifest.home?.interior,{size:[480,270],opaque:true,generated:true,maxColors
 add(manifest.home?.exterior,{size:[160,128],generated:true,maxColors:128});
 add(manifest.home?.seatedBodies,{size:[128,288],frame:[32,48],generated:true,maxColors:128});
 add(manifest.home?.seatedCrossed,{size:[64,288],frame:[32,48],generated:true,maxColors:128});
+add(manifest.home?.sofaBack,{size:[124,84],opaque:true,generated:true,maxColors:128});
+add(manifest.fishingScene?.background,{size:[640,400],opaque:true,generated:true,maxColors:192});
+add(manifest.fishingScene?.poses,{size:[160,168],frame:[40,56],generated:true,maxColors:128});
 for(const id of ['hawaii','lakeside','giraffe']){
   if(!manifest.travel?.[id])errors.push('Falta el recurso del viaje '+id);
   add(manifest.travel?.[id],{size:id==='giraffe'?[64,96]:[640,400],opaque:id!=='giraffe',generated:true,maxColors:id==='giraffe'?64:192});

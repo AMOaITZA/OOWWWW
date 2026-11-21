@@ -294,3 +294,17 @@ tele → Controles de la tele → Reproducir video**.
 
 Consulta [la guía V13](../docs/IMMERSIVE-V13.md) y
 [las pruebas y capturas](../docs/QA-IMMERSIVE-V13.md).
+
+## Detalles visuales V14
+
+El sillón mira hacia la TV, con su respaldo en primer plano. Las ocho poses
+del baile conservan ahora la mandíbula completa en todos los conjuntos.
+En Hawái, **♫ Música** controla el mismo reproductor y las 37 canciones del
+pueblo, sin salir de la isla.
+
+Itza pesca desde la orilla con sus atuendos y una caña conectada a sus manos.
+El peluche sale del agua y sube hasta ella. El mundo usa una sola superficie
+de terreno para eliminar el corte entre el pueblo y la costa.
+
+Consulta [la guía V14](../docs/POLISH-V14.md) y
+[la verificación con capturas](../docs/QA-POLISH-V14.md).

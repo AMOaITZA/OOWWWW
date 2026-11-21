@@ -1,0 +1,19 @@
+{
+  "screenshots": [
+    "desktop-principal.png",
+    "detail-principal.png",
+    "desktop-alternativo.png",
+    "detail-alternativo.png",
+    "desktop-boda.png",
+    "detail-boda.png",
+    "phone-principal.png",
+    "phone-alternativo.png",
+    "phone-boda.png",
+    "landscape-principal.png",
+    "landscape-alternativo.png",
+    "landscape-boda.png"
+  ],
+  "errors": [],
+  "failed": [],
+  "note": "Real room, TV-facing rear sofa and personalized actors. No personal video was played or captured; only the idle TV is visible. Phone sizes and touch are emulated."
+}

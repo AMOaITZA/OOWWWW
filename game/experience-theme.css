@@ -1,0 +1,118 @@
+/* An illustrated journal shell; the original experiences keep their own data. */
+.experience{
+  padding:16px;background:rgba(33,23,27,.76);backdrop-filter:blur(2px);
+  overflow:hidden;
+}
+.experience .experience-panel{
+  --experience-accent:#a9697d;--experience-tint:#f7e4e6;--experience-paper:#fff7e8;
+  display:flex;flex-direction:column;width:min(940px,100%);min-width:0;
+  max-height:calc(100dvh - 40px);height:auto;overflow:hidden;scrollbar-gutter:auto;
+  padding:0;background:var(--experience-paper);border:3px solid #684b42;
+  box-shadow:0 0 0 3px #ecd4b6,8px 8px 0 #39283280,0 22px 70px #160e2260;
+}
+.experience .experience-panel::after{
+  content:'';height:7px;flex:none;border-top:1px solid #d4bda0;
+  background:repeating-linear-gradient(90deg,var(--experience-tint) 0 16px,#fff4df 16px 32px);
+}
+.experience .experience-panel[data-experience='carta']{--experience-accent:#9d6868;--experience-tint:#f1dbd0;width:min(800px,100%)}
+.experience .experience-panel[data-experience='galeria']{--experience-accent:#64826a;--experience-tint:#e6ecd9;width:min(1000px,100%)}
+.experience .experience-panel[data-experience='razones']{--experience-accent:#a4637b;--experience-tint:#f4dee8}
+.experience .experience-panel[data-experience='playlist']{--experience-accent:#597b71;--experience-tint:#dfece6}
+.experience .experience-panel[data-experience='recuerdos']{--experience-accent:#7c6a8e;--experience-tint:#eae3f1}
+.experience .experience-panel[data-experience='contador']{--experience-accent:#9d7949;--experience-tint:#f4e7c8}
+.experience .experience-panel[data-experience='lugares']{--experience-accent:#64868b;--experience-tint:#e3eeeb}
+.experience .experience-panel[data-experience='final']{--experience-accent:#a3657d;--experience-tint:#f7dfe8}
+.experience .experience-panel[data-experience='armario']{--experience-accent:#9b6c78;--experience-tint:#f0e1de;width:min(1000px,100%)}
+.experience .experience-panel[data-experience='boda']{--experience-accent:#a56d81;--experience-tint:#fae1de;width:min(1060px,100%)}
+.experience .experience-panel[data-experience='secreto']{--experience-accent:#688475;--experience-tint:#e7eedc;width:min(820px,100%)}
+.experience .experience-panel[data-experience='grabadora']{--experience-accent:#9c7369;--experience-tint:#f1dfd1;width:min(840px,100%)}
+.experience .experience-panel[data-experience='pesca']{--experience-accent:#547f83;--experience-tint:#deede4}
+.experience .experience-panel[data-experience='casita']{--experience-accent:#9b755d;--experience-tint:#f4e6cf;width:min(1020px,100%)}
+.experience .experience-panel .experience-hero{
+  flex:none;position:relative;isolation:isolate;min-height:178px;display:flex;align-items:flex-end;
+  overflow:hidden;background:var(--experience-tint);border-bottom:2px solid #d8bfa4;
+}
+.experience .experience-hero-art{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 43%;
+  display:block;image-rendering:pixelated;z-index:-2;
+}
+.experience .experience-hero::after{
+  content:'';position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(180deg,#fff6e500 0%,#fff7e82b 24%,#fff7e8ed 78%,var(--experience-paper) 100%);
+}
+.experience .experience-heading{width:100%;padding:54px 76px 19px 28px}
+.experience .experience-heading .eyebrow{
+  display:block;margin:0 0 8px;padding:0;max-width:64ch;color:#755354;
+  color:color-mix(in srgb,var(--experience-accent) 72%,#3e2d30);text-shadow:1px 1px #fff7e8;
+  font:11px/1.7 'Silkscreen',monospace;letter-spacing:1px;
+}
+.experience .experience-heading h2{
+  margin:0;padding:0;max-width:38ch;color:#563b3c;white-space:pre-line;
+  font:clamp(15px,2vw,21px)/1.6 'Press Start 2P',monospace;text-wrap:balance;
+  text-shadow:1px 2px #fff8eb;
+}
+.experience .experience-panel #experience-content{
+  flex:1;min-height:0;min-width:0;display:block;overflow:auto;overscroll-behavior:contain;
+  scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:#bc9a85 #f4e8d7;
+  margin:0;padding:25px 28px 29px;color:#503d35;
+  background:radial-gradient(#d8c6aa26 .65px,transparent .65px) 0 0/8px 8px,var(--experience-paper);
+}
+.experience #experience-content>p{max-width:68ch;margin-inline:auto;line-height:1.5}
+.experience #experience-content>*+*{margin-top:18px}
+.experience #experience-content>p+section,.experience #experience-content>p+div{margin-top:20px}
+.experience .experience-panel .close-experience{
+  position:absolute;top:12px;right:13px;z-index:5;float:none;margin:0;
+  width:44px;height:44px;min-height:44px;display:grid;place-items:center;
+  padding:0;border:2px solid #75564b;background:#fff6e9;color:#6c4e45;
+  font:27px/1 'VT323',monospace;box-shadow:3px 3px #6b4c4633;
+}
+.experience .experience-panel .close-experience:hover{background:var(--experience-tint)}
+.experience .experience-panel .close-experience:focus-visible{outline:3px solid var(--experience-accent);outline-offset:3px}
+.experience #experience-content :is(button,a,input):focus-visible{outline-color:var(--experience-accent)}
+.experience #experience-content button{min-height:44px}
+.experience .experience-panel[data-experience='boda'] .experience-hero{min-height:145px}
+.experience .experience-panel[data-experience='boda'] #experience-content{padding:20px 26px 25px}
+.experience .wedding-ceremony{padding:15px;background:#fff9ed;border:1px solid #dbc0b3;box-shadow:inset 0 0 0 4px #f8ebdc}
+.experience .wedding-vow{box-shadow:3px 3px #ead6c6;border-color:#d3a2ad}
+.experience .wedding-stage-title{color:#815268}
+.experience .wedding-controls .wedding-nav{border-color:#76515d;box-shadow:2px 3px #dbbcc4}
+/* A brief journal opening; every control is usable from the first frame. */
+.experience[data-transition='entering']{animation:experience-backdrop-in 180ms ease-out both}
+.experience[data-transition='entering'] .experience-panel{animation:experience-arrive 220ms cubic-bezier(.2,.7,.3,1) both}
+.experience[data-transition='entering'] .experience-heading{animation:experience-detail-in 200ms 35ms ease-out both}
+.experience[data-transition='entering'] #experience-content{animation:experience-detail-in 200ms 55ms ease-out both}
+.experience-departure{pointer-events:none!important;z-index:29;animation:experience-backdrop-out 160ms ease-in both}
+.experience-departure *{pointer-events:none!important}
+.experience-departure .experience-panel{animation:experience-leave 160ms ease-in both}
+@keyframes experience-arrive{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes experience-detail-in{from{opacity:.35;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@keyframes experience-leave{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(6px)}}
+@keyframes experience-backdrop-in{from{background-color:rgba(33,23,27,0)}to{background-color:rgba(33,23,27,.76)}}
+@keyframes experience-backdrop-out{from{opacity:1}to{opacity:0}}
+@media(max-width:560px){
+  .experience{padding:10px 8px}
+  .experience .experience-panel{max-height:calc(100dvh - 24px);border-width:2px;box-shadow:0 0 0 2px #ecd4b6,4px 5px #39283280}
+  .experience .experience-panel .experience-hero{min-height:144px}
+  .experience .experience-heading{padding:39px 52px 14px 15px}
+  .experience .experience-heading .eyebrow{font-size:9px;line-height:1.65;letter-spacing:.35px;margin-bottom:7px}
+  .experience .experience-heading h2{font-size:13px;line-height:1.65;max-width:30ch}
+  .experience .experience-panel #experience-content{padding:18px 14px 23px;scrollbar-gutter:auto}
+  .experience .experience-panel .close-experience{top:9px;right:9px;box-shadow:2px 2px #6b4c4633}
+  .experience .experience-panel[data-experience='boda'] .experience-hero{min-height:126px}
+  .experience .experience-panel[data-experience='boda'] #experience-content{padding:12px 10px 18px}
+  .experience .wedding-ceremony{padding:10px 7px}
+}
+@media(max-height:480px){
+  .experience{padding:8px}
+  .experience .experience-panel{max-height:calc(100dvh - 20px)}
+  .experience .experience-panel .experience-hero{min-height:90px}
+  .experience .experience-heading{padding-top:22px;padding-bottom:10px}
+  .experience .experience-heading .eyebrow{margin-bottom:3px;font-size:9px}
+  .experience .experience-heading h2{font-size:13px;line-height:1.5}
+  .experience .experience-panel[data-experience='boda'] .experience-hero{min-height:90px}
+  .experience .experience-panel #experience-content{padding-block:14px}
+}
+@media(prefers-reduced-motion:reduce){
+  .experience,.experience .experience-panel,.experience .experience-heading,.experience #experience-content{animation:none!important}
+  .experience-departure{display:none}
+}

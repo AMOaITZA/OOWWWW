@@ -1,0 +1,137 @@
+{
+  "views": [
+    {
+      "name": "pond-day",
+      "viewport": [
+        1440,
+        900
+      ],
+      "stats": {
+        "pixelScale": "3",
+        "cameraX": "560",
+        "cameraY": "394",
+        "dayPhase": "day",
+        "lightingMode": "day",
+        "nightAmount": "0.000",
+        "visibleFireflies": "0",
+        "visibleLanterns": "0",
+        "ambientTime": "0.550",
+        "ambientMotion": "active",
+        "visiblePetals": "5",
+        "visibleRipples": "7",
+        "waterReady": "true"
+      }
+    },
+    {
+      "name": "cherry-petals",
+      "viewport": [
+        1440,
+        900
+      ],
+      "stats": {
+        "pixelScale": "3",
+        "cameraX": "400",
+        "cameraY": "426",
+        "dayPhase": "day",
+        "lightingMode": "day",
+        "nightAmount": "0.000",
+        "visibleFireflies": "0",
+        "visibleLanterns": "0",
+        "ambientTime": "0.550",
+        "ambientMotion": "active",
+        "visiblePetals": "4",
+        "visibleRipples": "7",
+        "waterReady": "true"
+      }
+    },
+    {
+      "name": "pond-night",
+      "viewport": [
+        1440,
+        900
+      ],
+      "stats": {
+        "pixelScale": "3",
+        "cameraX": "560",
+        "cameraY": "394",
+        "dayPhase": "night",
+        "lightingMode": "night",
+        "nightAmount": "1.000",
+        "visibleFireflies": "9",
+        "visibleLanterns": "1",
+        "ambientTime": "0.767",
+        "ambientMotion": "active",
+        "visiblePetals": "5",
+        "visibleRipples": "7",
+        "waterReady": "true"
+      }
+    },
+    {
+      "name": "lantern-night",
+      "viewport": [
+        1440,
+        900
+      ],
+      "stats": {
+        "pixelScale": "3",
+        "cameraX": "640",
+        "cameraY": "538",
+        "dayPhase": "night",
+        "lightingMode": "night",
+        "nightAmount": "1.000",
+        "visibleFireflies": "1",
+        "visibleLanterns": "1",
+        "ambientTime": "0.683",
+        "ambientMotion": "active",
+        "visiblePetals": "1",
+        "visibleRipples": "0",
+        "waterReady": "true"
+      }
+    },
+    {
+      "name": "phone",
+      "viewport": [
+        390,
+        844
+      ],
+      "stats": {
+        "pixelScale": "2",
+        "cameraX": "703",
+        "cameraY": "333",
+        "dayPhase": "day",
+        "lightingMode": "day",
+        "nightAmount": "0.000",
+        "visibleFireflies": "0",
+        "visibleLanterns": "0",
+        "ambientTime": "0.767",
+        "ambientMotion": "active",
+        "visiblePetals": "1",
+        "visibleRipples": "7",
+        "waterReady": "true"
+      }
+    },
+    {
+      "name": "landscape",
+      "viewport": [
+        844,
+        390
+      ],
+      "stats": {
+        "pixelScale": "2",
+        "cameraX": "589",
+        "cameraY": "447",
+        "dayPhase": "day",
+        "lightingMode": "day",
+        "nightAmount": "0.000",
+        "visibleFireflies": "0",
+        "visibleLanterns": "0",
+        "ambientTime": "0.633",
+        "ambientMotion": "active",
+        "visiblePetals": "4",
+        "visibleRipples": "7",
+        "waterReady": "true"
+      }
+    }
+  ],
+  "errors": []
+}

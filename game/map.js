@@ -1,0 +1,138 @@
+import {WIDTH,HEIGHT,walkable} from './world.js';
+import {activateDialog} from './dialog.js';
+import {visiblePlaces} from './place-discovery.js';
+import {POND_LAYOUT,pondTileBlocked} from './pond-geometry.js';
+import {COAST_LAYOUT,coastTileType} from './coast-layout.js';
+const STEP=3;
+const palette={grass:'#94B77B',grassShade:'#8BAE74',road:'#D8C69A',water:'#6D9BAC',accent:'#B5656F',ink:'#1B120E',cream:'#FFF1DC',visited:'#F2C46D'};
+export function createMap({places,decor,moments=[],pair,save,onNavigate,getActivities=()=>[]}){
+  const panel=document.getElementById('map-panel');
+  const canvas=document.getElementById('overview');
+  canvas.width=WIDTH*STEP;canvas.height=HEIGHT*STEP;
+  canvas.style.aspectRatio=WIDTH+' / '+HEIGHT;
+  // Keep the taller overview inside a phone while its backing grid and tap
+  // coordinates retain the same three pixels per world tile.
+  canvas.style.width='min(100%, 600px, '+(52*WIDTH/HEIGHT).toFixed(3)+'dvh)';
+  const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;
+  const closeButton=document.getElementById('close-map');
+  const destinations=document.getElementById('map-destinations');
+  const mapButton=document.getElementById('map-button');
+  let releaseDialog=()=>{};
+  const background=document.createElement('canvas');
+  background.width=WIDTH*STEP;background.height=HEIGHT*STEP;
+  const land=background.getContext('2d');land.imageSmoothingEnabled=false;
+  land.fillStyle=palette.grass;land.fillRect(0,0,background.width,background.height);
+  for(let y=0;y<HEIGHT;y++)for(let x=0;x<WIDTH;x++){
+    if((x*29+y*17)%13===0){land.fillStyle=palette.grassShade;land.fillRect(x*STEP,y*STEP,STEP,STEP);}
+    if((y>=36&&y<=42&&x>10&&x<101)||(x>=59&&x<=65&&y>19&&y<65)){
+      land.fillStyle=palette.road;land.fillRect(x*STEP,y*STEP,STEP,STEP);
+    }
+    const coast=coastTileType(x,y);
+    if(coast){
+      land.fillStyle=coast==='water'?'#639FA0':coast==='pier'?'#A77D58':coast==='sand'?'#EAD4AB':palette.grass;
+      land.fillRect(x*STEP,y*STEP,STEP,STEP);
+    }
+  }
+  // The terminal is a destination building, not an anonymous map marker.
+  const terminal=COAST_LAYOUT.terminal;
+  land.fillStyle='#9F7965';
+  land.fillRect(Math.floor(terminal.x/16*STEP),Math.floor(terminal.y/16*STEP),
+    Math.ceil(terminal.width/16*STEP),Math.ceil(terminal.height/16*STEP));
+  for(let y=Math.floor(POND_LAYOUT.y/16);y<=Math.ceil((POND_LAYOUT.y+POND_LAYOUT.height)/16);y++)
+    for(let x=Math.floor(POND_LAYOUT.x/16);x<=Math.ceil((POND_LAYOUT.x+POND_LAYOUT.width)/16);x++)
+      if(pondTileBlocked(x,y)){land.fillStyle=palette.water;land.fillRect(x*STEP,y*STEP,STEP,STEP);}
+  land.fillStyle='#426B4C';
+  for(const item of decor)if(item.kind==='tree')land.fillRect(item.tile[0]*STEP-2,item.tile[1]*STEP-2,7,7);
+  function repaint(){
+    if(panel.hidden)return;
+    ctx.drawImage(background,0,0);
+    for(const place of visiblePlaces(places,save)){
+      const x=place.tile[0]*STEP,y=place.tile[1]*STEP;
+      ctx.fillStyle=save.visited.includes(place.id)?palette.visited:palette.accent;
+      ctx.fillRect(x-4,y-4,9,9);
+      ctx.fillStyle=palette.ink;ctx.fillRect(x-2,y-2,5,5);
+      ctx.fillStyle=palette.cream;ctx.fillRect(x-1,y-1,3,3);
+    }
+    for(const spot of moments){
+      const x=spot.tile[0]*STEP,y=spot.tile[1]*STEP;
+      ctx.fillStyle=spot.kind==='cats'?'#F6C0CE':'#F2C46D';
+      ctx.fillRect(x-3,y-3,7,7);
+      ctx.fillStyle=palette.ink;ctx.fillRect(x-1,y-1,3,3);
+    }
+    for(const spot of getActivities()){
+      const x=spot.tile[0]*STEP,y=spot.tile[1]*STEP;
+      ctx.fillStyle=spot.kind==='hidden-secret'?'#F2C46D':spot.kind==='ponyo'?'#E6B7C8':'#FFF1DC';ctx.fillRect(x-3,y-3,7,7);
+      ctx.fillStyle=spot.kind==='ponyo'?'#756D77':'#547F83';ctx.fillRect(x-1,y-1,3,3);
+    }
+    // The world viewport follows the screen's aspect ratio, including rotation.
+    const world=document.getElementById('world');
+    const width=world?.width??480,height=world?.height??270;
+    const cameraX=Number(world?.dataset.cameraX??Math.max(0,Math.min(WIDTH*16-width,Math.round(pair.x*16-width/2))));
+    const cameraY=Number(world?.dataset.cameraY??Math.max(0,Math.min(HEIGHT*16-height,Math.round(pair.y*16-height/2))));
+    ctx.strokeStyle=palette.ink;ctx.lineWidth=2;
+    ctx.strokeRect(Math.round(cameraX*STEP/16),Math.round(cameraY*STEP/16),width*STEP/16,height*STEP/16);
+    ctx.fillStyle=palette.ink;ctx.fillRect(Math.round(pair.x*STEP)-3,Math.round(pair.y*STEP)-3,7,7);
+    ctx.fillStyle=palette.visited;ctx.fillRect(Math.round(pair.x*STEP)-2,Math.round(pair.y*STEP)-2,5,5);
+  }
+  function close(){
+    if(panel.hidden)return;
+    releaseDialog();releaseDialog=()=>{};
+    mapButton.setAttribute('aria-expanded','false');
+  }
+  function navigate(x,y,place){
+    close();
+    onNavigate(x,y,place);
+  }
+  function open(){
+    if(!panel.hidden)return;
+    destinations.replaceChildren();
+    for(const place of visiblePlaces(places,save)){
+      const button=document.createElement('button');
+      button.type='button';button.className='map-destination';button.textContent=place.name;
+      if(save.visited.includes(place.id))button.classList.add('visited');
+      button.addEventListener('click',()=>navigate(...place.arrival,place));
+      destinations.append(button);
+    }
+    for(const spot of getActivities()){
+      const button=document.createElement('button');button.type='button';
+      button.className='map-destination activity-destination';
+      button.textContent=spot.kind==='travel'||spot.kind==='lakeside'?spot.name:spot.kind==='hidden-secret'?'Tesoro · '+spot.name:
+        spot.kind==='ponyo'?'Ponyo · Acariciar':'Pesca · '+spot.name;
+      button.addEventListener('click',()=>navigate(...spot.arrival,spot));destinations.append(button);
+    }
+    for(const spot of moments){
+      const button=document.createElement('button');
+      button.type='button';button.className='map-destination moment-destination';
+      button.textContent=spot.kind==='cats'?'Gatitos · Acariciar':'Banca · '+spot.name;
+      button.addEventListener('click',()=>navigate(...spot.arrival,spot));
+      destinations.append(button);
+    }
+    releaseDialog=activateDialog(panel,{onClose:close,initialFocus:closeButton,fallbackFocus:mapButton});
+    mapButton.setAttribute('aria-expanded','true');
+    repaint();
+  }
+  canvas.addEventListener('pointerdown',event=>{
+    const rect=canvas.getBoundingClientRect();
+    const style=getComputedStyle(canvas),number=value=>parseFloat(value)||0;
+    const left=number(style.borderLeftWidth),top=number(style.borderTopWidth);
+    const width=rect.width-left-number(style.borderRightWidth);
+    const height=rect.height-top-number(style.borderBottomWidth);
+    const x=(event.clientX-rect.left-left)*canvas.width/width/STEP;
+    const y=(event.clientY-rect.top-top)*canvas.height/height/STEP;
+    const spot=[...moments,...getActivities()].reduce((best,p)=>{
+      const dist=Math.hypot(p.tile[0]-x,p.tile[1]-y);
+      return dist<3.8&&(!best||dist<best.dist)?{p,dist}:best;
+    },null)?.p;
+    if(spot){navigate(...spot.arrival,spot);return;}
+    const place=visiblePlaces(places,save).reduce((best,p)=>{
+      const dist=Math.hypot(p.tile[0]-x,p.tile[1]-y);
+      return dist<7&&(!best||dist<best.dist)?{p,dist}:best;
+    },null)?.p;
+    if(place)navigate(...place.arrival,place);
+    else navigate(Math.floor(x),Math.floor(y),null);
+  });
+  mapButton.addEventListener('click',open);
+  closeButton.addEventListener('click',close);
+  panel.addEventListener('pointerdown',event=>{if(event.target===panel)close();});
+  return {open,close,repaint,isOpen:()=>!panel.hidden};
+}

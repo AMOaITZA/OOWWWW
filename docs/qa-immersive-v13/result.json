@@ -1,0 +1,58 @@
+{
+  "screenshots": [
+    "harbor-physical-desktop.png",
+    "coast-blanket-desktop.png",
+    "coast-fireworks-desktop.png",
+    "coast-fireworks-phone.png",
+    "coast-fireworks-landscape.png",
+    "hawai-fullscreen-desktop.png",
+    "dance-eight-frames.png",
+    "hawai-jirafa-phone.png",
+    "hawai-jirafa-landscape.png"
+  ],
+  "danceFrames": [
+    {
+      "frame": 0,
+      "phase": "de la mano",
+      "path": "dance-frame-00.png"
+    },
+    {
+      "frame": 1,
+      "phase": "paso abierto",
+      "path": "dance-frame-01.png"
+    },
+    {
+      "frame": 2,
+      "phase": "paso cruzado",
+      "path": "dance-frame-02.png"
+    },
+    {
+      "frame": 3,
+      "phase": "preparar el giro",
+      "path": "dance-frame-03.png"
+    },
+    {
+      "frame": 4,
+      "phase": "vuelta de la pareja",
+      "path": "dance-frame-04.png"
+    },
+    {
+      "frame": 5,
+      "phase": "cerrar el giro",
+      "path": "dance-frame-05.png"
+    },
+    {
+      "frame": 6,
+      "phase": "paso al costado",
+      "path": "dance-frame-06.png"
+    },
+    {
+      "frame": 7,
+      "phase": "encontrarnos otra vez",
+      "path": "dance-frame-07.png"
+    }
+  ],
+  "errors": [],
+  "failed": [],
+  "note": "Real game UI and ordinary arrival seeds; reduced motion freezes decorative coast effects. No personal video was played or captured."
+}

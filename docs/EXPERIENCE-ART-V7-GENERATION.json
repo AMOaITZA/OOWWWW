@@ -1,0 +1,296 @@
+{
+  "generator": "image_gen.imagegen",
+  "packer": "scripts/prepare-experience-art-v7.mjs",
+  "sampling": "uniform nearest-neighbor",
+  "paletteCeilingPerBanner": 192,
+  "assets": [
+    {
+      "id": "inicio",
+      "path": "assets/game/experiences/inicio.png",
+      "size": [
+        384,
+        128
+      ],
+      "opaque": true,
+      "colors": 192,
+      "bytes": 54935,
+      "sha256": "9c3495a976edaaccf52bc204e703d9f99cc94fce4a2148b597c08e9d71981476",
+      "source": "exec-cbe7ebfd-58cf-4bba-9090-dc768a9ba1ee.png",
+      "sourceSha256": "8e1d035d14e45af92a639cbca763765d59f263d367e847000b0d32b478bf4dba",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": {
+        "x": 0,
+        "y": 0,
+        "width": 1086,
+        "height": 362
+      }
+    },
+    {
+      "id": "carta",
+      "path": "assets/game/experiences/carta.png",
+      "size": [
+        384,
+        128
+      ],
+      "opaque": true,
+      "colors": 192,
+      "bytes": 46176,
+      "sha256": "8564b0066783e7fc9e6f7e9d67f1407b3e817dfb573f34f4fc704fae84d3f8cb",
+      "source": "exec-cbe7ebfd-58cf-4bba-9090-dc768a9ba1ee.png",
+      "sourceSha256": "8e1d035d14e45af92a639cbca763765d59f263d367e847000b0d32b478bf4dba",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": {
+        "x": 1086,
+        "y": 0,
+        "width": 1086,
+        "height": 362
+      }
+    },
+    {
+      "id": "galeria",
+      "path": "assets/game/experiences/galeria.png",
+      "size": [
+        384,
+        128
+      ],
+      "opaque": true,
+      "colors": 192,
+      "bytes": 48964,
+      "sha256": "3b1f61c29e3a07f6d7e8e7fa7bbdb76944673134f06e504a6e5cc93af5e631ad",
+      "source": "exec-cbe7ebfd-58cf-4bba-9090-dc768a9ba1ee.png",
+      "sourceSha256": "8e1d035d14e45af92a639cbca763765d59f263d367e847000b0d32b478bf4dba",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": {
+        "x": 0,
+        "y": 362,
+        "width": 1086,
+        "height": 362
+      }
+    },
+    {
+      "id": "razones",
+      "path": "assets/game/experiences/razones.png",
+      "size": [
+        384,
+        128
+      ],
+      "opaque": true,
+      "colors": 192,
+      "bytes": 45510,
+      "sha256": "56c6dad6827045136885e9c211faa4b8388915106e65f8a99e19b7cafad93f4a",
+      "source": "exec-cbe7ebfd-58cf-4bba-9090-dc768a9ba1ee.png",
+      "sourceSha256": "8e1d035d14e45af92a639cbca763765d59f263d367e847000b0d32b478bf4dba",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": {
+        "x": 1086,
+        "y": 362,
+        "width": 1086,
+        "height": 362
+      }
+    },
+    {
+      "id": "playlist",
+      "path": "assets/game/experiences/playlist.png",
+      "size": [
+        384,
+        128
+      ],
+      "opaque": true,
+      "colors": 192,
+      "bytes": 51681,
+      "sha256": "f38fe19534e82db2b5d096dd24b39623ae5541ea424a7ff711d1c2633b86c283",
+      "source": "exec-7708ef7e-4f2d-41db-b975-bac7da7cc6bc.png",
+      "sourceSha256": "8ef79e583851e46be36da1bbb9032ab9cd852db2fa6f19b48d41ed90b5d7bd98",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": {
+        "x": 0,
+        "y": 0,
+        "width": 1086,
+        "height": 362
+      }
+    },
+    {
+      "id": "recuerdos",
+      "path": "assets/game/experiences/recuerdos.png",
+      "size": [
+        384,
+        128
+      ],
+      "opaque": true,
+      "colors": 192,
+      "bytes": 47565,
+      "sha256": "63d94c33db5cd6cc244f5abbf23b7fb9e59f4d90da48c02aa0051f8e66a162c5",
+      "source": "exec-7708ef7e-4f2d-41db-b975-bac7da7cc6bc.png",
+      "sourceSha256": "8ef79e583851e46be36da1bbb9032ab9cd852db2fa6f19b48d41ed90b5d7bd98",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": {
+        "x": 1086,
+        "y": 0,
+        "width": 1086,
+        "height": 362
+      }
+    },
+    {
+      "id": "contador",
+      "path": "assets/game/experiences/contador.png",
+      "size": [
+        384,
+        128
+      ],
+      "opaque": true,
+      "colors": 192,
+      "bytes": 49376,
+      "sha256": "7ca4b340ca551d8a0ad6885474d9b9da5ddbe87af7b01c0f21013550f4f8a48f",
+      "source": "exec-7708ef7e-4f2d-41db-b975-bac7da7cc6bc.png",
+      "sourceSha256": "8ef79e583851e46be36da1bbb9032ab9cd852db2fa6f19b48d41ed90b5d7bd98",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": {
+        "x": 0,
+        "y": 362,
+        "width": 1086,
+        "height": 362
+      }
+    },
+    {
+      "id": "lugares",
+      "path": "assets/game/experiences/lugares.png",
+      "size": [
+        384,
+        128
+      ],
+      "opaque": true,
+      "colors": 192,
+      "bytes": 50695,
+      "sha256": "7f142160dab00123c693f215a35262bf6c572fd72e98bdc51a165b46a39f325e",
+      "source": "exec-7708ef7e-4f2d-41db-b975-bac7da7cc6bc.png",
+      "sourceSha256": "8ef79e583851e46be36da1bbb9032ab9cd852db2fa6f19b48d41ed90b5d7bd98",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": {
+        "x": 1086,
+        "y": 362,
+        "width": 1086,
+        "height": 362
+      }
+    },
+    {
+      "id": "final",
+      "path": "assets/game/experiences/final.png",
+      "size": [
+        384,
+        128
+      ],
+      "opaque": true,
+      "colors": 192,
+      "bytes": 52618,
+      "sha256": "4b6a25ab6af36e79dafa752091da9f52d2492dab580f2ca9082b26d2b59a00dc",
+      "source": "exec-a8b30200-f8dd-4931-8b31-fac20dc93124.png",
+      "sourceSha256": "d11c2f5f2ea3c6f0c2e63c7df4f520bd7f55fa0eab1183bbfdb637c31663d9d0",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": {
+        "x": 0,
+        "y": 0,
+        "width": 1086,
+        "height": 362
+      }
+    },
+    {
+      "id": "armario",
+      "path": "assets/game/experiences/armario.png",
+      "size": [
+        384,
+        128
+      ],
+      "opaque": true,
+      "colors": 192,
+      "bytes": 51396,
+      "sha256": "2c3495240432173bb007d7c6f1a9cbb680391fac0528677ef373cbd4c643a987",
+      "source": "exec-a8b30200-f8dd-4931-8b31-fac20dc93124.png",
+      "sourceSha256": "d11c2f5f2ea3c6f0c2e63c7df4f520bd7f55fa0eab1183bbfdb637c31663d9d0",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": {
+        "x": 1086,
+        "y": 0,
+        "width": 1086,
+        "height": 362
+      }
+    },
+    {
+      "id": "secreto",
+      "path": "assets/game/experiences/secreto.png",
+      "size": [
+        384,
+        128
+      ],
+      "opaque": true,
+      "colors": 192,
+      "bytes": 53714,
+      "sha256": "5cc06465741654511bc92113d4db97159021188586acd81c24ebedfa17bb6977",
+      "source": "exec-a8b30200-f8dd-4931-8b31-fac20dc93124.png",
+      "sourceSha256": "d11c2f5f2ea3c6f0c2e63c7df4f520bd7f55fa0eab1183bbfdb637c31663d9d0",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": {
+        "x": 0,
+        "y": 362,
+        "width": 1086,
+        "height": 362
+      }
+    },
+    {
+      "id": "grabadora",
+      "path": "assets/game/experiences/grabadora.png",
+      "size": [
+        384,
+        128
+      ],
+      "opaque": true,
+      "colors": 192,
+      "bytes": 48305,
+      "sha256": "a569debb1f8658cd5c4221d50983831749ab9796fdacae4f2e1bbd3109350cf3",
+      "source": "exec-a8b30200-f8dd-4931-8b31-fac20dc93124.png",
+      "sourceSha256": "d11c2f5f2ea3c6f0c2e63c7df4f520bd7f55fa0eab1183bbfdb637c31663d9d0",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": {
+        "x": 1086,
+        "y": 362,
+        "width": 1086,
+        "height": 362
+      }
+    }
+  ]
+}

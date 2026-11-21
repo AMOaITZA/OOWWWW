@@ -1,0 +1,54 @@
+{
+  "hair": [
+    {
+      "id": "corto",
+      "name": "Pelo corto negro",
+      "front": "/assets/game/characters/leo/hair-short-front.png",
+      "back": "/assets/game/characters/leo/hair-short-back.png",
+      "color": "#1B120E",
+      "default": true
+    }
+  ],
+  "top": [
+    {
+      "id": "guinda",
+      "name": "Chamarra guinda",
+      "sprite": "/assets/game/characters/leo/top-guinda.png",
+      "color": "#B5656F",
+      "default": true
+    },
+    {
+      "id": "beige",
+      "name": "Suéter beige",
+      "sprite": "/assets/game/characters/leo/top-beige.png",
+      "color": "#C98F5B"
+    }
+  ],
+  "bottom": [
+    {
+      "id": "mezclilla",
+      "name": "Jeans",
+      "sprite": "/assets/game/characters/leo/bottom-jeans.png",
+      "color": "#607D91",
+      "default": true
+    }
+  ],
+  "shoes": [
+    {
+      "id": "tenis",
+      "name": "Tenis",
+      "sprite": "/assets/game/characters/leo/shoes-sneakers.png",
+      "color": "#2E1F18",
+      "default": true
+    }
+  ],
+  "accessories": [
+    {
+      "id": "lentes",
+      "name": "Lentes",
+      "sprite": "/assets/game/characters/leo/accessories-glasses.png",
+      "color": "#1B120E",
+      "default": true
+    }
+  ]
+}

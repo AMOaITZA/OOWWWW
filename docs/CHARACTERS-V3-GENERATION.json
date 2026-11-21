@@ -1,0 +1,156 @@
+{
+  "generator": "image_gen.imagegen",
+  "packer": "scripts/prepare-character-v3.mjs",
+  "reference": "pair-bench-v2",
+  "skin": [
+    [
+      199,
+      135,
+      104
+    ],
+    [
+      146,
+      103,
+      89
+    ],
+    [
+      211,
+      178,
+      160
+    ]
+  ],
+  "assets": [
+    {
+      "key": "leo-main",
+      "path": "assets/game/characters/leo/look-01.png",
+      "size": [
+        192,
+        144
+      ],
+      "frames": 18,
+      "source": "exec-6e7d283c-f441-42ed-b5b6-bb81f4c4bbaf.png",
+      "sourceSha256": "c148001d82dd1c920cab44f2c4bc72ca672c5374d2d09bbff53ee721b954c148",
+      "sha256": "280662a3cf289b215440c997dd1b9a02874c884671cdea233459ceedf5d8cfa4",
+      "replacesSha256": "f65e9dd3ffc93a90caf9a01f18fe8c8eb679a9ecae6e3558fb8c1875c5ccda4b"
+    },
+    {
+      "key": "itza-main",
+      "path": "assets/game/characters/itza/look-01.png",
+      "size": [
+        192,
+        144
+      ],
+      "frames": 18,
+      "source": "exec-5524c5f4-89e9-4fae-ae0b-79c2299d5349.png",
+      "sourceSha256": "fbafc45c4b53c5b1091d1e3a0cbdb80fe9273ea4998a1d22e79eac8886a7bf62",
+      "sha256": "9a61c52954c34c20dab8ccd9791553cc32c66d720a195140bdc8080f3a230ead",
+      "replacesSha256": "5a88bc31a8018bad9a7a5bf63bfb2f29c55ac29ff6d8b9ed5cf979e8cc748e20"
+    },
+    {
+      "key": "leo-wedding",
+      "path": "assets/game/wedding/characters/leo-walk.png",
+      "size": [
+        192,
+        144
+      ],
+      "frames": 18,
+      "source": "exec-f16ea4c5-f0c9-4508-9bef-658340c2746f.png",
+      "sourceSha256": "6947f0e0d93e0d09c9a4f3b6d1e1686bae95ddfa535d6d67a2461aed308bc326",
+      "sha256": "fb0fd5a12e580a240d8be2bfe85343b719153fd0a43e5359170794a65194d63f",
+      "replacesSha256": null
+    },
+    {
+      "key": "itza-wedding",
+      "path": "assets/game/wedding/characters/itza-walk.png",
+      "size": [
+        192,
+        144
+      ],
+      "frames": 18,
+      "source": "exec-8c35ff27-185a-4681-a7ab-d1de4107a703.png",
+      "sourceSha256": "9d37a851030f87a8d35726d980557c1964b92f5709ba5991cc371adfe8ddc394",
+      "sha256": "1fb7a85d331be2fc480ba21500c26f19db0514920f3f81de3f668066f3d60c99",
+      "replacesSha256": null
+    },
+    {
+      "key": "idle",
+      "path": "assets/game/wedding/characters/idle.png",
+      "size": [
+        128,
+        48
+      ],
+      "frames": 2,
+      "source": "exec-d7e4e1ae-4bc5-4ebb-aee7-145d7f6dd758.png",
+      "sourceSha256": "3a9911a568c83fd2d5f4bf484d36e08ba1a84a6a2e5e5971bceaa53c4444de8f",
+      "sha256": "c0d125d0772816217f8703b2a108003d0a6118b5790be75a1fb0e95bf971be53",
+      "replacesSha256": null
+    },
+    {
+      "key": "vows",
+      "path": "assets/game/wedding/characters/vows.png",
+      "size": [
+        256,
+        48
+      ],
+      "frames": 4,
+      "source": "exec-34567ed7-929a-4528-9dc8-634e18ec9629.png",
+      "sourceSha256": "16905242518d48e9b9353133d16294ad950fb77cfd3201ae9a69657776540917",
+      "sha256": "07cb5b2b622a92cd9656153baffe127e40b999653ce5a5036836c347c90b8568",
+      "replacesSha256": null
+    },
+    {
+      "key": "kiss",
+      "path": "assets/game/wedding/characters/kiss.png",
+      "size": [
+        192,
+        48
+      ],
+      "frames": 3,
+      "source": "exec-beb812b3-9d88-4378-ba01-c1cd7d7fdb41.png",
+      "sourceSha256": "47e8712502fba7c87adb00388e2415f30a970a41c0ddeb8ca2619768048ce77a",
+      "sha256": "cce43d53fc9c7ef9e25c303491e0ec25a7a603c18aa1a879729a799f53b96ab2",
+      "replacesSha256": null
+    },
+    {
+      "key": "hug",
+      "path": "assets/game/wedding/characters/hug.png",
+      "size": [
+        128,
+        48
+      ],
+      "frames": 2,
+      "source": "exec-b6985f83-1b9b-4843-8a0b-b4b7e61fa150.png",
+      "sourceSha256": "4c47601bdca5e5b015887e209ab62038f72026fe0913483c39395a6a5dff2d3c",
+      "sha256": "fda3cb7bb38d6aeba5eecef8257edc68f405085cd4c7dce4518d77c0238a6e7c",
+      "replacesSha256": null
+    },
+    {
+      "key": "celebrate",
+      "path": "assets/game/wedding/characters/celebrate.png",
+      "size": [
+        192,
+        48
+      ],
+      "frames": 3,
+      "source": "exec-c8420b05-066c-4514-80b7-c503fbc702a4.png",
+      "sourceSha256": "8672c9f1d890793fa2d962d0526615c450c45f6adc118d5b213adae1cac31a60",
+      "sha256": "4a99beaea6a5e4fc58c129562581901561fba97a219403a2fdd3650dcfa831f2",
+      "replacesSha256": null
+    }
+  ],
+  "atlas": {
+    "path": "assets/game/wedding/atlas.png",
+    "sha256": "bce26aa84f48060c1698eb520121a40ecb6bdabeed3063fc78e0a91f258214eb",
+    "replacesSha256": "44cb37617aa5a6867066de319fb619e3aaad39f5cfdacfa4f77708fc23d20318",
+    "replacedRegions": [
+      "itza-walk",
+      "leo-walk",
+      "vows",
+      "idle",
+      "kiss",
+      "hug",
+      "wedding-bench",
+      "celebrate"
+    ]
+  }
+}

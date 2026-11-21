@@ -1,0 +1,27 @@
+.experience-panel[data-experience='mirador']{--experience-accent:#79728D;--experience-tint:#DDD2D6;--experience-paper:#F9F0E3}
+.lakeside{max-width:960px;margin-inline:auto;color:#5E566F}
+.lakeside-intro{text-align:center;margin:0 0 18px!important;color:#75647C}
+.lakeside-stage{position:relative;overflow:hidden;border:3px solid #80728C;padding:4px;background:#C0AAB7;box-shadow:inset 0 0 0 1px #F5E4D6,5px 5px #79657C22}
+.lakeside-scene{display:block;width:100%;height:auto;aspect-ratio:8/5;image-rendering:pixelated;background:#353C57;outline-offset:-4px}
+.lakeside-badge{position:absolute;left:16px;top:16px;padding:9px 11px;border:1px solid #C8BFC899;background:#313548CC;color:#E9DFD1;font:9px/1.5 'Silkscreen',monospace;letter-spacing:1px;pointer-events:none}
+.lakeside-caption{text-align:center;margin:0!important;padding:15px 8px 5px;font:11px/1.8 'Silkscreen',monospace;letter-spacing:.4px;color:#74617E}
+.lakeside-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:20px 0 0}
+.lakeside-button,.lakeside-return{min-height:52px;padding:13px 14px;border:2px solid #AD94A1;background:#F8E8D9;box-shadow:3px 3px #82657822;color:#68556F;font:11px/1.7 'Silkscreen',monospace;cursor:pointer}
+.lakeside-button:hover,.lakeside-return:hover{background:#F3DADB;border-color:#94758D}
+.lakeside-primary,.lakeside-button[aria-pressed='true']{background:#DBC6D3;border-color:#95718D;box-shadow:inset 0 0 0 2px #F3DFE2,3px 3px #82657822}
+.lakeside-button:disabled{color:#8B818B;background:#ECE5DF;opacity:.7;box-shadow:none;cursor:default}
+.lakeside-button[hidden]{display:none}
+.lakeside-reply{max-width:820px;margin:20px auto 0!important;padding:16px 20px;border:1px solid #C5ABB8;background:#F5E6E2;text-align:center;color:#755C77;line-height:1.5}
+.lakeside-instruction{margin:12px auto 0!important;text-align:center;color:#8A7B89;font:20px/1.4 'VT323',monospace}
+.lakeside-return{display:block;margin:18px auto 0;min-height:44px;background:#F8EFE4;font-size:10px;box-shadow:none}
+@media(max-width:560px){
+ .lakeside-intro{margin-bottom:12px!important;font-size:21px}.lakeside-stage{padding:3px;border-width:2px}
+ .lakeside-badge{left:11px;top:11px;padding:6px 8px;font-size:7px;letter-spacing:.3px}
+ .lakeside-caption{font-size:9px;padding:12px 4px 2px}.lakeside-actions{grid-template-columns:1fr;gap:8px;margin-top:16px}
+ .lakeside-button{min-height:48px;font-size:10px;padding:10px}.lakeside-reply{padding:13px 12px;margin-top:17px!important}
+ .lakeside-instruction{font-size:18px}
+}
+@media(max-height:480px) and (min-width:561px){
+ .lakeside-stage{max-width:480px;margin-inline:auto}.lakeside-intro{margin-bottom:10px!important}
+ .lakeside-badge{font-size:7px;padding:6px 8px}.lakeside-actions{margin-top:14px}.lakeside-button{min-height:46px;font-size:9px}
+}

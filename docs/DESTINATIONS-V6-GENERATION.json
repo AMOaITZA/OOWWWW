@@ -1,0 +1,30 @@
+{
+  "generator": "image_gen.imagegen",
+  "source": "exec-fab7a3a8-605e-4a8c-9b23-2e305a8bdc3b.png",
+  "sourceSha256": "2708b5aaf45024283b79d947499deae57d1b0bd2cff90df6cf109131d97f86ae",
+  "packer": "scripts/prepare-destinations-v6.mjs",
+  "alphaThreshold": 200,
+  "sharedPaletteLimit": 128,
+  "assets": [
+    {
+      "path": "assets/game/architecture/secreto.png",
+      "size": [
+        160,
+        128
+      ],
+      "sha256": "7baf2c06fa665195fedd6647f4f585687039f1f218f5cfc01470e558fb2d0a38",
+      "sourceCell": 0,
+      "baseRow": 119
+    },
+    {
+      "path": "assets/game/architecture/grabadora.png",
+      "size": [
+        160,
+        128
+      ],
+      "sha256": "431af5190c8af501b6c5375cc07783e8a6550f355d42d3466c1ac298b9303287",
+      "sourceCell": 1,
+      "baseRow": 119
+    }
+  ]
+}

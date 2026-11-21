@@ -1,0 +1,21 @@
+{
+  "phase": "after",
+  "evidence": [
+    "after-home-eat-desktop.png",
+    "after-home-tv-desktop.png",
+    "after-home-eat-phone.png",
+    "after-home-tv-phone.png",
+    "after-home-tv-landscape.png",
+    "after-finding-cofre-cerezo.png",
+    "after-finding-cofre-luna.png",
+    "after-finding-carta-bosque.png",
+    "after-structure-shadows-day.png",
+    "after-structure-shadows-night.png",
+    "after-sound-controls-phone.png",
+    "after-shooting-star.png",
+    "after-shooting-star-detail.png",
+    "after-faces-all-looks.png"
+  ],
+  "errors": [],
+  "failed": []
+}

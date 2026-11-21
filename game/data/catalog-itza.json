@@ -1,0 +1,54 @@
+{
+  "hair": [
+    {
+      "id": "largo",
+      "name": "Pelo largo oscuro",
+      "front": "/assets/game/characters/itza/hair-long-front.png",
+      "back": "/assets/game/characters/itza/hair-long-back.png",
+      "color": "#302020",
+      "default": true
+    }
+  ],
+  "top": [
+    {
+      "id": "negra",
+      "name": "Chamarra negra",
+      "sprite": "/assets/game/characters/itza/top-black.png",
+      "color": "#2E1F18",
+      "default": true
+    },
+    {
+      "id": "rosa",
+      "name": "Suéter rosa",
+      "sprite": "/assets/game/characters/itza/top-pink.png",
+      "color": "#E8A0A8"
+    }
+  ],
+  "bottom": [
+    {
+      "id": "mezclilla",
+      "name": "Jeans",
+      "sprite": "/assets/game/characters/itza/bottom-jeans.png",
+      "color": "#607D91",
+      "default": true
+    }
+  ],
+  "shoes": [
+    {
+      "id": "tenis",
+      "name": "Tenis",
+      "sprite": "/assets/game/characters/itza/shoes-sneakers.png",
+      "color": "#6B4429",
+      "default": true
+    }
+  ],
+  "accessories": [
+    {
+      "id": "lentes",
+      "name": "Lentes",
+      "sprite": "/assets/game/characters/itza/accessories-glasses.png",
+      "color": "#1B120E",
+      "default": true
+    }
+  ]
+}

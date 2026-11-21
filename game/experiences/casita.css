@@ -26,6 +26,13 @@
 .home-video-preview{max-width:620px;margin:12px auto 0;background:#231D22;border:2px solid #8F6C55}
 .home-video-source{display:block;width:100%;max-height:60dvh}
 .experience-panel[data-experience='casita']{--experience-accent:#A27367;--experience-tint:#EFDDC5;--experience-paper:#FFF5E4}
+.home-outings{position:absolute;left:calc(16px + env(safe-area-inset-left));top:calc(76px + env(safe-area-inset-top));z-index:7;width:min(240px,calc(100% - 32px));margin:0!important;color:#694F42}
+.home-outings>summary{display:flex;align-items:center;justify-content:space-between;min-height:44px;padding:10px 12px;background:#FFF1DCEB;border:1px solid #805D49;font:10px/1.6 'Silkscreen',monospace;cursor:pointer;list-style:none}
+.home-outings>summary::after{content:'+';font-size:16px;margin-left:16px}.home-outings[open]>summary::after{content:'−'}.home-outings>summary::-webkit-details-marker{display:none}
+.home-outings-actions{display:grid;gap:6px;padding:8px;background:#FFF1DCF5;border:1px solid #A48166;border-top:0}
+.home-outings-actions button{min-height:44px;border:1px solid #BBA082;background:#F8E8CE;color:#694F42;padding:9px;font:9px/1.6 'Silkscreen',monospace;cursor:pointer}
+.home-outings :focus-visible{outline:3px solid #B5656F;outline-offset:2px}
+@media(max-width:560px){.home-outings{left:12px;width:190px}.home-outings>summary{font-size:9px}}
 @media(max-width:560px){
  .home-room{padding:6px}.home-caption{font-size:8px;padding:8px 3px 2px;letter-spacing:.5px}
  .home-activities{gap:6px;margin-top:15px!important}.home-activity{min-height:93px;padding:10px 4px;gap:5px}

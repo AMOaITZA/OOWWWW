@@ -29,6 +29,11 @@ add(manifest.home?.seatedCrossed,{size:[64,288],frame:[32,48],generated:true,max
 add(manifest.home?.sofaBack,{size:[124,84],opaque:true,generated:true,maxColors:128});
 add(manifest.fishingScene?.background,{size:[640,400],opaque:true,generated:true,maxColors:192});
 add(manifest.fishingScene?.poses,{size:[160,168],frame:[40,56],generated:true,maxColors:128});
+add(manifest.cooking?.kitchen,{size:[640,400],opaque:true,generated:true,maxColors:192});
+add(manifest.garden?.garden,{size:[640,400],opaque:true,generated:true,maxColors:192});
+add(manifest.garden?.flowers,{size:[96,128],frame:[32,32],generated:true,maxColors:128});
+add(manifest.boating?.archipelago,{size:[768,512],opaque:true,generated:true,maxColors:192});
+add(manifest.boating?.boats,{size:[384,128],generated:true,maxColors:128});
 for(const id of ['hawaii','lakeside','giraffe']){
   if(!manifest.travel?.[id])errors.push('Falta el recurso del viaje '+id);
   add(manifest.travel?.[id],{size:id==='giraffe'?[64,96]:[640,400],opaque:id!=='giraffe',generated:true,maxColors:id==='giraffe'?64:192});

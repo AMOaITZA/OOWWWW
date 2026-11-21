@@ -17,19 +17,27 @@ import * as casita from './casita.js';
 import * as hallazgo from './hallazgo.js';
 import * as hawai from './hawai.js';
 import * as mirador from './mirador.js';
+import * as cocina from './cocina.js';
+import * as huerto from './huerto.js';
+import * as barca from './barca.js';
+import * as album from './album.js';
 import {activateDialog} from '../dialog.js';
 import {createExperienceTransitions} from '../experience-transitions.js';
 import manifest from '../data/assets.json';
 import '../experience-theme.css';
 import '../scene-presentation.css';
-const modules={inicio:intro,carta:letter,galeria:gallery,razones:reasons,playlist,recuerdos:tv,contador:counter,lugares:places,final:ending,armario:wardrobe,boda,secreto,grabadora,pesca,casita,hallazgo,hawai,mirador};
+const modules={inicio:intro,carta:letter,galeria:gallery,razones:reasons,playlist,recuerdos:tv,contador:counter,lugares:places,final:ending,armario:wardrobe,boda,secreto,grabadora,pesca,casita,hallazgo,hawai,mirador,cocina,huerto,barca,album};
 const extraContent={secreto:{title:'Nuestro rinconcito secreto',eyebrow:'Solo tú y yo'},grabadora:{title:'La grabadora de Leo',eyebrow:'Mi voz para ti'},
   pesca:{title:'Lago de los peluches',eyebrow:'Una misión para conocer a Ponyo'},
   casita:{title:'Nuestra casita',eyebrow:'Aquí estamos en casa'},
   hallazgo:{title:'Un secreto para ti',eyebrow:'Tesoros de nuestro mundo'},
   hawai:{title:'Nuestra escapada a Hawái',eyebrow:'Un viaje contigo'},
-  mirador:{title:'Orilla de los deseos',eyebrow:'Una noche para los dos'}};
-const immersiveScenes=new Set(['hawai','casita','boda','pesca','mirador']);
+  mirador:{title:'Orilla de los deseos',eyebrow:'Una noche para los dos'},
+  cocina:{title:'Nuestra cocina',eyebrow:'Hecho entre los dos'},
+  huerto:{title:'Nuestro jardín',eyebrow:'Algo bonito que crece contigo'},
+  barca:{title:'Un paseo en barca',eyebrow:'Pequeñas islas, grandes recuerdos'},
+  album:{title:'Nuestro álbum',eyebrow:'Recuerdos de nuestra Canon'}};
+const immersiveScenes=new Set(['hawai','casita','boda','pesca','mirador','cocina','huerto','barca','album']);
 export function createHost(api){
   const panel=document.getElementById('experience');
   const body=document.getElementById('experience-content');
@@ -48,6 +56,8 @@ export function createHost(api){
   heading.append(category,title);hero.append(art,heading);paper.insertBefore(hero,body);
   let cleanup=()=>{},releaseDialog=()=>{};
   function theme(id){
+    const worldCamera=document.querySelector('.header-actions .camera-open-control');
+    if(worldCamera)worldCamera.hidden=true;
     paper.dataset.experience=id;
     paper.dataset.sceneKind=immersiveScenes.has(id)?'immersive':'story';
     panel.dataset.experience=id;
@@ -104,10 +114,13 @@ export function createHost(api){
     theme(id);
     title.textContent=data.title||id;
     category.textContent=data.eyebrow||'Nuestro pequeño mundo';
-    cleanup=modules[id].mount(body,data,{...api,requestClose:close})||(()=>{});
+    cleanup=modules[id].mount(body,data,{...api,requestClose:close,openExperience:open})||(()=>{});
     addSceneControls(id);
-    const releaseCamera=followHouseCamera(id),releaseModule=cleanup;
-    cleanup=()=>{releaseCamera();releaseModule();};
+    const releaseHouseCamera=followHouseCamera(id),releaseModule=cleanup;
+    const releasePhoto=immersiveScenes.has(id)&&id!=='album'?api.camera?.attach(body,{getScene:()=>({
+      canvas:body.querySelector('canvas'),title:data.title||id,container:panel
+    })}):null;
+    cleanup=()=>{api.camera?.close();releasePhoto?.();releaseHouseCamera();releaseModule();};
     show();
   }
   function close(){
@@ -116,6 +129,8 @@ export function createHost(api){
     cleanup();cleanup=()=>{};
     releaseDialog();releaseDialog=()=>{};
     transition.depart(bounds,()=>body.replaceChildren());
+    const worldCamera=document.querySelector('.header-actions .camera-open-control');
+    if(worldCamera)worldCamera.hidden=false;
     api.onClose?.();
   }
   function help(){
@@ -129,7 +144,7 @@ export function createHost(api){
     const customization=document.createElement('p');
     customization.textContent='En el armario puedes poner o quitar los lentes de cada personaje y elegir el cabello negro, café, rosa pastel o rubio claro de Itza. Se conserva con sus conjuntos y al sentarse. Arriba del mundo puedes elegir Día, Noche o Automático. Las opciones manuales se mantienen; Automático alterna cinco minutos de día y cinco de noche.';
     const discoveries=document.createElement('p');
-    discoveries.textContent='Explora el bosque: hay un rinconcito con preguntas de Leo, dos cofres y una cartita escondidos. En el estanque puedes pescar peluches para conocer a Ponyo. Nuestra casita permite comer, dormir y ver tu video en la tele. Al sur del pueblo está la costa. En la Orilla de los deseos pueden sentarse frente al mar a ver fuegos artificiales y estrellas fugaces. En el Muelle de los viajes pulsa E y elige Subir al barco para ir a Hawái: allí pueden caminar, bailar, comprar bebidas y acariciar una jirafa. Ambos lugares aparecen en el mapa. La grabadora guarda tus mensajes de voz. En Música puedes ajustar la voz de Leo y los efectos de gatos, agua y grillos.';
+    discoveries.textContent='Explora el bosque: hay un rinconcito con preguntas de Leo, dos cofres y una cartita escondidos. En el estanque puedes pescar peluches para conocer a Ponyo. Nuestra casita permite comer, dormir y ver tu video en la tele. En Más en casa encontrarás la cocina para preparar recetas juntos y el huerto: siembra, riega, recoge flores y decora la casa con un ramo. Al sur está el Muelle de los viajes: puedes ir a Hawái o pasear en barca y descubrir regalos en tres islas. En Hawái pueden caminar, bailar, comprar bebidas y acariciar una jirafa. En la Orilla de los deseos pueden ver fuegos artificiales y estrellas fugaces. Usa Cámara para tomar fotos con tu Canon retro negra y guardarlas en Nuestro álbum. La grabadora guarda tus mensajes de voz.';
     body.append(p,customization,discoveries);show();
   }
   closeButton.addEventListener('click',close);

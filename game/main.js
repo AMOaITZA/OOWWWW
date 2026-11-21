@@ -30,6 +30,9 @@ import {TRAVEL_SPOTS,isTravelSpot,travelAt,travelScenery} from './travel-spots.j
 import {COAST_LAYOUT} from './coast-layout.js';
 import {createCoast} from './coast.js';
 import {createHarbor} from './harbor.js';
+import {createCamera} from './camera.js';
+import {GARDEN_SPOT,gardenAt,gardenObstacles} from './activity-spots.js';
+import {drawGardenBeds} from './garden.js';
 
 const $=id=>document.getElementById(id);
 const canvas=$('world'),ctx=canvas.getContext('2d',{alpha:false});
@@ -51,7 +54,7 @@ const discoveries=createHiddenSecrets({save,getImage:kind=>assetImage('/assets/g
   }});
 function initializeWorld(){
   initWorld(places,decor,momentSpots,{ponyoUnlocked:hasAllPlushies(save.fishing),
-    extraObstacles:SECRETS.map(spot=>spot.tile)});
+    extraObstacles:[...SECRETS.map(spot=>spot.tile),...gardenObstacles()]});
 }
 initializeWorld();
 if(!walkable(Math.round(pair.x),Math.round(pair.y))){
@@ -80,8 +83,15 @@ const lighting=createDayNight({saved:save.dayNight,reducedMotion:()=>motionPrefe
 save.dayNight=lighting.getState();
 lighting.mount(document.querySelector('.game-header'));
 const music=createMusicPlayer({openPlaylist:()=>host.open('playlist')});
+const camera=createCamera({save,onChange:persist,onAlbum:()=>host.open('album'),
+  getOutfits:()=>save.outfits,getCharacterImage:url=>outfitImage(url,save.outfits),assetImage,
+  getScene:()=>({canvas:document.querySelector('#experience:not([hidden]) #experience-content canvas')||canvas,
+    title:$('experience').hidden?(coast.isSitting()?'Orilla de los deseos':'Nuestro pequeño mundo'):$('experience-title').textContent,
+    container:$('experience').hidden?$('game-screen'):$('experience')})});
+camera.mountControl(document.querySelector('.header-actions'));
+document.querySelector('.header-actions .camera-open-control')?.classList.add('hud-button');
 const host=createHost({
-  save,assetImage,music,getWeddingImage:key=>weddingCharacterImage(key,save.outfits),
+  save,assetImage,music,camera,getWeddingImage:key=>weddingCharacterImage(key,save.outfits),
   getOutfits:()=>save.outfits,getCharacterImage:url=>outfitImage(url,save.outfits),
   getSeatedImage:(who,look)=>seatedImage(who,look,save.outfits),
   getPonyoImage:()=>momentImage('ponyo'),getPonyoUnlocked:()=>hasAllPlushies(save.fishing),
@@ -108,7 +118,7 @@ const coast=createCoast({pair,save,getOutfits:()=>save.outfits,
   getCharacterImage:url=>outfitImage(url,save.outfits),getRawImage:assetImage,assetImage,
   onChange:()=>{if(coast.isSitting()){path=[];targetPlace=null;pressed.clear();pair.moving=false;}persist();},
   onSay:line=>voice.speak(line),onNight:()=>lighting.setMode('night')});
-const harbor=createHarbor({pair,onTravel:()=>host.open('hawai'),onSay:line=>voice.speak(line),
+const harbor=createHarbor({pair,onTravel:()=>host.open('hawai'),onBoat:()=>host.open('barca'),onSay:line=>voice.speak(line),
   onBoard:()=>{path=[];targetPlace=null;pressed.clear();pair.moving=false;persist();}});
 function interactMoment(spot){
   const result=moments.arrive(spot);
@@ -128,7 +138,7 @@ function goTo(x,y,place=null){
       ponyo.arrive();status('Acariciando a Ponyo');
     }else if(discoveries.isSpot(place)){
       discoveries.arrive(place);
-    }else if(place?.id==='pesca'||isTravelSpot(place))openPlace(place);
+    }else if(place?.id==='pesca'||place?.id==='huerto'||isTravelSpot(place))openPlace(place);
     else if(place&&moments.isMoment(place)){
       interactMoment(place);
       status(place.kind==='cats'?'Acariciando a los gatitos':moments.isSitting()?'Descansando juntos en la banca':'Seguimos explorando');
@@ -161,14 +171,19 @@ function cameraAt(){
     y:Math.max(0,Math.min(HEIGHT*TILE-canvas.height,Math.round(displayed.y*TILE-canvas.height/2)-lift))};
 }
 function pointClick(event){
-  if(!active||host.isOpen()||overview.isOpen()||coast.isSitting()||harbor.isBoarding())return;
+  if(!active||host.isOpen()||overview.isOpen()||camera.isOpen()||coast.isSitting()||harbor.isBoarding())return;
   canvas.focus({preventScroll:true});
   const bounds=canvas.getBoundingClientRect();
   const px=(event.clientX-bounds.left)*canvas.width/bounds.width;
   const py=(event.clientY-bounds.top)*canvas.height/bounds.height;
-  const camera=cameraAt(),wx=px+camera.x,wy=py+camera.y;
+  const view=cameraAt(),wx=px+view.x,wy=py+view.y;
   const travel=travelAt(wx,wy);
   if(travel){goTo(...travel.arrival,travel);return;}
+  if(gardenAt(wx,wy)){
+    if(!path.length&&Math.hypot(pair.x-GARDEN_SPOT.arrival[0],pair.y-GARDEN_SPOT.arrival[1])<.51)openPlace(GARDEN_SPOT);
+    else goTo(...GARDEN_SPOT.arrival,GARDEN_SPOT);
+    return;
+  }
   const discovery=discoveries.hit(wx,wy);
   if(discovery){goTo(...discovery.arrival,discovery);return;}
   if(ponyo.hit(wx,wy)){goTo(...PONYO_SPOT.arrival,PONYO_SPOT);return;}
@@ -193,14 +208,14 @@ function pointClick(event){
 }
 const overview=createMap({
   places,decor,moments:momentSpots,pair,save,
-  getActivities:()=>[FISHING_SPOT,...TRAVEL_SPOTS,...discoveries.getVisibleSpots(),...(hasAllPlushies(save.fishing)?[PONYO_SPOT]:[])],
+  getActivities:()=>[FISHING_SPOT,...TRAVEL_SPOTS,GARDEN_SPOT,...discoveries.getVisibleSpots(),...(hasAllPlushies(save.fishing)?[PONYO_SPOT]:[])],
   onNavigate:(x,y,place)=>{canvas.focus({preventScroll:true});goTo(x,y,place);}
 });
 const pressed=new Set();
 const keyDirections={arrowup:[0,-1,'up'],w:[0,-1,'up'],arrowdown:[0,1,'down'],s:[0,1,'down'],arrowleft:[-1,0,'left'],a:[-1,0,'left'],arrowright:[1,0,'right'],d:[1,0,'right']};
 function step(dt){
   pair.clock+=dt;
-  if(!active||host.isOpen()||overview.isOpen()||coast.isSitting()||harbor.isBoarding()||moments.isTransitioning()){pair.moving=false;return;}
+  if(!active||host.isOpen()||overview.isOpen()||camera.isOpen()||coast.isSitting()||harbor.isBoarding()||moments.isTransitioning()){pair.moving=false;return;}
   const direction=Object.keys(keyDirections).find(key=>pressed.has(key));
   if(direction&&!path.length){
     if(moments.isSitting())moments.stand();
@@ -252,6 +267,7 @@ function draw(){
   coast.drawScenery(ctx,ambientFrame);
   const scenery=objects.concat(moments.scenery(),ponyo.scenery(),discoveries.scenery(),travelScenery(assetImage),{
     z:FISHING_SPOT.arrival[1]*TILE-2,draw:drawFishingSign});
+  scenery.push({z:52*TILE,draw:ctx=>drawGardenBeds(ctx,{x:44*TILE-32,y:51*TILE-22,getImage:assetImage,state:save.garden})});
   if(!moments.shouldHidePair())scenery.push({z:pair.y*TILE,draw:ctx=>drawPair(ctx,moments.renderPair(),url=>outfitImage(url,save.outfits),save.outfits)});
   scenery.sort((a,b)=>a.z-b.z);
   for(const item of scenery)item.draw(ctx); // objetos independientes, clasificados por profundidad
@@ -336,7 +352,7 @@ canvas.addEventListener('pointerdown',pointClick);
 window.addEventListener('pointerdown',()=>{if(active){void voice.unlock();void effects.unlock();}},{capture:true,passive:true});
 window.addEventListener('keydown',()=>{if(active){void voice.unlock();void effects.unlock();}},{capture:true});
 window.addEventListener('keydown',event=>{
-  if(event.defaultPrevented)return;
+  if(event.defaultPrevented||camera.isOpen())return;
   const interactive=event.target?.closest?.('input,textarea,select,button,a,[contenteditable="true"]');
   if(event.key==='Escape'&&host.isOpen()){host.close();return;}
   if(event.key==='Escape'&&overview.isOpen()){overview.close();return;}
@@ -346,7 +362,7 @@ window.addEventListener('keydown',event=>{
   const key=event.key.toLowerCase();
   if(active&&key==='e'&&!event.repeat&&!host.isOpen()&&!overview.isOpen()){
     if(coast.isSitting()){event.preventDefault();coast.stand();return;}
-    const spot=[...momentSpots,FISHING_SPOT,...TRAVEL_SPOTS,...SECRETS,...(hasAllPlushies(save.fishing)?[PONYO_SPOT]:[])]
+    const spot=[...momentSpots,FISHING_SPOT,...TRAVEL_SPOTS,GARDEN_SPOT,...SECRETS,...(hasAllPlushies(save.fishing)?[PONYO_SPOT]:[])]
       .map(item=>({item,distance:Math.hypot(pair.x-item.arrival[0],pair.y-item.arrival[1])}))
       .filter(item=>item.distance<=4).sort((a,b)=>a.distance-b.distance)[0]?.item;
     if(spot){event.preventDefault();goTo(...spot.arrival,spot);return;}

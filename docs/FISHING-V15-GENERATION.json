@@ -1,0 +1,22 @@
+{
+  "generator": "image_gen.imagegen",
+  "source": "exec-754d4480-9649-4788-80e7-edebef8714b3.png",
+  "sourceSha256": "ef0b4255b7326707cf12cca6458be824bef9b728215677f38696877cbe3045d8",
+  "packer": "scripts/prepare-fishing-v15.mjs",
+  "path": "assets/game/fishing/poses.png",
+  "sha256": "85ffd8b98963cf3f760777a9ed9f09c0f5f678ee0e2262d16a9f18ba4a4cccfb",
+  "size": [
+    160,
+    168
+  ],
+  "frame": [
+    40,
+    56
+  ],
+  "actorCanvas": [
+    40,
+    64
+  ],
+  "bodyOffsetY": 6,
+  "note": "Repacks the original generated full bodies, retaining shoulders and complete arms, rejecting disconnected neighboring fragments. Native personalized faces and hair remain unchanged."
+}

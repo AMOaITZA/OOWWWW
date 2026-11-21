@@ -6,6 +6,11 @@ n.º 1. No se fusiona con `main` sin aprobación explícita.
 
 ## Características actuales
 
+- **Actividades V15**: cocina y huerto en **Nuestra casita → Más en casa**,
+  tres islas con regalos en **Muelle de los viajes → Pasear en barca**, y
+  una **Canon digital retro negra** para tomar fotos y abrir el álbum desde
+  el mundo y las actividades. Las flores del huerto decoran la casita.
+  Guía y detalles en [ACTIVITIES-V15.md](../docs/ACTIVITIES-V15.md).
 - Mundo de 120 × 112 casillas (16 píxeles por casilla), con costa y mar al sur, cámara adaptable a la pantalla,
   paseo por teclado, ratón y pantalla táctil, con búsqueda de rutas A*.
 - Catorce lugares: las nueve experiencias clásicas, armario, **Castillo de nuestra boda**,

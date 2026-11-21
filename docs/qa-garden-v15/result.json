@@ -1,0 +1,128 @@
+{
+  "screenshots": [
+    "garden-empty-desktop.png",
+    "garden-watering-desktop.png",
+    "garden-bloom-desktop.png",
+    "garden-decoration-desktop.png",
+    "home-cosmos-vase-desktop.png",
+    "garden-empty-phone.png",
+    "garden-bloom-phone.png",
+    "garden-empty-landscape.png",
+    "garden-bloom-landscape.png"
+  ],
+  "errors": [],
+  "failed": [],
+  "layouts": [
+    {
+      "name": "phone",
+      "width": 390,
+      "height": 844,
+      "positions": [
+        {
+          "text": "← Volver",
+          "aria": "Cerrar",
+          "x": 12,
+          "y": 12,
+          "w": 104,
+          "h": 44
+        },
+        {
+          "text": "Decorar la casita",
+          "aria": null,
+          "x": 219.5,
+          "y": 58,
+          "w": 102.5,
+          "h": 44
+        },
+        {
+          "text": "1",
+          "aria": "Bancal 1: vacío",
+          "x": 64.9921875,
+          "y": 724,
+          "w": 40,
+          "h": 44
+        },
+        {
+          "text": "2",
+          "aria": "Bancal 2: vacío",
+          "x": 108.9921875,
+          "y": 724,
+          "w": 40,
+          "h": 44
+        },
+        {
+          "text": "3",
+          "aria": "Bancal 3: vacío",
+          "x": 152.9921875,
+          "y": 724,
+          "w": 40,
+          "h": 44
+        },
+        {
+          "text": "4",
+          "aria": "Bancal 4: vacío",
+          "x": 196.9921875,
+          "y": 724,
+          "w": 40,
+          "h": 44
+        },
+        {
+          "text": "5",
+          "aria": "Bancal 5: Cosmos rosa, listo para recoger",
+          "x": 240.9921875,
+          "y": 724,
+          "w": 40,
+          "h": 44
+        },
+        {
+          "text": "6",
+          "aria": "Bancal 6: vacío",
+          "x": 284.9921875,
+          "y": 724,
+          "w": 40,
+          "h": 44
+        },
+        {
+          "text": "Recoger flores",
+          "aria": null,
+          "x": 61.9921875,
+          "y": 776,
+          "w": 266.015625,
+          "h": 44
+        }
+      ]
+    },
+    {
+      "name": "landscape",
+      "width": 844,
+      "height": 390,
+      "positions": [
+        {
+          "text": "← Volver",
+          "aria": "Cerrar",
+          "x": 16,
+          "y": 17,
+          "w": 112,
+          "h": 44
+        },
+        {
+          "text": "Decorar la casita",
+          "aria": null,
+          "x": 570.484375,
+          "y": 8.5,
+          "w": 133.515625,
+          "h": 44
+        },
+        {
+          "text": "Recoger flores",
+          "aria": null,
+          "x": 622,
+          "y": 326,
+          "w": 146,
+          "h": 44
+        }
+      ]
+    }
+  ],
+  "note": "Actual user controls; no garden progress injected. All three views grow flowers under reduced motion. Desktop harvest creates a vase and opens the actual house."
+}

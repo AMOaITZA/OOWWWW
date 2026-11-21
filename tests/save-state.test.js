@@ -44,3 +44,14 @@ test('travel progress survives reload without replacing the village position',()
     writeSave(save);assert.deepEqual(loadSave(),save);
   });
 });
+
+test('new shared activities and photo metadata survive alongside earlier memories',()=>{
+  withStorage(null,()=>{
+    const save={position:{x:37,y:53},direction:'down',outfits:{leo:{},itza:{}},visited:['casita'],
+      dayNight:undefined,leoVoice:undefined,secretQuiz:undefined,voiceNotes:undefined,
+      cooking:{recipes:{pancakes:2}},garden:{flowers:{cosmos:2},decoration:'cosmos'},
+      boating:{found:['carta']},camera:{shots:2,lastPhotoAt:123456},
+      home:{activity:'tv',video:{position:23,volume:.4,muted:false}}};
+    writeSave(save);assert.deepEqual(loadSave(),save);
+  });
+});

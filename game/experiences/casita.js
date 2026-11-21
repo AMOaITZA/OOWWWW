@@ -5,6 +5,7 @@ import {getHairColor} from '../hair.js';
 import {getGlasses} from '../glasses.js';
 import {drawHomeActor} from '../home-poses.js';
 import {createHomeVideoPlayer,drawHomeVideoFrame,homeVideoTime} from '../home-video.js';
+import {getHomeDecoration} from '../garden.js';
 import './casita.css';
 
 const INTERIOR='/assets/game/home/interior.png';
@@ -49,6 +50,13 @@ export function mount(root,_data,api){
   const video=node('video','home-video-source');video.controls=true;video.playsInline=true;video.preload='none';video.tabIndex=0;video.setAttribute('aria-label','Nuestro video');videoPreview.append(video);
   tvControls.append(videoStatus,videoActions,videoTimeline,videoVolumeLabel,videoPreview);
   root.append(room,tvControls,activities,reply,keepsake);
+  const outings=node('details','home-outings'),outingsTitle=node('summary','','Más en casa');
+  const outingsActions=node('div','home-outings-actions');
+  for(const [id,label] of [['cocina','Cocinar juntos'],['huerto','Cuidar el huerto'],['album','Nuestro álbum']]){
+    const button=node('button','',label);button.type='button';
+    button.addEventListener('click',()=>api.openExperience?.(id));outingsActions.append(button);
+  }
+  outings.append(outingsTitle,outingsActions);root.append(outings);
   const ctx=canvas.getContext('2d');
   let roomCache=null,roomSource=null,sofaSource=null;
   function roomImage(){
@@ -92,6 +100,12 @@ export function mount(root,_data,api){
     const background=roomImage();
     if(background)ctx.drawImage(background,0,0,480,270);
     else{ctx.fillStyle='#CFAE8E';ctx.fillRect(0,0,480,270);ctx.fillStyle='#F4DEBD';ctx.fillRect(12,12,456,246);}
+    const bouquet=getHomeDecoration(api.save.garden),bouquetImage=bouquet&&api.assetImage?.(bouquet.asset);
+    if(bouquetImage){
+      const box=bouquet.source;
+      ctx.drawImage(bouquetImage,box.x,box.y,box.width,box.height,383,8,32,32);
+    }
+    canvas.dataset.flowerDecoration=bouquet?.id||'none';
     const still=preference.matches,blink=still?0:Math.floor(clock/1.8)%2;
     canvas.dataset.activity=home.activity;
     canvas.dataset.leoLook=getChoice(outfits(),'leo');canvas.dataset.itzaLook=getChoice(outfits(),'itza');

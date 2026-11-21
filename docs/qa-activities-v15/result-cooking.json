@@ -1,0 +1,11 @@
+{
+  "screenshots": [
+    "cooking-shared-desktop.png",
+    "cooking-shared-phone.png",
+    "cooking-shared-compact-phone.png",
+    "cooking-shared-landscape.png"
+  ],
+  "errors": [],
+  "failed": [],
+  "note": "Responsive cooking framing refreshed in all four sizes after serving a complete recipe."
+}

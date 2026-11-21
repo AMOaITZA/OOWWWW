@@ -17,6 +17,10 @@ export function loadSave() {
       ...(data.home&&typeof data.home==='object'?{home:data.home}:{}),
       ...(data.hawaii&&typeof data.hawaii==='object'?{hawaii:data.hawaii}:{}),
       ...(data.lakeside&&typeof data.lakeside==='object'?{lakeside:data.lakeside}:{}),
+      ...(data.cooking&&typeof data.cooking==='object'?{cooking:data.cooking}:{}),
+      ...(data.garden&&typeof data.garden==='object'?{garden:data.garden}:{}),
+      ...(data.boating&&typeof data.boating==='object'?{boating:data.boating}:{}),
+      ...(data.camera&&typeof data.camera==='object'?{camera:data.camera}:{}),
       ...(data.soundEffects&&typeof data.soundEffects==='object'?{soundEffects:data.soundEffects}:{}),
       ...(data.hiddenSecrets&&typeof data.hiddenSecrets==='object'?{hiddenSecrets:data.hiddenSecrets}:{})};
   } catch {return structuredClone(DEFAULT);}

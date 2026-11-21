@@ -1,0 +1,28 @@
+.cooking-room{position:absolute;inset:0;isolation:isolate;overflow:hidden;color:#614537;background:#B77F53;margin:0!important}
+.cooking-stage{position:absolute;inset:0;overflow:hidden}
+.cooking-scene{position:absolute;inset:0;width:100%;height:100%;max-width:none!important;object-fit:cover;object-position:50% 42%;image-rendering:pixelated}
+.cooking-heading{position:absolute;top:calc(20px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);text-align:center;padding:9px 18px;background:#FFF1DCD9;border:1px solid #9A7152;max-width:calc(100% - 330px)}
+.cooking-heading span{font:9px/1.5 'Silkscreen',monospace;letter-spacing:.12em;color:#A26757}
+.cooking-heading h3{margin:3px 0 0;font:15px/1.5 'Silkscreen',monospace;color:#654435}
+.cooking-book{position:absolute;z-index:6;top:calc(17px + env(safe-area-inset-top));right:calc(16px + env(safe-area-inset-right));margin:0!important;width:min(320px,calc(100% - 154px));pointer-events:none}
+.cooking-book>summary{list-style:none;cursor:pointer;pointer-events:auto;margin-left:auto;width:max-content;min-height:44px;display:flex;align-items:center;padding:9px 14px;border:1px solid #805C46;background:#FFF1DCEF;box-shadow:2px 2px #543D2826;font:10px/1.5 'Silkscreen',monospace}
+.cooking-recipes{display:grid;gap:8px;margin-top:8px;padding:12px;background:#FFF0DDF7;border:1px solid #997354;box-shadow:4px 4px #4C342344;pointer-events:auto;max-height:calc(100dvh - 100px);overflow:auto}
+.cooking-recipe{display:grid;gap:7px;width:100%;padding:12px;text-align:left;background:#F3DAB4;border:1px solid #9C7455;color:#62483A;cursor:pointer;min-height:64px}
+.cooking-recipe strong{font:10px/1.6 'Silkscreen',monospace}.cooking-recipe-count{font:19px/1.2 'VT323',monospace}.cooking-recipe[aria-pressed=true]{background:#E9C0B7}
+.cooking-controls{position:absolute;z-index:4;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(760px,calc(100% - 32px));padding:15px 20px;background:#FFF2DDEB;border:1px solid #A37C5D;box-shadow:3px 3px #58392638;text-align:center}
+.cooking-title{margin:0 0 5px;font:13px/1.6 'Silkscreen',monospace;color:#6C493C}.cooking-hint{margin:0 0 9px;font:21px/1.2 'VT323',monospace}
+.cooking-steps{display:flex;justify-content:space-around;gap:6px;margin:8px 0;font:8px/1.5 'Silkscreen',monospace;color:#9D8B71}.cooking-steps span[data-step=active]{color:#9A5D65}.cooking-steps span[data-step=complete]{color:#648061}
+.cooking-progress{display:block;width:100%;height:5px;margin:8px 0 12px;accent-color:#B98080;border:0}.cooking-progress::-webkit-progress-bar{background:#D5C6AB}.cooking-progress::-webkit-progress-value{background:#B98080}
+.cooking-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}.cooking-actions button{min-height:44px;padding:10px 15px;max-width:100%;font:10px/1.6 'Silkscreen',monospace;background:#E6BD97;color:#5E4031;border:1px solid #987050;box-shadow:2px 2px #6344312E;cursor:pointer}.cooking-actions button:hover{background:#F2CFAD}.cooking-actions button:disabled{background:#DAD9BC;color:#68745C;cursor:default;box-shadow:none}
+.cooking-reply{margin:9px 0 0;min-height:24px;font:21px/1.2 'VT323',monospace}.cooking-reply:empty{display:none}
+.cooking-room button:focus-visible,.cooking-room summary:focus-visible{outline:3px solid #94646A;outline-offset:3px}
+@media(max-width:700px){.cooking-heading{display:none}.cooking-controls{width:calc(100% - 24px);bottom:calc(12px + env(safe-area-inset-bottom));padding:12px}.cooking-title{font-size:11px}.cooking-hint,.cooking-reply{font-size:20px}.cooking-actions button{flex:1;padding:9px 7px;font-size:9px}.cooking-steps{font-size:7px}.cooking-book{right:12px}}
+@media(max-height:520px){.cooking-controls{padding:8px 12px;bottom:8px;width:min(740px,calc(100% - 24px))}.cooking-hint,.cooking-steps,.cooking-heading,.cooking-progress{display:none}.cooking-title{font-size:10px;margin-bottom:7px}.cooking-reply{font-size:18px;margin-top:5px;min-height:0}.cooking-scene{object-position:50% 82%}.cooking-actions button{min-height:44px;padding:8px 12px}}
+@media(prefers-reduced-motion:reduce){.cooking-room *{animation:none!important;transition:none!important}}
+
+.cooking-back-home{padding:7px 10px;margin-top:7px;min-height:44px;border:0;background:transparent;color:#815F4B;text-decoration:underline;text-underline-offset:3px;font:9px/1.5 'Silkscreen',monospace;cursor:pointer}
+@media(max-height:520px){.cooking-back-home{margin:2px 0 0;min-height:44px;padding:4px 8px;font-size:8px}}
+/* Keep the hands, bowl and shared plates above the touch controls. The unused
+   lower strip sits completely behind the anchored HUD. */
+@media(max-width:700px) and (min-height:521px){.cooking-scene{top:-80px;bottom:auto}}
+@media(max-height:520px){.cooking-scene{top:-45px;bottom:auto}}

@@ -1,6 +1,6 @@
 {
-  "version": 14,
-  "description": "Pesca con Itza, sofá hacia la tele, rostros completos y terreno continuo.",
+  "version": 15,
+  "description": "Cocinar juntos, jardín y decoración, paseos en barca y cámara Canon retro con álbum; pesca con brazos completos.",
   "secrets": {
     "chest": "/assets/game/secrets/chest.png",
     "note": "/assets/game/secrets/note.png"
@@ -180,5 +180,16 @@
   "fishingScene": {
     "background": "/assets/game/fishing/scene.png",
     "poses": "/assets/game/fishing/poses.png"
+  },
+  "cooking": {
+    "kitchen": "/assets/game/cooking/kitchen.png"
+  },
+  "garden": {
+    "garden": "/assets/game/garden/garden.png",
+    "flowers": "/assets/game/garden/flowers.png"
+  },
+  "boating": {
+    "archipelago": "/assets/game/boating/archipelago.png",
+    "boats": "/assets/game/boating/boats.png"
   }
 }

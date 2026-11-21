@@ -224,3 +224,25 @@
 @media(prefers-reduced-motion:reduce){
   #experience[data-presentation='scene'] .experience-panel{animation:none!important}
 }
+
+/* The portable camera shares the top HUD with each scene's own drawer. */
+#experience[data-presentation='scene'] #experience-content>.camera-open-control{
+  position:absolute;z-index:9;top:calc(17px + env(safe-area-inset-top));right:calc(16px + env(safe-area-inset-right));
+  width:110px;height:44px;margin:0!important;padding:5px 8px;gap:5px;
+}
+#experience[data-presentation='scene'] #experience-content>.camera-open-control img{width:33px;height:23px}
+#experience[data-presentation='scene'] .scene-options{right:calc(140px + env(safe-area-inset-right));width:min(420px,calc(100% - 280px))}
+@media(max-width:600px){
+  .game-header .camera-open-control img{display:none}
+  #experience[data-presentation='scene'] #experience-content>.camera-open-control{right:calc(12px + env(safe-area-inset-right));top:calc(12px + env(safe-area-inset-top));width:44px;min-width:44px;padding:5px}
+  #experience[data-presentation='scene'] #experience-content>.camera-open-control span{display:none}
+  #experience[data-presentation='scene'] .scene-options{right:calc(68px + env(safe-area-inset-right));width:calc(100% - 208px)}
+  #experience[data-presentation='scene'] .scene-options[open]{right:calc(12px + env(safe-area-inset-right));width:calc(100% - 24px);z-index:11}
+  #experience[data-presentation='scene'] .scene-options[open]>summary{margin-right:56px}
+}
+#experience[data-presentation='scene'] .cooking-book{right:calc(140px + env(safe-area-inset-right))}
+#experience[data-presentation='scene'] .garden-top{right:calc(140px + env(safe-area-inset-right))}
+@media(max-width:600px){
+  #experience[data-presentation='scene'] .cooking-book{right:calc(68px + env(safe-area-inset-right));width:calc(100% - 208px)}
+  #experience[data-presentation='scene'] .garden-top{right:calc(68px + env(safe-area-inset-right))}
+}

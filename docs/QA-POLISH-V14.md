@@ -3,6 +3,7 @@
 ## Comprobaciones
 
 - **241/241 pruebas unitarias** aprobadas.
+- **117/117 pruebas de navegador** aprobadas en una ejecución completa.
 - **94 PNG** aprobados por dimensiones, alfa, anclajes y paletas.
   Compilación aprobada con el video personal instalado.
 - **5/5 recorridos específicos** de música, terreno y pesca aprobados.

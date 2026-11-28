@@ -1,0 +1,55 @@
+{
+  "generator": "image_gen.imagegen",
+  "packer": "scripts/prepare-coast-v13.mjs",
+  "notes": "Generated coastal extension and transparent terminal/pier/boat; ocean viewpoint edited with image_gen from the existing lakeside scene. Nearest-neighbor sampling, alpha normalization and median-cut palette only. Characters are composed at runtime.",
+  "resources": [
+    {
+      "id": "ground",
+      "path": "assets/game/coast/ground.png",
+      "size": [
+        1920,
+        512
+      ],
+      "paletteColors": 192,
+      "sha256": "4e9e899f73b09eeb632a971e8743a772c2863e99c7b4128b9bdf37f748cf58c8",
+      "source": "exec-4c6aac2a-a4e1-44a0-9d21-d12468b76617.png",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceSha256": "76a2d00081b476b00a1a47bc7f9760f4aa05c4665c083bdf11871610ce1e2e75"
+    },
+    {
+      "id": "harbor",
+      "path": "assets/game/coast/harbor.png",
+      "size": [
+        256,
+        256
+      ],
+      "paletteColors": 128,
+      "sha256": "e3b08fcf476b0088290fcf3511f383530f159cd157028926b74c46ac9024bd54",
+      "source": "exec-5f14bc5e-aa60-4a34-b5e6-58856389193c.png",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceSha256": "535bbf3ec49ab89d7bdb5ad6d0fe424a0905a6911b1fda2e04085717fd30d6b7"
+    },
+    {
+      "id": "view",
+      "path": "assets/game/coast/view.png",
+      "size": [
+        640,
+        400
+      ],
+      "paletteColors": 192,
+      "sha256": "86d254be8a19be6fb33e75e0c54a1684045dac575be503f9c911af0c986cf471",
+      "source": "exec-223ba481-9716-437d-8217-0083eb741e29.png",
+      "sourceSize": [
+        1586,
+        992
+      ],
+      "sourceSha256": "a68c1d736a184fcb78822b722484e50854cedcb021891f93d837c32582999f9c"
+    }
+  ]
+}

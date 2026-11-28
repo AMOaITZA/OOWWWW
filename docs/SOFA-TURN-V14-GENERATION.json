@@ -1,0 +1,26 @@
+{
+  "generator": "image_gen.imagegen",
+  "source": "exec-f549a588-4355-4570-a020-a4a457cf439a.png",
+  "sourceSha256": "886b5386c2494add266d227e60dba40a67600439bf914b3f979115640518031d",
+  "sourceSize": [
+    1672,
+    941
+  ],
+  "base": "assets/game/home/interior.png",
+  "baseSha256": "e8cddf875b1ef55f1fc2f40c7b0e3393a94cc860830e328d99a9b8af5d4c0ca9",
+  "output": "assets/game/home/sofa-back-patch.png",
+  "sha256": "3140d388ee99d8d97113203cc602c89ee2d5080499c5cf3097997ba9b16f9995",
+  "nativeSize": [
+    124,
+    84
+  ],
+  "roomRegion": {
+    "x": 316,
+    "y": 150,
+    "width": 124,
+    "height": 84
+  },
+  "paletteColors": 113,
+  "packer": "scripts/prepare-sofa-turn-v14.mjs",
+  "note": "The edited sofa faces upward toward the TV. Its rear upholstered back is on the lower edge. Only this rectangular furniture region is replaced at runtime; the original room and every pixel outside it are preserved. Native nearest-neighbor sampling uses the existing room palette."
+}

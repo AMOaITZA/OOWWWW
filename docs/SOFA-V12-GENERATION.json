@@ -1,0 +1,222 @@
+{
+  "generator": "image_gen.imagegen",
+  "source": "/workspace/generated_images/exec-2fe5a5aa-1057-45ef-b811-46912878e340.png",
+  "sourceSha256": "26393e77ad838f5846d7ce6104946f22a3d710de1ab27b913fda0e87b04a6081",
+  "path": "assets/game/home/seated-crossed.png",
+  "size": [
+    64,
+    288
+  ],
+  "cell": [
+    32,
+    48
+  ],
+  "columns": [
+    "cross-legged hands on knees",
+    "cross-legged relaxed arms"
+  ],
+  "rows": [
+    "leo-principal",
+    "leo-alternativo",
+    "leo-boda",
+    "itza-principal",
+    "itza-alternativo",
+    "itza-boda"
+  ],
+  "notes": "Generated seated backs, visibly folded knees. Generated heads/hair are removed; actual personalized walking heads/hair are composed at runtime. Palette reused from the original seated-body atlas. Front-facing dinner poses remain in their original resource.",
+  "sha256": "f6df0f6023db4cde75ecedffb7e766e999d8f2d5c6317869f2d50e55ea168866",
+  "regions": [
+    {
+      "row": 0,
+      "column": 0,
+      "source": {
+        "x": 211,
+        "y": 17,
+        "width": 171,
+        "height": 236
+      },
+      "native": {
+        "x": 1,
+        "y": 2,
+        "width": 30,
+        "height": 44
+      }
+    },
+    {
+      "row": 0,
+      "column": 1,
+      "source": {
+        "x": 630,
+        "y": 17,
+        "width": 175,
+        "height": 234
+      },
+      "native": {
+        "x": 1,
+        "y": 2,
+        "width": 30,
+        "height": 44
+      }
+    },
+    {
+      "row": 1,
+      "column": 0,
+      "source": {
+        "x": 211,
+        "y": 271,
+        "width": 171,
+        "height": 236
+      },
+      "native": {
+        "x": 1,
+        "y": 2,
+        "width": 30,
+        "height": 44
+      }
+    },
+    {
+      "row": 1,
+      "column": 1,
+      "source": {
+        "x": 630,
+        "y": 272,
+        "width": 175,
+        "height": 235
+      },
+      "native": {
+        "x": 1,
+        "y": 2,
+        "width": 30,
+        "height": 44
+      }
+    },
+    {
+      "row": 2,
+      "column": 0,
+      "source": {
+        "x": 213,
+        "y": 527,
+        "width": 169,
+        "height": 234
+      },
+      "native": {
+        "x": 1,
+        "y": 2,
+        "width": 30,
+        "height": 44
+      }
+    },
+    {
+      "row": 2,
+      "column": 1,
+      "source": {
+        "x": 631,
+        "y": 527,
+        "width": 175,
+        "height": 235
+      },
+      "native": {
+        "x": 1,
+        "y": 2,
+        "width": 30,
+        "height": 44
+      }
+    },
+    {
+      "row": 3,
+      "column": 0,
+      "source": {
+        "x": 208,
+        "y": 784,
+        "width": 179,
+        "height": 222
+      },
+      "native": {
+        "x": 1,
+        "y": 2,
+        "width": 30,
+        "height": 44
+      }
+    },
+    {
+      "row": 3,
+      "column": 1,
+      "source": {
+        "x": 626,
+        "y": 784,
+        "width": 184,
+        "height": 222
+      },
+      "native": {
+        "x": 1,
+        "y": 2,
+        "width": 30,
+        "height": 44
+      }
+    },
+    {
+      "row": 4,
+      "column": 0,
+      "source": {
+        "x": 207,
+        "y": 1027,
+        "width": 180,
+        "height": 219
+      },
+      "native": {
+        "x": 1,
+        "y": 2,
+        "width": 30,
+        "height": 44
+      }
+    },
+    {
+      "row": 4,
+      "column": 1,
+      "source": {
+        "x": 625,
+        "y": 1027,
+        "width": 185,
+        "height": 219
+      },
+      "native": {
+        "x": 1,
+        "y": 2,
+        "width": 30,
+        "height": 44
+      }
+    },
+    {
+      "row": 5,
+      "column": 0,
+      "source": {
+        "x": 199,
+        "y": 1275,
+        "width": 197,
+        "height": 239
+      },
+      "native": {
+        "x": 1,
+        "y": 2,
+        "width": 30,
+        "height": 44
+      }
+    },
+    {
+      "row": 5,
+      "column": 1,
+      "source": {
+        "x": 622,
+        "y": 1276,
+        "width": 193,
+        "height": 237
+      },
+      "native": {
+        "x": 1,
+        "y": 2,
+        "width": 30,
+        "height": 44
+      }
+    }
+  ]
+}

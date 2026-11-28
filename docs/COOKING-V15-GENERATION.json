@@ -1,0 +1,13 @@
+{
+  "generator": "image_gen.imagegen",
+  "source": "/workspace/generated_images/exec-2b9f7040-9cdd-493e-95d8-c856a27cdf9f.png",
+  "packer": "scripts/prepare-cooking-v15.mjs",
+  "resource": "assets/game/cooking/kitchen.png",
+  "size": [
+    640,
+    400
+  ],
+  "maxColors": 192,
+  "sha256": "c203cc948ef985d2f32f74871c3beebb88a66e3779b3ac9e8c393ac63ee21781",
+  "note": "Original generated kitchen background. Characters and cooking ingredients are composed live; personal hair, glasses and full walking faces remain intact."
+}

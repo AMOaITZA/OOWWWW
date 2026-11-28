@@ -1,0 +1,108 @@
+/* The world is the backdrop; controls float above it instead of shrinking it. */
+html,body,#app{width:100%;height:100%;overflow:hidden;overscroll-behavior:none}
+.title-screen{display:flex;flex-direction:column;overflow-y:auto}
+.title-content{flex-shrink:0;margin:auto;width:100%}
+.game-screen{
+  position:fixed;inset:0;min-height:0;height:100dvh;padding:0;
+  overflow:hidden;isolation:isolate;background:#91B079;
+}
+.game-center{position:absolute;inset:0;display:block}
+.game-frame{
+  position:absolute;inset:0;width:auto;height:auto;max-width:none;
+  aspect-ratio:auto;border:0;box-shadow:none;overflow:hidden;
+}
+.game-frame canvas{position:absolute;left:0;top:0;max-width:none;max-height:none;object-fit:initial}
+.game-frame canvas:focus{outline:none}
+.game-frame canvas:focus-visible{outline:3px solid var(--px-amber);outline-offset:-3px}
+.game-header{
+  position:relative;z-index:2;display:grid;grid-template-columns:auto minmax(0,1fr);
+  align-items:start;gap:7px 12px;max-width:none;
+  width:calc(100% - 24px - env(safe-area-inset-left) - env(safe-area-inset-right));
+  margin:calc(10px + env(safe-area-inset-top)) auto 0;padding:0;pointer-events:none;
+}
+.game-header .brand,.game-header .header-actions,.game-header .day-night-controls{pointer-events:auto}
+.game-header .brand{
+  grid-column:1;grid-row:1/3;align-self:start;display:block;
+  padding:10px 12px;background:#2E1F18E8;border:2px solid #1B120E;
+  box-shadow:3px 3px 0 #1B120E55;color:var(--px-cream);line-height:1.4;
+}
+.game-header .brand small{margin-top:3px}
+.game-header .header-actions{grid-column:2;justify-content:flex-end;gap:6px}
+.game-header .hud-button{
+  display:grid;place-items:center;min-height:44px;min-width:44px;
+  background:#2E1F18E8;box-shadow:2px 2px 0 #1B120E55;
+  font-size:12px;line-height:1.4;text-align:center;
+}
+.game-header .hud-button:hover{background:var(--px-wood-dark)}
+.game-header .day-night-controls{grid-column:2;justify-self:end;width:auto;gap:10px}
+.game-header .day-night-label{
+  padding:5px 8px;background:#2E1F18E8;border:2px solid #1B120E;
+  font-size:16px;line-height:1.2;
+}
+.game-header .day-night-label small{font-size:13px}
+.game-header .day-night-button{background:#2E1F18E8;padding:7px 9px;font-size:10px}
+.game-header .day-night-button[aria-pressed="true"]{background:var(--px-parchment)}
+.game-footer{
+  position:absolute;z-index:2;left:calc(12px + env(safe-area-inset-left));
+  right:calc(12px + env(safe-area-inset-right));bottom:calc(10px + env(safe-area-inset-bottom));
+  width:auto;max-width:none;margin:0;padding:0;gap:8px;pointer-events:none;
+  color:var(--px-cream);font-size:18px;
+}
+.game-footer span{padding:4px 8px;background:#2E1F18E8;border:1px solid #1B120E}
+.world-status{
+  left:calc(12px + env(safe-area-inset-left));bottom:calc(49px + env(safe-area-inset-bottom));
+  max-width:calc(100% - 24px - env(safe-area-inset-left) - env(safe-area-inset-right));
+  padding:6px 8px;font-size:10px;line-height:1.5;background:#2E1F18E8;border:1px solid #1B120E;
+}
+/* The complete instructions remain available to assistive technology and in Ayuda. */
+.game-hint{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+}
+@media(max-width:600px){
+  .game-header{
+    grid-template-columns:minmax(0,1fr) auto;gap:6px;
+    width:calc(100% - 16px - env(safe-area-inset-left) - env(safe-area-inset-right));
+    margin-top:calc(8px + env(safe-area-inset-top));
+  }
+  .game-header .brand{
+    grid-row:1;grid-column:1;align-self:center;width:max-content;max-width:100%;
+    padding:8px;font-size:12px;
+  }
+  .game-header .brand small{display:none}
+  .game-header .header-actions{
+    grid-row:2;grid-column:1/-1;width:100%;display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;
+  }
+  .game-header .header-actions .hud-button{font-size:9px;padding:5px 3px;min-width:0}
+  .game-header .day-night-controls{grid-row:1;grid-column:2;align-self:center;gap:0}
+  .game-header .day-night-buttons{gap:4px}
+  .game-header .day-night-button{min-width:44px;padding:5px 6px;font-size:9px}
+  .game-header .day-night-label{
+    position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+    overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+  }
+  .game-footer{
+    left:calc(8px + env(safe-area-inset-left));right:calc(8px + env(safe-area-inset-right));
+    bottom:calc(8px + env(safe-area-inset-bottom));font-size:15px;
+  }
+  .game-footer span{padding:4px 6px}
+  .world-status{
+    left:calc(8px + env(safe-area-inset-left));bottom:calc(43px + env(safe-area-inset-bottom));
+    max-width:calc(100% - 16px - env(safe-area-inset-left) - env(safe-area-inset-right));font-size:8px;
+  }
+}
+@media(max-height:480px) and (orientation:landscape){
+  .game-header{
+    display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:flex-start;gap:8px;
+    width:calc(100% - 16px - env(safe-area-inset-left) - env(safe-area-inset-right));
+    margin-top:calc(6px + env(safe-area-inset-top));
+  }
+  .game-header .brand,.game-header .day-night-label{display:none}
+  .game-header .header-actions{grid-row:1;grid-column:1;display:flex;width:auto;flex-wrap:nowrap;gap:5px}
+  .game-header .header-actions .hud-button{font-size:9px;padding:5px 7px;min-width:0;flex:1}
+  .game-header .day-night-controls{grid-row:1;grid-column:2;width:auto;flex-shrink:0}
+  .game-header .day-night-button{font-size:9px;padding:5px 7px}
+  .game-footer{bottom:calc(6px + env(safe-area-inset-bottom));font-size:14px}
+  .world-status{bottom:calc(40px + env(safe-area-inset-bottom));font-size:8px}
+}

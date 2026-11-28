@@ -1,0 +1,39 @@
+{
+  "generator": "image_gen.imagegen",
+  "packer": "scripts/prepare-boating-v15.mjs",
+  "resources": [
+    {
+      "path": "assets/game/boating/archipelago.png",
+      "sha256": "199e45d693d448d279f02c25dc21953c15f5066e26f9d38cacd86b095493062e",
+      "sourceSha256": "b1b6baaceea16a1a96fb2fb2f5bc78f2d0f18bc9e04f841bfd5d33a3142bf1ca"
+    },
+    {
+      "path": "assets/game/boating/boats.png",
+      "sha256": "99a67ec3b0ced65d72dec5e0844206ca4c464dc35afe31b3bdc4648d4c8b2d92",
+      "sourceSha256": "4bd910d3cb2da183b1d3b323d91985e50e430267716a391f16c1029040d24c49"
+    }
+  ],
+  "regions": [
+    {
+      "cell": 0,
+      "x": 31,
+      "y": 5,
+      "width": 66,
+      "height": 118
+    },
+    {
+      "cell": 1,
+      "x": 30,
+      "y": 5,
+      "width": 68,
+      "height": 118
+    },
+    {
+      "cell": 2,
+      "x": 5,
+      "y": 29,
+      "width": 118,
+      "height": 70
+    }
+  ]
+}

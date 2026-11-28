@@ -1,0 +1,40 @@
+{
+  "screenshots": [
+    "wedding-complete-missed-desktop.png",
+    "principal-waiting.png",
+    "principal-caught.png",
+    "alternative-phone-waiting.png",
+    "alternative-phone-caught.png",
+    "wedding-landscape-waiting.png",
+    "wedding-landscape-caught.png",
+    "wedding-sequence-01-cast.png",
+    "wedding-sequence-02-wait.png",
+    "wedding-sequence-03-reel.png",
+    "wedding-sequence-04-catch.png"
+  ],
+  "errors": [],
+  "failed": [],
+  "actor": {
+    "pixelScale": "3",
+    "phase": "missed",
+    "visual": "missed",
+    "fishingPose": "0",
+    "itzaLook": "boda",
+    "itzaHair": "negro",
+    "itzaGlasses": "true",
+    "actorReady": "true",
+    "actorX": "201",
+    "actorY": "172",
+    "actorWidth": "40",
+    "actorHeight": "64",
+    "bodyOffsetY": "6",
+    "rodHandX": "229",
+    "rodHandY": "204",
+    "rodTipX": "270",
+    "rodTipY": "153",
+    "rewardX": "",
+    "rewardY": "",
+    "plushie": ""
+  },
+  "note": "Actual full-game idle, expired bite and successful cast/bite/reel controls. Complete collection is seeded only to reproduce the supplied screenshot, with no catches added on the missed cast."
+}

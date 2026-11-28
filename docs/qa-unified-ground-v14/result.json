@@ -1,0 +1,10 @@
+{
+  "screenshots": [
+    "world-seam-day.png",
+    "world-seam-night.png",
+    "world-seam-phone.png"
+  ],
+  "errors": [],
+  "failed": [],
+  "note": "Real game at the former boundary y1280, with ordinary arrival coordinates and actual day/night lighting. Mobile emulated."
+}

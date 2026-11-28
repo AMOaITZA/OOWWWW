@@ -1,0 +1,198 @@
+{
+  "version": 16,
+  "description": "Pesca y baile de Itza, tres recetas para compartir y seis flores para el jardín.",
+  "secrets": {
+    "chest": "/assets/game/secrets/chest.png",
+    "note": "/assets/game/secrets/note.png"
+  },
+  "fishing": {
+    "freddy": "/assets/game/fishing/freddy.png",
+    "bonnie": "/assets/game/fishing/bonnie.png",
+    "chica": "/assets/game/fishing/chica.png",
+    "foxy": "/assets/game/fishing/foxy.png",
+    "golden-freddy": "/assets/game/fishing/golden-freddy.png"
+  },
+  "home": {
+    "exterior": "/assets/game/home/exterior.png",
+    "interior": "/assets/game/home/interior.png",
+    "seatedBodies": "/assets/game/home/seated-bodies.png",
+    "seatedCrossed": "/assets/game/home/seated-crossed.png",
+    "sofaBack": "/assets/game/home/sofa-back-patch.png",
+    "diningMats": "/assets/game/home/dining-mats.png"
+  },
+  "ambient": {
+    "pond": "/assets/game/ambient/pond.png"
+  },
+  "world": {
+    "ground": "/assets/game/world/ground-unified.png"
+  },
+  "objects": {
+    "house": "/assets/game/objects/house.png",
+    "letter": "/assets/game/objects/letter.png",
+    "gallery": "/assets/game/objects/gallery.png",
+    "book": "/assets/game/objects/book.png",
+    "playlist": "/assets/game/objects/playlist.png",
+    "tv": "/assets/game/objects/tv.png",
+    "clock": "/assets/game/objects/clock.png",
+    "places": "/assets/game/objects/places.png",
+    "final": "/assets/game/objects/final.png",
+    "wardrobe": "/assets/game/objects/wardrobe.png",
+    "tree": "/assets/game/objects/tree.png",
+    "rock": "/assets/game/objects/rock.png",
+    "bench": "/assets/game/objects/bench.png",
+    "lamp": "/assets/game/objects/lamp.png",
+    "roof": "/assets/game/objects/roof.png",
+    "awning": "/assets/game/objects/awning.png",
+    "tree-cerezo": "/assets/game/trees/cerezo.png",
+    "tree-jacaranda": "/assets/game/trees/jacaranda.png",
+    "tree-roble": "/assets/game/trees/roble.png",
+    "tree-abedul": "/assets/game/trees/abedul.png"
+  },
+  "characters": {
+    "leo": {
+      "looks": [
+        {
+          "id": "principal",
+          "name": "Conjunto original",
+          "sheet": "/assets/game/characters/leo/look-01.png"
+        },
+        {
+          "id": "alternativo",
+          "name": "Segundo conjunto",
+          "sheet": "/assets/game/characters/leo/look-02.png"
+        },
+        {
+          "id": "boda",
+          "name": "Traje de boda",
+          "sheet": "wedding:leo-walk"
+        }
+      ]
+    },
+    "itza": {
+      "looks": [
+        {
+          "id": "principal",
+          "name": "Conjunto original",
+          "sheet": "/assets/game/characters/itza/look-01.png"
+        },
+        {
+          "id": "alternativo",
+          "name": "Segundo conjunto",
+          "sheet": "/assets/game/characters/itza/look-02.png"
+        },
+        {
+          "id": "boda",
+          "name": "Vestido de novia",
+          "sheet": "wedding:itza-walk"
+        }
+      ]
+    }
+  },
+  "moments": {
+    "catIdle": "/assets/game/moments/cat-duo-idle.png",
+    "catHappy": "/assets/game/moments/cat-duo-happy.png",
+    "petSparkles": "/assets/game/moments/pet-sparkles-sheet.png",
+    "benchSeat": "/assets/game/moments/bench-seat-v4.png",
+    "ponyo": "/assets/game/moments/ponyo.png"
+  },
+  "wedding": {
+    "atlas": "/assets/game/wedding/atlas.png",
+    "logicalSize": [
+      720,
+      342
+    ],
+    "resourceCount": 19,
+    "note": "Atlas con 19 regiones; todos los personajes han sido sustituidos. Las hojas independientes conservan el nuevo estilo si falla el atlas.",
+    "background": "/assets/game/wedding/cinematic-background.png",
+    "castle": "/assets/game/wedding/castle-v2.png",
+    "arch": "/assets/game/wedding/arch-v2.png",
+    "seatedPair": "/assets/game/wedding/pair-bench-v2.png",
+    "characters": {
+      "leo-walk": "/assets/game/wedding/characters/leo-walk.png",
+      "itza-walk": "/assets/game/wedding/characters/itza-walk.png",
+      "idle": "/assets/game/wedding/characters/idle.png",
+      "vows": "/assets/game/wedding/characters/vows.png",
+      "kiss": "/assets/game/wedding/characters/kiss.png",
+      "hug": "/assets/game/wedding/characters/hug.png",
+      "celebrate": "/assets/game/wedding/characters/celebrate.png"
+    }
+  },
+  "architecture": {
+    "inicio": "/assets/game/architecture/inicio.png",
+    "carta": "/assets/game/architecture/carta.png",
+    "galeria": "/assets/game/architecture/galeria.png",
+    "razones": "/assets/game/architecture/razones.png",
+    "playlist": "/assets/game/architecture/playlist.png",
+    "recuerdos": "/assets/game/architecture/recuerdos.png",
+    "contador": "/assets/game/architecture/contador.png",
+    "lugares": "/assets/game/architecture/lugares.png",
+    "final": "/assets/game/architecture/final.png",
+    "armario": "/assets/game/architecture/armario.png",
+    "secreto": "/assets/game/architecture/secreto.png",
+    "grabadora": "/assets/game/architecture/grabadora.png",
+    "casita": "/assets/game/home/exterior.png"
+  },
+  "seated": {
+    "leo": {
+      "principal": "/assets/game/moments/seated/leo-principal.png",
+      "alternativo": "/assets/game/moments/seated/leo-alternativo.png",
+      "boda": "/assets/game/moments/seated/leo-boda.png"
+    },
+    "itza": {
+      "principal": "/assets/game/moments/seated/itza-principal.png",
+      "alternativo": "/assets/game/moments/seated/itza-alternativo.png",
+      "boda": "/assets/game/moments/seated/itza-boda.png"
+    }
+  },
+  "appearance": {
+    "eyes": "/assets/game/appearance/eyes-without-glasses.png"
+  },
+  "experienceHeaders": {
+    "inicio": "/assets/game/experiences/inicio.png",
+    "carta": "/assets/game/experiences/carta.png",
+    "galeria": "/assets/game/experiences/galeria.png",
+    "razones": "/assets/game/experiences/razones.png",
+    "playlist": "/assets/game/experiences/playlist.png",
+    "recuerdos": "/assets/game/experiences/recuerdos.png",
+    "contador": "/assets/game/experiences/contador.png",
+    "lugares": "/assets/game/experiences/lugares.png",
+    "final": "/assets/game/experiences/final.png",
+    "armario": "/assets/game/experiences/armario.png",
+    "secreto": "/assets/game/experiences/secreto.png",
+    "grabadora": "/assets/game/experiences/grabadora.png",
+    "pesca": "/assets/game/ambient/pond.png",
+    "casita": "/assets/game/home/interior.png",
+    "hallazgo": "/assets/game/experiences/secreto.png",
+    "hawai": "/assets/game/travel/hawaii.png",
+    "mirador": "/assets/game/travel/lakeside.png"
+  },
+  "travel": {
+    "hawaii": "/assets/game/travel/hawaii.png",
+    "lakeside": "/assets/game/travel/lakeside.png",
+    "giraffe": "/assets/game/travel/giraffe.png"
+  },
+  "coast": {
+    "harbor": "/assets/game/coast/harbor.png",
+    "view": "/assets/game/coast/view.png"
+  },
+  "dance": {
+    "bodies": "/assets/game/dance/bodies.png"
+  },
+  "fishingScene": {
+    "background": "/assets/game/fishing/scene.png",
+    "poses": "/assets/game/fishing/poses-v16.png"
+  },
+  "cooking": {
+    "kitchen": "/assets/game/cooking/kitchen.png",
+    "actions": "/assets/game/cooking/actions.png",
+    "foods": "/assets/game/cooking/foods.png"
+  },
+  "garden": {
+    "garden": "/assets/game/garden/garden.png",
+    "flowers": "/assets/game/garden/flowers.png"
+  },
+  "boating": {
+    "archipelago": "/assets/game/boating/archipelago.png",
+    "boats": "/assets/game/boating/boats.png"
+  }
+}

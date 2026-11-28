@@ -1,0 +1,58 @@
+{
+  "generator": "image_gen.imagegen",
+  "source": "exec-92030c92-adc9-4d2d-9c1e-69c4f08277ae.png",
+  "sourceSha256": "5664cb7bd68a718f6f25855dd04c6483df3d1ec267014bab9e8f8240921be8d7",
+  "references": "Four user-supplied photos of Ponyo; existing cat-duo sprite as style reference.",
+  "subject": "Ponyo: dilute tortoiseshell gray kitten, muted tan forehead/chest patches, pale chin, green-gold eyes.",
+  "frames": [
+    "sitting, eyes open",
+    "same pose, happy blink"
+  ],
+  "sourceSize": [
+    1774,
+    887
+  ],
+  "sourceBounds": [
+    {
+      "left": 284,
+      "top": 105,
+      "width": 409,
+      "height": 667
+    },
+    {
+      "left": 235,
+      "top": 105,
+      "width": 407,
+      "height": 667
+    }
+  ],
+  "path": "assets/game/moments/ponyo.png",
+  "size": [
+    64,
+    32
+  ],
+  "frameSize": [
+    32,
+    32
+  ],
+  "nativeDraw": [
+    {
+      "left": 7,
+      "top": 2,
+      "width": 17,
+      "height": 28
+    },
+    {
+      "left": 7,
+      "top": 2,
+      "width": 17,
+      "height": 28
+    }
+  ],
+  "paletteColors": 63,
+  "opaquePixels": 663,
+  "alpha": "binary 0/255; source threshold 128",
+  "sha256": "9985ac04404b584f7e43553ebb21d7708ccbcb0611a310777abbb40fb0e4a39a",
+  "packer": "scripts/prepare-ponyo-v10.mjs",
+  "note": "Only technical uniform scaling, centering, alpha threshold and a shared bounded palette. The generated source is preserved unchanged."
+}

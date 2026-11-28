@@ -1,0 +1,41 @@
+[
+  {
+    "id": "gatitos",
+    "name": "Los gatitos",
+    "kind": "cats",
+    "tile": [
+      68,
+      47
+    ],
+    "arrival": [
+      68,
+      51
+    ]
+  },
+  {
+    "id": "banca-jardin",
+    "name": "Banca del jardín",
+    "kind": "bench",
+    "tile": [
+      24,
+      31
+    ],
+    "arrival": [
+      24,
+      33
+    ]
+  },
+  {
+    "id": "banca-sendero",
+    "name": "Banca del sendero",
+    "kind": "bench",
+    "tile": [
+      76,
+      47
+    ],
+    "arrival": [
+      76,
+      49
+    ]
+  }
+]

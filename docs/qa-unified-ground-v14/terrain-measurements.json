@@ -1,0 +1,35 @@
+{
+  "crop": {
+    "x": 384,
+    "y": 1112,
+    "width": 1152,
+    "height": 352
+  },
+  "note": "Unaltered native screenshot-size crops of the old composed source and the single generated full-world ground. No smoothing or image blending.",
+  "before": {
+    "northMean": [
+      168.19161676646706,
+      186.1556886227545,
+      111.61676646706587
+    ],
+    "southMean": [
+      141.9933962264151,
+      174.14905660377357,
+      90.3877358490566
+    ],
+    "distance": 35.793542893723085
+  },
+  "after": {
+    "northMean": [
+      132.22627737226279,
+      161.0316301703163,
+      74.67153284671532
+    ],
+    "southMean": [
+      132.1057934508816,
+      162.02392947103274,
+      74.73425692695214
+    ],
+    "distance": 1.0015530878367236
+  }
+}

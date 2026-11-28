@@ -1,0 +1,120 @@
+/* Album, letter and postcard compositions belong only to RPG experiences. */
+#experience-content .memory-welcome{display:grid;grid-template-columns:minmax(190px,.95fr) minmax(0,1fr);align-items:center;gap:clamp(20px,5vw,46px);padding:12px 10px 20px}
+#experience-content .welcome-portrait-frame{position:relative;margin:0;padding:20px 16px 0;border:3px solid #987154;background:radial-gradient(ellipse at 50% 30%,#fff6e7 20%,#eed5bc 76%);box-shadow:5px 5px 0 #dac2a0,inset 0 0 0 5px #fff2dc;min-width:0}
+#experience-content .welcome-portrait-frame::before,#experience-content .welcome-portrait-frame::after{content:'';position:absolute;width:18px;height:18px;border-color:#b88d55;pointer-events:none}
+#experience-content .welcome-portrait-frame::before{top:8px;left:8px;border-top:3px solid;border-left:3px solid}
+#experience-content .welcome-portrait-frame::after{right:8px;bottom:8px;border-right:3px solid;border-bottom:3px solid}
+#experience-content .intro-portrait{width:100%;max-width:290px;max-height:310px;object-fit:contain;image-rendering:pixelated;margin:auto;filter:drop-shadow(0 5px 0 #cba98d55)}
+#experience-content .welcome-names{text-align:center;margin:8px -16px 0;padding:13px 8px;background:#fff1db;border-top:2px solid #c6a882;font:12px/1.5 'Silkscreen',monospace;letter-spacing:2px;color:#875b50}
+#experience-content .welcome-message{min-width:0;text-align:center;display:grid;justify-items:center;gap:24px}
+#experience-content .welcome-note{font-family:'VT323',monospace!important;font-size:clamp(25px,3.7vw,34px)!important;line-height:1.5!important;color:#72524a;max-width:310px}
+#experience-content .memory-flower-rule{display:flex;align-items:center;justify-content:center;gap:17px;color:#bc7e88;font-size:23px;position:relative}
+#experience-content .memory-flower-rule::before,#experience-content .memory-flower-rule::after{content:'';width:35px;height:1px;background:#c6a98c}
+
+#experience-content .memory-letter{position:relative;padding:18px 7px 8px;max-width:700px;width:100%;margin:0 auto}
+#experience-content .letter-sheet{position:relative;padding:clamp(25px,4vw,44px);background:#fffbef;border:1px solid #d8c29f;box-shadow:5px 6px 0 #e4c9a5,9px 10px 0 -3px #c6a48655}
+#experience-content .letter-sheet::before{content:'';position:absolute;inset:10px;border:1px solid #e5d6bb;pointer-events:none}
+#experience-content .letter-wax-seal{position:relative;z-index:1;display:grid;place-items:center;width:45px;height:45px;margin:0 auto -18px;background:#b8747e;color:#ffe7dc;border:3px solid #915762;outline:3px solid #e7c7bc;box-shadow:3px 3px 0 #c9a38d;font-size:23px;clip-path:polygon(18% 0,82% 0,82% 9%,100% 9%,100% 82%,91% 82%,91% 100%,9% 100%,9% 82%,0 82%,0 18%,18% 18%)}
+#experience-content .memory-letter .letter-original{background:none;border:0;padding:0;font-size:clamp(22px,2.5vw,27px)!important;line-height:1.6!important;color:#614a40;white-space:pre-wrap!important;position:relative}
+#experience-content .memory-letter .signature{margin-top:26px;text-align:right;font:clamp(12px,1.8vw,15px)/1.8 'Silkscreen',monospace;color:#a56c72}
+
+#experience-content .memory-album{min-width:0;display:grid;gap:19px}
+#experience-content .album-introduction{max-width:720px;color:#71594b;font-size:23px}
+#experience-content .album-index{display:flex;justify-content:space-between;align-items:center;gap:15px;border-top:1px solid #d8c4a7;border-bottom:1px solid #d8c4a7;padding:12px 0;font:11px/1.5 'Silkscreen',monospace;letter-spacing:1px;color:#946d5b}
+#experience-content .memory-gallery{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:19px;padding:5px 3px 13px}
+#experience-content .photo-tile{display:grid;grid-template-rows:auto 1fr;gap:10px;aspect-ratio:auto;overflow:visible;padding:9px 9px 12px;background:#fffcf2;border:1px solid #d5c4aa;box-shadow:3px 4px 0 #cbb69566;text-align:left;transition:transform .18s,box-shadow .18s;transform:rotate(-1deg)}
+#experience-content .photo-tile:nth-child(even){transform:rotate(1deg)}
+#experience-content .photo-tile:hover{transform:translateY(-3px) rotate(0deg);box-shadow:4px 7px 0 #cbb69566}
+#experience-content .photo-tile:focus-visible{transform:rotate(0deg);outline:3px solid #af737d;outline-offset:4px}
+#experience-content .album-thumbnail{display:block;aspect-ratio:4/5;overflow:hidden;background:#e7d4b9;border:1px solid #ded0b7}
+#experience-content .album-thumbnail img{display:block;width:100%;height:100%;object-fit:cover;image-rendering:auto}
+#experience-content .album-photo-label{display:grid;grid-template-columns:22px minmax(0,1fr);align-items:start;gap:6px}
+#experience-content .photo-number{position:static;padding:1px 0;background:none;color:#b77981;font:10px/1.5 'Silkscreen',monospace;text-align:center}
+#experience-content .photo-note{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font:19px/1.12 'VT323',monospace;color:#725c4e;overflow-wrap:anywhere}
+#experience-content .gallery-viewer{display:grid;gap:14px;min-width:0;text-align:left}
+#experience-content .gallery-viewer-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+#experience-content .gallery-viewer-navigation{display:flex;align-items:center;gap:8px}
+#experience-content .gallery-viewer button{min-height:44px;border:2px solid #a48267;box-shadow:2px 2px 0 #dcc7a8;background:#fff5e5;color:#6c4e43;font:11px/1.4 'Silkscreen',monospace}
+#experience-content .gallery-viewer .album-return{padding:10px 13px}
+#experience-content .album-return::before{content:'←';margin-right:7px}
+#experience-content .gallery-viewer .album-step{min-width:44px;padding:8px;font-size:20px}
+#experience-content .gallery-position{font:11px 'Silkscreen',monospace;color:#906d5b;min-width:56px;text-align:center}
+#experience-content .gallery-photo-stage{margin:0;padding:clamp(10px,2vw,20px);background:#fffcf2;border:1px solid #d5c4aa;box-shadow:4px 5px 0 #cfb89966}
+#experience-content .gallery-photo-stage .album-large-photo{display:block;margin:0 auto;width:auto;max-width:100%;height:auto;max-height:44dvh;object-fit:contain;border:1px solid #e1d5c1;image-rendering:auto}
+#experience-content .gallery-caption{max-width:660px;margin:15px auto 0;padding:10px 5px 0;border-top:1px solid #e1d0b5;text-align:center;font:23px/1.4 'VT323',monospace;color:#71544b;white-space:pre-line}
+
+#experience-content .memory-journey{display:grid;gap:23px;padding:5px 3px 12px}
+#experience-content .place-memory.place-postcard{display:grid;grid-template-columns:minmax(150px,.7fr) minmax(0,1.45fr);padding:0;overflow:hidden;background:#fff9ec;border:1px solid #cfb99a;box-shadow:4px 5px 0 #d6bfa066;min-width:0}
+#experience-content .place-postcard:nth-child(even){grid-template-columns:minmax(0,1.45fr) minmax(150px,.7fr)}
+#experience-content .place-postcard:nth-child(even) .postcard-scene{order:2;border-right:0;border-left:1px solid #d8c4a5}
+#experience-content .postcard-scene{display:grid;place-items:center;position:relative;background:linear-gradient(#eee4ca 0 70%,#bfcd9b 70% 76%,#d7dfb5 76%);min-height:175px;border-right:1px solid #d8c4a5;isolation:isolate}
+#experience-content .postcard-scene::after{content:'';position:absolute;bottom:10px;left:20px;width:20px;height:2px;background:#d6b8b2;box-shadow:30px -5px #e7c6c2,55px 2px #e7c6c2,90px -6px #e7c6c2;opacity:.8;z-index:-1}
+#experience-content .postcard-illustration{width:160px;height:128px;max-width:100%;object-fit:contain;image-rendering:pixelated;align-self:end;margin-bottom:21px}
+#experience-content .postcard-copy{position:relative;min-width:0;padding:25px 25px 25px 28px}
+#experience-content .postcard-stamp{display:inline-block;margin-bottom:13px;padding:7px 8px;border:1px dashed #bc9692;outline:3px solid #f2dfcc;color:#b67c85;background:#fff3e1;font:10px 'Silkscreen',monospace}
+#experience-content .place-memory h3{margin:0 0 12px;font:clamp(12px,1.8vw,16px)/1.7 'Silkscreen',monospace;color:#8f625c;overflow-wrap:anywhere}
+#experience-content .place-memory p{font-size:24px;line-height:1.4;color:#6c5549}
+
+#experience-content .memory-finale{display:grid;gap:24px;min-width:0;padding:4px 3px 10px}
+#experience-content .finale-introduction{font:23px/1.45 'VT323',monospace!important;text-align:center;color:#73574b;max-width:660px;margin:auto}
+#experience-content .finale-stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:stretch;gap:23px}
+#experience-content .memory-finale .final-pair{position:relative;overflow:hidden;min-height:265px;padding:22px 12px;background:radial-gradient(ellipse at 50% 30%,#fff2d8,#e6d3cf 80%);border:2px solid #b5917c;box-shadow:4px 5px 0 #dcc1a366}
+#experience-content .memory-finale .final-pair::before{content:'✦';position:absolute;top:17px;left:19px;color:#d7af77;text-shadow:160px 14px #d0a4aa,90px -9px #d7af77;font-size:18px}
+#experience-content .memory-finale .final-pair img{display:block;width:auto;height:auto;max-width:100%;max-height:240px;object-fit:contain;image-rendering:pixelated;position:relative;z-index:1}
+#experience-content .finale-ticket{position:relative;display:grid;align-content:center;justify-items:center;gap:19px;text-align:center;padding:23px 18px;background:#fff8e9;border:1px solid #cead93;box-shadow:4px 5px 0 #dcc1a366}
+#experience-content .finale-ticket::before,#experience-content .finale-ticket::after{content:'';position:absolute;left:9px;right:9px;height:1px;border-top:1px dashed #d5baa2}
+#experience-content .finale-ticket::before{top:10px}
+#experience-content .finale-ticket::after{bottom:10px}
+#experience-content .final-chapter{font:10px/1.7 'Silkscreen',monospace;letter-spacing:1px;color:#a68068}
+#experience-content .final-question{font:clamp(13px,2vw,17px)/1.6 'Silkscreen',monospace;color:#a56776}
+#experience-content .final-continuation{font-size:22px;line-height:1.4;color:#735c50}
+#experience-content .memory-finale .final-action-game{min-height:52px;width:100%;max-width:260px;padding:12px 18px;background:#b87582;color:#fff6e8;border:2px solid #875460;box-shadow:3px 4px 0 #dac1aa;font:13px/1.5 'Silkscreen',monospace}
+#experience-content .memory-finale .final-action-game:hover{background:#a86a78;transform:translateY(-1px)}
+#experience-content .memory-finale[data-state=kiss] .final-pair{animation:memory-kiss-glow 1s ease-out}
+#experience-content .finale-dedication{display:grid;gap:17px;padding:23px;background:#f5e4cd;border:1px solid #d8bea0;border-top:3px solid #b7858b}
+#experience-content .memory-finale .final-footer-love{padding:0;background:none;text-align:center;font-size:24px;color:#805d56;line-height:1.4;white-space:pre-line}
+#experience-content .final-correspondence{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 30px;padding-top:15px;border-top:1px solid #dac3a7}
+#experience-content .final-correspondence p{font:11px/1.7 'Silkscreen',monospace;color:#956b62}
+#experience-content .memory-finale .final-ps{font:20px/1.4 'VT323',monospace;color:#957e6c;text-align:center;font-style:italic}
+@keyframes memory-kiss-glow{0%{box-shadow:4px 5px 0 #dcc1a366,0 0 0 0 #d89da688}70%{box-shadow:4px 5px 0 #dcc1a366,0 0 0 12px #d89da600}100%{box-shadow:4px 5px 0 #dcc1a366}}
+@media(max-width:850px){#experience-content .memory-gallery{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){
+  #experience-content .memory-welcome{grid-template-columns:1fr;gap:22px;padding:3px 2px 14px}
+  #experience-content .welcome-portrait-frame{width:min(240px,88%);justify-self:center}
+  #experience-content .intro-portrait{max-height:235px}
+  #experience-content .welcome-note{max-width:300px;font-size:27px!important}
+  #experience-content .welcome-message{gap:18px}
+  #experience-content .memory-letter{padding:15px 2px 7px}
+  #experience-content .letter-sheet{padding:30px 19px 24px}
+  #experience-content .memory-letter .letter-original{font-size:23px!important;line-height:1.5!important}
+  #experience-content .memory-letter .signature{font-size:11px;line-height:1.8}
+  #experience-content .memory-gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px 13px}
+  #experience-content .photo-tile{padding:7px 7px 10px;gap:8px}
+  #experience-content .photo-note{font-size:17px}
+  #experience-content .photo-number{font-size:9px}
+  #experience-content .album-photo-label{grid-template-columns:18px minmax(0,1fr);gap:4px}
+  #experience-content .album-index{font-size:10px;letter-spacing:0}
+  #experience-content .gallery-viewer-toolbar{gap:8px}
+  #experience-content .gallery-viewer .album-return{padding:8px;font-size:10px}
+  #experience-content .gallery-viewer-navigation{gap:5px}
+  #experience-content .gallery-position{min-width:43px;font-size:9px}
+  #experience-content .gallery-viewer .album-step{min-width:44px;padding:6px;font-size:18px}
+  #experience-content .gallery-caption{font-size:21px;margin-top:12px;padding-top:12px}
+  #experience-content .place-memory.place-postcard,#experience-content .place-postcard:nth-child(even){grid-template-columns:1fr}
+  #experience-content .postcard-scene,#experience-content .place-postcard:nth-child(even) .postcard-scene{order:0;min-height:151px;border:0;border-bottom:1px solid #d8c4a5}
+  #experience-content .postcard-copy{padding:21px}
+  #experience-content .place-memory p{font-size:23px}
+  #experience-content .place-memory h3{font-size:13px;line-height:1.6}
+  #experience-content .postcard-stamp{margin-bottom:12px}
+  #experience-content .finale-stage{grid-template-columns:1fr;gap:16px}
+  #experience-content .memory-finale .final-pair{min-height:220px;padding:18px 12px}
+  #experience-content .memory-finale .final-pair img{max-height:220px}
+  #experience-content .finale-ticket{padding:28px 19px;gap:17px}
+  #experience-content .finale-introduction{font-size:23px!important}
+  #experience-content .finale-dedication{padding:21px 16px}
+  #experience-content .memory-finale .final-footer-love{font-size:23px}
+}
+@media(prefers-reduced-motion:reduce){
+  #experience-content .photo-tile,#experience-content .photo-tile:hover,#experience-content .memory-finale .final-action-game:hover{transition:none;transform:none}
+  #experience-content .memory-finale[data-state=kiss] .final-pair{animation:none}
+}

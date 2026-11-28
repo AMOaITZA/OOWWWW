@@ -1,0 +1,55 @@
+{
+  "generator": "image_gen.imagegen",
+  "packer": "scripts/prepare-generated-art.mjs",
+  "nativeAssets": [
+    {
+      "asset": "assets/game/characters/leo/look-02.png",
+      "sha256": "926e4562605c0e519135dc807a2960d9a59dd4c8f1873b2f461626bec18552ab",
+      "bytes": 24460,
+      "generated_source": "exec-08cf054a-055f-4d22-ab07-70a65011d801.png",
+      "generated_source_sha256": "6d46e193dcc17e84afe5929f6441189bebdc2791729223264575072cff55dffb"
+    },
+    {
+      "asset": "assets/game/characters/itza/look-02.png",
+      "sha256": "36d317b40744e8640af2d6dd1d3a69375a194c2b2dd2cb49165047fab8f3a7e2",
+      "bytes": 24077,
+      "generated_source": "exec-9fa00d4d-c90a-46b5-bda5-2a70d1ea2559.png",
+      "generated_source_sha256": "5e1cb42170804505a504a768e7b982ff2b825ae4430c6042dc0449d4a6cc36a2"
+    },
+    {
+      "asset": "assets/game/moments/pair-bench-sit-v2.png",
+      "sha256": "558b2b8c149b323f140f1222a924051fb415bf9336e44560f885119312db03b2",
+      "bytes": 9319,
+      "generated_source": "exec-02e37cfb-dd45-40f8-9369-720e28258345.png",
+      "generated_source_sha256": "3836c0784af13976512902b5c9e46a51f10a832fcc114f0fc93228273a600608"
+    },
+    {
+      "asset": "assets/game/wedding/castle-v2.png",
+      "sha256": "7727e39f5379e213c6bbc46b16df51ad150ccfb529cabc2e6950fa5491be9854",
+      "bytes": 47063,
+      "generated_source": "exec-07368df6-f8f9-4601-af60-2614910b311c.png",
+      "generated_source_sha256": "0c58fdc06a08ffe65a6a7f17a3c987445960e8ae03c647bdd34b85f7102ef25d"
+    },
+    {
+      "asset": "assets/game/wedding/cinematic-background.png",
+      "sha256": "e5322a2874e43f4b3a8a1dd08979f03d904a1613624698b68ff31bea924757d7",
+      "bytes": 110336,
+      "generated_source": "exec-4c5cff49-dee3-4f6c-ba5f-b1292f829182.png",
+      "generated_source_sha256": "a4b5d445680bfe65dcb3a68a7926fec9529320fa5702366f3f22cd2ae1327e78"
+    },
+    {
+      "asset": "assets/game/wedding/arch-v2.png",
+      "sha256": "3cb8a37bbfc8b1f854da30cb71068184310fb4a685d7a9e5859b4cec255fb5aa",
+      "bytes": 5545,
+      "generated_source": "exec-3e833eab-8903-4886-bc75-fdd4703f02c0.png",
+      "generated_source_sha256": "5f39da88f13702064c0a6883bb6111416212a93b612060b4edbbeda921cd5738"
+    },
+    {
+      "asset": "assets/game/wedding/pair-bench-v2.png",
+      "sha256": "a2bc4172adc45b0fc9a23b7c83045904ce1aed1037bc5c7769b552157175415b",
+      "bytes": 9051,
+      "generated_source": "exec-d79aecff-6dca-42de-a9ab-e8195b2e6653.png",
+      "generated_source_sha256": "aa1aefc1e68fca2faabd80f75b2170512c5f96e2f050585d3634b1c28f4e8628"
+    }
+  ]
+}

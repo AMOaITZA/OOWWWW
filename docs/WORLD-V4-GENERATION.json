@@ -1,0 +1,247 @@
+{
+  "generator": "image_gen.imagegen",
+  "packer": "scripts/prepare-world-v4.mjs",
+  "assets": [
+    {
+      "path": "assets/game/characters/leo/look-01.png",
+      "size": [
+        192,
+        144
+      ],
+      "source": "exec-23d1fcb2-762a-4ff7-9f10-e06e66ab7d7d.png",
+      "sourceSha256": "14b1ceda340497966124e85c5f86cded4334ad53edb5ab1367d862feccb85b56",
+      "sha256": "d302775baad5d6d3062900b211191e3563b749c5e37f5502482e689e36856153",
+      "replacesSha256": "280662a3cf289b215440c997dd1b9a02874c884671cdea233459ceedf5d8cfa4",
+      "frames": 18
+    },
+    {
+      "path": "assets/game/moments/seated/leo-principal.png",
+      "size": [
+        64,
+        48
+      ],
+      "source": "exec-eeb7ab8a-2419-401f-bbb2-2c8fb9e27f6f.png",
+      "sourceSha256": "0b4e8ba00d19d329e5566e94da3e9696f8aef5ab13cd3eb21fea7d970b16bbb8",
+      "sha256": "4745c6803183cdee5df7323631b6a753d6c6633aa6d5df92374780e9360700f0",
+      "replacesSha256": null,
+      "frames": 2
+    },
+    {
+      "path": "assets/game/moments/seated/leo-alternativo.png",
+      "size": [
+        64,
+        48
+      ],
+      "source": "exec-eeb7ab8a-2419-401f-bbb2-2c8fb9e27f6f.png",
+      "sourceSha256": "0b4e8ba00d19d329e5566e94da3e9696f8aef5ab13cd3eb21fea7d970b16bbb8",
+      "sha256": "3e0e406c67fee9eb22289922b32d85a9ad7dce6c5c8ca9b23f9cb1d2b776a377",
+      "replacesSha256": null,
+      "frames": 2
+    },
+    {
+      "path": "assets/game/moments/seated/leo-boda.png",
+      "size": [
+        64,
+        48
+      ],
+      "source": "exec-eeb7ab8a-2419-401f-bbb2-2c8fb9e27f6f.png",
+      "sourceSha256": "0b4e8ba00d19d329e5566e94da3e9696f8aef5ab13cd3eb21fea7d970b16bbb8",
+      "sha256": "a1fdb1b4f19f05520c9b5bf28d5285654d64ea320b95f1b3991af2d6d8f8fb2c",
+      "replacesSha256": null,
+      "frames": 2
+    },
+    {
+      "path": "assets/game/characters/itza/look-01.png",
+      "size": [
+        192,
+        144
+      ],
+      "source": "exec-f97f8e09-5812-41d0-9eb6-e5b4414fe916.png",
+      "sourceSha256": "dd19aa2342b0b79029b0b333ffacdc2d6eb3094adcc0e1c686531094fb50f836",
+      "sha256": "a9fc37a24ab2dbd4046b03e983e2fc3cf0c11500763cd6ca8a6bbb9512819d5e",
+      "replacesSha256": "9a61c52954c34c20dab8ccd9791553cc32c66d720a195140bdc8080f3a230ead",
+      "frames": 18
+    },
+    {
+      "path": "assets/game/moments/seated/itza-principal.png",
+      "size": [
+        64,
+        48
+      ],
+      "source": "exec-bac8ffc9-c3c6-4275-8847-157354fea78d.png",
+      "sourceSha256": "45b58e84b0f0105d84222fc67028ce0b3ed392c96142e7880e5645dcabcdc6e7",
+      "sha256": "29dba60d128907140c158c486d5322152ada08eb4bf695fd491d73b076105152",
+      "replacesSha256": null,
+      "frames": 2
+    },
+    {
+      "path": "assets/game/moments/seated/itza-alternativo.png",
+      "size": [
+        64,
+        48
+      ],
+      "source": "exec-bac8ffc9-c3c6-4275-8847-157354fea78d.png",
+      "sourceSha256": "45b58e84b0f0105d84222fc67028ce0b3ed392c96142e7880e5645dcabcdc6e7",
+      "sha256": "1c6e5c4f18d659760c63a4398fcae4b40d295149554b32d887d5fcdfaf33df18",
+      "replacesSha256": null,
+      "frames": 2
+    },
+    {
+      "path": "assets/game/moments/seated/itza-boda.png",
+      "size": [
+        64,
+        48
+      ],
+      "source": "exec-bac8ffc9-c3c6-4275-8847-157354fea78d.png",
+      "sourceSha256": "45b58e84b0f0105d84222fc67028ce0b3ed392c96142e7880e5645dcabcdc6e7",
+      "sha256": "96216e2cc29f68b4b9da76d8c0a914c4e16a0e33ea0a648b69e3fac089062ccb",
+      "replacesSha256": null,
+      "frames": 2
+    },
+    {
+      "path": "assets/game/architecture/inicio.png",
+      "size": [
+        160,
+        128
+      ],
+      "source": "exec-dd67a01c-b663-4c93-ad24-1c5821c4e59c.png",
+      "sourceSha256": "80fb28f6afb32d70f2c5a7f13f701193d93970d2b8db91ded7ae036686f7d0fc",
+      "sha256": "bd09e8cea626fe2c1b699b10ea22e5b083f924daec08a8840bc443d225592974",
+      "replacesSha256": null,
+      "frames": 1
+    },
+    {
+      "path": "assets/game/architecture/carta.png",
+      "size": [
+        160,
+        128
+      ],
+      "source": "exec-dd67a01c-b663-4c93-ad24-1c5821c4e59c.png",
+      "sourceSha256": "80fb28f6afb32d70f2c5a7f13f701193d93970d2b8db91ded7ae036686f7d0fc",
+      "sha256": "3abeb6ed676667ea065ee54a5163ee5253dbcc288081bcc7489ca485ada5d6be",
+      "replacesSha256": null,
+      "frames": 1
+    },
+    {
+      "path": "assets/game/architecture/galeria.png",
+      "size": [
+        160,
+        128
+      ],
+      "source": "exec-dd67a01c-b663-4c93-ad24-1c5821c4e59c.png",
+      "sourceSha256": "80fb28f6afb32d70f2c5a7f13f701193d93970d2b8db91ded7ae036686f7d0fc",
+      "sha256": "3130c63acae22bf0dc93ed377bfdc5ef8215690a643e19340b6f9d038c897063",
+      "replacesSha256": null,
+      "frames": 1
+    },
+    {
+      "path": "assets/game/architecture/razones.png",
+      "size": [
+        160,
+        128
+      ],
+      "source": "exec-dd67a01c-b663-4c93-ad24-1c5821c4e59c.png",
+      "sourceSha256": "80fb28f6afb32d70f2c5a7f13f701193d93970d2b8db91ded7ae036686f7d0fc",
+      "sha256": "1aebb0f6f42141215f88c8602c9a6b51d3938205f6b4d5fb1d960b6e0bafa223",
+      "replacesSha256": null,
+      "frames": 1
+    },
+    {
+      "path": "assets/game/architecture/playlist.png",
+      "size": [
+        160,
+        128
+      ],
+      "source": "exec-dd67a01c-b663-4c93-ad24-1c5821c4e59c.png",
+      "sourceSha256": "80fb28f6afb32d70f2c5a7f13f701193d93970d2b8db91ded7ae036686f7d0fc",
+      "sha256": "32af5044351d17df78b9b61d3c28ad423ea652dba95c418b0b3c953e559922ca",
+      "replacesSha256": null,
+      "frames": 1
+    },
+    {
+      "path": "assets/game/architecture/recuerdos.png",
+      "size": [
+        160,
+        128
+      ],
+      "source": "exec-dd67a01c-b663-4c93-ad24-1c5821c4e59c.png",
+      "sourceSha256": "80fb28f6afb32d70f2c5a7f13f701193d93970d2b8db91ded7ae036686f7d0fc",
+      "sha256": "8bc365244594f705881e2a23560fc6a6f90501ba601196c99030d47d3b6bc55c",
+      "replacesSha256": null,
+      "frames": 1
+    },
+    {
+      "path": "assets/game/architecture/contador.png",
+      "size": [
+        160,
+        128
+      ],
+      "source": "exec-dd67a01c-b663-4c93-ad24-1c5821c4e59c.png",
+      "sourceSha256": "80fb28f6afb32d70f2c5a7f13f701193d93970d2b8db91ded7ae036686f7d0fc",
+      "sha256": "26b6dc47164a6b0db6ff82e0e15a1c717a270983810800b1550cba165d0cfdda",
+      "replacesSha256": null,
+      "frames": 1
+    },
+    {
+      "path": "assets/game/architecture/lugares.png",
+      "size": [
+        160,
+        128
+      ],
+      "source": "exec-dd67a01c-b663-4c93-ad24-1c5821c4e59c.png",
+      "sourceSha256": "80fb28f6afb32d70f2c5a7f13f701193d93970d2b8db91ded7ae036686f7d0fc",
+      "sha256": "69562d1bec73b81569635189e9f74a5cd20283881c04637455e944ce7f33f5db",
+      "replacesSha256": null,
+      "frames": 1
+    },
+    {
+      "path": "assets/game/architecture/final.png",
+      "size": [
+        160,
+        128
+      ],
+      "source": "exec-dd67a01c-b663-4c93-ad24-1c5821c4e59c.png",
+      "sourceSha256": "80fb28f6afb32d70f2c5a7f13f701193d93970d2b8db91ded7ae036686f7d0fc",
+      "sha256": "16358509c5956a2f05c6cef5e09ff6dab7edb372cafac3bd580ba1065861e2fa",
+      "replacesSha256": null,
+      "frames": 1
+    },
+    {
+      "path": "assets/game/architecture/armario.png",
+      "size": [
+        160,
+        128
+      ],
+      "source": "exec-dd67a01c-b663-4c93-ad24-1c5821c4e59c.png",
+      "sourceSha256": "80fb28f6afb32d70f2c5a7f13f701193d93970d2b8db91ded7ae036686f7d0fc",
+      "sha256": "9f0436f061d39b74eaf0f351d57f6f0bf50cd2ecd44cdb5f8b84897351ed264f",
+      "replacesSha256": null,
+      "frames": 1
+    },
+    {
+      "path": "assets/game/moments/bench-seat-v4.png",
+      "size": [
+        56,
+        32
+      ],
+      "source": "exec-5e388661-2218-4a8e-aba2-3352474e8367.png",
+      "sourceSha256": "409b5074132c0a64acd2e19d61faeb1a818f4df35ca8094ae1d884d0ff31fbb4",
+      "sha256": "3d44350316fe7b3fca455cc39087cc5b863451d971e59655cbaa8b30847d766d",
+      "replacesSha256": null,
+      "frames": 1
+    },
+    {
+      "path": "assets/game/world/ground-v4.png",
+      "size": [
+        1920,
+        1280
+      ],
+      "source": "exec-f72d8244-a2f5-4da4-9bc3-db5297f231f3.png",
+      "sourceSha256": "bd957d71d43110dd47dd5c197bee363da1d1846799ce49a63b0ca1afcea4d69a",
+      "sha256": "df01fb1a8edc17fbf18c04f6ba9a232ec1f9bdb1c385e94dc5ced40ad4456d1d",
+      "replacesSha256": null,
+      "opaque": true,
+      "pixelGrid": 2
+    }
+  ]
+}

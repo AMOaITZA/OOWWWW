@@ -1,0 +1,238 @@
+{
+  "generator": "image_gen.imagegen",
+  "packer": "scripts/prepare-fishing-v14.mjs",
+  "posesSize": [
+    160,
+    168
+  ],
+  "frame": [
+    40,
+    56
+  ],
+  "backgroundSize": [
+    640,
+    400
+  ],
+  "rows": [
+    "principal",
+    "alternativo",
+    "boda"
+  ],
+  "columns": [
+    "waiting",
+    "casting",
+    "reeling",
+    "caught"
+  ],
+  "note": "Generated fishing bodies and scenery. Exact game heads, hair and glasses are composed at runtime using the shared anatomical mask. Existing user plush icons remain unchanged.",
+  "resources": [
+    {
+      "id": "poses",
+      "path": "assets/game/fishing/poses.png",
+      "sha256": "eb428fc37d95ab3be641c3a7066acbf8234ead03a4425c7a157557105db0c8ef",
+      "source": "exec-754d4480-9649-4788-80e7-edebef8714b3.png",
+      "sourceSha256": "ef0b4255b7326707cf12cca6458be824bef9b728215677f38696877cbe3045d8"
+    },
+    {
+      "id": "background",
+      "path": "assets/game/fishing/scene.png",
+      "sha256": "08a44c4789fac1df449cd31412b2d223e87992e02107adf1a629c5ed8ce2601e",
+      "source": "exec-815dda58-037a-4616-b2f0-469516f4013f.png",
+      "sourceSha256": "c53c0f48192a808d082a780e51bdda4608a6a22838ecde6ba16faae6b2482735"
+    }
+  ],
+  "regions": [
+    {
+      "row": 0,
+      "column": 0,
+      "source": {
+        "x": 7,
+        "y": 57,
+        "width": 237,
+        "height": 434
+      },
+      "native": {
+        "x": 2,
+        "y": 0,
+        "width": 36,
+        "height": 55
+      }
+    },
+    {
+      "row": 0,
+      "column": 1,
+      "source": {
+        "x": 244,
+        "y": 69,
+        "width": 245,
+        "height": 423
+      },
+      "native": {
+        "x": 2,
+        "y": 0,
+        "width": 36,
+        "height": 55
+      }
+    },
+    {
+      "row": 0,
+      "column": 2,
+      "source": {
+        "x": 489,
+        "y": 84,
+        "width": 226,
+        "height": 411
+      },
+      "native": {
+        "x": 2,
+        "y": 0,
+        "width": 36,
+        "height": 55
+      }
+    },
+    {
+      "row": 0,
+      "column": 3,
+      "source": {
+        "x": 740,
+        "y": 60,
+        "width": 210,
+        "height": 435
+      },
+      "native": {
+        "x": 2,
+        "y": 0,
+        "width": 36,
+        "height": 55
+      }
+    },
+    {
+      "row": 1,
+      "column": 0,
+      "source": {
+        "x": 7,
+        "y": 582,
+        "width": 237,
+        "height": 453
+      },
+      "native": {
+        "x": 2,
+        "y": 0,
+        "width": 36,
+        "height": 55
+      }
+    },
+    {
+      "row": 1,
+      "column": 1,
+      "source": {
+        "x": 244,
+        "y": 594,
+        "width": 245,
+        "height": 442
+      },
+      "native": {
+        "x": 2,
+        "y": 0,
+        "width": 36,
+        "height": 55
+      }
+    },
+    {
+      "row": 1,
+      "column": 2,
+      "source": {
+        "x": 489,
+        "y": 614,
+        "width": 232,
+        "height": 426
+      },
+      "native": {
+        "x": 2,
+        "y": 0,
+        "width": 36,
+        "height": 55
+      }
+    },
+    {
+      "row": 1,
+      "column": 3,
+      "source": {
+        "x": 739,
+        "y": 586,
+        "width": 214,
+        "height": 454
+      },
+      "native": {
+        "x": 2,
+        "y": 0,
+        "width": 36,
+        "height": 55
+      }
+    },
+    {
+      "row": 2,
+      "column": 0,
+      "source": {
+        "x": 6,
+        "y": 1124,
+        "width": 238,
+        "height": 439
+      },
+      "native": {
+        "x": 2,
+        "y": 0,
+        "width": 36,
+        "height": 55
+      }
+    },
+    {
+      "row": 2,
+      "column": 1,
+      "source": {
+        "x": 244,
+        "y": 1138,
+        "width": 245,
+        "height": 427
+      },
+      "native": {
+        "x": 2,
+        "y": 0,
+        "width": 36,
+        "height": 55
+      }
+    },
+    {
+      "row": 2,
+      "column": 2,
+      "source": {
+        "x": 489,
+        "y": 1158,
+        "width": 245,
+        "height": 412
+      },
+      "native": {
+        "x": 2,
+        "y": 0,
+        "width": 36,
+        "height": 55
+      }
+    },
+    {
+      "row": 2,
+      "column": 3,
+      "source": {
+        "x": 734,
+        "y": 1126,
+        "width": 218,
+        "height": 444
+      },
+      "native": {
+        "x": 2,
+        "y": 0,
+        "width": 36,
+        "height": 55
+      }
+    }
+  ]
+}

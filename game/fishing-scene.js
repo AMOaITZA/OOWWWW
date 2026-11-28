@@ -4,12 +4,13 @@ import {getGlasses} from './glasses.js';
 import {splitCharacterHeadPixels} from './character-head.js';
 
 export const FISHING_SCENE_URL='/assets/game/fishing/scene.png';
-export const FISHING_POSE_URL='/assets/game/fishing/poses.png';
+export const FISHING_POSE_URL='/assets/game/fishing/poses-v16.png';
+export const FISHING_ACTOR_WIDTH=56;
 export const FISHING_ACTOR_HEIGHT=64;
-export const FISHING_BODY_OFFSET_Y=6;
+export const FISHING_BODY_OFFSET_Y=0;
 // These points were measured on the generated palms after packing, rather
 // than inferred from the outer frame. The rod is drawn behind that real hand.
-export const FISHING_GRIPS=[[28,32],[35,26],[31,20],[34,11]];
+export const FISHING_GRIPS=[[31,37],[42,30],[41,32],[40,36]];
 const looks=['principal','alternativo','boda'];
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const pixelsCache=new WeakMap(),actorCache=new WeakMap();
@@ -37,14 +38,16 @@ function actorPose({pose,outfits,source,raw,body}){
   let variants=actorCache.get(source);if(!variants){variants=new WeakMap();actorCache.set(source,variants);}
   let frames=variants.get(body);if(!frames){frames=new Map();variants.set(body,frames);}
   const look=getChoice(outfits,'itza'),key=look+':'+pose;if(frames.has(key))return frames.get(key);
-  const result=document.createElement('canvas');result.width=40;result.height=FISHING_ACTOR_HEIGHT;
+  const width=FISHING_ACTOR_WIDTH,height=FISHING_ACTOR_HEIGHT;
+  const result=document.createElement('canvas');result.width=width;result.height=height;
   const ctx=result.getContext('2d');ctx.imageSmoothingEnabled=false;
-  const split=splitCharacterHeadPixels(pixelsOf(source),pixelsOf(raw||source),{who:'itza',look,direction:1,width:40,height:56,offsetX:4,offsetY:2});
-  const head=document.createElement('canvas'),hair=document.createElement('canvas');head.width=hair.width=40;head.height=hair.height=56;
-  head.getContext('2d').putImageData(new ImageData(split.head,40,56),0,0);
-  hair.getContext('2d').putImageData(new ImageData(split.hair,40,56),0,0);
-  ctx.drawImage(hair,0,0);ctx.drawImage(body,pose*40,Math.max(0,looks.indexOf(look))*56,40,56,0,FISHING_BODY_OFFSET_Y,40,56);ctx.drawImage(head,0,0);
-  Object.assign(result.dataset,{fishingActor:'itza',fishingPose:String(pose),fishingLook:look,fishingGripX:String(FISHING_GRIPS[pose][0]),fishingGripY:String(FISHING_GRIPS[pose][1]),hairColor:source.dataset?.hairColor||'negro',
+  const split=splitCharacterHeadPixels(pixelsOf(source),pixelsOf(raw||source),{who:'itza',look,direction:1,width,height,offsetX:4,offsetY:2});
+  const layer=document.createElement('canvas');layer.width=width;layer.height=height;
+  const painter=layer.getContext('2d');
+  painter.putImageData(new ImageData(split.hair,width,height),0,0);ctx.drawImage(layer,0,0);
+  ctx.drawImage(body,pose*width,looks.indexOf(look)*height,width,height,0,0,width,height);
+  painter.putImageData(new ImageData(split.head,width,height),0,0);ctx.drawImage(layer,0,0);
+  Object.assign(result.dataset,{fishingActor:'itza',fishingPose:String(pose),fishingLook:look,hairColor:source.dataset?.hairColor||'negro',
     glassesItza:source.dataset?.glassesItza||'on',assetSource:source.src||source.dataset?.assetSource||''});
   frames.set(key,result);return result;
 }
@@ -67,7 +70,7 @@ export function createFishingScene({stage,api,preference}){
     const outfits=api.getOutfits?.()??api.save?.outfits??{},selected=getSelectedLook(outfits,'itza');
     const source=api.getCharacterImage?.(selected?.sheet)??image(selected?.sheet),body=image(FISHING_POSE_URL);
     const sprite=actorPose({pose,outfits,source,raw:image(selected?.sheet),body});
-    if(sprite)ctx.drawImage(sprite,x,y,40,FISHING_ACTOR_HEIGHT);
+    if(sprite)ctx.drawImage(sprite,x,y);
     return Boolean(sprite);
   }
   function reserve(){
@@ -96,23 +99,37 @@ export function createFishingScene({stage,api,preference}){
     else{ctx.fillStyle='#75A79A';ctx.fillRect(0,0,width,height);ctx.fillStyle='#AFC875';ctx.fillRect(0,height*.72,width,height*.28);}
     const floatX=Math.round(width/2+31),floatY=Math.round(Math.min(height*.47,baseline-64));
     if(!still){ctx.fillStyle='#DCEBC780';for(let i=0;i<7;i++)ctx.fillRect(Math.round(width*.15+(i*39)%(width*.7)+Math.sin(elapsed+i)*2),Math.round(height*.25+(i*11)%(height*.22)),8+i%3*3,1);}
-    ctx.fillStyle='#667A5840';ctx.fillRect(actorX+10,baseline-1,25,4);
-    const hand={x:actorX+FISHING_GRIPS[step.pose][0],y:actorY+FISHING_GRIPS[step.pose][1]};
-    const tips=[[69,-19],[92,14],[54,-19],[49,-27]],tip={x:actorX+tips[step.pose][0],y:actorY+tips[step.pose][1]};
+    // Follow the planted feet as she steps forward and leans back to reel.
+    const center=actorX+[23,16,29,23][step.pose],halfWidth=step.pose===1?14:11;
+    ctx.fillStyle='#667A5838';
+    ctx.fillRect(center-halfWidth,baseline-2,halfWidth*2,2);
+    ctx.fillRect(center-halfWidth+3,baseline,halfWidth*2-6,1);
+    const [palmX,palmY]=FISHING_GRIPS[step.pose],hand={x:actorX+palmX,y:actorY+palmY};
+    const tips=[[37,-50],[57,-12],[24,-55],[20,-51]],direction=tips[step.pose];
+    const tip={x:hand.x+direction[0],y:hand.y+direction[1]};
     if(step.visual==='casting'){
-      const t=step.progress;tip.x=actorX+58+t*34;tip.y=actorY-24+t*38;
+      const angle=(-80+68*step.progress)*Math.PI/180;
+      tip.x=hand.x+58*Math.cos(angle);tip.y=hand.y+58*Math.sin(angle);
+    }else if(step.visual==='waiting'&&!still&&elapsed<.8){
+      const settle=clamp((elapsed-.48)/.32,0,1);
+      const angle=(-12-41*settle)*Math.PI/180;
+      tip.x=hand.x+(58+4*settle)*Math.cos(angle);tip.y=hand.y+(58+4*settle)*Math.sin(angle);
     }
     rod(hand.x,hand.y,tip.x,tip.y);
     const ready=actor(step.pose,actorX,actorY);
     let rewardX=null,rewardY=null;
     if(phase==='waiting'||phase==='bite'){
       const bob=still?0:phase==='bite'?Math.sin(elapsed*14)*2:Math.sin(elapsed*3)*.7;
-      fishingLine(tip.x,tip.y,floatX,floatY+bob);
-      ctx.fillStyle='#C07B7D';ctx.fillRect(floatX-2,Math.round(floatY-4+bob),4,5);ctx.fillStyle='#FFF0D5';ctx.fillRect(floatX-2,Math.round(floatY-1+bob),4,2);
+      const casting=step.visual==='casting',p=step.progress;
+      const bobX=casting?Math.round(tip.x+(floatX-tip.x)*p):floatX;
+      const bobY=Math.round(casting?tip.y+(floatY-tip.y)*p-12*Math.sin(Math.PI*p):floatY+bob);
+      fishingLine(tip.x,tip.y,bobX,bobY);
+      ctx.fillStyle='#C07B7D';ctx.fillRect(bobX-2,bobY-4,4,5);ctx.fillStyle='#FFF0D5';ctx.fillRect(bobX-2,bobY-1,4,2);
       if(phase==='bite'){ctx.fillStyle='#FFF1C6';ctx.fillRect(floatX-1,floatY-15,2,5);ctx.fillRect(floatX-1,floatY-8,2,2);}
-      if(!still&&elapsed<.5)splash(floatX,floatY,elapsed*2);
+      if(!still&&phase==='waiting'&&elapsed>=.48&&elapsed<.98)splash(floatX,floatY,(elapsed-.48)*2);
     }else if(phase==='caught'&&plushie){
-      const p=step.progress,eased=1-(1-p)**3,target={x:actorX+54,y:actorY+2};
+      const p=step.progress,eased=1-(1-p)**3,[liftX,liftY]=FISHING_GRIPS[3];
+      const target={x:actorX+liftX+15,y:actorY+liftY-7};
       rewardX=floatX+(target.x-floatX)*eased;rewardY=floatY+(target.y-floatY)*eased-Math.sin(p*Math.PI)*20;
       fishingLine(tip.x,tip.y,rewardX,rewardY-10);
       const caught=image(plushie.image);if(caught)ctx.drawImage(caught,Math.round(rewardX)-12,Math.round(rewardY)-12,24,24);
@@ -123,7 +140,7 @@ export function createFishingScene({stage,api,preference}){
     }
     const outfits=api.getOutfits?.()??api.save?.outfits??{};
     Object.assign(canvas.dataset,{phase,visual:step.visual,fishingPose:String(step.pose),itzaLook:getChoice(outfits,'itza'),itzaHair:getHairColor(outfits),itzaGlasses:String(getGlasses(outfits,'itza')),
-      actorReady:String(ready),actorX:String(actorX),actorY:String(actorY),actorWidth:'40',actorHeight:String(FISHING_ACTOR_HEIGHT),bodyOffsetY:String(FISHING_BODY_OFFSET_Y),rodHandX:String(hand.x),rodHandY:String(hand.y),rodTipX:String(tip.x),rodTipY:String(tip.y),
+      actorReady:String(ready),actorX:String(actorX),actorY:String(actorY),actorWidth:String(FISHING_ACTOR_WIDTH),actorHeight:String(FISHING_ACTOR_HEIGHT),bodyOffsetY:String(FISHING_BODY_OFFSET_Y),rodHandX:String(hand.x),rodHandY:String(hand.y),rodTipX:String(tip.x),rodTipY:String(tip.y),
       rewardX:rewardX===null?'':rewardX.toFixed(2),rewardY:rewardY===null?'':rewardY.toFixed(2),plushie:plushie?.id||''});
     canvas.setAttribute('aria-label',phase==='caught'?'Itza levanta con su caña el peluche de '+plushie?.name:phase==='bite'?'Itza tira de su caña: ha picado un peluche':phase==='waiting'?'Itza pesca desde la orilla, con la caña y el flotador en el agua':'Itza está en la orilla del lago, sosteniendo su caña de pescar');
   }

@@ -34,9 +34,38 @@ test('invalid actions do not modify another plot and growth never reverses',()=>
   assert.equal(advanceGarden(state,10000).plots[0].growth,1);
 });
 test('all garden plots and flower frames fit their shared scene resources',()=>{
-  assert.equal(GARDEN_FLOWERS.length,3);assert.equal(GARDEN_PLOTS.length,6);
+  assert.deepEqual(GARDEN_FLOWERS.map(({frame})=>frame),[0,1,2,3,4,5]);assert.equal(GARDEN_PLOTS.length,6);
   for(const plot of GARDEN_PLOTS)assert.ok(plot.x>32&&plot.x<608&&plot.y>32&&plot.y<368);
   for(const size of [[390,844],[844,390],[1920,1080]]){
     const viewport=gardenViewport(...size);assert.ok(viewport.cssWidth>=size[0]);assert.ok(viewport.cssHeight>=size[1]);assert.ok(Number.isInteger(viewport.scale));assert.ok(viewport.width<=640&&viewport.height<=400);
   }
+});
+
+test('each new flower grows from a seed into the matching vase in the house',()=>{
+  for(const [id,label,frame] of [['lirio','Lirios',3],['rosa','Rosas rosas',4],['peonia','Peonías',5]]){
+    let state=plantGarden(null,4,id).state;
+    assert.equal(gardenStage(state.plots[4]),1);
+    state=advanceGarden(waterGarden(state,4).state,GARDEN_GROW_SECONDS/2);
+    assert.equal(gardenStage(state.plots[4]),2);
+    state=advanceGarden(state,GARDEN_GROW_SECONDS/2);
+    assert.equal(gardenStage(state.plots[4]),3);
+    const harvest=harvestGarden(state,4);
+    assert.equal(harvest.flower,id);assert.equal(harvest.state.inventory[id],1);
+    state=decorateGarden(harvest.state,id).state;
+    const vase=getHomeDecoration(normalizeGarden(state));
+    assert.equal(vase.label,'Florero de '+label.toLowerCase());
+    assert.deepEqual(vase.source,{x:frame*32,y:96,width:32,height:32});
+    assert.equal(state.inventory[id],0);
+  }
+});
+
+test('loading a three-species garden preserves its plants, stock and displayed bouquet',()=>{
+  const old={visits:3,planted:9,harvested:6,
+    plots:[{flower:'lavanda',watered:true,growth:.5},{flower:'cosmos',watered:false,growth:0},{flower:'girasol',watered:true,growth:1}],
+    inventory:{cosmos:2,lavanda:1,girasol:3},decorations:['cosmos','girasol'],decoration:'girasol'};
+  const loaded=normalizeGarden(old);
+  assert.deepEqual(loaded.plots.slice(0,3),old.plots);
+  assert.deepEqual(loaded.inventory,{...old.inventory,lirio:0,rosa:0,peonia:0});
+  assert.deepEqual(loaded.decorations,old.decorations);assert.equal(loaded.decoration,old.decoration);
+  assert.equal(loaded.harvested,6);assert.equal(loaded.planted,9);assert.equal(loaded.visits,3);
 });

@@ -1,5 +1,6 @@
 import {getChoice,getSelectedLook} from './wardrobe.js';
-import {splitCharacterHeadPixels} from './character-head.js';
+import {characterHeadPixel} from './character-head.js';
+import {hairMaskPixel} from './hair.js';
 
 export const DANCE_BODY_URL='/assets/game/dance/bodies.png';
 export const DANCE_FRAME_SIZE=Object.freeze({width:40,height:56});
@@ -27,6 +28,26 @@ function pixelsOf(image){
   const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(image,0,0);
   const pixels=ctx.getImageData(0,0,canvas.width,canvas.height);pixelsCache.set(image,pixels);return pixels;
 }
+function dancePortrait(personalized,raw,who,look,direction){
+  const layer=document.createElement('canvas');
+  layer.width=DANCE_FRAME_SIZE.width;layer.height=DANCE_FRAME_SIZE.height;
+  const ctx=layer.getContext('2d'),image=ctx.createImageData(layer.width,layer.height);
+  for(let y=0;y<48;y++)for(let x=0;x<32;x++){
+    const row=direction*48+y,source=(row*personalized.width+x)*4;
+    if(!personalized.data[source+3])continue;
+    if(!characterHeadPixel(who,look,direction,x,y)){
+      // Locks fall in front of the dancing shoulders. Select them in the
+      // original art so blonde highlights and warm outlines both survive.
+      if(who!=='itza'||!hairMaskPixel('walk-'+look,0,direction,x,y))continue;
+      const i=(row*raw.width+x)*4;
+      const r=raw.data[i],g=raw.data[i+1],b=raw.data[i+2],light=Math.max(r,g,b);
+      if(light>112||light-Math.min(r,g,b)>48)continue;
+    }
+    image.data.set(personalized.data.subarray(source,source+4),(y*layer.width+x+4)*4);
+  }
+  ctx.putImageData(image,0,0);
+  return layer;
+}
 function actorPose({who,bodyFrame,outfits,getCharacterImage,getRawImage,getDanceImage}){
   const look=getChoice(outfits,who),selected=getSelectedLook(outfits,who);
   const source=getCharacterImage?.(selected?.sheet),body=getDanceImage?.(DANCE_BODY_URL);
@@ -38,18 +59,9 @@ function actorPose({who,bodyFrame,outfits,getCharacterImage,getRawImage,getDance
   const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;
   const personalized=pixelsOf(source),raw=pixelsOf(getRawImage?.(selected?.sheet)||source);
   const direction=headDirections[bodyFrame];
-  const head=document.createElement('canvas');head.width=40;head.height=56;
-  const headCtx=head.getContext('2d'),headPixels=headCtx.createImageData(40,56);
-  const hair=document.createElement('canvas');hair.width=40;hair.height=56;
-  const hairCtx=hair.getContext('2d'),hairPixels=hairCtx.createImageData(40,56);
-  const split=splitCharacterHeadPixels(personalized,raw,{who,look,direction});
-  headPixels.data.set(split.head);hairPixels.data.set(split.hair);
-  headCtx.putImageData(headPixels,0,0);hairCtx.putImageData(hairPixels,0,0);
-  if(direction!==2)ctx.drawImage(hair,0,0);
   const row=(who==='itza'?3:0)+Math.max(0,looks.indexOf(look));
   ctx.drawImage(body,bodyFrame*40,row*56,40,56,0,0,40,56);
-  if(direction===2)ctx.drawImage(hair,0,0);
-  ctx.drawImage(head,0,0);
+  ctx.drawImage(dancePortrait(personalized,raw,who,look,direction),0,0);
   Object.assign(canvas.dataset,{danceCharacter:who,danceLook:look,dancePose:String(bodyFrame),
     danceHeadDirection:String(direction),hairColor:source.dataset?.hairColor||'negro',
     glassesItza:source.dataset?.glassesItza||'on',glassesLeo:source.dataset?.glassesLeo||'on',

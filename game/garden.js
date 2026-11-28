@@ -3,7 +3,10 @@ export const GARDEN_GROW_SECONDS=7;
 export const GARDEN_FLOWERS=Object.freeze([
   {id:'cosmos',label:'Cosmos rosa',short:'Cosmos',color:'#E4A1AD',frame:0,line:'Estas florecitas tienen tu color de ternura.'},
   {id:'lavanda',label:'Lavanda lila',short:'Lavanda',color:'#AB9ABD',frame:1,line:'Para que nuestra casita huela a un día bonito contigo.'},
-  {id:'girasol',label:'Girasoles',short:'Girasol',color:'#E7BF69',frame:2,line:'Tú eres mi solecito; estos van a recordármelo.'}
+  {id:'girasol',label:'Girasoles',short:'Girasol',color:'#E7BF69',frame:2,line:'Tú eres mi solecito; estos van a recordármelo.'},
+  {id:'lirio',label:'Lirios',short:'Lirios',color:'#E9CD8B',frame:3,line:'Mira cómo se abrieron los lirios. Este es para ti.'},
+  {id:'rosa',label:'Rosas rosas',short:'Rosas rosas',color:'#D0829B',frame:4,line:'De todas las rosas del jardín, yo te guardé la más rosita.'},
+  {id:'peonia',label:'Peonías',short:'Peonías',color:'#E7A49E',frame:5,line:'¡Cuántos pétalos tiene esta peonía! ¿La llevamos a casa?'}
 ]);
 export const GARDEN_PLOTS=Object.freeze(Array.from({length:6},(_,i)=>({id:i,x:190+i%3*132,y:164+Math.floor(i/3)*65})));
 const count=value=>Number.isInteger(value)&&value>=0?Math.min(999999,value):0;

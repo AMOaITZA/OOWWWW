@@ -30,7 +30,7 @@ try{
   await missed.clock.runFor(4600);await expect(missed.locator('.fishing-scene')).toHaveAttribute('data-phase','missed');
   await shot(missed,'wedding-complete-missed-desktop');
   const data=await missed.locator('.fishing-scene').evaluate(c=>({...c.dataset}));
-  expect(data.actorHeight).toBe('64');expect(data.bodyOffsetY).toBe('6');
+  expect(data.actorHeight).toBe('64');expect(data.bodyOffsetY).toBe('0');
   const native=await missed.evaluate(()=>window.__fishingActors[0].toDataURL());
   await fs.writeFile(output+'/wedding-missed-native.png',Buffer.from(native.split(',')[1],'base64'));await missed.close();
   for(const [name,width,height,look,hair]of[['principal',1440,900,'principal','rosa'],['alternative-phone',390,844,'alternativo','rubio'],['wedding-landscape',844,390,'boda','cafe']]){

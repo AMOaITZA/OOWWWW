@@ -64,6 +64,12 @@ test('Itza casts from the bank and visibly raises the earned plush while keeping
   await expect(scene).toHaveAttribute('data-phase','waiting');
   await expect(scene).toHaveAttribute('data-visual','waiting');
   await expect(page.locator('.fishing-game')).toHaveAttribute('data-phase','bite');
+  await expect(scene).toHaveAttribute('data-visual','bite');
+  const biteGrip=await scene.evaluate(({dataset:d})=>({
+    x:Number(d.rodHandX)-Number(d.actorX),y:Number(d.rodHandY)-Number(d.actorY)
+  }));
+  // The bottom of the personalized side face is row 29 in the actor frame.
+  expect(biteGrip.x).toBeGreaterThanOrEqual(30);expect(biteGrip.y).toBeGreaterThanOrEqual(30);
   await page.getByRole('button',{name:'¡Sacar!',exact:true}).click();
   await expect(scene).toHaveAttribute('data-visual','reeling');
   await expect(scene).toHaveAttribute('data-visual','caught');
@@ -73,10 +79,11 @@ test('Itza casts from the bank and visibly raises the earned plush while keeping
   const layout=await scene.evaluate(canvas=>({
     handX:Number(canvas.dataset.rodHandX),handY:Number(canvas.dataset.rodHandY),
     actorX:Number(canvas.dataset.actorX),actorY:Number(canvas.dataset.actorY),
+    actorWidth:Number(canvas.dataset.actorWidth),actorHeight:Number(canvas.dataset.actorHeight),
     rewardX:Number(canvas.dataset.rewardX),rewardY:Number(canvas.dataset.rewardY)
   }));
-  expect(layout.handX).toBeGreaterThan(layout.actorX);expect(layout.handX).toBeLessThan(layout.actorX+40);
-  expect(layout.handY).toBeGreaterThanOrEqual(layout.actorY);expect(layout.handY).toBeLessThan(layout.actorY+56);
+  expect(layout.handX).toBeGreaterThan(layout.actorX);expect(layout.handX).toBeLessThan(layout.actorX+layout.actorWidth);
+  expect(layout.handY).toBeGreaterThanOrEqual(layout.actorY);expect(layout.handY).toBeLessThan(layout.actorY+layout.actorHeight);
   expect(Math.hypot(layout.rewardX-layout.handX,layout.rewardY-layout.handY)).toBeLessThan(35);
   expect((await saved(page)).fishing.catches).toBe(1);
   expect((await saved(page)).outfits.itza).toEqual({look:'boda',hair:'rubio',glasses:false});
@@ -98,7 +105,8 @@ test('phone fishing keeps Itza, her rod and the plush visible through rotation a
     await expect.poll(()=>scene.evaluate(canvas=>{
       const r=canvas.getBoundingClientRect(),stage=canvas.parentElement.getBoundingClientRect();
       const x=Number(canvas.dataset.actorX),y=Number(canvas.dataset.actorY),s=r.width/canvas.width;
-      const actor={left:r.left+x*s,right:r.left+(x+40)*s,top:r.top+y*s,bottom:r.top+(y+56)*s};
+      const width=Number(canvas.dataset.actorWidth),height=Number(canvas.dataset.actorHeight);
+      const actor={left:r.left+x*s,right:r.left+(x+width)*s,top:r.top+y*s,bottom:r.top+(y+height)*s};
       const clear=[...document.querySelectorAll('.fishing-status,.fishing-action,.fishing-mission')].every(el=>{
         const hud=el.getBoundingClientRect();
         return actor.right<=hud.left||actor.left>=hud.right||actor.bottom<=hud.top||actor.top>=hud.bottom;

@@ -6,6 +6,12 @@ n.º 1. No se fusiona con `main` sin aprobación explícita.
 
 ## Características actuales
 
+- En el lago, Itza lanza y recoge la caña con las manos visibles. En Hawái,
+  los mechones siguen sus hombros y su cabeza durante las ocho poses del baile.
+- En la cocina se preparan macarrones con queso, crema de calabaza y pastel
+  de fresa. Al servir puedes llevar los dos platos al comedor. En **Semillas**
+  también hay lirios, rosas rosas y peonías para el jardín y la casita.
+  [Guía y capturas de esta actualización](../docs/DETALLES-V16.md).
 - **Actividades V15**: cocina y huerto en **Nuestra casita → Más en casa**,
   tres islas con regalos en **Muelle de los viajes → Pasear en barca**, y
   una **Canon digital retro negra** para tomar fotos y abrir el álbum desde

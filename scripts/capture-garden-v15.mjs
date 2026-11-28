@@ -15,7 +15,7 @@ try{
   await page.getByText('Más en casa',{exact:true}).click();await page.getByRole('button',{name:'Cuidar el huerto',exact:true}).click();
   await expect(page.locator('.garden-scene')).toBeVisible();await page.evaluate(()=>document.fonts.ready);await shot(page,'garden-empty-'+name);
   if(name==='desktop'){
-   await page.locator('.garden-plot[data-garden-plot="4"]').click();await page.locator('[data-garden-seed="cosmos"]').click();await page.locator('.garden-primary').click();
+   await page.locator('.garden-plot[data-garden-plot="4"]').click();await page.locator('.garden-seed-picker>summary').click();await page.locator('[data-garden-seed="cosmos"]').click();await page.locator('.garden-primary').click();
    await expect(page.locator('.garden-primary')).toHaveText('Regar las flores');await page.locator('.garden-primary').click();await page.waitForTimeout(700);await shot(page,'garden-watering-'+name);
    await expect(page.locator('.garden-primary')).toHaveText('Recoger flores',{timeout:16000});await shot(page,'garden-bloom-'+name);
    await page.locator('.garden-primary').click();await page.locator('.garden-decor-toggle').click();await page.locator('[data-garden-decoration="cosmos"]').click();await shot(page,'garden-decoration-'+name);

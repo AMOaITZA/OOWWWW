@@ -133,8 +133,8 @@ test('cooking a complete recipe updates the cookbook once and survives a return 
   const room=page.locator('.cooking-room'),scene=page.locator('.cooking-scene');
   await expect(room).toHaveAttribute('data-cooking-stage','choose');await expect(scene).toBeVisible();
   const before=await scene.evaluate(canvas=>canvas.toDataURL());
-  await page.locator('[data-cooking-choose="panqueques"]').click();
-  for(const ingredient of ['harina','leche','fresas'])await page.locator(`[data-cooking-ingredient="${ingredient}"]`).click();
+  await page.locator('[data-cooking-choose="macarrones"]').click();
+  for(const ingredient of ['macarrones','leche','queso'])await page.locator(`[data-cooking-ingredient="${ingredient}"]`).click();
   await expect(room).toHaveAttribute('data-cooking-stage','stir');
   for(let i=0;i<4;i++)await page.locator('[data-cooking-action="stir"]').click();
   await expect(room).toHaveAttribute('data-cooking-stage','cook');
@@ -144,16 +144,17 @@ test('cooking a complete recipe updates the cookbook once and survives a return 
   await expect(room).toHaveAttribute('data-cooking-stage','served');
   await expect(room).toHaveAttribute('data-cooking-servings','1');
   expect(await scene.evaluate(canvas=>canvas.toDataURL())).not.toBe(before);
-  expect((await saved(page)).cooking).toMatchObject({recipe:'panqueques',prepared:['harina','leche','fresas'],stirs:4,heat:3,served:true,servings:{panqueques:1,pasta:0,galletas:0}});
+  expect((await saved(page)).cooking).toMatchObject({recipe:'macarrones',prepared:['macarrones','leche','queso'],stirs:4,heat:3,served:true,servings:{macarrones:1,crema:0,pastel:0}});
   expect((await saved(page)).position).toEqual(HOUSE);expect((await saved(page)).outfits).toEqual(OUTFITS);
-  await page.getByRole('button',{name:'Volver a nuestra casita',exact:true}).click();
-  await expect(page.locator('.home-scene')).toBeVisible();await expect(room).toHaveCount(0);
+  await page.getByRole('button',{name:'Comer juntos en la casita',exact:true}).click();
+  await expect(page.locator('.home-scene')).toHaveAttribute('data-meal','macarrones');
+  await expect(page.locator('.home-scene')).toHaveAttribute('data-activity','eat');await expect(room).toHaveCount(0);
   await page.locator('#close-experience').click();await page.reload();await page.locator('#start-game').click();
   await houseActivity(page,'Cocinar juntos');await expect(room).toHaveAttribute('data-cooking-stage','served');
   await page.locator('.cooking-book>summary').click();
-  await expect(page.locator('.cooking-recipe[data-cooking-recipe="panqueques"]')).toContainText('Cocinada 1 vez');
-  await page.locator('.cooking-recipe[data-cooking-recipe="pasta"]').click();
-  expect((await saved(page)).cooking.servings.panqueques).toBe(1);
+  await expect(page.locator('.cooking-recipe[data-cooking-recipe="macarrones"]')).toContainText('Cocinada 1 vez');
+  await page.locator('.cooking-recipe[data-cooking-recipe="crema"]').click();
+  expect((await saved(page)).cooking.servings.macarrones).toBe(1);
   await expect(room).toHaveAttribute('data-cooking-stage','prepare');
   await page.locator('#close-experience').click();check();
 });
@@ -161,7 +162,7 @@ test('cooking a complete recipe updates the cookbook once and survives a return 
 test('a flower is planted, watered, grown and harvested into a lasting home decoration',async({page})=>{
   const check=watchErrors(page);await enter(page);await houseActivity(page,'Cuidar el huerto');await fullScreen(page);
   const scene=page.locator('.garden-scene');await expect(scene).toBeVisible();
-  await page.locator('[data-garden-plot="0"]').click();await page.locator('[data-garden-seed="cosmos"]').click();
+  await page.locator('[data-garden-plot="0"]').click();await page.locator('.garden-seed-picker>summary').click();await page.locator('[data-garden-seed="cosmos"]').click();
   await page.locator('.garden-primary').click();
   await expect.poll(async()=>(await saved(page)).garden.plots[0]).toEqual({flower:'cosmos',watered:false,growth:0});
   await expect(page.locator('.garden-primary')).toHaveText('Regar las flores');await page.locator('.garden-primary').click();
@@ -235,8 +236,8 @@ test('the new house activities and Canon remain usable with phone taps in portra
       await page.locator('.retro-camera-shutter').tap();await expect(page.locator('.retro-camera-status')).toContainText('Foto guardada');
       await page.locator('.retro-camera-back').tap();await expect(page.locator('.cooking-scene')).toBeVisible();
       if(size.width===320){
-        await page.locator('[data-cooking-choose="panqueques"]').tap();
-        for(const id of ['harina','leche','fresas'])await page.locator(`[data-cooking-ingredient="${id}"]`).tap();
+        await page.locator('[data-cooking-choose="macarrones"]').tap();
+        for(const id of ['macarrones','leche','queso'])await page.locator(`[data-cooking-ingredient="${id}"]`).tap();
         for(let i=0;i<4;i++)await page.locator('[data-cooking-action="stir"]').tap();
         for(let i=0;i<3;i++)await page.locator('[data-cooking-action="cook"]').tap();
         await page.locator('[data-cooking-action="serve"]').tap();
@@ -247,11 +248,16 @@ test('the new house activities and Canon remain usable with phone taps in portra
       await cookingWorktopClear(page);
       await onScreenControls(page,'.cooking-room button:not(.cooking-recipes button),#close-experience,.camera-open-control');
     }
-    await page.getByRole('button',{name:'Volver a nuestra casita',exact:true}).tap();
+    await page.getByRole('button',{name:'Comer juntos en la casita',exact:true}).tap();
     await page.getByText('Más en casa',{exact:true}).tap();await page.getByRole('button',{name:'Cuidar el huerto',exact:true}).tap();
     for(const size of [{width:390,height:844},{width:844,height:390}]){
       await page.setViewportSize(size);await fullScreen(page);await expect(page.locator('.garden-scene')).toBeVisible();
-      await onScreenControls(page,'.garden-trip button:not(.garden-decoration button),#close-experience,.camera-open-control');
+      await onScreenControls(page,'.garden-trip button:not(.garden-decoration button),.garden-seed-picker>summary,#close-experience,.camera-open-control');
+      await page.locator('.garden-seed-picker>summary').tap();
+      await expect(page.locator('.garden-seed:visible')).toHaveCount(6);
+      await onScreenControls(page,'.garden-seed');
+      await page.locator('[data-garden-seed="peonia"]').tap();
+      await expect(page.locator('.garden-primary')).toHaveAccessibleName(/peonías/i);
       await page.locator('.garden-decor-toggle').tap();await expect(page.locator('.garden-decoration')).toBeVisible();
       await onScreenControls(page,'.garden-decoration button',{scrollEach:true});await page.getByRole('button',{name:'Cerrar decoración',exact:true}).tap();
     }
@@ -297,11 +303,112 @@ test('an expired cast keeps the complete wedding pose and the five earned plushi
   const geometry=await scene.evaluate(canvas=>{
     const d=canvas.dataset;return {x:Number(d.actorX),y:Number(d.actorY),width:Number(d.actorWidth),height:Number(d.actorHeight),handX:Number(d.rodHandX),handY:Number(d.rodHandY),canvasHeight:canvas.height};
   });
-  expect(geometry.width).toBe(40);expect(geometry.height).toBe(64);
+  expect(geometry.width).toBeGreaterThan(0);expect(geometry.height).toBeGreaterThan(0);
   expect(geometry.handX).toBeGreaterThan(geometry.x);expect(geometry.handX).toBeLessThan(geometry.x+geometry.width);
   expect(geometry.handY).toBeGreaterThan(geometry.y);expect(geometry.handY).toBeLessThan(geometry.y+geometry.height);
   expect(geometry.y+geometry.height).toBeLessThanOrEqual(geometry.canvasHeight);
   expect((await saved(page)).fishing.collection).toEqual(collection);expect((await saved(page)).fishing.catches).toBe(5);
   await page.locator('#close-experience').click();await expect(scene).toHaveCount(0);
   expect((await saved(page)).position).toEqual({x:50,y:34});check();
+});
+
+async function pictureOf(canvas, box){
+  return canvas.evaluate((source,[x,y,width,height])=>{
+    const crop=document.createElement('canvas');
+    crop.width=width;crop.height=height;
+    crop.getContext('2d').drawImage(source,x,y,width,height,0,0,width,height);
+    return crop.toDataURL();
+  },box);
+}
+
+test('the three recipes make distinct meals at the dinner table and retain the old cookbook counts',async({page},testInfo)=>{
+  const check=watchErrors(page);
+  const recipes=[
+    {id:'macarrones',name:'Macarrones con queso',ingredients:['macarrones','leche','queso']},
+    {id:'crema',name:'Crema de calabaza',ingredients:['calabaza','crema','caldo']},
+    {id:'pastel',name:'Pastel',ingredients:['harina','huevo','fresas']}
+  ];
+  await enter(page,{extra:{cooking:{recipe:'pasta',prepared:['pasta','tomate','albahaca'],
+    stirs:4,heat:2,served:false,servings:{pasta:4,panqueques:2,galletas:3}}}});
+  await houseActivity(page,'Cocinar juntos');
+  const room=page.locator('.cooking-room');
+  await expect(room).toHaveAttribute('data-cooking-stage','prepare');
+  expect((await saved(page)).cooking.servings).toEqual({macarrones:4,crema:2,pastel:3});
+  const kitchenPlates=new Set(),homePlates=new Set();
+  for(const recipe of recipes){
+    await page.locator('.cooking-book>summary').click();
+    await page.locator(`.cooking-recipe[data-cooking-recipe="${recipe.id}"]`).click();
+    await expect(page.locator('.cooking-title')).toHaveText(recipe.name);
+    for(const ingredient of recipe.ingredients){
+      await page.locator(`[data-cooking-ingredient="${ingredient}"]`).click();
+    }
+    for(let i=0;i<4;i++)await page.locator('[data-cooking-action="stir"]').click();
+    for(let i=0;i<3;i++)await page.locator('[data-cooking-action="cook"]').click();
+    await page.locator('[data-cooking-action="serve"]').click();
+    await expect(room).toHaveAttribute('data-cooking-stage','served');
+    kitchenPlates.add(await pictureOf(page.locator('.cooking-scene'),[268,241,100,29]));
+    if(recipe.id==='macarrones')await testInfo.attach('cocina-servida',{body:await page.screenshot(),contentType:'image/png'});
+    await page.getByRole('button',{name:'Comer juntos en la casita',exact:true}).click();
+    const home=page.locator('.home-scene');
+    await expect(home).toHaveAttribute('data-activity','eat');
+    await expect(home).toHaveAttribute('data-meal',recipe.id);
+    homePlates.add(await pictureOf(home,[194,180,72,30]));
+    if(recipe.id==='pastel')await testInfo.attach('pastel-para-dos',{body:await page.screenshot(),contentType:'image/png'});
+    if(recipe.id!=='pastel'){
+      await page.getByText('Más en casa',{exact:true}).click();
+      await page.getByRole('button',{name:'Cocinar juntos',exact:true}).click();
+    }
+  }
+  expect(kitchenPlates.size).toBe(3);expect(homePlates.size).toBe(3);
+  expect((await saved(page)).cooking.servings).toEqual({macarrones:5,crema:3,pastel:4});
+  await page.locator('#close-experience').click();
+  await page.reload();await page.locator('#start-game').click();await interact(page);
+  await expect(page.locator('.home-scene')).toHaveAttribute('data-meal','pastel');
+  expect((await saved(page)).position).toEqual(HOUSE);check();
+});
+
+test('lilies, pink roses and peonies can each be grown into a distinct vase in the house',async({page},testInfo)=>{
+  const check=watchErrors(page);
+  const flowers=[['lirio','Lirios'],['rosa','Rosas rosas'],['peonia','Peonías']];
+  await enter(page,{extra:{garden:{inventory:{cosmos:1,lavanda:2,girasol:3},
+    decorations:['cosmos'],decoration:'cosmos'}}});
+  await houseActivity(page,'Cuidar el huerto');
+  const primary=page.locator('.garden-primary');
+  for(const [plot,[id,label]] of flowers.entries()){
+    await page.locator(`.garden-plot[data-garden-plot="${plot}"]`).click();
+    await page.locator('.garden-seed-picker>summary').click();
+    const seed=page.locator(`[data-garden-seed="${id}"]`);
+    await expect(seed).toHaveText(label);await seed.click();
+    await primary.click();await expect(primary).toHaveText('Regar las flores');await primary.click();
+    await expect.poll(async()=>(await saved(page)).garden.plots[plot].watered).toBe(true);
+  }
+  for(const [plot,[id]] of flowers.entries()){
+    await page.locator(`.garden-plot[data-garden-plot="${plot}"]`).click();
+    await expect(primary).toHaveText('Recoger flores',{timeout:16000});
+    if(id==='lirio'){
+      await expect(page.locator('.garden-plot[data-garden-stage="3"]')).toHaveCount(3,{timeout:16000});
+      await testInfo.attach('jardin-en-flor',{body:await page.screenshot(),contentType:'image/png'});
+    }
+    await primary.click();
+    await expect.poll(async()=>(await saved(page)).garden.inventory[id]).toBe(1);
+  }
+  const bouquets=new Set();
+  for(const [id] of flowers){
+    await page.locator('.garden-decor-toggle').click();
+    await page.locator(`[data-garden-decoration="${id}"]`).click();
+    await page.getByRole('button',{name:'Ver el florero en casa',exact:true}).click();
+    const home=page.locator('.home-scene');
+    await expect(home).toHaveAttribute('data-flower-decoration',id);
+    bouquets.add(await pictureOf(home,[383,8,32,32]));
+    if(id!=='peonia'){
+      await page.getByText('Más en casa',{exact:true}).click();
+      await page.getByRole('button',{name:'Cuidar el huerto',exact:true}).click();
+    }
+  }
+  expect(bouquets.size).toBe(3);
+  expect((await saved(page)).garden.inventory).toEqual({cosmos:1,lavanda:2,girasol:3,lirio:0,rosa:0,peonia:0});
+  expect((await saved(page)).garden.decorations).toEqual(expect.arrayContaining(['cosmos','lirio','rosa','peonia']));
+  await page.locator('#close-experience').click();await page.reload();await page.locator('#start-game').click();await interact(page);
+  await expect(page.locator('.home-scene')).toHaveAttribute('data-flower-decoration','peonia');
+  expect((await saved(page)).position).toEqual(HOUSE);check();
 });

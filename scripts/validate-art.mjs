@@ -28,10 +28,13 @@ add(manifest.home?.seatedBodies,{size:[128,288],frame:[32,48],generated:true,max
 add(manifest.home?.seatedCrossed,{size:[64,288],frame:[32,48],generated:true,maxColors:128});
 add(manifest.home?.sofaBack,{size:[124,84],opaque:true,generated:true,maxColors:128});
 add(manifest.fishingScene?.background,{size:[640,400],opaque:true,generated:true,maxColors:192});
-add(manifest.fishingScene?.poses,{size:[160,168],frame:[40,56],generated:true,maxColors:128});
+add(manifest.fishingScene?.poses,{size:[224,192],frame:[56,64],generated:true,maxColors:128});
 add(manifest.cooking?.kitchen,{size:[640,400],opaque:true,generated:true,maxColors:192});
+add(manifest.home?.diningMats,{size:[67,19],opaque:true,maxColors:192});
+add(manifest.cooking?.actions,{size:[128,288],frame:[32,48],generated:true,maxColors:128});
+add(manifest.cooking?.foods,{size:[96,32],frame:[32,32],generated:true,maxColors:128});
 add(manifest.garden?.garden,{size:[640,400],opaque:true,generated:true,maxColors:192});
-add(manifest.garden?.flowers,{size:[96,128],frame:[32,32],generated:true,maxColors:128});
+add(manifest.garden?.flowers,{size:[192,128],frame:[32,32],generated:true,maxColors:128});
 add(manifest.boating?.archipelago,{size:[768,512],opaque:true,generated:true,maxColors:192});
 add(manifest.boating?.boats,{size:[384,128],generated:true,maxColors:128});
 for(const id of ['hawaii','lakeside','giraffe']){

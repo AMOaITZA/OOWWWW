@@ -25,11 +25,18 @@ export function mount(root,_data,api){
   const plotButtons=GARDEN_PLOTS.map(plot=>{
     const button=labeledButton(String(plot.id+1),()=>choosePlot(plot.id),'garden-plot');button.dataset.gardenPlot=String(plot.id);plots.append(button);return button;
   });
-  const tools=node('div','garden-tools'),seeds=node('div','garden-seeds');seeds.setAttribute('role','group');seeds.setAttribute('aria-label','Semillas de flores');
+  const tools=node('div','garden-tools'),picker=node('details','garden-seed-picker');
+  const seedSummary=node('summary'),seeds=node('div','garden-seeds');seeds.setAttribute('role','group');seeds.setAttribute('aria-label','Semillas de flores');
+  picker.append(seedSummary,seeds);
   const seedButtons=GARDEN_FLOWERS.map(flower=>{
-    const button=labeledButton(flower.short,()=>{seed=flower.id;render();},'garden-seed');button.dataset.gardenSeed=flower.id;button.style.setProperty('--flower-color',flower.color);seeds.append(button);return button;
+    const button=labeledButton('',()=>{
+      seed=flower.id;picker.open=false;render();seedSummary.focus({preventScroll:true});
+    },'garden-seed');
+    const icon=node('span','garden-seed-icon');icon.style.backgroundPosition=`${-flower.frame*32}px -64px`;icon.setAttribute('aria-hidden','true');
+    button.append(icon,node('span','',flower.short));button.dataset.gardenSeed=flower.id;
+    button.style.setProperty('--flower-color',flower.color);seeds.append(button);return button;
   });
-  const primary=labeledButton('',()=>perform(),'garden-primary');tools.append(seeds,primary);hud.append(info,plots,tools);
+  const primary=labeledButton('',()=>perform(),'garden-primary');tools.append(picker,primary);hud.append(info,plots,tools);
   const reply=node('p','garden-reply','Leo: plantemos algo bonito y lo vemos crecer juntos.');reply.setAttribute('role','status');reply.setAttribute('aria-live','polite');
   const drawer=node('section','garden-decoration');drawer.setAttribute('aria-label','Flores para decorar nuestra casita');
   const drawerTitle=node('div','garden-decoration-heading');drawerTitle.append(node('h3','','Un florero para casa'));
@@ -55,7 +62,9 @@ export function mount(root,_data,api){
       `${flower.label} · ${growth===2?'ya vienen los capullos':'creciendo juntas'} · ${Math.max(1,Math.ceil((1-plot.growth)*7))} s`;
     primary.textContent=queued?'Caminando…':growth===0?'Sembrar '+selectedSeed.short.toLowerCase():growth===3?'Recoger flores':!plot.watered?'Regar las flores':'Creciendo…';
     primary.disabled=queued||Boolean(plot.flower&&plot.watered&&growth<3);
-    seeds.hidden=Boolean(plot.flower);
+    picker.hidden=Boolean(plot.flower);
+    if(picker.hidden)picker.open=false;
+    seedSummary.textContent='Semillas · '+selectedSeed.short;
     for(const [index,button] of plotButtons.entries()){
       const p=state.plots[index],stage=gardenStage(p),name=GARDEN_FLOWERS.find(f=>f.id===p.flower)?.label;
       button.setAttribute('aria-pressed',String(index===selected));button.setAttribute('aria-label',`Bancal ${index+1}: ${stage===0?'vacío':name+', '+(stage===3?'listo para recoger':p.watered?'creciendo':'sin regar')}`);

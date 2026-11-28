@@ -6,6 +6,8 @@ import {getGlasses} from '../glasses.js';
 import {drawHomeActor} from '../home-poses.js';
 import {createHomeVideoPlayer,drawHomeVideoFrame,homeVideoTime} from '../home-video.js';
 import {getHomeDecoration} from '../garden.js';
+import {normalizeCooking,recipeById} from '../cooking.js';
+import manifest from '../data/assets.json';
 import './casita.css';
 
 const INTERIOR='/assets/game/home/interior.png';
@@ -14,6 +16,8 @@ const activityOf=id=>HOME_ACTIVITIES.find(activity=>activity.id===id)||HOME_ACTI
 
 export function mount(root,_data,api){
   let home=visitHome(api.save.home),alive=true,frame=0,last=0,clock=0,expanded=false,videoError='';
+  const cooking=normalizeCooking(api.save.cooking);
+  const meal=cooking.served?recipeById(cooking.recipe):null;
   api.save.home=home;api.onProgressChange?.();
   const preference=window.matchMedia('(prefers-reduced-motion: reduce)');
   const intro=paragraph(root,'Aquí siempre hay un lugar para los dos. ¿Qué hacemos hoy?','home-intro');
@@ -108,14 +112,21 @@ export function mount(root,_data,api){
     canvas.dataset.flowerDecoration=bouquet?.id||'none';
     const still=preference.matches,blink=still?0:Math.floor(clock/1.8)%2;
     canvas.dataset.activity=home.activity;
+    canvas.dataset.meal=home.activity==='eat'&&meal?meal.id:'';
     canvas.dataset.leoLook=getChoice(outfits(),'leo');canvas.dataset.itzaLook=getChoice(outfits(),'itza');
     canvas.dataset.itzaHair=getHairColor(outfits());canvas.dataset.itzaGlasses=String(getGlasses(outfits(),'itza'));
     canvas.dataset.motion=still?'reduced':'active';
     if(home.activity==='eat'){
       HOME_LAYOUT.table.people.forEach(([x,y],index)=>actor(index?'itza':'leo',x,y,'eat',blink));
       restoreFurniture(background,HOME_LAYOUT.table.foreground);
+      const dishes=meal&&api.assetImage?.(manifest.cooking.foods);
+      const mats=meal&&api.assetImage?.(manifest.home.diningMats);
+      if(dishes&&mats)ctx.drawImage(mats,197,188);
       for(const [index,[x,y]] of HOME_LAYOUT.table.food.entries()){
-        if(!still){
+        if(dishes&&mats){
+          ctx.drawImage(dishes,meal.frame*32,0,32,32,x-13,y-16,26,26);
+        }
+        if(!still&&meal?.id!=='pastel'){
           const rise=Math.floor((clock*.7+index*.4)%1*6);
           ctx.globalAlpha=.45;ctx.fillStyle='#FFF3DA';ctx.fillRect(x-2,y-8-rise,1,4);ctx.fillRect(x+2,y-11-rise,1,3);ctx.globalAlpha=1;
         }
@@ -156,8 +167,10 @@ export function mount(root,_data,api){
   }
   function describe(){
     const activity=activityOf(home.activity);
-    caption.textContent=activity.caption;reply.textContent='Leo: '+activity.line;
-    canvas.setAttribute('aria-label',`Itza y Leo en su casita: ${activity.label.toLowerCase()}`);
+    const dinner=home.activity==='eat'&&meal;
+    caption.textContent=dinner?`${meal.label} para dos`:activity.caption;
+    reply.textContent='Leo: '+activity.line;
+    canvas.setAttribute('aria-label',dinner?`Itza y Leo comparten ${meal.label.toLowerCase()} en la mesa.`:`Itza y Leo en su casita: ${activity.label.toLowerCase()}`);
     for(const [id,button] of buttons)button.setAttribute('aria-pressed',String(id===home.activity));
     keepsake.textContent=api.getPonyoUnlocked?.()?'Ponyo también tiene un rinconcito aquí.':'Nuestro lugar favorito siempre será juntos.';
     keepsake.dataset.ponyo=String(Boolean(api.getPonyoUnlocked?.()));

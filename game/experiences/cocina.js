@@ -1,11 +1,13 @@
 import {node,labeledButton} from './dom.js';
 import {RECIPES,recipeById,normalizeCooking,cookingStage,chooseRecipe,prepareIngredient,stirRecipe,heatRecipe,serveRecipe} from '../cooking.js';
-import {getSelectedLook,getChoice} from '../wardrobe.js';
+import {getChoice} from '../wardrobe.js';
+import {chooseHomeActivity} from '../home.js';
+import {kitchenActor,cookingPose} from '../cooking-poses.js';
 import {getHairColor} from '../hair.js';
 import {getGlasses} from '../glasses.js';
 import './cocina.css';
 const BACKGROUND='/assets/game/cooking/kitchen.png';
-const copy={choose:['Una receta para los dos','Elige algo rico en nuestro recetario.'],prepare:['Todo comienza con cariño','Añade los tres ingredientes a la mesa.'],stir:['Una vuelta tú, otra yo','Mezclen juntos hasta que todo esté listo.'],cook:['A fuego lento','Cocinen en tres pasos, sin prisas.'],serve:['¡Huele delicioso!','Lleven su creación a la mesa.'],served:['Nuestra receta ya tiene historia','La guardamos en nuestro recetario. ¿Hacemos otra?']};
+const copy={choose:['Una receta para los dos','Elige algo rico en nuestro recetario.'],prepare:['Todo comienza con cariño','Añade los tres ingredientes a la mesa.'],stir:['Una vuelta tú, otra yo','Mezclen juntos hasta que todo esté listo.'],cook:['A fuego lento','Cocinen en tres pasos, sin prisas.'],serve:['¡Huele delicioso!','Lleven su creación a la mesa.'],served:['¡A la mesa!','Ya tienen dos porciones. Pueden comerlas juntos en la casita.']};
 export function mount(root,_data,api){
   api.save??={};let state=normalizeCooking(api.save.cooking),alive=true,raf=0,last=0,clock=0,actionAt=-10;
   const preference=window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -26,7 +28,10 @@ export function mount(root,_data,api){
   for(const label of ['Ingredientes','Mezclar','Cocinar','Compartir'])steps.append(node('span','',label));
   const actions=node('div','cooking-actions'),reply=node('p','cooking-reply');reply.setAttribute('role','status');reply.setAttribute('aria-live','polite');
   const progress=node('progress','cooking-progress');progress.max=10;progress.setAttribute('aria-label','Progreso de la receta');
-  const backHome=labeledButton('Volver a nuestra casita',()=>api.openExperience?.('casita'),'cooking-back-home');
+  const backHome=labeledButton('Volver a nuestra casita',()=>{
+    if(state.served){api.save.home=chooseHomeActivity(api.save.home,'eat');api.onProgressChange?.();}
+    api.openExperience?.('casita');
+  },'cooking-back-home');
   controls.append(title,hint,steps,progress,actions,reply,backHome);shell.append(stage,heading,cookbook,controls);root.append(shell);
   const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;
   let worktopOffset=0;
@@ -65,6 +70,8 @@ export function mount(root,_data,api){
     Object.assign(shell.dataset,{cookingStage:phase,cookingRecipe:state.recipe||'',cookingServings:String(Object.values(state.servings).reduce((a,b)=>a+b,0))});
     Object.assign(canvas.dataset,{cookingStage:phase,itzaLook:getChoice(api.getOutfits?.()??api.save.outfits,'itza'),leoLook:getChoice(api.getOutfits?.()??api.save.outfits,'leo'),itzaHair:getHairColor(api.getOutfits?.()??api.save.outfits),itzaGlasses:String(getGlasses(api.getOutfits?.()??api.save.outfits,'itza')),leoGlasses:String(getGlasses(api.getOutfits?.()??api.save.outfits,'leo'))});
     title.textContent=recipe?recipe.label:copy[phase][0];hint.textContent=copy[phase][1];
+    backHome.textContent=state.served?'Comer juntos en la casita':'Volver a nuestra casita';
+    backHome.setAttribute('aria-label',backHome.textContent);
     progress.value=state.prepared.length+state.stirs+state.heat;
     const index={choose:-1,prepare:0,stir:1,cook:2,serve:3,served:4}[phase];
     [...steps.children].forEach((item,i)=>{item.dataset.step=i<index?'complete':i===index?'active':'waiting';if(i===index)item.setAttribute('aria-current','step');else item.removeAttribute('aria-current');});
@@ -81,44 +88,70 @@ export function mount(root,_data,api){
   }
   function rect(x,y,w,h,color){ctx.fillStyle=color;ctx.fillRect(Math.round(x),Math.round(y),w,h);}
   function heart(x,y){rect(x+1,y,2,1,'#D58589');rect(x+4,y,2,1,'#D58589');rect(x,y+1,7,2,'#D58589');rect(x+1,y+3,5,1,'#D58589');rect(x+2,y+4,3,1,'#D58589');rect(x+3,y+5,1,1,'#D58589');}
-  function actor(who,x,y){
-    const look=getSelectedLook(api.getOutfits?.()??api.save.outfits??{},who);const sheet=api.getCharacterImage?.(look?.sheet)??api.assetImage?.(look?.sheet);if(!sheet)return;
-    // Use the complete personalized idle frame. Faces, glasses and hair are never repainted.
-    const frame=0;ctx.drawImage(sheet,frame*32,0,32,48,x,y,32,48);
+  // Both chefs use the side-on sleeve, elbow and hand of their selected outfit.
+  // Only the forearms reach over the far edge of the counter.
+  function chef(actor,x,y,mirror,forearm=false){
+    if(!actor)return;
+    ctx.save();ctx.translate(x+(mirror?32:0),y);if(mirror)ctx.scale(-1,1);
+    if(forearm){
+      const left=actor.elbow;
+      ctx.drawImage(actor.canvas,left,28,32-left,10,left,28,32-left,10);
+    }else ctx.drawImage(actor.canvas,0,0);
+    ctx.restore();
   }
-  function arm(points,color){ctx.strokeStyle='#5E3E33';ctx.lineWidth=5;ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(...points[0]);for(const p of points.slice(1))ctx.lineTo(...p);ctx.stroke();ctx.strokeStyle=color;ctx.lineWidth=3;ctx.stroke();}
+  function utensil(actor,x,y,mirror,knife){
+    if(!actor)return;
+    const handX=x+(mirror?31-actor.gripX:actor.gripX),handY=y+actor.gripY;
+    const direction=mirror?-1:1;
+    for(let i=1;i<=6;i++){
+      const px=handX+direction*Math.round(i/2),py=handY+i;
+      rect(px,py,2,2,'#785035');rect(px,py,1,1,'#C6935D');
+    }
+    const tipX=handX+direction*4,tipY=handY+7;
+    if(knife){
+      rect(tipX,tipY,3,4,'#766763');rect(tipX,tipY,2,3,'#E1D6BA');
+    }else{
+      rect(tipX-1,tipY,4,3,'#835330');rect(tipX,tipY-1,2,4,'#C38D58');
+    }
+  }
+  function worktop(recipe,phase){
+    rect(278,249,30,11,'#8C5939');rect(277,248,30,10,'#AE794D');
+    rect(279,247,26,10,'#D7A66D');rect(280,248,22,1,'#E9BB82');
+    if(recipe)recipe.ingredients.forEach((item,i)=>{
+      if(!state.prepared.includes(item.id))return;
+      const x=280+8*i;
+      rect(x,252,6,3,item.color);rect(x+1,250,4,6,item.color);rect(x+1,251,2,1,'#FFE7B5');
+    });
+    const soup=recipe?.color??'#C79162';
+    rect(319,250,29,6,'#775744');rect(321,255,25,4,'#9B7F62');rect(324,259,19,3,'#A48166');rect(328,262,11,1,'#765741');
+    rect(320,250,27,4,'#FCEDCC');rect(322,254,23,3,'#E9D0A6');rect(325,257,17,3,'#C3AF87');
+    rect(319,248,29,4,'#F6E5BF');rect(322,247,23,6,'#F6E5BF');
+    rect(321,249,25,2,soup);rect(324,248,19,4,soup);rect(336,249,6,1,'#F0CC93');
+    if(phase==='cook'||phase==='serve'){
+      rect(322,264,23,2,'#634D42');for(let i=0;i<3;i++)rect(326+i*6,262,2,2,'#DA9349');
+      if(!preference.matches)for(let i=0;i<3;i++){
+        const rise=Math.floor((clock*.8+i*.32)%1*13);rect(326+i*7,245-rise,1,3,'#FFF0DAAA');
+      }
+    }
+  }
   function draw(){
     if(!alive)return;ctx.imageSmoothingEnabled=false;const bg=background();
     if(bg)ctx.drawImage(bg,0,0,640,400);else{rect(0,0,640,400,'#DFC49B');rect(0,210,640,190,'#BC865D');rect(164,242,312,140,'#AD7448');}
     const phase=cookingStage(state),recipe=recipeById(state.recipe),active=!preference.matches&&clock-actionAt<.65;
-    const sway=active?Math.round(Math.sin((clock-actionAt)*12)):0;
-    actor('leo',275,197);actor('itza',329,197);
-    // Restore only the island foreground: the complete heads and torsos stay above its edge.
+    const pose=cookingPose(phase,clock,preference.matches,active),outfits=api.getOutfits?.()??api.save.outfits??{};
+    const leo=kitchenActor('leo',pose,outfits,api),itza=kitchenActor('itza',pose,outfits,api);
+    chef(leo,270,209,false);chef(itza,328,209,true);
     if(bg)ctx.drawImage(bg,160,242,320,145,160,242,320,145);
-    rect(275,248,37,16,'#6C4932');rect(276,247,35,15,'#DEB77C');rect(279,249,2,1,'#EED4A1');
-    rect(319,254,34,5,'#795247');rect(316,247,40,8,'#FFF0D2');rect(319,255,34,7,'#F3D3A8');rect(323,262,26,2,'#B88A65');
-    rect(320,248,32,5,recipe?.color||'#E9C48F');
-    if(recipe)for(const [i,ingredient]of recipe.ingredients.entries()){
-      const x=281+i*10,y=251;
-      rect(x,y,7,6,state.prepared.includes(ingredient.id)?ingredient.color:'#F1D8AC');
-      if(state.prepared.includes(ingredient.id))rect(x+2,y-1,2,1,'#FFF0D2');
-    }
-    // Connected forearms and a spoon animate on the worktop, below intact walking-sheet faces.
-    if(['prepare','stir','cook','serve'].includes(phase)){
-      arm([[289,228],[290,240],[294+sway,248]],({principal:'#B86E65',alternativo:'#64775B',boda:'#453B38'})[getChoice(api.getOutfits?.()??api.save.outfits,'leo')]);
-      rect(292+sway,246,4,4,'#BD8966');
-      arm([[343,228],[344,239],[337+sway,247]],getChoice(api.getOutfits?.()??api.save.outfits,'itza')==='boda'?'#F5E3CA':'#51433F');
-      rect(334+sway,245,4,4,'#C28A68');
-      ctx.strokeStyle='#805537';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(336+sway,247);ctx.lineTo(331-sway,255);ctx.stroke();
-      if(phase==='prepare'&&active){rect(293+sway,246-sway,2,8,'#EEE0BA');rect(293+sway,243-sway,2,4,'#79523B');}
-    }
-    if(phase==='cook'||phase==='serve'){
-      rect(320,267,33,2,'#59483D');for(let i=0;i<3;i++)rect(325+i*8,265,3,2,phase==='cook'?'#D99047':'#BC8E5A');
-      if(!preference.matches)for(let i=0;i<3;i++){const rise=Math.floor((clock*.8+i*.32)%1*15);rect(326+i*8,244-rise,1,4,'#FFF0DAAA');}
-    }
     if(phase==='served'){
-      for(const x of [293,343]){rect(x-12,248,24,11,'#FAE9CE');rect(x-9,250,18,7,recipe?.color||'#D9A56D');rect(x-3,249,4,1,'#E4C396');}
-      const rise=preference.matches?0:Math.round(Math.sin(clock*1.5)*2);heart(313,204+rise);
+      const food=api.assetImage?.('/assets/game/cooking/foods.png');
+      if(food)for(const x of [294,337])ctx.drawImage(food,recipe.frame*32,0,32,32,x-16,234,32,32);
+      const rise=preference.matches?0:Math.round(Math.sin(clock*1.5)*2);heart(312,205+rise);
+    }else{
+      worktop(recipe,phase);
+      if(phase!=='choose'){
+        utensil(leo,270,209,false,phase==='prepare');utensil(itza,328,209,true,false);
+        chef(leo,270,209,false,true);chef(itza,328,209,true,true);
+      }
     }
     canvas.dataset.cookingAnimation=active?'working':phase==='served'?'shared':'idle';
   }

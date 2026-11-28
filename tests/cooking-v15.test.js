@@ -19,16 +19,26 @@ test('all recipes require every ingredient, mixing and heat before serving',()=>
   }
 });
 test('cooking rejects foreign/duplicate ingredients and preserves the recipe book',()=>{
-  let state=chooseRecipe({},'panqueques');state=prepareIngredient(state,'harina');
+  let state=chooseRecipe({},'pastel');state=prepareIngredient(state,'harina');
   assert.deepEqual(prepareIngredient(state,'harina'),state);
   assert.deepEqual(prepareIngredient(state,'tomate'),state);
-  state.servings.pasta=4;const changed=chooseRecipe(state,'galletas');
-  assert.equal(changed.servings.pasta,4);assert.deepEqual(changed.prepared,[]);
+  state.servings.macarrones=4;const changed=chooseRecipe(state,'crema');
+  assert.equal(changed.servings.macarrones,4);assert.deepEqual(changed.prepared,[]);
   assert.deepEqual(chooseRecipe(changed,'unknown'),changed);
 });
 test('corrupt or interrupted save cannot bypass cooking stages',()=>{
-  const bad=normalizeCooking({recipe:'pasta',prepared:['pasta','pasta','x'],stirs:100,heat:100,served:true,servings:{pasta:-10,galletas:Infinity}});
-  assert.deepEqual(bad.prepared,['pasta']);assert.equal(bad.stirs,0);assert.equal(bad.heat,0);assert.equal(bad.served,false);
-  assert.equal(bad.servings.pasta,0);assert.equal(bad.servings.galletas,9999);
+  const bad=normalizeCooking({recipe:'macarrones',prepared:['macarrones','macarrones','x'],stirs:100,heat:100,served:true,servings:{pasta:-10,galletas:Infinity}});
+  assert.deepEqual(bad.prepared,['macarrones']);assert.equal(bad.stirs,0);assert.equal(bad.heat,0);assert.equal(bad.served,false);
+  assert.equal(bad.servings.macarrones,0);assert.equal(bad.servings.pastel,9999);
   assert.equal(cookingStage(null),'choose');
+});
+
+test('a legacy recipe restarts at ingredients and keeps old and new serving counts after reloading',()=>{
+  const old={recipe:'galletas',prepared:['harina','mantequilla','chocolate'],stirs:4,heat:3,served:true,
+    servings:{pasta:1,macarrones:2,panqueques:4,galletas:3}};
+  const converted=normalizeCooking(old);
+  assert.equal(converted.recipe,'pastel');
+  assert.equal(cookingStage(converted),'prepare');
+  assert.deepEqual(converted.servings,{macarrones:3,crema:4,pastel:3});
+  assert.deepEqual(normalizeCooking(converted),converted);
 });

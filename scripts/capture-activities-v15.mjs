@@ -24,8 +24,8 @@ try{
   for(const [name,width,height]of layouts){
     const context=await browser.newContext({viewport:{width,height},hasTouch:true,isMobile:name!=='desktop'});
     const page=await context.newPage();await enter(page);await houseActivity(page,'Cocinar juntos');
-    await page.locator('[data-cooking-choose="panqueques"]').click();
-    for(const id of ['harina','leche','fresas'])await page.locator(`[data-cooking-ingredient="${id}"]`).click();
+    await page.locator('[data-cooking-choose="macarrones"]').click();
+    for(const id of ['macarrones','leche','queso'])await page.locator(`[data-cooking-ingredient="${id}"]`).click();
     for(let i=0;i<4;i++)await page.locator('[data-cooking-action="stir"]').click();
     for(let i=0;i<3;i++)await page.locator('[data-cooking-action="cook"]').click();
     await page.locator('[data-cooking-action="serve"]').click();await expect(page.locator('.cooking-room')).toHaveAttribute('data-cooking-stage','served');

@@ -1,6 +1,6 @@
 {
-  "version": 15,
-  "description": "Cocinar juntos, jardín y decoración, paseos en barca y cámara Canon retro con álbum; pesca con brazos completos.",
+  "version": 16,
+  "description": "Pesca y baile de Itza, tres recetas para compartir y seis flores para el jardín.",
   "secrets": {
     "chest": "/assets/game/secrets/chest.png",
     "note": "/assets/game/secrets/note.png"
@@ -17,7 +17,8 @@
     "interior": "/assets/game/home/interior.png",
     "seatedBodies": "/assets/game/home/seated-bodies.png",
     "seatedCrossed": "/assets/game/home/seated-crossed.png",
-    "sofaBack": "/assets/game/home/sofa-back-patch.png"
+    "sofaBack": "/assets/game/home/sofa-back-patch.png",
+    "diningMats": "/assets/game/home/dining-mats.png"
   },
   "ambient": {
     "pond": "/assets/game/ambient/pond.png"
@@ -179,10 +180,12 @@
   },
   "fishingScene": {
     "background": "/assets/game/fishing/scene.png",
-    "poses": "/assets/game/fishing/poses.png"
+    "poses": "/assets/game/fishing/poses-v16.png"
   },
   "cooking": {
-    "kitchen": "/assets/game/cooking/kitchen.png"
+    "kitchen": "/assets/game/cooking/kitchen.png",
+    "actions": "/assets/game/cooking/actions.png",
+    "foods": "/assets/game/cooking/foods.png"
   },
   "garden": {
     "garden": "/assets/game/garden/garden.png",
